@@ -1,0 +1,4 @@
+[submodule "third-party/miscellaneous"]
+	path = third-party/miscellaneous
+	url = https://github.com/Glasssix/miscellaneous.git
+	branch = main
