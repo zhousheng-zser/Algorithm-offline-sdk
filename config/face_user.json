@@ -1,0 +1,5 @@
+{
+        "working_directory": "D:/test/LSH_bucket",
+        "working_directory_mask": "D:/test/LSH_bucket_mask",
+        "dimension":256
+}

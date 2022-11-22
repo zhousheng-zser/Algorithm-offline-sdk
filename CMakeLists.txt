@@ -22,4 +22,4 @@ if(GX_STATIC_RUNTIME)
 endif()
 
 add_subdirectory(src)
-#add_subdirectory(test)
+add_subdirectory(test)
