@@ -68,7 +68,7 @@ class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
         //人脸检测
         std::vector<face_box> gx_detect(const cv::Mat* mat);
         //人脸追踪
-        std::vector<trackface_box> gx_track(const cv::Mat* mat);
+        std::vector<track_face_box> gx_track(const cv::Mat* mat);
         //清除人脸跟踪历史
         void gx_clear_track_history();
         //人脸质量(模糊度)检测
@@ -106,5 +106,6 @@ class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
         config *_config;
         std::string guid[6];    // guid_type  sum = 5 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid irisviel_mask_guid)
         void* parser; 
+        track_cache cache;
     };
 } // namespace glasssix::face
