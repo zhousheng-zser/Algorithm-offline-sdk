@@ -80,6 +80,4 @@ namespace glasssix::face {
         void set_feature();
         void set_face_user();
     };
-
-
 } // namespace glasssix::face

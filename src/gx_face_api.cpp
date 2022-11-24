@@ -333,6 +333,41 @@ namespace glasssix::face {
 //静默活体检测
 std::vector<spoofing> gx_face_api::gx_face_spoofing_live(const cv::Mat* mat) {
     std::vector<spoofing> ans;
+    std::vector<face_box> faces = gx_detect(mat);
+    if (faces.size() == 0)
+        return ans;
+    json jsonobj_param, jsonobj_result;
+    jsonobj_param.clear();
+    jsonobj_param["instance_guid"]      = guid[guid_type::damocles_guid];
+    jsonobj_param["format"]             = _config->_action_live_config.format;
+    jsonobj_param["height"]             = mat->rows;
+    jsonobj_param["width"]              = mat->cols;
+    for (int i=0;i<faces.size() ;i++) {
+    jsonobj_param["facerect_list"][i]["x"]      = faces[i].x;
+    jsonobj_param["facerect_list"][i]["y"]      = faces[i].y;
+    jsonobj_param["facerect_list"][i]["width"]  = faces[i].width;
+    jsonobj_param["facerect_list"][i]["height"] = faces[i].height;
+    spoofing temp;
+    temp._face_box = faces[i];
+    ans.emplace_back(temp);
+    }
+    char* result_str = parser_parse(parser, "Damocles.spoofing_detect", jsonobj_param.dump().c_str(),
+        reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
+
+    jsonobj_result = json ::parse(result_str);
+    if (jsonobj_result["status"]["code"].get<int>() == 0) {
+        for (int i = 0; i < jsonobj_result["spoofing_result"].size() && i <faces.size(); i++) {
+            jsonobj_result["spoofing_result"][i]["prob"].get_to(ans[i].prob);
+        }
+    } else {
+        printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+        getchar();
+        exit(-1);
+    }
+    parser_free(result_str);
+    result_str = nullptr;
+
+
     return ans;
 }
 //特征提取融合

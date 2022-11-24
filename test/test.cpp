@@ -135,6 +135,26 @@ void test_action_live(gx_face_api* _api) {
         cv::waitKey(20);
     }
 }
+void test_spoofing_live(gx_face_api* _api) {
+    cv::VideoCapture capture;
+    capture.open(0);
+    while (1) {
+        cv::Mat img;
+        capture >> img;
+        std::vector<spoofing> faces;
+        faces = _api->gx_face_spoofing_live(&img);
+        for (int i = 0; i < faces.size(); ++i) {
+            face_box info = faces[i]._face_box;
+            std::cout << faces[i].prob[0] << "  " << faces[i].prob[1] << "  "<< faces[i].prob[2] << "\n"; 
+
+        rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
+            cv::Scalar(200, 255, 0), 2);
+        }
+        puts("");
+        cv::imshow("video-demo", img);
+        cv::waitKey(20);
+    }
+}
 
 
 int main() {
@@ -143,10 +163,10 @@ int main() {
     gx_face_api* _api = new gx_face_api();
 
     // test_detect(_api);
-     test_track(_api);
+    // test_track(_api);
     // test_blur(_api);
     // test_action_live(_api);
-
+     test_spoofing_live(_api);
     delete _api;
     getchar();
     return 0;
