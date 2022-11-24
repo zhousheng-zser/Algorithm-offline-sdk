@@ -37,4 +37,6 @@ gx_make_install_third_party_library(
     ${additional_args}
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/third-party/proxy
     TOOLCHAIN_FILE ${toolchain_file}
+    CMAKE_ARGS
+        -DBUILD_TESTING=OFF
 )
