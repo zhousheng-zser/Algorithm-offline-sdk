@@ -143,9 +143,9 @@ int main() {
     gx_face_api* _api = new gx_face_api();
 
     // test_detect(_api);
-    // test_track(_api);
+     test_track(_api);
     // test_blur(_api);
-    test_action_live(_api);
+    // test_action_live(_api);
 
     delete _api;
     getchar();

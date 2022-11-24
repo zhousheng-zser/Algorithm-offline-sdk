@@ -1,5 +1,7 @@
 #include <config.h>
 
+#include <proxy/proxy.h>
+
 namespace glasssix::face {
     config::config() {
         set_detect();

@@ -1,13 +1,13 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 #include <g6/format_remediation.hpp>
 #include <g6/json_compat.hpp>
 #include <g6/json_extensions.hpp>
 #include <g6/logger.hpp>
-#include <vector>
-#include <unordered_map>
 
 
 namespace glasssix::face {
@@ -64,7 +64,7 @@ namespace glasssix::face {
     struct blur {
         GX_BEGIN_FIELDS(blur);
         face_box _face_box; // 人脸基础信息
-        float clarity ; // 人脸质量程度
+        float clarity; // 人脸质量程度
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -74,7 +74,7 @@ namespace glasssix::face {
     struct spoofing {
         GX_BEGIN_FIELDS(spoofing);
         face_box _face_box; // 人脸基础信息
-        float prob[3]; //   活体检测分类结果
+        GX_FIELD(std::vector<float>, prob); //   活体检测分类结果
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -84,7 +84,7 @@ namespace glasssix::face {
     struct feature {
         GX_BEGIN_FIELDS(feature);
         face_box _face_box; // 特征值数组
-        float feature[256]; //人脸基础信息
+        std::vector<float>feature;//人脸基础信息
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

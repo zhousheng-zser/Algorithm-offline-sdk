@@ -2,3 +2,6 @@
 	path = third-party/miscellaneous
 	url = https://github.com/Glasssix/miscellaneous.git
 	branch = main
+[submodule "third-party/proxy"]
+	path = third-party/proxy
+	url = git@github.com:microsoft/proxy.git
