@@ -81,10 +81,19 @@ namespace glasssix::face {
     };
 
     // 特征值
-    struct feature {
-        GX_BEGIN_FIELDS(feature);
-        face_box _face_box; // 特征值数组
-        std::vector<float>feature;//人脸基础信息
+    struct face_feature {
+        GX_BEGIN_FIELDS(face_feature);
+        face_box _face_box; //人脸基础信息
+        GX_FIELD(std::vector<float>, feature); // 特征值数组
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct face_info_data {
+        GX_BEGIN_FIELDS(face_info_data);
+        GX_FIELD(std::string, key); //键值
+        GX_FIELD(std::vector<float>, feature); // 特征值数组
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -93,9 +102,8 @@ namespace glasssix::face {
     // 底库用户信息
     struct face_info {
         GX_BEGIN_FIELDS(face_info);
-        std::string key; // 键值
-        double similarity; //相似度
-                           // 特征值
+        GX_FIELD(float, similarity); //相似度
+        GX_FIELD(std::vector<face_info_data>, data); // 键值和特征值
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

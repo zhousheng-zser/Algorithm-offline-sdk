@@ -2,6 +2,36 @@
 
 
 namespace glasssix::face {
+
+    inline float DotProductAVX256(const std::vector<float>& emb_1, const std::vector<float>& emb_2) {
+        const static size_t kBlockWidth = 8; // compute 8 floats in one loop
+        const float* a                  = emb_1.data();
+        const float* b                  = emb_2.data();
+        int k                           = std::min(emb_1.size(), emb_2.size()) / kBlockWidth;
+        __m256 ans;
+        ans          = _mm256_setzero_ps();
+        float tmp[8] = {0};
+        for (int i = 0; i < k; i++) {
+            __m256 ai = _mm256_loadu_ps(a + i * kBlockWidth);
+            __m256 bi = _mm256_loadu_ps(b + i * kBlockWidth);
+            ans       = _mm256_add_ps(ans, _mm256_mul_ps(ai, bi));
+        }
+        _mm256_store_ps(tmp, ans);
+        return tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
+    }
+
+    inline float Cosine_distance_AVX256(std::vector<float>& x, std::vector<float>& y) {
+        float sum, a, b;
+        a = DotProductAVX256(x, x);
+        b = DotProductAVX256(y, y);
+        if (a == 0 || b == 0)
+            return 0;
+        sum       = DotProductAVX256(x, y);
+        float ans = sum / (sqrt(a) * sqrt(b));
+        ans       = std::min(1.0f, abs(ans));
+        return ans;
+    }
+
     gx_face_api::gx_face_api() {
         _config = new config();
         gx_clear_track_history();
@@ -17,7 +47,6 @@ namespace glasssix::face {
             printf("Successfully init sdk.\n");
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -32,7 +61,6 @@ namespace glasssix::face {
             guid[guid_type::longinus_guid] = jsonobj_result["instance_guid"].get<std::string>();
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -47,7 +75,6 @@ namespace glasssix::face {
             guid[guid_type::romancia_guid] = jsonobj_result["instance_guid"].get<std::string>();
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -63,7 +90,6 @@ namespace glasssix::face {
             guid[guid_type::damocles_guid] = jsonobj_result["instance_guid"].get<std::string>();
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -80,7 +106,6 @@ namespace glasssix::face {
             guid[guid_type::selene_guid] = jsonobj_result["instance_guid"].get<std::string>();
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -95,7 +120,6 @@ namespace glasssix::face {
             guid[guid_type::irisviel_guid] = jsonobj_result["instance_guid"].get<std::string>();
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -110,7 +134,6 @@ namespace glasssix::face {
             guid[guid_type::irisviel_mask_guid] = jsonobj_result["instance_guid"].get<std::string>();
         else {
             printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -182,7 +205,6 @@ namespace glasssix::face {
             }
         } else {
             printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -278,7 +300,6 @@ namespace glasssix::face {
 
         } else {
             printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-            getchar();
             exit(-1);
         }
         parser_free(result_str);
@@ -286,7 +307,7 @@ namespace glasssix::face {
 
         return ans;
     }
-    
+
     //配合活体检测
     face_box gx_face_api::gx_face_action_live(int action_type, int& action_result, const cv::Mat* mat) {
         face_box ans;
@@ -300,125 +321,251 @@ namespace glasssix::face {
                 ans = faces[i];
         }
 
-        json jsonobj_param,jsonobj_result;
+        json jsonobj_param, jsonobj_result;
         jsonobj_param.clear();
-        jsonobj_param["instance_guid"]           = guid[guid_type::damocles_guid];
-        jsonobj_param["action_cmd"]              = action_type;
-        jsonobj_param["format"]                  = _config->_action_live_config.format;
-        jsonobj_param["height"]                  = mat->rows;
-        jsonobj_param["width"]                   = mat->cols;
+        jsonobj_param["instance_guid"]      = guid[guid_type::damocles_guid];
+        jsonobj_param["action_cmd"]         = action_type;
+        jsonobj_param["format"]             = _config->_action_live_config.format;
+        jsonobj_param["height"]             = mat->rows;
+        jsonobj_param["width"]              = mat->cols;
         jsonobj_param["facerect"]["x"]      = ans.x;
         jsonobj_param["facerect"]["y"]      = ans.y;
         jsonobj_param["facerect"]["width"]  = ans.width;
         jsonobj_param["facerect"]["height"] = ans.height;
 
-    char* result_str = parser_parse(parser, "Damocles.presentation_attack_detect", jsonobj_param.dump().c_str(),
-        reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
+        char* result_str = parser_parse(parser, "Damocles.presentation_attack_detect", jsonobj_param.dump().c_str(),
+            reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
 
-    jsonobj_result = json ::parse(result_str);
-    if (jsonobj_result["status"]["code"].get<int>() == 0) {
-        action_result = (int) jsonobj_result["presentation_attack_result"].get<bool>();
-    } 
-    else {
-        printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-        getchar();
-        exit(-1);
-    }
-    parser_free(result_str);
-    result_str = nullptr;
-
-
-    return ans;
-}
-//静默活体检测
-std::vector<spoofing> gx_face_api::gx_face_spoofing_live(const cv::Mat* mat) {
-    std::vector<spoofing> ans;
-    std::vector<face_box> faces = gx_detect(mat);
-    if (faces.size() == 0)
-        return ans;
-    json jsonobj_param, jsonobj_result;
-    jsonobj_param.clear();
-    jsonobj_param["instance_guid"]      = guid[guid_type::damocles_guid];
-    jsonobj_param["format"]             = _config->_action_live_config.format;
-    jsonobj_param["height"]             = mat->rows;
-    jsonobj_param["width"]              = mat->cols;
-    for (int i=0;i<faces.size() ;i++) {
-    jsonobj_param["facerect_list"][i]["x"]      = faces[i].x;
-    jsonobj_param["facerect_list"][i]["y"]      = faces[i].y;
-    jsonobj_param["facerect_list"][i]["width"]  = faces[i].width;
-    jsonobj_param["facerect_list"][i]["height"] = faces[i].height;
-    spoofing temp;
-    temp._face_box = faces[i];
-    ans.emplace_back(temp);
-    }
-    char* result_str = parser_parse(parser, "Damocles.spoofing_detect", jsonobj_param.dump().c_str(),
-        reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
-
-    jsonobj_result = json ::parse(result_str);
-    if (jsonobj_result["status"]["code"].get<int>() == 0) {
-        for (int i = 0; i < jsonobj_result["spoofing_result"].size() && i <faces.size(); i++) {
-            jsonobj_result["spoofing_result"][i]["prob"].get_to(ans[i].prob);
+        jsonobj_result = json ::parse(result_str);
+        if (jsonobj_result["status"]["code"].get<int>() == 0) {
+            action_result = (int) jsonobj_result["presentation_attack_result"].get<bool>();
+        } else {
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            exit(-1);
         }
-    } else {
-        printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
-        getchar();
-        exit(-1);
+        parser_free(result_str);
+        result_str = nullptr;
+
+
+        return ans;
     }
-    parser_free(result_str);
-    result_str = nullptr;
+    //静默活体检测
+    std::vector<spoofing> gx_face_api::gx_face_spoofing_live(const cv::Mat* mat) {
+        std::vector<spoofing> ans;
+        std::vector<face_box> faces = gx_detect(mat);
+        if (faces.size() == 0)
+            return ans;
+        json jsonobj_param, jsonobj_result;
+        jsonobj_param.clear();
+        jsonobj_param["instance_guid"] = guid[guid_type::damocles_guid];
+        jsonobj_param["format"]        = _config->_action_live_config.format;
+        jsonobj_param["height"]        = mat->rows;
+        jsonobj_param["width"]         = mat->cols;
+        for (int i = 0; i < faces.size(); i++) {
+            jsonobj_param["facerect_list"][i]["x"]      = faces[i].x;
+            jsonobj_param["facerect_list"][i]["y"]      = faces[i].y;
+            jsonobj_param["facerect_list"][i]["width"]  = faces[i].width;
+            jsonobj_param["facerect_list"][i]["height"] = faces[i].height;
+            ans.emplace_back(spoofing{faces[i]});
+        }
+        char* result_str = parser_parse(parser, "Damocles.spoofing_detect", jsonobj_param.dump().c_str(),
+            reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
+
+        jsonobj_result = json ::parse(result_str);
+        if (jsonobj_result["status"]["code"].get<int>() == 0) {
+            for (int i = 0; i < jsonobj_result["spoofing_result"].size() && i < faces.size(); i++) {
+                jsonobj_result["spoofing_result"][i]["prob"].get_to(ans[i].prob);
+            }
+        } else {
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            exit(-1);
+        }
+        parser_free(result_str);
+        result_str = nullptr;
 
 
-    return ans;
-}
-//特征提取融合
-std::vector<feature> gx_face_api::gx_face_feature(const cv::Mat* mat) {
-    std::vector<feature> ans;
-    return ans;
-}
+        return ans;
+    }
 
-// 特征值库加载
-int gx_face_api::gx_user_load(bool is_mask = false) {
-    return 1;
-}
-// 特征值库搜索
-std::vector<face_info> gx_face_api::gx_user_removeRecords(
-    const cv::Mat* mat, int top = 1, float min_similarity = 0.6, bool is_mask = false) {
-    std::vector<face_info> ans;
-    return ans;
-}
-//特征值库清除缓存
-int gx_face_api::gx_user_clear(bool is_mask = false) {
-    return 2;
-}
-//特征值库清空
-int gx_face_api::gx_user_removeAll(bool is_mask = false) {
-    return 3;
-}
-//特征值库批量删除
-int gx_face_api::gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask = false) {
-    return 4;
-}
-//特征值库批量添加
-std::vector<bool> gx_face_api::gx_user_addRecords(
-    std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask = false) {
-    std::vector<bool> ans;
-    return ans;
-}
-//特征值库批量更新
-std::vector<bool> gx_face_api::gx_user_updateRecords(
-    std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask = false) {
-    std::vector<bool> ans;
-    return ans;
-}
+    //特征提取融合
+    std::vector<face_feature> gx_face_api::gx_face_feature(const cv::Mat* mat) {
+        std::vector<face_feature> ans;
+        std::vector<face_box> faces = gx_detect(mat);
+        if (faces.size() == 0)
+            return ans;
 
-//人脸识别流程融合
-std::vector<face_info> gx_face_api::gx_detect_integration(const cv::Mat* mat, int top = 1, bool is_mask = false) {
+        json jsonobj_param, jsonobj_result;
+        jsonobj_param.clear();
+        jsonobj_param["romancia_instance_guid"] = guid[guid_type::romancia_guid];
+        jsonobj_param["selene_instance_guid"] = guid[guid_type::selene_guid];
+        jsonobj_param["format"]        = _config->_feature_config.format;
+        jsonobj_param["height"]        = mat->rows;
+        jsonobj_param["width"]         = mat->cols;
+        for (int i = 0; i < faces.size(); i++) {
+            jsonobj_param["facerectwithfaceinfo_list"][i]      = faces[i];
+            ans.emplace_back(face_feature{faces[i]});
+        }
+        char* result_str = parser_parse(parser, "Fusion.Romancia.alignFace.Selene.forward", jsonobj_param.dump().c_str(),
+            reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
 
-    std::vector<face_info> ans;
-    return ans;
-}
-// 1:1特征值对比接口
-double gx_face_api::gx_feature_comparison(const cv::Mat* mat_A, const cv::Mat* mat_B) {
-    return 5;
-}
+        jsonobj_result = json ::parse(result_str);
+        if (jsonobj_result["status"]["code"].get<int>() == 0) {
+            for (int i = 0; i < jsonobj_result["features"].size() && i < faces.size(); i++) {
+                jsonobj_result["features"][i]["feature"].get_to(ans[i].feature);
+            }
+        } else {
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            exit(-1);
+        }
+        parser_free(result_str);
+        result_str = nullptr;
+        return ans;
+    }
+
+    face_feature gx_face_api::gx_get_max_face_feature(const std::vector<face_feature> &faces) {
+        face_feature ans;
+        if (faces.size() == 0)
+            return ans;
+
+        int id = 0;
+        for (int i = 1; i < faces.size(); i++) {
+            if (1llu * faces[id]._face_box.width * faces[id]._face_box.height
+                < 1llu * faces[i]._face_box.width * faces[i]._face_box.height)
+                id = i;
+        }
+        ans = faces[id];
+        return ans;
+    }
+
+    // 特征值库加载
+    int gx_face_api::gx_user_load(bool is_mask = false) {
+
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else 
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        char* result_str =parser_parse(parser, "Irisviel.load_databases", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result = json ::parse(result_str);
+        parser_free(result_str);
+        result_str = nullptr;
+        return jsonobj_result["status"]["code"].get<int>();
+    }
+    // 特征值库搜索
+    std::vector<face_info> gx_face_api::gx_user_removeRecords(
+        const cv::Mat* mat, int top = 1, float min_similarity = 0.6, bool is_mask = false) {
+        std::vector<face_info> ans;
+        std::vector<face_feature> faces = gx_face_feature(mat);
+        if (faces.size() == 0 )
+            return ans;
+        face_feature max_face = gx_get_max_face_feature(faces);
+
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        jsonobj_param["top"]           = top;
+        jsonobj_param["min_similarity"] = min_similarity;
+        jsonobj_param["feature"]        = max_face.feature;
+
+
+        char* result_str = parser_parse(parser, "Irisviel.search", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result   = json ::parse(result_str);
+        parser_free(result_str);
+        result_str = nullptr;
+        int len    = jsonobj_result["result"].size();
+        for (int i = 0; i < len; i++) {
+            face_info temp;
+            jsonobj_result["result"][i].get_to(temp);
+            ans.emplace_back(temp);
+        }
+
+        return ans;
+    }
+    //特征值库清除缓存
+    int gx_face_api::gx_user_clear(bool is_mask = false) {
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        char* result_str =
+            parser_parse(parser, "Irisviel.clear", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result = json ::parse(result_str);
+        parser_free(result_str);
+        result_str = nullptr;
+        return jsonobj_result["status"]["code"].get<int>();
+    }
+    //特征值库清空
+    int gx_face_api::gx_user_removeAll(bool is_mask = false) {
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        char* result_str = parser_parse(parser, "Irisviel.remove_all", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result   = json ::parse(result_str);
+        parser_free(result_str);
+        result_str = nullptr;
+        return jsonobj_result["status"]["code"].get<int>();
+    }
+    //特征值库批量删除
+    int gx_face_api::gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask = false) {
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        for (int i = 0; i < keys.size(); i++)
+            jsonobj_param["keys"][i] = keys[i];
+        char* result_str =
+            parser_parse(parser, "Irisviel.remove_records", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result = json ::parse(result_str);
+        parser_free(result_str);
+        result_str = nullptr;
+        return jsonobj_result["status"]["code"].get<int>();
+    }
+    //特征值库批量添加
+    std::vector<bool> gx_face_api::gx_user_addRecords(
+        std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask = false) {
+        std::vector<bool> ans;
+        return ans;
+    }
+    //特征值库批量更新
+    std::vector<bool> gx_face_api::gx_user_updateRecords(
+        std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask = false) {
+        std::vector<bool> ans;
+        return ans;
+    }
+
+    //人脸识别流程融合
+    std::vector<face_info> gx_face_api::gx_detect_integration(const cv::Mat* mat, int top = 1, bool is_mask = false) {
+
+        std::vector<face_info> ans;
+        return ans;
+    }
+
+    // 1:1特征值对比接口
+    double gx_face_api::gx_feature_comparison(const cv::Mat* mat_A, const cv::Mat* mat_B) {
+        double ans = 0; 
+        std::vector<face_feature> faces_A = gx_face_feature(mat_A);
+        std::vector<face_feature> faces_B = gx_face_feature(mat_B);
+        if (faces_A.size() == 0 || faces_B.size() == 0)
+            return 0;
+
+        std::vector<float> x = gx_get_max_face_feature(faces_A).feature;
+        std::vector<float> y = gx_get_max_face_feature(faces_B).feature;
+
+        if (x.size() == 0 || y.size() == 0 || x.size() != y.size())
+            return 0;
+        ans = Cosine_distance_AVX256(x, y );
+        return ans;
+
+    }
 } // namespace glasssix::face

@@ -38,6 +38,8 @@ target_include_directories(
 		"D:/opencv/build/include"
 )
 
+find_package(OpenCV REQUIRED HINTS "D:/opencv/build/x64/vc15/lib")
+
 #include_directories("D:/opencv/build/include")
 target_link_directories(${target_name} PRIVATE "D:/opencv/build/x64/vc15/lib")
 
