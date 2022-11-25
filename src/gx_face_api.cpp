@@ -315,11 +315,7 @@ namespace glasssix::face {
         action_result               = 0;
         if (faces.size() == 0)
             return ans;
-        ans = faces[0];
-        for (int i = 1; i < faces.size(); i++) {
-            if (1llu * ans.height * ans.width < 1llu * faces[i].width * faces[i].height)
-                ans = faces[i];
-        }
+        ans = gx_get_max_face_feature(faces);
 
         json jsonobj_param, jsonobj_result;
         jsonobj_param.clear();
@@ -397,16 +393,17 @@ namespace glasssix::face {
         json jsonobj_param, jsonobj_result;
         jsonobj_param.clear();
         jsonobj_param["romancia_instance_guid"] = guid[guid_type::romancia_guid];
-        jsonobj_param["selene_instance_guid"] = guid[guid_type::selene_guid];
-        jsonobj_param["format"]        = _config->_feature_config.format;
-        jsonobj_param["height"]        = mat->rows;
-        jsonobj_param["width"]         = mat->cols;
+        jsonobj_param["selene_instance_guid"]   = guid[guid_type::selene_guid];
+        jsonobj_param["format"]                 = _config->_feature_config.format;
+        jsonobj_param["height"]                 = mat->rows;
+        jsonobj_param["width"]                  = mat->cols;
         for (int i = 0; i < faces.size(); i++) {
-            jsonobj_param["facerectwithfaceinfo_list"][i]      = faces[i];
+            jsonobj_param["facerectwithfaceinfo_list"][i] = faces[i];
             ans.emplace_back(face_feature{faces[i]});
         }
-        char* result_str = parser_parse(parser, "Fusion.Romancia.alignFace.Selene.forward", jsonobj_param.dump().c_str(),
-            reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
+        char* result_str =
+            parser_parse(parser, "Fusion.Romancia.alignFace.Selene.forward", jsonobj_param.dump().c_str(),
+                reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
 
         jsonobj_result = json ::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0) {
@@ -422,7 +419,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    face_feature gx_face_api::gx_get_max_face_feature(const std::vector<face_feature> &faces) {
+    face_feature gx_face_api::gx_get_max_face_feature(const std::vector<face_feature>& faces) {
         face_feature ans;
         if (faces.size() == 0)
             return ans;
@@ -436,28 +433,43 @@ namespace glasssix::face {
         ans = faces[id];
         return ans;
     }
+    face_box gx_face_api::gx_get_max_face_feature(const std::vector<face_box>& faces) {
+        face_box ans;
+        if (faces.size() == 0)
+            return ans;
+
+        int id = 0;
+        for (int i = 1; i < faces.size(); i++) {
+            if (1llu * faces[id].width * faces[id].height < 1llu * faces[i].width * faces[i].height)
+                id = i;
+        }
+        ans = faces[id];
+        return ans;
+    }
+
 
     // 特征值库加载
-    int gx_face_api::gx_user_load(bool is_mask = false) {
+    int gx_face_api::gx_user_load(bool is_mask) {
 
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
         if (is_mask == false)
             jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
-        else 
+        else
             jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
-        char* result_str =parser_parse(parser, "Irisviel.load_databases", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        char* result_str =
+            parser_parse(parser, "Irisviel.load_databases", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json ::parse(result_str);
         parser_free(result_str);
         result_str = nullptr;
         return jsonobj_result["status"]["code"].get<int>();
     }
     // 特征值库搜索
-    std::vector<face_info> gx_face_api::gx_user_removeRecords(
-        const cv::Mat* mat, int top = 1, float min_similarity = 0.6, bool is_mask = false) {
+    std::vector<face_info> gx_face_api::gx_user_search(
+        const cv::Mat* mat, int top, float min_similarity, bool is_mask) {
         std::vector<face_info> ans;
         std::vector<face_feature> faces = gx_face_feature(mat);
-        if (faces.size() == 0 )
+        if (faces.size() == 0)
             return ans;
         face_feature max_face = gx_get_max_face_feature(faces);
 
@@ -467,13 +479,14 @@ namespace glasssix::face {
             jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
         else
             jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
-        jsonobj_param["top"]           = top;
+        jsonobj_param["top"]            = top;
         jsonobj_param["min_similarity"] = min_similarity;
         jsonobj_param["feature"]        = max_face.feature;
 
 
-        char* result_str = parser_parse(parser, "Irisviel.search", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
-        jsonobj_result   = json ::parse(result_str);
+        char* result_str =
+            parser_parse(parser, "Irisviel.search", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result = json ::parse(result_str);
         parser_free(result_str);
         result_str = nullptr;
         int len    = jsonobj_result["result"].size();
@@ -486,7 +499,21 @@ namespace glasssix::face {
         return ans;
     }
     //特征值库清除缓存
-    int gx_face_api::gx_user_clear(bool is_mask = false) {
+    int gx_face_api::gx_user_clear(bool is_mask) {
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        char* result_str = parser_parse(parser, "Irisviel.clear", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result   = json ::parse(result_str);
+        parser_free(result_str);
+        result_str = nullptr;
+        return jsonobj_result["status"]["code"].get<int>();
+    }
+    //特征值库清空
+    int gx_face_api::gx_user_removeAll(bool is_mask) {
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
         if (is_mask == false)
@@ -494,28 +521,14 @@ namespace glasssix::face {
         else
             jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
         char* result_str =
-            parser_parse(parser, "Irisviel.clear", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+            parser_parse(parser, "Irisviel.remove_all", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json ::parse(result_str);
         parser_free(result_str);
         result_str = nullptr;
         return jsonobj_result["status"]["code"].get<int>();
     }
-    //特征值库清空
-    int gx_face_api::gx_user_removeAll(bool is_mask = false) {
-        json jsonobj_param, jsonobj_result, jsonobj_face;
-        jsonobj_param.clear();
-        if (is_mask == false)
-            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
-        else
-            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
-        char* result_str = parser_parse(parser, "Irisviel.remove_all", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
-        jsonobj_result   = json ::parse(result_str);
-        parser_free(result_str);
-        result_str = nullptr;
-        return jsonobj_result["status"]["code"].get<int>();
-    }
     //特征值库批量删除
-    int gx_face_api::gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask = false) {
+    int gx_face_api::gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask) {
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
         if (is_mask == false)
@@ -533,19 +546,98 @@ namespace glasssix::face {
     }
     //特征值库批量添加
     std::vector<bool> gx_face_api::gx_user_addRecords(
-        std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask = false) {
-        std::vector<bool> ans;
+        std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
+        std::vector<bool> ans(mat.size(), false);
+        std::vector<face_feature> faces;
+        if (keys.size() != mat.size())
+            return ans;
+
+        for (int i = 0; i < mat.size(); i++) {
+            face_feature temp = gx_get_max_face_feature(gx_face_feature(&mat[i]));
+            if (temp.feature.size() == 0 || keys[i] == "")
+                ans[i] = false;
+            else
+                ans[i] = true;
+
+            // faces.emplace_back(gx_face_feature(&mat[i]));
+            faces.emplace_back(temp);
+        }
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        for (int i = 0, id = 0; i < keys.size(); i++) {
+
+            if (ans[i]) {
+                jsonobj_param["data"][id]["feature"] = faces[i].feature;
+                jsonobj_param["data"][id]["key"]     = keys[i];
+                id++;
+            }
+        }
+        char* result_str =
+            parser_parse(parser, "Irisviel.add_records", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result = json ::parse(result_str);
+
+        if (jsonobj_result["status"]["code"].get<int>() != 0) {
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            ans.clear();
+            ans = std::vector<bool>(mat.size(), false);
+        }
+
+        parser_free(result_str);
+        result_str = nullptr;
         return ans;
     }
     //特征值库批量更新
     std::vector<bool> gx_face_api::gx_user_updateRecords(
-        std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask = false) {
-        std::vector<bool> ans;
+        std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
+        std::vector<bool> ans(mat.size(), false);
+        std::vector<face_feature> faces;
+        if (keys.size() != mat.size())
+            return ans;
+        for (int i = 0; i < mat.size(); i++) {
+            face_feature temp = gx_get_max_face_feature(gx_face_feature(&mat[i]));
+            if (temp.feature.size() == 0 || keys[i] == "")
+                ans[i] = false;
+            else
+                ans[i] = true;
+            // faces.emplace_back(gx_face_feature(&mat[i]));
+            faces.emplace_back(temp);
+        }
+        json jsonobj_param, jsonobj_result, jsonobj_face;
+        jsonobj_param.clear();
+        if (is_mask == false)
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_guid];
+        else
+            jsonobj_param["instance_guid"] = guid[guid_type::irisviel_mask_guid];
+        for (int i = 0, id = 0; i < keys.size(); i++) {
+
+            if (ans[i]) {
+                jsonobj_param["data"][id]["feature"] = faces[i].feature;
+                jsonobj_param["data"][id]["key"]     = keys[i];
+                id++;
+            }
+        }
+        char* result_str =
+            parser_parse(parser, "Irisviel.update_records", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
+        jsonobj_result = json ::parse(result_str);
+
+        if (jsonobj_result["status"]["code"].get<int>() != 0) {
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            ans.clear();
+            ans = std::vector<bool>(mat.size(), false);
+        }
+
+        parser_free(result_str);
+        result_str = nullptr;
         return ans;
     }
 
     //人脸识别流程融合
-    std::vector<face_info> gx_face_api::gx_detect_integration(const cv::Mat* mat, int top = 1, bool is_mask = false) {
+    std::vector<face_info> gx_face_api::gx_detect_integration(const cv::Mat* mat, int top, bool is_mask) {
+
 
         std::vector<face_info> ans;
         return ans;
@@ -553,7 +645,7 @@ namespace glasssix::face {
 
     // 1:1特征值对比接口
     double gx_face_api::gx_feature_comparison(const cv::Mat* mat_A, const cv::Mat* mat_B) {
-        double ans = 0; 
+        double ans                        = 0;
         std::vector<face_feature> faces_A = gx_face_feature(mat_A);
         std::vector<face_feature> faces_B = gx_face_feature(mat_B);
         if (faces_A.size() == 0 || faces_B.size() == 0)
@@ -564,8 +656,7 @@ namespace glasssix::face {
 
         if (x.size() == 0 || y.size() == 0 || x.size() != y.size())
             return 0;
-        ans = Cosine_distance_AVX256(x, y );
+        ans = Cosine_distance_AVX256(x, y);
         return ans;
-
     }
 } // namespace glasssix::face

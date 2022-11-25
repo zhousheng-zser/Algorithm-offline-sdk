@@ -3,17 +3,16 @@
 #include <vector>
 
 #include <g6/char8_t_remediation.hpp>
+#include <g6/face/struct_info.h>
 #include <g6/format_remediation.hpp>
 #include <g6/json_compat.hpp>
 #include <g6/json_extensions.hpp>
 #include <g6/logger.hpp>
-#include <g6/face/struct_info.h>
+
 #include <config.h>
-
-
 #include <license.hpp>
-#include <parser_c.hpp>
 #include <opencv2/opencv.hpp>
+#include <parser_c.hpp>
 
 namespace glasssix::face {
     /*
@@ -46,12 +45,12 @@ namespace glasssix::face {
     */
 
 
-    // 图片类   传路径  传buff   
-    // 让用户不用安装opencv   
+    // 图片类   传路径  传buff
+    // 让用户不用安装opencv
     //  缩放  旋转  裁剪
 
-    
-class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
+
+    class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
     public:
         gx_face_api();
         ~gx_face_api();
@@ -81,31 +80,35 @@ class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
         std::vector<face_feature> gx_face_feature(const cv::Mat* mat);
 
         // 特征值库加载
-        int gx_user_load(bool is_mask);
+        int gx_user_load(bool is_mask = false);
         // 特征值库搜索
-        std::vector<face_info> gx_user_removeRecords(const cv::Mat* mat, int top, float min_similarity, bool is_mask);
+        std::vector<face_info> gx_user_search(
+            const cv::Mat* mat, int top = 1, float min_similarity = 0.4, bool is_mask = false);
         //特征值库清除缓存
-        int gx_user_clear(bool is_mask);
+        int gx_user_clear(bool is_mask = false);
         //特征值库清空
-        int gx_user_removeAll(bool is_mask);
+        int gx_user_removeAll(bool is_mask = false);
         //特征值库批量删除
-        int gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask);
+        int gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask = false);
         //特征值库批量添加
         std::vector<bool> gx_user_addRecords(
-            std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask);
+            std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
         //特征值库批量更新
         std::vector<bool> gx_user_updateRecords(
-            std::vector<std::string>& keys, std::vector<const cv::Mat*>& mat, bool is_mask);
+            std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
 
         //人脸识别流程融合
-        std::vector<face_info> gx_detect_integration(const cv::Mat* mat, int top, bool is_mask);
+        std::vector<face_info> gx_detect_integration(const cv::Mat* mat, int top = 1, bool is_mask = false);
         // 1:1特征值对比接口
         double gx_feature_comparison(const cv::Mat* mat_A, const cv::Mat* mat_B);
 
     private:
-        config *_config;
-        std::string guid[6];    // guid_type  sum = 5 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid irisviel_mask_guid)
-        void* parser; 
+        config* _config;
+        std::string guid[6]; // guid_type  sum = 5 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
+                             // irisviel_mask_guid)
+        void* parser;
         track_cache cache;
+        face_feature gx_get_max_face_feature(const std::vector<face_feature>& faces);
+        face_box gx_get_max_face_feature(const std::vector<face_box>& faces);
     };
 } // namespace glasssix::face

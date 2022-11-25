@@ -103,7 +103,7 @@ namespace glasssix::face {
     struct face_info {
         GX_BEGIN_FIELDS(face_info);
         GX_FIELD(float, similarity); //相似度
-        GX_FIELD(std::vector<face_info_data>, data); // 键值和特征值
+        GX_FIELD(face_info_data, data); // 键值和特征值
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

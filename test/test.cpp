@@ -79,13 +79,13 @@ void test_blur(gx_face_api* _api) {
         capture >> img;
         std::vector<blur> faces;
         faces = _api->gx_face_blur(&img);
-            for (int i = 0; i < faces.size(); i++) {
+        for (int i = 0; i < faces.size(); i++) {
             face_box info = faces[i]._face_box;
             std::cout << "detect clarity is:" << faces[i].clarity << std::endl;
 
             rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
                 cv::Scalar(0, 255, 0), 2);
-            }
+        }
 
         std::cout << "-------------华丽的分割线-----------------\n";
         cv::imshow("video-demo", img);
@@ -145,10 +145,10 @@ void test_spoofing_live(gx_face_api* _api) {
         faces = _api->gx_face_spoofing_live(&img);
         for (int i = 0; i < faces.size(); ++i) {
             face_box info = faces[i]._face_box;
-            std::cout << faces[i].prob[0] << "  " << faces[i].prob[1] << "  "<< faces[i].prob[2] << "\n"; 
+            std::cout << faces[i].prob[0] << "  " << faces[i].prob[1] << "  " << faces[i].prob[2] << "\n";
 
-        rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
-            cv::Scalar(200, 255, 0), 2);
+            rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
+                cv::Scalar(200, 255, 0), 2);
         }
         puts("");
         cv::imshow("video-demo", img);
@@ -159,7 +159,7 @@ void test_spoofing_live(gx_face_api* _api) {
 void test_feature(gx_face_api* _api) {
     cv::VideoCapture capture;
     capture.open("D:/opencv/2.jpg");
-    //while (1) 
+    // while (1)
     {
 
         cv::Mat img;
@@ -177,7 +177,7 @@ void test_feature(gx_face_api* _api) {
         }
         puts("");
         cv::imshow("video-demo", img);
-        //cv::waitKey(20);
+        // cv::waitKey(20);
         cv::waitKey(0);
     }
 }
@@ -202,9 +202,47 @@ void test_feature_comparison(gx_face_api* _api) {
     std::cout << "feature_comparison: " << ans << std::endl;
 
     cv::imshow("video-demo", img_b);
-     cv::waitKey(20);
+    cv::waitKey(20);
     cv::waitKey(0);
-    
+}
+
+
+void test_user(gx_face_api* _api) {
+
+    int flag;
+    std::vector<cv::Mat> imgs;
+    imgs.push_back(cv::imread("D:/test/img/B/610111200208264510.jpg"));
+    imgs.push_back(cv::imread("D:/test/img/A/610111200208264510.jpg"));
+    imgs.push_back(cv::imread("D:/test/img/B/410305199405011513.jpg"));
+    imgs.push_back(cv::imread("D:/test/img/A/410305199405011513.jpg"));
+
+
+    std::vector<std::string> keys;
+    keys.push_back("B-61011");
+    keys.push_back("A-61011");
+    keys.push_back("B-41030");
+    keys.push_back("A-41030");
+
+    do {
+        printf("Input Irisviel key (0-6), (-1 exit): \n");
+        scanf_s("%d", &flag);
+        if (flag == 0)
+            _api->gx_user_load(); //人员库加载
+        else if (flag == 1)
+            _api->gx_user_search(&imgs[0], 3, 0.4, false); //人员库搜索
+        else if (flag == 2)
+            _api->gx_user_clear(false); //人员库清除缓存  清内存
+        else if (flag == 3)
+            _api->gx_user_removeAll(false); //人员库清空  清内存和磁盘
+        else if (flag == 4)
+            _api->gx_user_removeRecords(keys, false); //人员库批量删除记录
+        else if (flag == 5)
+            _api->gx_user_addRecords(keys, imgs, false); //人员库批量添加记录
+        else if (flag == 6) {
+            _api->gx_user_updateRecords(keys, imgs, false); //人员库批量更新记录
+        } else
+            break;
+    } while (flag != -1);
 }
 
 
@@ -219,7 +257,8 @@ int main() {
     // test_action_live(_api);
     // test_spoofing_live(_api);
     // test_feature(_api);
-    test_feature_comparison(_api);
+    // test_feature_comparison(_api);
+    test_user(_api);
     delete _api;
     getchar();
     return 0;
