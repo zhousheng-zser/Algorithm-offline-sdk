@@ -22,17 +22,17 @@ void test_detect(gx_face_api* _api) {
         if (faces.size() > 0) {
             for (int i = 0; i < faces.size(); i++) {
                 face_box info = faces[i];
-                // »À¡≥÷√–≈∂»
+                // ‰∫∫ËÑ∏ÁΩÆ‰ø°Â∫¶
                 std::cout << "detect score is:" << info.confidence << std::endl;
-                // »À¡≥øÌ∂»
+                // ‰∫∫ËÑ∏ÂÆΩÂ∫¶
                 std::cout << "detect mWidth is:" << info.width << std::endl;
-                // »À¡≥∏ﬂ∂»
+                // ‰∫∫ËÑ∏È´òÂ∫¶
                 std::cout << "detect mHeight is:" << info.height << std::endl;
-                // ÷––ƒµ„X,Y◊¯±Í
+                // ‰∏≠ÂøÉÁÇπX,YÂùêÊ†á
                 std::cout << "detect mCenter_x is:" << info.x + info.width / 2 << std::endl;
                 std::cout << "detect mCenter_y is:" << info.y + info.height / 2 << std::endl;
 
-                // Ãÿ’˜µ„◊¯±Í
+                // ÁâπÂæÅÁÇπÂùêÊ†á
                 for (int j = 0; j < info.landmark.size(); j++) {
                     std::cout << "info.landmark[" << j << "] :" << info.landmark[j].x << std::endl;
                     std::cout << "info.landmark[" << j << "] :" << info.landmark[j].y << std::endl;
@@ -87,7 +87,7 @@ void test_blur(gx_face_api* _api) {
                 cv::Scalar(0, 255, 0), 2);
         }
 
-        std::cout << "-------------ª™¿ˆµƒ∑÷∏Óœﬂ-----------------\n";
+        std::cout << "-------------Âçé‰∏ΩÁöÑÂàÜÂâ≤Á∫ø-----------------\n";
         cv::imshow("video-demo", img);
         cv::waitKey(20);
     }
@@ -105,29 +105,29 @@ void test_action_live(gx_face_api* _api) {
         std::string temp;
         info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, &img);
         if (action_result)
-            std::cout << "----------------------ºÏ≤‚µΩ ’£’£—€\n";
+            std::cout << "----------------------Ê£ÄÊµãÂà∞ Áú®Áú®Áúº\n";
         else
-            std::cout << "Œ¥ºÏ≤‚µΩ ’£’£—€\n";
+            std::cout << "Êú™Ê£ÄÊµãÂà∞ Áú®Áú®Áúº\n";
         info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, &img);
         if (action_result)
-            std::cout << "----------------------ºÏ≤‚µΩ ’≈’≈◊Ï\n ";
+            std::cout << "----------------------Ê£ÄÊµãÂà∞ Âº†Âº†Âò¥\n ";
         else
-            std::cout << "Œ¥ºÏ≤‚µΩ ’≈’≈◊Ï\n";
+            std::cout << "Êú™Ê£ÄÊµãÂà∞ Âº†Âº†Âò¥\n";
         info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, &img);
         if (action_result)
-            std::cout << "----------------------ºÏ≤‚µΩ µ„µ„Õ∑\n ";
+            std::cout << "----------------------Ê£ÄÊµãÂà∞ ÁÇπÁÇπÂ§¥\n ";
         else
-            std::cout << "Œ¥ºÏ≤‚µΩ µ„µ„Õ∑\n";
+            std::cout << "Êú™Ê£ÄÊµãÂà∞ ÁÇπÁÇπÂ§¥\n";
         info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, &img);
         if (action_result)
-            std::cout << "----------------------ºÏ≤‚µΩ ◊Û“°Õ∑\n ";
+            std::cout << "----------------------Ê£ÄÊµãÂà∞ Â∑¶ÊëáÂ§¥\n ";
         else
-            std::cout << "Œ¥ºÏ≤‚µΩ ◊Û“°Õ∑\n";
+            std::cout << "Êú™Ê£ÄÊµãÂà∞ Â∑¶ÊëáÂ§¥\n";
         info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, &img);
         if (action_result)
-            std::cout << "----------------------ºÏ≤‚µΩ ”““°Õ∑\n ";
+            std::cout << "----------------------Ê£ÄÊµãÂà∞ Âè≥ÊëáÂ§¥\n ";
         else
-            std::cout << "Œ¥ºÏ≤‚µΩ ”““°Õ∑\n";
+            std::cout << "Êú™Ê£ÄÊµãÂà∞ Âè≥ÊëáÂ§¥\n";
         std::cout << "\n\n";
         rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
             cv::Scalar(0, 255, 0), 2);
@@ -227,19 +227,19 @@ void test_user(gx_face_api* _api) {
         printf("Input Irisviel key (0-6), (-1 exit): \n");
         scanf_s("%d", &flag);
         if (flag == 0)
-            _api->gx_user_load(); //»À‘±ø‚º”‘ÿ
+            _api->gx_user_load(); //‰∫∫ÂëòÂ∫ìÂä†ËΩΩ
         else if (flag == 1)
-            _api->gx_user_search(&imgs[0], 3, 0.4, false); //»À‘±ø‚À—À˜
+            _api->gx_user_search(&imgs[0], 3, 0.4, false); //‰∫∫ÂëòÂ∫ìÊêúÁ¥¢
         else if (flag == 2)
-            _api->gx_user_clear(false); //»À‘±ø‚«Â≥˝ª∫¥Ê  «Âƒ⁄¥Ê
+            _api->gx_user_clear(false); //‰∫∫ÂëòÂ∫ìÊ∏ÖÈô§ÁºìÂ≠ò  Ê∏ÖÂÜÖÂ≠ò
         else if (flag == 3)
-            _api->gx_user_removeAll(false); //»À‘±ø‚«Âø’  «Âƒ⁄¥Ê∫Õ¥≈≈Ã
+            _api->gx_user_removeAll(false); //‰∫∫ÂëòÂ∫ìÊ∏ÖÁ©∫  Ê∏ÖÂÜÖÂ≠òÂíåÁ£ÅÁõò
         else if (flag == 4)
-            _api->gx_user_removeRecords(keys, false); //»À‘±ø‚≈˙¡ø…æ≥˝º«¬º
+            _api->gx_user_removeRecords(keys, false); //‰∫∫ÂëòÂ∫ìÊâπÈáèÂà†Èô§ËÆ∞ÂΩï
         else if (flag == 5)
-            _api->gx_user_addRecords(keys, imgs, false); //»À‘±ø‚≈˙¡øÃÌº”º«¬º
+            _api->gx_user_addRecords(keys, imgs, false); //‰∫∫ÂëòÂ∫ìÊâπÈáèÊ∑ªÂä†ËÆ∞ÂΩï
         else if (flag == 6) {
-            _api->gx_user_updateRecords(keys, imgs, false); //»À‘±ø‚≈˙¡ø∏¸–¬º«¬º
+            _api->gx_user_updateRecords(keys, imgs, false); //‰∫∫ÂëòÂ∫ìÊâπÈáèÊõ¥Êñ∞ËÆ∞ÂΩï
         } else
             break;
     } while (flag != -1);

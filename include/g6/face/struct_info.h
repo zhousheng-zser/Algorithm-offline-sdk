@@ -11,80 +11,80 @@
 
 
 namespace glasssix::face {
-    //ÈËÁ³ÊôĞÔ
+    //äººè„¸å±æ€§
     struct face_box_attributes {
         GX_BEGIN_FIELDS(face_box_attributes);
-        GX_FIELD(int, glass_index); // ÊÇ·ñ´÷ÑÛ¾µ
-        GX_FIELD(int, mask_index); // ÊÇ·ñ´÷¿ÚÕÖ
-        GX_FIELD(float, yaw); // ÈËÁ³Æ«º½½Ç
-        GX_FIELD(float, pitch); // ÈËÁ³¸©Ñö½Ç
-        GX_FIELD(float, roll); // ÈËÁ³·­¹ö½Ç
+        GX_FIELD(int, glass_index); // æ˜¯å¦æˆ´çœ¼é•œ
+        GX_FIELD(int, mask_index); // æ˜¯å¦æˆ´å£ç½©
+        GX_FIELD(float, yaw); // äººè„¸åèˆªè§’
+        GX_FIELD(float, pitch); // äººè„¸ä¿¯ä»°è§’
+        GX_FIELD(float, roll); // äººè„¸ç¿»æ»šè§’
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //ÈËÁ³¹Ø¼üµã
+    //äººè„¸å…³é”®ç‚¹
     struct face_box_landmark {
         GX_BEGIN_FIELDS(face_box_landmark);
-        GX_FIELD(int, x); // x×ø±ê
-        GX_FIELD(int, y); // y×ø±ê
+        GX_FIELD(int, x); // xåæ ‡
+        GX_FIELD(int, y); // yåæ ‡
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //ÈËÁ³»ù´¡ĞÅÏ¢
+    //äººè„¸åŸºç¡€ä¿¡æ¯
     struct face_box {
         GX_BEGIN_FIELDS(face_box);
-        GX_FIELD(int, x); // ÈËÁ³x×ø±ê
-        GX_FIELD(int, y); // ÈËÁ³y×ø±ê
-        GX_FIELD(int, height); // ÈËÁ³¸ß¶È
-        GX_FIELD(int, width); // ÈËÁ³¿í¶È
-        GX_FIELD(float, confidence); // ÈËÁ³ÖÃĞÅ¶È
-        GX_FIELD(face_box_attributes, attributes); // ÈËÁ³ÊôĞÔ
-        GX_FIELD(std::vector<face_box_landmark>, landmark); // ÈËÁ³5µã¹Ø¼üµã
+        GX_FIELD(int, x); // äººè„¸xåæ ‡
+        GX_FIELD(int, y); // äººè„¸yåæ ‡
+        GX_FIELD(int, height); // äººè„¸é«˜åº¦
+        GX_FIELD(int, width); // äººè„¸å®½åº¦
+        GX_FIELD(float, confidence); // äººè„¸ç½®ä¿¡åº¦
+        GX_FIELD(face_box_attributes, attributes); // äººè„¸å±æ€§
+        GX_FIELD(std::vector<face_box_landmark>, landmark); // äººè„¸5ç‚¹å…³é”®ç‚¹
 
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //ÈËÁ³×·×Ù
+    //äººè„¸è¿½è¸ª
     struct track_face_box {
         GX_BEGIN_FIELDS(track_face_box);
-        face_box _face_box; // ÈËÁ³»ù´¡ĞÅÏ¢
-        bool trace_success; // ×·×ÙÊÇ·ñ³É¹¦
+        face_box _face_box; // äººè„¸åŸºç¡€ä¿¡æ¯
+        bool trace_success; // è¿½è¸ªæ˜¯å¦æˆåŠŸ
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //ÈËÁ³ÖÊÁ¿¼ì²â½á¹û
+    //äººè„¸è´¨é‡æ£€æµ‹ç»“æœ
     struct blur {
         GX_BEGIN_FIELDS(blur);
-        face_box _face_box; // ÈËÁ³»ù´¡ĞÅÏ¢
-        float clarity; // ÈËÁ³ÖÊÁ¿³Ì¶È
+        face_box _face_box; // äººè„¸åŸºç¡€ä¿¡æ¯
+        float clarity; // äººè„¸è´¨é‡ç¨‹åº¦
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //¾²Ä¬»îÌå¼ì²â½á¹û
+    //é™é»˜æ´»ä½“æ£€æµ‹ç»“æœ
     struct spoofing {
         GX_BEGIN_FIELDS(spoofing);
-        face_box _face_box; // ÈËÁ³»ù´¡ĞÅÏ¢
-        GX_FIELD(std::vector<float>, prob); //   »îÌå¼ì²â·ÖÀà½á¹û
+        face_box _face_box; // äººè„¸åŸºç¡€ä¿¡æ¯
+        GX_FIELD(std::vector<float>, prob); //   æ´»ä½“æ£€æµ‹åˆ†ç±»ç»“æœ
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    // ÌØÕ÷Öµ
+    // ç‰¹å¾å€¼
     struct face_feature {
         GX_BEGIN_FIELDS(face_feature);
-        face_box _face_box; //ÈËÁ³»ù´¡ĞÅÏ¢
-        GX_FIELD(std::vector<float>, feature); // ÌØÕ÷ÖµÊı×é
+        face_box _face_box; //äººè„¸åŸºç¡€ä¿¡æ¯
+        GX_FIELD(std::vector<float>, feature); // ç‰¹å¾å€¼æ•°ç»„
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -92,29 +92,29 @@ namespace glasssix::face {
 
     struct face_info_data {
         GX_BEGIN_FIELDS(face_info_data);
-        GX_FIELD(std::string, key); //¼üÖµ
-        GX_FIELD(std::vector<float>, feature); // ÌØÕ÷ÖµÊı×é
+        GX_FIELD(std::string, key); //é”®å€¼
+        GX_FIELD(std::vector<float>, feature); // ç‰¹å¾å€¼æ•°ç»„
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    // µ×¿âÓÃ»§ĞÅÏ¢
+    // åº•åº“ç”¨æˆ·ä¿¡æ¯
     struct face_info {
         GX_BEGIN_FIELDS(face_info);
-        GX_FIELD(float, similarity); //ÏàËÆ¶È
-        GX_FIELD(face_info_data, data); // ¼üÖµºÍÌØÕ÷Öµ
+        GX_FIELD(float, similarity); //ç›¸ä¼¼åº¦
+        GX_FIELD(face_info_data, data); // é”®å€¼å’Œç‰¹å¾å€¼
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //Í¼Æ¬²ÎÊı
+    //å›¾ç‰‡å‚æ•°
     struct img {
-        int height; // Í¼Æ¬¸ß¶È
-        int width; //  Í¼Æ¬¿í¶È
-        char* date; //Í¼Æ¬Êı¾İ
-        size_t data_len; // Í¼Æ¬×Ö½Ú³¤¶È
+        int height; // å›¾ç‰‡é«˜åº¦
+        int width; //  å›¾ç‰‡å®½åº¦
+        char* date; //å›¾ç‰‡æ•°æ®
+        size_t data_len; // å›¾ç‰‡å­—èŠ‚é•¿åº¦
     };
 
     struct track_cache {
@@ -124,22 +124,22 @@ namespace glasssix::face {
 
 
     /**
-     * @brief   ¶¯×÷»îÌåÀàĞÍÃ¶¾Ù
+     * @brief   åŠ¨ä½œæ´»ä½“ç±»å‹æšä¸¾
      */
     enum action_live_type {
-        BDFACE_ACTION_LIVE_BLINK      = 0, // Õ£Õ£ÑÛ
-        BDFACE_ACTION_LIVE_OPEN_MOUTH = 1, // ÕÅÕÅ×ì
-        BDFACE_ACTION_LIVE_NOD        = 2, // µãµãÍ·
-        BDFACE_ACTION_LIVE_LEFT_HEAD  = 3, // ×óÒ¡Í·
-        BDFACE_ACTION_LIVE_RIGHT_HEAD = 4 // ÓÒÒ¡Í·
+        BDFACE_ACTION_LIVE_BLINK      = 0, // çœ¨çœ¨çœ¼
+        BDFACE_ACTION_LIVE_OPEN_MOUTH = 1, // å¼ å¼ å˜´
+        BDFACE_ACTION_LIVE_NOD        = 2, // ç‚¹ç‚¹å¤´
+        BDFACE_ACTION_LIVE_LEFT_HEAD  = 3, // å·¦æ‘‡å¤´
+        BDFACE_ACTION_LIVE_RIGHT_HEAD = 4 // å³æ‘‡å¤´
     };
 
     enum guid_type {
-        longinus_guid      = 0, //ÈËÁ³Ê¶±ğ
-        romancia_guid      = 1, //ÈËÁ³¶ÔÆë
-        damocles_guid      = 2, //»îÌå¼ì²â
-        selene_guid        = 3, // 256Î¬ÌØÕ÷ÌáÈ¡
-        irisviel_guid      = 4, //ÈËÁ³¿â
-        irisviel_mask_guid = 5 //¿ÚÕÖÈËÁ³¿â
+        longinus_guid      = 0, //äººè„¸è¯†åˆ«
+        romancia_guid      = 1, //äººè„¸å¯¹é½
+        damocles_guid      = 2, //æ´»ä½“æ£€æµ‹
+        selene_guid        = 3, // 256ç»´ç‰¹å¾æå–
+        irisviel_guid      = 4, //äººè„¸åº“
+        irisviel_mask_guid = 5 //å£ç½©äººè„¸åº“
     };
 } // namespace glasssix::face

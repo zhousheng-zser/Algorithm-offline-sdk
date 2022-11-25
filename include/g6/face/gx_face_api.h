@@ -45,9 +45,9 @@ namespace glasssix::face {
     */
 
 
-    // Í¼Æ¬Àà   ´«Â·¾¶  ´«buff
-    // ÈÃÓÃ»§²»ÓÃ°²×°opencv
-    //  Ëõ·Å  Ğı×ª  ²Ã¼ô
+    // å›¾ç‰‡ç±»   ä¼ è·¯å¾„  ä¼ buff
+    // è®©ç”¨æˆ·ä¸ç”¨å®‰è£…opencv
+    //  ç¼©æ”¾  æ—‹è½¬  è£å‰ª
 
 
     class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
@@ -55,51 +55,51 @@ namespace glasssix::face {
         gx_face_api();
         ~gx_face_api();
 
-        //// »ñÈ¡Éè±¸Ö¸ÎÆ
+        //// è·å–è®¾å¤‡æŒ‡çº¹
         // void get_device_id(std::string& device_id);
-        //// »ñÈ¡°æ±¾ºÅ
+        //// è·å–ç‰ˆæœ¬å·
         // void sdk_version(std::string& version);
-        //// sdk³õÊ¼»¯
+        //// sdkåˆå§‹åŒ–
         // int sdk_init(const char* model_path);
         // int log_type();
         // bool is_auth();
 
-        //ÈËÁ³¼ì²â
+        //äººè„¸æ£€æµ‹
         std::vector<face_box> gx_detect(const cv::Mat* mat);
-        //ÈËÁ³×·×Ù
+        //äººè„¸è¿½è¸ª
         std::vector<track_face_box> gx_track(const cv::Mat* mat);
-        //Çå³ıÈËÁ³¸ú×ÙÀúÊ·
+        //æ¸…é™¤äººè„¸è·Ÿè¸ªå†å²
         void gx_clear_track_history();
-        //ÈËÁ³ÖÊÁ¿(Ä£ºı¶È)¼ì²â
+        //äººè„¸è´¨é‡(æ¨¡ç³Šåº¦)æ£€æµ‹
         std::vector<blur> gx_face_blur(const cv::Mat* mat);
-        //ÅäºÏ»îÌå¼ì²â
+        //é…åˆæ´»ä½“æ£€æµ‹
         face_box gx_face_action_live(int action_type, int& action_result, const cv::Mat* mat);
-        //¾²Ä¬»îÌå¼ì²â
+        //é™é»˜æ´»ä½“æ£€æµ‹
         std::vector<spoofing> gx_face_spoofing_live(const cv::Mat* mat);
-        //ÌØÕ÷ÌáÈ¡ÈÚºÏ
+        //ç‰¹å¾æå–èåˆ
         std::vector<face_feature> gx_face_feature(const cv::Mat* mat);
 
-        // ÌØÕ÷Öµ¿â¼ÓÔØ
+        // ç‰¹å¾å€¼åº“åŠ è½½
         int gx_user_load(bool is_mask = false);
-        // ÌØÕ÷Öµ¿âËÑË÷
+        // ç‰¹å¾å€¼åº“æœç´¢
         std::vector<face_info> gx_user_search(
             const cv::Mat* mat, int top = 1, float min_similarity = 0.4, bool is_mask = false);
-        //ÌØÕ÷Öµ¿âÇå³ı»º´æ
+        //ç‰¹å¾å€¼åº“æ¸…é™¤ç¼“å­˜
         int gx_user_clear(bool is_mask = false);
-        //ÌØÕ÷Öµ¿âÇå¿Õ
+        //ç‰¹å¾å€¼åº“æ¸…ç©º
         int gx_user_removeAll(bool is_mask = false);
-        //ÌØÕ÷Öµ¿âÅúÁ¿É¾³ı
+        //ç‰¹å¾å€¼åº“æ‰¹é‡åˆ é™¤
         int gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask = false);
-        //ÌØÕ÷Öµ¿âÅúÁ¿Ìí¼Ó
+        //ç‰¹å¾å€¼åº“æ‰¹é‡æ·»åŠ 
         std::vector<bool> gx_user_addRecords(
             std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
-        //ÌØÕ÷Öµ¿âÅúÁ¿¸üĞÂ
+        //ç‰¹å¾å€¼åº“æ‰¹é‡æ›´æ–°
         std::vector<bool> gx_user_updateRecords(
             std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
 
-        //ÈËÁ³Ê¶±ğÁ÷³ÌÈÚºÏ
+        //äººè„¸è¯†åˆ«æµç¨‹èåˆ
         std::vector<face_info> gx_detect_integration(const cv::Mat* mat, int top = 1, bool is_mask = false);
-        // 1:1ÌØÕ÷Öµ¶Ô±È½Ó¿Ú
+        // 1:1ç‰¹å¾å€¼å¯¹æ¯”æ¥å£
         double gx_feature_comparison(const cv::Mat* mat_A, const cv::Mat* mat_B);
 
     private:
