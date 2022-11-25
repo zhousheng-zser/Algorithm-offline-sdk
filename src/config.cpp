@@ -1,4 +1,6 @@
-#include <config.h>
+#include "config.h"
+
+#include "config_validation.hpp"
 
 #include <proxy/proxy.h>
 
@@ -16,12 +18,12 @@ namespace glasssix::face {
 
         glasssix::json temp;
         std::ifstream(path.c_str()) >> temp;
-        printf("临时打印 看看效果  :%s\n", temp.dump().c_str());
+        printf("涓存椂鎵撳嵃 鐪嬬湅鏁堟灉  :%s\n", temp.dump().c_str());
         return temp;
     }
     void config::set_detect() {
         glasssix::json temp;
-        temp= read_json_file("./config/detect.json");
+        temp = read_json_file("./config/detect.json");
         temp.get_to(_detect_config);
         //_detect_config.models_directory = temp["models_directory"].get<abi::string>();
         //_detect_config.device           = temp["device"].get<int>();
@@ -32,7 +34,7 @@ namespace glasssix::face {
     }
     void config::set_track() {
         glasssix::json temp;
-        temp= read_json_file("./config/track.json");
+        temp = read_json_file("./config/track.json");
         temp.get_to(_track_config);
         //_track_config.detect_intv_before_track = temp["detect_intv_before_track"].get<int>();
         //_track_config.detect_intv_during_track = temp["detect_intv_during_track"].get<int>();

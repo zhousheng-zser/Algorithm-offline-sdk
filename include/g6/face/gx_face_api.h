@@ -10,7 +10,6 @@
 #include <g6/face/struct_info.h>
 #include <config.h>
 
-
 #include <license.hpp>
 #include <parser_c.hpp>
 #include <opencv2/opencv.hpp>
