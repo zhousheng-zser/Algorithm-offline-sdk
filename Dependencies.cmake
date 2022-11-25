@@ -40,3 +40,10 @@ gx_make_install_third_party_library(
     CMAKE_ARGS
         -DBUILD_TESTING=OFF
 )
+
+find_package(OpenCV REQUIRED HINTS ${GX_OPENCV_ROOT} NO_DEFAULT_PATH)
+set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)
+set(GX_CV_SDK_LIB_DIR ${GX_CV_SDK_ROOT}/lib)
+set(GX_CV_SDK_LIBS libparser)
+
+message(STATUS "GX_CV_SDK_INCLUDE: ${GX_CV_SDK_INCLUDE}")
