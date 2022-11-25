@@ -156,6 +156,57 @@ void test_spoofing_live(gx_face_api* _api) {
     }
 }
 
+void test_feature(gx_face_api* _api) {
+    cv::VideoCapture capture;
+    capture.open("D:/opencv/2.jpg");
+    //while (1) 
+    {
+
+        cv::Mat img;
+        capture >> img;
+        std::vector<face_feature> faces;
+        faces = _api->gx_face_feature(&img);
+        for (int i = 0; i < faces.size(); ++i) {
+            face_box info = faces[i]._face_box;
+
+            for (int j = 0; j < faces[i].feature.size(); j++)
+                std::cout << " " << faces[i].feature[j];
+            std::cout << "\n";
+            rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
+                cv::Scalar(200, 255, 0), 2);
+        }
+        puts("");
+        cv::imshow("video-demo", img);
+        //cv::waitKey(20);
+        cv::waitKey(0);
+    }
+}
+
+void test_feature_comparison(gx_face_api* _api) {
+    // while (1)
+    cv::VideoCapture capture;
+    cv::Mat img_a, img_b;
+    capture.open("D:/test/img/A/610111200208264510.jpg");
+    capture >> img_a;
+    capture.open("D:/test/img/B/610111200208264510.jpg");
+    capture >> img_b;
+
+    std::vector<face_box> fa = _api->gx_detect(&img_a);
+    std::vector<face_box> fb = _api->gx_detect(&img_b);
+
+    std::cout << "fa size=" << fa.size() << " fb size= " << fb.size() << "\n";
+
+    std::vector<face_feature> faces;
+    double ans = _api->gx_feature_comparison(&img_a, &img_b);
+
+    std::cout << "feature_comparison: " << ans << std::endl;
+
+    cv::imshow("video-demo", img_b);
+     cv::waitKey(20);
+    cv::waitKey(0);
+    
+}
+
 
 int main() {
 
@@ -166,7 +217,9 @@ int main() {
     // test_track(_api);
     // test_blur(_api);
     // test_action_live(_api);
-     test_spoofing_live(_api);
+    // test_spoofing_live(_api);
+    // test_feature(_api);
+    test_feature_comparison(_api);
     delete _api;
     getchar();
     return 0;

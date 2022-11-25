@@ -77,7 +77,7 @@ class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
         //静默活体检测
         std::vector<spoofing> gx_face_spoofing_live(const cv::Mat* mat);
         //特征提取融合
-        std::vector<feature> gx_face_feature(const cv::Mat* mat);
+        std::vector<face_feature> gx_face_feature(const cv::Mat* mat);
 
         // 特征值库加载
         int gx_user_load(bool is_mask);
