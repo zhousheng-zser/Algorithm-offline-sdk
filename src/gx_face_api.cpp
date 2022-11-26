@@ -47,7 +47,7 @@ namespace glasssix::face {
         if (jsonobj_result["status"]["code"].get<int>() == 0)
             printf("Successfully init sdk.\n");
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -59,9 +59,9 @@ namespace glasssix::face {
         result_str     = parser_parse(parser, "Longinus.new", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0)
-            guid[guid_type::longinus_guid] = jsonobj_result["instance_guid"].get<std::string>();
+            guid[guid_type::longinus_guid] = jsonobj_result["instance_guid"].get<abi::string>();
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -73,9 +73,9 @@ namespace glasssix::face {
         result_str     = parser_parse(parser, "Romancia.new", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0)
-            guid[guid_type::romancia_guid] = jsonobj_result["instance_guid"].get<std::string>();
+            guid[guid_type::romancia_guid] = jsonobj_result["instance_guid"].get<abi::string>();
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -88,9 +88,9 @@ namespace glasssix::face {
         result_str     = parser_parse(parser, "Damocles.new", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0)
-            guid[guid_type::damocles_guid] = jsonobj_result["instance_guid"].get<std::string>();
+            guid[guid_type::damocles_guid] = jsonobj_result["instance_guid"].get<abi::string>();
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -104,9 +104,9 @@ namespace glasssix::face {
         result_str     = parser_parse(parser, "Selene.new", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0)
-            guid[guid_type::selene_guid] = jsonobj_result["instance_guid"].get<std::string>();
+            guid[guid_type::selene_guid] = jsonobj_result["instance_guid"].get<abi::string>();
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -118,9 +118,9 @@ namespace glasssix::face {
         result_str     = parser_parse(parser, "Irisviel.new", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0)
-            guid[guid_type::irisviel_guid] = jsonobj_result["instance_guid"].get<std::string>();
+            guid[guid_type::irisviel_guid] = jsonobj_result["instance_guid"].get<abi::string>();
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -132,9 +132,9 @@ namespace glasssix::face {
         result_str     = parser_parse(parser, "Irisviel.new", jsonobj_param.dump().c_str(), nullptr, 0, nullptr, 0);
         jsonobj_result = json::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0)
-            guid[guid_type::irisviel_mask_guid] = jsonobj_result["instance_guid"].get<std::string>();
+            guid[guid_type::irisviel_mask_guid] = jsonobj_result["instance_guid"].get<abi::string>();
         else {
-            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : %s \n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -172,9 +172,9 @@ namespace glasssix::face {
     }
 
     //// 获取设备指纹
-    // void get_device_id(std::string& device_id);
+    // void get_device_id(abi::string& device_id);
     //// 获取版本号
-    // void sdk_version(std::string& version);
+    // void sdk_version(abi::string& version);
     //// sdk初始化
     // int sdk_init(const char* model_path);
     // int log_type();
@@ -205,7 +205,7 @@ namespace glasssix::face {
                 ans.emplace_back(temp);
             }
         } else {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -256,7 +256,7 @@ namespace glasssix::face {
                 ans.emplace_back(track_face_box{it->second, false});
                 cache.track_history.erase(it++);
             } else {
-                printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+                printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
                 cache.track_history.erase(it++);
             }
         }
@@ -300,7 +300,7 @@ namespace glasssix::face {
                 ans.emplace_back(blur{faces[i], jsonobj_result["clarity"][i].get<float>()});
 
         } else {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -337,7 +337,7 @@ namespace glasssix::face {
         if (jsonobj_result["status"]["code"].get<int>() == 0) {
             action_result = (int) jsonobj_result["presentation_attack_result"].get<bool>();
         } else {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -374,7 +374,7 @@ namespace glasssix::face {
                 jsonobj_result["spoofing_result"][i]["prob"].get_to(ans[i].prob);
             }
         } else {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -412,7 +412,7 @@ namespace glasssix::face {
                 jsonobj_result["features"][i]["feature"].get_to(ans[i].feature);
             }
         } else {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
         }
         parser_free(result_str);
@@ -515,7 +515,7 @@ namespace glasssix::face {
         return jsonobj_result["status"]["code"].get<int>();
     }
     //特征值库批量删除
-    int gx_face_api::gx_user_remove_records(std::vector<std::string>& keys, bool is_mask) {
+    int gx_face_api::gx_user_remove_records(std::vector<abi::string>& keys, bool is_mask) {
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
         if (is_mask == false)
@@ -533,7 +533,7 @@ namespace glasssix::face {
     }
     //特征值库批量添加
     std::vector<bool> gx_face_api::gx_user_add_records(
-        std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
+        std::vector<abi::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
         std::vector<bool> ans(mat.size(), false);
         std::vector<face_feature> faces;
         if (keys.size() != mat.size())
@@ -568,7 +568,7 @@ namespace glasssix::face {
         jsonobj_result = json ::parse(result_str);
 
         if (jsonobj_result["status"]["code"].get<int>() != 0) {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             ans.clear();
             ans = std::vector<bool>(mat.size(), false);
         }
@@ -579,7 +579,7 @@ namespace glasssix::face {
     }
     //特征值库批量更新
     std::vector<bool> gx_face_api::gx_user_update_records(
-        std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
+        std::vector<abi::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
         std::vector<bool> ans(mat.size(), false);
         std::vector<face_feature> faces;
         if (keys.size() != mat.size())
@@ -612,7 +612,7 @@ namespace glasssix::face {
         jsonobj_result = json ::parse(result_str);
 
         if (jsonobj_result["status"]["code"].get<int>() != 0) {
-            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<std::string>().c_str());
+            printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             ans.clear();
             ans = std::vector<bool>(mat.size(), false);
         }

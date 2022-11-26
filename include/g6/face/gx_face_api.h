@@ -19,7 +19,7 @@ namespace glasssix::face {
     struct baz {
         GX_BEGIN_FIELDS(baz);
         GX_FIELD(int, a);
-        GX_FIELD(std::string, b);
+        GX_FIELD(abi::string, b);
         GX_FIELD(std::vector<int>, c);
         GX_END_FIELDS;
 
@@ -56,9 +56,9 @@ namespace glasssix::face {
         ~gx_face_api();
 
         //// 获取设备指纹
-        // void get_device_id(std::string& device_id);
+        // void get_device_id(abi::string& device_id);
         //// 获取版本号
-        // void sdk_version(std::string& version);
+        // void sdk_version(abi::string& version);
         //// sdk初始化
         // int sdk_init(const char* model_path);
         // int log_type();
@@ -89,13 +89,13 @@ namespace glasssix::face {
         //特征值库清空
         int gx_user_remove_all(bool is_mask = false);
         //特征值库批量删除
-        int gx_user_remove_records(std::vector<std::string>& keys, bool is_mask = false);
+        int gx_user_remove_records(std::vector<abi::string>& keys, bool is_mask = false);
         //特征值库批量添加
         std::vector<bool> gx_user_add_records(
-            std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
+            std::vector<abi::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
         //特征值库批量更新
         std::vector<bool> gx_user_update_records(
-            std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
+            std::vector<abi::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
 
         //人脸识别流程融合
         std::vector<face_info> gx_detect_integration(
@@ -105,7 +105,7 @@ namespace glasssix::face {
 
     private:
         config* _config;
-        std::string guid[6]; // guid_type  sum = 6 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
+        abi::string guid[6]; // guid_type  sum = 6 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
                              // irisviel_mask_guid)
         void* parser;
         track_cache cache;

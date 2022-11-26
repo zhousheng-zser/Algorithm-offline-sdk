@@ -8,7 +8,7 @@
 // using namespace std;
 //
 using namespace glasssix::face;
-
+using namespace glasssix;
 
 void test_detect(gx_face_api* _api) {
 
@@ -102,7 +102,7 @@ void test_action_live(gx_face_api* _api) {
         capture >> img;
         face_box info;
         int action_result;
-        std::string temp;
+        abi::string temp;
         info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, &img);
         if (action_result)
             std::cout << "----------------------检测到 眨眨眼\n";
@@ -217,7 +217,7 @@ void test_user(gx_face_api* _api) {
     imgs.push_back(cv::imread("D:/test/img/A/410305199405011513.jpg"));
 
 
-    std::vector<std::string> keys;
+    std::vector<abi::string> keys;
     keys.push_back("B-61011");
     keys.push_back("A-61011");
     keys.push_back("B-41030");
@@ -289,3 +289,7 @@ int main() {
     getchar();
     return 0;
 }
+
+
+
+

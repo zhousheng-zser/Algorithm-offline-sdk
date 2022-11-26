@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -93,7 +92,7 @@ namespace glasssix::face {
     // 底库用户信息
     struct face_info_data {
         GX_BEGIN_FIELDS(face_info_data);
-        GX_FIELD(std::string, key); //键值
+        GX_FIELD(abi::string, key); //键值
         GX_FIELD(std::vector<float>, feature); // 特征值数组
         GX_END_FIELDS;
 
