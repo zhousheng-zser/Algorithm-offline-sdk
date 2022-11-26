@@ -90,6 +90,7 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    // 底库用户信息
     struct face_info_data {
         GX_BEGIN_FIELDS(face_info_data);
         GX_FIELD(std::string, key); //键值
@@ -99,7 +100,7 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    // 底库用户信息
+    // 搜索底库用户结果
     struct face_info {
         GX_BEGIN_FIELDS(face_info);
         GX_FIELD(float, similarity); //相似度

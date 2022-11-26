@@ -227,22 +227,47 @@ void test_user(gx_face_api* _api) {
         printf("Input Irisviel key (0-6), (-1 exit): \n");
         scanf_s("%d", &flag);
         if (flag == 0)
-            _api->gx_user_load(); //人员库加载
+            _api->gx_user_load(false); //人员库加载
         else if (flag == 1)
             _api->gx_user_search(&imgs[0], 3, 0.4, false); //人员库搜索
         else if (flag == 2)
             _api->gx_user_clear(false); //人员库清除缓存  清内存
         else if (flag == 3)
-            _api->gx_user_removeAll(false); //人员库清空  清内存和磁盘
+            _api->gx_user_remove_all(false); //人员库清空  清内存和磁盘
         else if (flag == 4)
-            _api->gx_user_removeRecords(keys, false); //人员库批量删除记录
+            _api->gx_user_remove_records(keys, false); //人员库批量删除记录
         else if (flag == 5)
-            _api->gx_user_addRecords(keys, imgs, false); //人员库批量添加记录
+            _api->gx_user_add_records(keys, imgs, false); //人员库批量添加记录
         else if (flag == 6) {
-            _api->gx_user_updateRecords(keys, imgs, false); //人员库批量更新记录
+            _api->gx_user_update_records(keys, imgs, false); //人员库批量更新记录
         } else
             break;
     } while (flag != -1);
+}
+
+void test_detect_integration(gx_face_api* _api) {
+
+    int flag;
+    std::vector<cv::Mat> imgs;
+
+    cv::VideoCapture capture;
+    capture.open(0);
+    while (1) {
+        cv::Mat img;
+        capture >> img;
+        std::vector<face_info> faces = _api->gx_detect_integration(&img, 5, 0.4, false);
+        for (int i = 0; i < faces.size(); i++) {
+
+            // 相似度
+            std::cout << "detect similarity is:" << faces[i].similarity << std::endl;
+            // 键值
+            std::cout << "detect key is:" << faces[i].data.key << std::endl;
+        }
+        std::cout << "\n";
+
+        cv::imshow("video-demo", img);
+        cv::waitKey(20);
+    }
 }
 
 
@@ -258,7 +283,8 @@ int main() {
     // test_spoofing_live(_api);
     // test_feature(_api);
     // test_feature_comparison(_api);
-    test_user(_api);
+    // test_user(_api);
+    test_detect_integration(_api);
     delete _api;
     getchar();
     return 0;

@@ -316,7 +316,7 @@ namespace glasssix::face {
         action_result               = 0;
         if (faces.size() == 0)
             return ans;
-        ans = gx_get_max_face_feature(faces);
+        ans = faces[0];
 
         json jsonobj_param, jsonobj_result;
         jsonobj_param.clear();
@@ -420,21 +420,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    face_feature gx_face_api::gx_get_max_face_feature(const std::vector<face_feature>& faces) {
-        face_feature ans;
-        if (faces.size() == 0)
-            return ans;
-
-        int id = 0;
-        for (int i = 1; i < faces.size(); i++) {
-            if (1llu * faces[id]._face_box.width * faces[id]._face_box.height
-                < 1llu * faces[i]._face_box.width * faces[i]._face_box.height)
-                id = i;
-        }
-        ans = faces[id];
-        return ans;
-    }
-    face_box gx_face_api::gx_get_max_face_feature(const std::vector<face_box>& faces) {
+    face_box gx_face_api::gx_get_max_face(const std::vector<face_box>& faces) {
         face_box ans;
         if (faces.size() == 0)
             return ans;
@@ -472,7 +458,7 @@ namespace glasssix::face {
         std::vector<face_feature> faces = gx_face_feature(mat);
         if (faces.size() == 0)
             return ans;
-        face_feature max_face = gx_get_max_face_feature(faces);
+        face_feature max_face = faces[0];
 
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
@@ -514,7 +500,7 @@ namespace glasssix::face {
         return jsonobj_result["status"]["code"].get<int>();
     }
     //特征值库清空
-    int gx_face_api::gx_user_removeAll(bool is_mask) {
+    int gx_face_api::gx_user_remove_all(bool is_mask) {
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
         if (is_mask == false)
@@ -529,7 +515,7 @@ namespace glasssix::face {
         return jsonobj_result["status"]["code"].get<int>();
     }
     //特征值库批量删除
-    int gx_face_api::gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask) {
+    int gx_face_api::gx_user_remove_records(std::vector<std::string>& keys, bool is_mask) {
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
         if (is_mask == false)
@@ -546,7 +532,7 @@ namespace glasssix::face {
         return jsonobj_result["status"]["code"].get<int>();
     }
     //特征值库批量添加
-    std::vector<bool> gx_face_api::gx_user_addRecords(
+    std::vector<bool> gx_face_api::gx_user_add_records(
         std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
         std::vector<bool> ans(mat.size(), false);
         std::vector<face_feature> faces;
@@ -554,14 +540,14 @@ namespace glasssix::face {
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
-            face_feature temp = gx_get_max_face_feature(gx_face_feature(&mat[i]));
-            if (temp.feature.size() == 0 || keys[i] == "")
+            std::vector<face_feature> temp = gx_face_feature(&mat[i]);
+            if (temp.size() == 0 || keys[i] == "") {
+                faces.emplace_back(face_feature{});
                 ans[i] = false;
-            else
+            } else {
+                faces.emplace_back(temp[0]);
                 ans[i] = true;
-
-            // faces.emplace_back(gx_face_feature(&mat[i]));
-            faces.emplace_back(temp);
+            }
         }
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
@@ -592,14 +578,14 @@ namespace glasssix::face {
         return ans;
     }
     //特征值库批量更新
-    std::vector<bool> gx_face_api::gx_user_updateRecords(
+    std::vector<bool> gx_face_api::gx_user_update_records(
         std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask) {
         std::vector<bool> ans(mat.size(), false);
         std::vector<face_feature> faces;
         if (keys.size() != mat.size())
             return ans;
         for (int i = 0; i < mat.size(); i++) {
-            face_feature temp = gx_get_max_face_feature(gx_face_feature(&mat[i]));
+            face_feature temp = gx_face_feature(&mat[i])[0];
             if (temp.feature.size() == 0 || keys[i] == "")
                 ans[i] = false;
             else
@@ -637,10 +623,19 @@ namespace glasssix::face {
     }
 
     //人脸识别流程融合
-    std::vector<face_info> gx_face_api::gx_detect_integration(const cv::Mat* mat, int top, bool is_mask) {
-
-
+    std::vector<face_info> gx_face_api::gx_detect_integration(
+        const cv::Mat* mat, int top, float min_similarity, bool is_mask) {
         std::vector<face_info> ans;
+        std::vector<spoofing> faces = gx_face_spoofing_live(mat);
+        if (faces.size() == 0) {
+            printf("no face!\n");
+            return ans;
+        } else if (faces[0].prob[1] < 0.5) {
+            printf("prob < 0.5 !\n");
+            return ans;
+        }
+        gx_user_load(is_mask);
+        ans = gx_user_search(mat, top, min_similarity, is_mask);
         return ans;
     }
 
@@ -652,8 +647,8 @@ namespace glasssix::face {
         if (faces_A.size() == 0 || faces_B.size() == 0)
             return 0;
 
-        std::vector<float> x = gx_get_max_face_feature(faces_A).feature;
-        std::vector<float> y = gx_get_max_face_feature(faces_B).feature;
+        std::vector<float> x = faces_A[0].feature;
+        std::vector<float> y = faces_B[0].feature;
 
         if (x.size() == 0 || y.size() == 0 || x.size() != y.size())
             return 0;

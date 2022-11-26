@@ -87,28 +87,28 @@ namespace glasssix::face {
         //特征值库清除缓存
         int gx_user_clear(bool is_mask = false);
         //特征值库清空
-        int gx_user_removeAll(bool is_mask = false);
+        int gx_user_remove_all(bool is_mask = false);
         //特征值库批量删除
-        int gx_user_removeRecords(std::vector<std::string>& keys, bool is_mask = false);
+        int gx_user_remove_records(std::vector<std::string>& keys, bool is_mask = false);
         //特征值库批量添加
-        std::vector<bool> gx_user_addRecords(
+        std::vector<bool> gx_user_add_records(
             std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
         //特征值库批量更新
-        std::vector<bool> gx_user_updateRecords(
+        std::vector<bool> gx_user_update_records(
             std::vector<std::string>& keys, std::vector<cv::Mat>& mat, bool is_mask = false);
 
         //人脸识别流程融合
-        std::vector<face_info> gx_detect_integration(const cv::Mat* mat, int top = 1, bool is_mask = false);
+        std::vector<face_info> gx_detect_integration(
+            const cv::Mat* mat, int top = 1, float min_similarity = 0.4, bool is_mask = false);
         // 1:1特征值对比接口
         double gx_feature_comparison(const cv::Mat* mat_A, const cv::Mat* mat_B);
 
     private:
         config* _config;
-        std::string guid[6]; // guid_type  sum = 5 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
+        std::string guid[6]; // guid_type  sum = 6 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
                              // irisviel_mask_guid)
         void* parser;
         track_cache cache;
-        face_feature gx_get_max_face_feature(const std::vector<face_feature>& faces);
-        face_box gx_get_max_face_feature(const std::vector<face_box>& faces);
+        face_box gx_get_max_face(const std::vector<face_box>& faces);
     };
 } // namespace glasssix::face
