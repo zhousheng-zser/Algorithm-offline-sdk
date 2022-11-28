@@ -195,12 +195,7 @@ namespace glasssix::face {
                            reinterpret_cast<char*>(mat->data), 1llu * mat->channels() * mat->cols * mat->rows, nullptr, 0);
         jsonobj_result                  = json ::parse(result_str);
         if (jsonobj_result["status"]["code"].get<int>() == 0) {
-            int list_size = jsonobj_result["facerectwithfaceinfo_list"].size();
-            for (int i = 0; i < list_size; i++) {
-                jsonobj_face = jsonobj_result["facerectwithfaceinfo_list"][i];
-                jsonobj_face.get_to(temp);
-                ans.emplace_back(temp);
-            }
+            jsonobj_result["facerectwithfaceinfo_list"].get_to(ans);
         } else {
             printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             exit(-1);
@@ -519,6 +514,7 @@ namespace glasssix::face {
                 faces.emplace_back(temp[0]);
                 ans[i] = true;
             }
+            mat[i].release();
         }
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
@@ -541,7 +537,7 @@ namespace glasssix::face {
         if (jsonobj_result["status"]["code"].get<int>() != 0) {
             printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             ans.clear();
-            ans = std::vector<bool>(mat.size(), false);
+            ans = std::vector<bool>(keys.size(), false);
         }
 
         parser_free(result_str);
@@ -557,12 +553,15 @@ namespace glasssix::face {
         if (keys.size() != mat.size())
             return ans;
         for (int i = 0; i < mat.size(); i++) {
-            face_feature temp = gx_face_feature(&mat[i])[0];
-            if (temp.feature.size() == 0 || keys[i] == "")
+            std::vector<face_feature> temp = gx_face_feature(&mat[i]);
+            if (temp.size() == 0 || keys[i] == "") {
+                faces.emplace_back(face_feature{});
                 ans[i] = false;
-            else
+            } else {
+                faces.emplace_back(temp[0]);
                 ans[i] = true;
-            faces.emplace_back(temp);
+            }
+            mat[i].release();
         }
         json jsonobj_param, jsonobj_result, jsonobj_face;
         jsonobj_param.clear();
@@ -585,7 +584,7 @@ namespace glasssix::face {
         if (jsonobj_result["status"]["code"].get<int>() != 0) {
             printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
             ans.clear();
-            ans = std::vector<bool>(mat.size(), false);
+            ans = std::vector<bool>(keys.size(), false);
         }
 
         parser_free(result_str);

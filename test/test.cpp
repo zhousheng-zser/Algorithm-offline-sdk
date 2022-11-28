@@ -3,8 +3,9 @@
 
 #include <config.h>
 #include <gx_face_api.h>
+#include <io.h>
 #include <opencv2/opencv.hpp>
-#include <stdio.h>
+//#include <immintrin.h>
 // using namespace std;
 //
 using namespace glasssix::face;
@@ -93,7 +94,6 @@ void test_blur(gx_face_api* _api) {
     }
 }
 
-
 void test_action_live(gx_face_api* _api) {
     cv::VideoCapture capture;
     capture.open(0);
@@ -135,6 +135,7 @@ void test_action_live(gx_face_api* _api) {
         cv::waitKey(20);
     }
 }
+
 void test_spoofing_live(gx_face_api* _api) {
     cv::VideoCapture capture;
     capture.open(0);
@@ -206,22 +207,17 @@ void test_feature_comparison(gx_face_api* _api) {
     cv::waitKey(0);
 }
 
-
 void test_user(gx_face_api* _api) {
 
     int flag;
     std::vector<cv::Mat> imgs;
     imgs.push_back(cv::imread("D:/test/img/B/610111200208264510.jpg"));
     imgs.push_back(cv::imread("D:/test/img/A/610111200208264510.jpg"));
-    imgs.push_back(cv::imread("D:/test/img/B/410305199405011513.jpg"));
-    imgs.push_back(cv::imread("D:/test/img/A/410305199405011513.jpg"));
 
 
     std::vector<abi::string> keys;
-    keys.push_back("B-61011");
-    keys.push_back("A-61011");
-    keys.push_back("B-41030");
-    keys.push_back("A-41030");
+    keys.push_back("B-----61011");
+    keys.push_back("A-----61011");
 
     do {
         printf("Input Irisviel key (0-6), (-1 exit): \n");
@@ -229,7 +225,7 @@ void test_user(gx_face_api* _api) {
         if (flag == 0)
             _api->gx_user_load(false); //人员库加载
         else if (flag == 1)
-            _api->gx_user_search(&imgs[0], 3, 0.4, false); //人员库搜索
+            _api->gx_user_search(&imgs[0], 5, 0.4, false); //人员库搜索
         else if (flag == 2)
             _api->gx_user_clear(false); //人员库清除缓存  清内存
         else if (flag == 3)
@@ -271,6 +267,43 @@ void test_detect_integration(gx_face_api* _api) {
 }
 
 
+void getFiles(abi::string path, std::vector<abi::string>& files) {
+    // 文件句柄
+    intptr_t hFile = 0;
+    // 文件信息
+    struct _finddata_t fileinfo;
+
+    abi::string p;
+
+    if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1) {
+        do {
+
+            files.push_back(fileinfo.name);
+
+        } while (_findnext(hFile, &fileinfo) == 0); //寻找下一个，成功返回0，否则-1
+
+        _findclose(hFile);
+    }
+}
+
+
+void test_add_folder_all(gx_face_api* _api) {
+    abi::string working_directory = "D:/test/img_align_celeba";
+    std::vector<abi::string> namelist;
+    getFiles(working_directory, namelist);
+    for (int i = 2; i < namelist.size();) {
+        int T = 10000;
+        std::vector<cv::Mat> imgs;
+        std::vector<abi::string> keys;
+        while (T--) {
+            imgs.push_back(cv::imread((working_directory + "/" + namelist[i]).c_str()));
+            keys.push_back(namelist[i]);
+            i++;
+        }
+        _api->gx_user_add_records(keys, imgs, false);
+    }
+}
+
 int main() {
 
     // config *x = new config();
@@ -283,13 +316,11 @@ int main() {
     // test_spoofing_live(_api);
     // test_feature(_api);
     // test_feature_comparison(_api);
-    // test_user(_api);
-    test_detect_integration(_api);
+    test_user(_api);
+    // test_detect_integration(_api);
+    test_add_folder_all(_api); // 入库文件夹内全部人脸
+
     delete _api;
     getchar();
     return 0;
 }
-
-
-
-
