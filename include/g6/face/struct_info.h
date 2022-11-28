@@ -8,6 +8,7 @@
 #include <g6/json_extensions.hpp>
 #include <g6/logger.hpp>
 
+#include <proxy/proxy.h>
 
 namespace glasssix::face {
     //人脸属性

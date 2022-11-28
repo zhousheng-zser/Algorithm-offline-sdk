@@ -17,7 +17,6 @@ namespace glasssix::face {
     glasssix::json config::read_json_file(abi::string path) {
         glasssix::json temp;
         std::ifstream(path.c_str()) >> temp;
-        printf("try a try :%s\n", temp.dump().c_str());
         return temp;
     }
     void config::set_detect() {

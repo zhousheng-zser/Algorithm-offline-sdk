@@ -14,6 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include <parser_c.hpp>
 
+
 namespace glasssix::face {
     /*
     struct baz {
@@ -105,10 +106,8 @@ namespace glasssix::face {
 
     private:
         config* _config;
-        abi::string guid[6]; // guid_type  sum = 6 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
-                             // irisviel_mask_guid)
+        abi::string guid[6]; // guid_type  sum = 6 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid irisviel_mask_guid)
         void* parser;
         track_cache cache;
-        face_box gx_get_max_face(const std::vector<face_box>& faces);
     };
 } // namespace glasssix::face
