@@ -57,12 +57,14 @@ void test_detect(gx_face_api* _api) {
 
 void test_track(gx_face_api* _api) {
     cv::VideoCapture capture;
-    capture.open(0);
+    capture.open("D:/opencv/test/857102359-1-208.mp4");
     while (1) {
         cv::Mat img;
         capture >> img;
-
+        if (img.empty())
+            break;
         std::vector<uchar> buffer(1024 * 1024);
+
         cv::imencode(".jpg", img, buffer);
         gx_img_api img_buff(buffer);
         std::vector<track_face_box> faces;
@@ -71,13 +73,15 @@ void test_track(gx_face_api* _api) {
             for (int i = 0; i < faces.size(); i++) {
                 if (faces[i].trace_success == true) {
                     face_box info = faces[i]._face_box;
-                    rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
+                    cv::rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
                         cv::Scalar(0, 255, 0), 2);
+                    cv::putText(img, faces[i].trace_id.c_str(), cv::Point(info.x, info.y), cv::FONT_HERSHEY_COMPLEX,
+                        0.8, cv::Scalar(0, 255, 0), 2);
                 }
             }
         }
         cv::imshow("video-demo", img);
-        cv::waitKey(20);
+        cv::waitKey(10);
     }
 }
 
@@ -314,7 +318,7 @@ int main() {
     gx_face_api* _api = new gx_face_api();
 
     // test_detect(_api);
-    // test_track(_api);
+    test_track(_api);
     // test_blur(_api);
     // test_action_live(_api);
     // test_spoofing_live(_api);

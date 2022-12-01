@@ -1,5 +1,7 @@
 ﻿#include "gx_face_api.h"
 
+#include <random>
+
 #include <parser_c.hpp>
 
 namespace glasssix::face {
@@ -260,6 +262,44 @@ namespace glasssix::face {
     // int log_type();
     // bool is_auth();
 
+    abi::string get_random_string(size_t len) {
+        abi::string ans;
+        std::random_device rd; // 将用于为随机数引擎获得种子
+        std::mt19937 gen(rd()); // 以播种标准 mersenne_twister_engine
+        std::uniform_int_distribution<> dis(0, 61);
+        for (int i = 0; i < len; i++) {
+            int temp = dis(gen);
+            if (temp < 26)
+                ans += ('a' + temp);
+            else if (temp < 52)
+                ans += ('A' + temp - 26);
+            else
+                ans += ('0' + temp - 52);
+        }
+        return ans;
+    }
+
+
+    inline int ComputeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {
+        int x = std::max(0, std::min(ax2, bx2) - std::max(ax1, bx1));
+        int y = std::max(0, std::min(ay2, by2) - std::max(ay1, by1));
+        return x * y;
+    }
+
+    bool gx_face_api::track_chack(face_box& face) {
+        std::unordered_map<int, face_box>::iterator it;
+        for (it = cache.track_history.begin(); it != cache.track_history.end(); it++) {
+            if (1.0
+                    * ComputeArea(face.x, face.y, face.x + face.width, face.y + face.height, it->second.x, it->second.y,
+                        it->second.x + it->second.width, it->second.y + it->second.height)
+                    / std::min(face.width * face.height, it->second.width * it->second.height)
+                >= 0.60) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //人脸检测
     std::vector<face_box> gx_face_api::gx_detect(gx_img_api& mat) {
         std::vector<face_box> ans;
@@ -295,11 +335,17 @@ namespace glasssix::face {
         if (cache.index % (_config->_track_config.detect_intv_before_track) == 0) {
             std::vector<face_box> faces = gx_detect(mat);
             for (int i = 0; i < faces.size(); i++) /// TODO    可以优化加一个判断   重合超过90%的人脸框不入队
-                cache.track_history[faces[i].x * 10000 + faces[i].y] = faces[i];
+            {
+                if (!track_chack(faces[i])) {
+                    cache.track_history[faces[i].x * 10000 + faces[i].y]    = faces[i];
+                    cache.track_history_id[faces[i].x * 10000 + faces[i].y] = get_random_string(32);
+                }
+            }
         }
 
         std::unordered_map<int, face_box>::iterator it;
         std::unordered_map<int, face_box> temp_faces;
+        std::unordered_map<int, abi::string> temp_faces_id;
         for (it = cache.track_history.begin(); it != cache.track_history.end();) {
             json jsonobj_param, jsonobj_result;
             jsonobj_param.clear();
@@ -317,14 +363,16 @@ namespace glasssix::face {
                 //更新追踪坐标
                 jsonobj_result["facerectwithfaceinfo"].get_to(it->second);
                 track_face_box temp;
-                temp._face_box                                      = it->second;
-                temp.trace_success                                  = true;
-                temp_faces[(it->second).x * 10000 + (it->second).y] = it->second;
+                temp._face_box                                     = it->second;
+                temp.trace_success                                 = true;
+                temp.trace_id                                      = cache.track_history_id[it->first];
+                temp_faces[it->second.x * 10000 + it->second.y]    = temp._face_box;
+                temp_faces_id[it->second.x * 10000 + it->second.y] = temp.trace_id;
                 ans.emplace_back(temp);
                 cache.track_history.erase(it++);
 
             } else if (jsonobj_result["trace_success"].get<bool>() == false) {
-                ans.emplace_back(track_face_box{it->second, false});
+                ans.emplace_back(track_face_box{it->second, false, cache.track_history_id[it->first]});
                 cache.track_history.erase(it++);
             } else {
                 printf("Error info : % s\n", jsonobj_result["status"]["message"].get<abi::string>().c_str());
@@ -333,6 +381,8 @@ namespace glasssix::face {
         }
         cache.track_history.clear();
         cache.track_history = temp_faces;
+        cache.track_history_id.clear();
+        cache.track_history_id = temp_faces_id;
 
         cache.index++;
         return ans;
@@ -342,6 +392,7 @@ namespace glasssix::face {
     void gx_face_api::gx_clear_track_history() {
         cache.index = 0;
         cache.track_history.clear();
+        cache.track_history_id.clear();
         return;
     }
 

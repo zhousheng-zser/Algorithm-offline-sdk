@@ -55,6 +55,7 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(track_face_box);
         face_box _face_box; // 人脸基础信息
         bool trace_success; // 追踪是否成功
+        abi::string trace_id; //人脸id
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -120,6 +121,7 @@ namespace glasssix::face {
 
     struct track_cache {
         std::unordered_map<int, face_box> track_history;
+        std::unordered_map<int, abi::string> track_history_id;
         int index = 0;
     };
 

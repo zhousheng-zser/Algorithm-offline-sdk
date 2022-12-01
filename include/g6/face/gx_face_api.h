@@ -124,6 +124,7 @@ namespace glasssix::face {
 
     private:
         config* _config;
+        bool track_chack(face_box& face);
         abi::string guid[6]; // guid_type  sum = 6 (longinus_guid romancia_guid damocles_guid selene_guid irisviel_guid
                              // irisviel_mask_guid)
         void* parser;
