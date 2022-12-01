@@ -1,6 +1,6 @@
 ﻿set(target_version 1.0.0)
-set(target_name hotrail-util)
-set(package_name HotrailUtil)
+set(target_name gx-nessus)
+set(package_name GxNessus)
 
 add_library(${target_name})
 
@@ -9,6 +9,8 @@ file(
 	CONFIGURE_DEPENDS
 	*.hpp
 	*.cpp
+	protocols/*.hpp
+	protocols/*.cpp
 )
 
 target_sources(
@@ -29,13 +31,17 @@ target_include_directories(
 	PRIVATE
 		${GX_PUBLIC_INCLUDE_DIR}/g6/hotrail
 		${CMAKE_CURRENT_SOURCE_DIR}
+		${GX_CV_SDK_INCLUDE}
 )
+
+target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
 
 target_link_libraries(
 	${target_name}
 	PRIVATE
 	Threads::Threads
 	GXMiscellaneous::gx-miscellaneous
+	${GX_CV_SDK_LIBS}
 )
 
 set_target_properties(${target_name}

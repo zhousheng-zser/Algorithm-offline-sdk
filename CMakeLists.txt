@@ -22,4 +22,5 @@ if(GX_STATIC_RUNTIME)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(src/nessus)
 add_subdirectory(test)
