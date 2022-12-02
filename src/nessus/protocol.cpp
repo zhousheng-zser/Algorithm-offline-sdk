@@ -150,7 +150,7 @@ namespace glasssix::face {
 
     nessus_protocol::~nessus_protocol() {}
 
-    const nessus_protocol& nessus_protocol::instance() const {
+    const nessus_protocol& nessus_protocol::instance() {
         const nessus_protocol instance;
 
         return instance;

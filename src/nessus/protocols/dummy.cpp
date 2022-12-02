@@ -7,3 +7,4 @@
 #include "romancia.hpp"
 #include "selene.hpp"
 #include "valklyrs.hpp"
+#include "../protocol.hpp"
