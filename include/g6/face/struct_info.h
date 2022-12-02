@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -9,6 +8,7 @@
 #include <g6/json_extensions.hpp>
 #include <g6/logger.hpp>
 
+#include <proxy/proxy.h>
 
 namespace glasssix::face {
     //人脸属性
@@ -55,6 +55,7 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(track_face_box);
         face_box _face_box; // 人脸基础信息
         bool trace_success; // 追踪是否成功
+        abi::string trace_id; //人脸id
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -90,16 +91,17 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    // 底库用户信息
     struct face_info_data {
         GX_BEGIN_FIELDS(face_info_data);
-        GX_FIELD(std::string, key); //键值
+        GX_FIELD(abi::string, key); //键值
         GX_FIELD(std::vector<float>, feature); // 特征值数组
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    // 底库用户信息
+    // 搜索底库用户结果
     struct face_info {
         GX_BEGIN_FIELDS(face_info);
         GX_FIELD(float, similarity); //相似度
@@ -119,6 +121,7 @@ namespace glasssix::face {
 
     struct track_cache {
         std::unordered_map<int, face_box> track_history;
+        std::unordered_map<int, abi::string> track_history_id;
         int index = 0;
     };
 
