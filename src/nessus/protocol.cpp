@@ -41,7 +41,7 @@ namespace glasssix::face {
             GX_FIELD(std::string, instance_guid);
             GX_END_FIELDS;
 
-            GX_JSON_SERIALIZABLE_DEFAULT;
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
 
         struct protocol_object_data {
@@ -86,13 +86,13 @@ namespace glasssix::face {
 
     namespace detail {
         std::string make_procotol_full_name(std::string_view family, std::string_view name) {
-            return glasssix::format(U8("{}.{}"), family, name);
+            return glasssix::format(U8("{}{}"), family, name);
         }
     } // namespace detail
 
     class nessus_protocol::impl {
     public:
-        impl() : counter_{}, instance_{parser_new_instance()} {}
+        impl() : instance_{parser_new_instance()} {}
 
         void init(std::string_view config_file_path) const {
             throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
@@ -106,12 +106,18 @@ namespace glasssix::face {
         protocol_object make_instance(std::string_view family, const json& param) const {
             return throw_nested_and_flatten(
                 source_code_aware_runtime_error{U8("Family"), family, U8("Failed to make an instance.")}, [&] {
-                    auto result = invoke_raw({}, detail::make_procotol_full_name(family, U8("New")), json(param))
-                                      .get<parser_new_result>();
+                    auto raw_result = invoke_raw({}, detail::make_procotol_full_name(family, U8("new")), json(param));
 
-                    check_result(result);
+                    try {
 
-                    return make_protocol_object(family, result.instance_guid);
+                        auto result = raw_result.get<parser_new_result>();
+
+                        check_result(result);
+
+                        return make_protocol_object(family, result.instance_guid);
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error{U8("JSON"), raw_result.dump(4), U8("Error"), ex.what()};
+                    }
                 });
         }
 
@@ -131,7 +137,8 @@ namespace glasssix::face {
             if (!instance_uuid.empty()) {
                 param[U8("instance_guid")] = instance_uuid;
             }
-
+            std::string ss = param.dump();
+            void* instanc  = instance_.get();
             return parse_raw_result(parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0));
         }
@@ -139,24 +146,25 @@ namespace glasssix::face {
         protocol_object make_protocol_object(std::string_view family, std::string_view instance_uuid) const {
             return protocol_object{.opaque{std::make_shared<protocol_object_data>(
                 instance_uuid, [this, family = std::string{family}, instance_uuid = std::string{instance_uuid}] {
-                    static_cast<void>(invoke_raw(instance_uuid, detail::make_procotol_full_name(family, U8("Delete")),
+                    static_cast<void>(invoke_raw(instance_uuid, detail::make_procotol_full_name(family, U8("delete")),
                         parser_delete_param{.instance_guid{instance_uuid}}));
                 })}};
         }
 
-        std::uintptr_t counter_;
         std::unique_ptr<void, decltype([](void* inner) { parser_release_instance(inner); })> instance_;
     };
 
     nessus_protocol::~nessus_protocol() {}
 
     const nessus_protocol& nessus_protocol::instance() {
-        const nessus_protocol instance;
+        static const nessus_protocol instance;
 
         return instance;
     }
 
-    void nessus_protocol::init(std::string_view config_file_path) const {}
+    void nessus_protocol::init(std::string_view config_file_path) const {
+        impl_->init(config_file_path);
+    }
 
     protocol_object nessus_protocol::make_instance(std::string_view family, const json& param) const {
         return impl_->make_instance(family, param);

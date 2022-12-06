@@ -9,6 +9,8 @@
 #include <string_view>
 
 #include <g6/char8_t_remediation.hpp>
+#include <g6/error_extensions.hpp>
+#include <g6/exception.hpp>
 #include <g6/naming_convention.hpp>
 #include <g6/reflection.hpp>
 
@@ -41,9 +43,18 @@ namespace glasssix::face {
 
         template <parser_inout_prototype T, concrete_protocol_object U>
         auto invoke(U instance, const parser_in_t<T>& param, std::span<char> data = {}) const {
-            return invoke(instance,
-                detail::make_procotol_full_name(detail::protocol_family<T>::value, parser_text_v<T>), json(param), data)
-                .template get<parser_out_t<T>>();
+            return throw_nested_and_flatten(
+                source_code_aware_runtime_error{U8("Message"), U8("Failed to invoke the protocol.")}, [&] {
+                    auto raw_result = invoke(instance,
+                        detail::make_procotol_full_name(detail::protocol_family<U>::value, parser_text_v<T>),
+                        json(param), data);
+
+                    try {
+                        return raw_result.template get<parser_out_t<T>>();
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error{U8("JSON"), raw_result.dump(4), U8("Error"), ex.what()};
+                    }
+                });
         }
 
     private:

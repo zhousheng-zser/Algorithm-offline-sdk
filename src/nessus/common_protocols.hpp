@@ -16,7 +16,7 @@ namespace glasssix::face {
         GX_FIELD(std::string, message);
         GX_END_FIELDS;
 
-        GX_JSON_SERIALIZABLE_DEFAULT;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
 
         void ensure() const;
     };

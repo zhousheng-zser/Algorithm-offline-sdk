@@ -9,6 +9,11 @@ file(
 	CONFIGURE_DEPENDS
 	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.hpp
 	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.h
+	nessus/*.h
+	nessus/*.hpp
+	nessus/*.cpp
+	nessus/protocols/*.hpp
+	nessus/protocols/*.cpp
 	*.hpp
 	*.cpp
 	*.h

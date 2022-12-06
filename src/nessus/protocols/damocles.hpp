@@ -27,24 +27,24 @@ namespace glasssix::face {
         GX_FIELD(std::int32_t, format);
         GX_FIELD(std::int32_t, height);
         GX_FIELD(std::int32_t, width);
-        GX_FIELD(std::vector<face_rect>, facerect_list);
+        GX_FIELD(abi::vector<face_info>, facerect_list);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
     struct damocles_spoofing_detect_result {
-        struct spoofing_probability {
-            GX_BEGIN_FIELDS(spoofing_probability);
-            GX_FIELD(std::vector<float>, prob);
-            GX_END_FIELDS;
+        //struct spoofing_probability_info {
+        //    GX_BEGIN_FIELDS(spoofing_probability_info);
+        //    GX_FIELD(abi::vector<float>, prob);
+        //    GX_END_FIELDS;
 
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-        };
-
+        //    GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        //};
+        //using spoofing_probability_info = spoofing_probability; 
         GX_BEGIN_FIELDS(damocles_spoofing_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(spoofing_probability, spoofing_result);
+        GX_FIELD(abi::vector<spoofing_probability>, spoofing_result);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -57,7 +57,7 @@ namespace glasssix::face {
         GX_FIELD(std::int32_t, format);
         GX_FIELD(std::int32_t, height);
         GX_FIELD(std::int32_t, width);
-        GX_FIELD(face_rect, facerect);
+        GX_FIELD(face_info, facerect);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -72,7 +72,7 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct domacles : protocol_object {
+    struct damocles : protocol_object {
         struct spoofing_detect : parser_inout<damocles_spoofing_detect_param, damocles_spoofing_detect_result> {};
         struct presentation_attack_detect
             : parser_inout<damocles_presentation_attack_detect_param, damocles_presentation_attack_detect_result> {};

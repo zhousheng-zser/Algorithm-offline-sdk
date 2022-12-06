@@ -14,7 +14,7 @@ namespace glasssix::face {
         set_face_user();
     }
 
-    glasssix::json config::read_json_file(abi::string path) {
+    glasssix::json config::read_json_file(std::string path) {
         glasssix::json temp;
         std::ifstream(path.c_str()) >> temp;
         return temp;

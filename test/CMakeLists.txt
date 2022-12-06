@@ -8,6 +8,11 @@ file(
 	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.h
 	../src/*.cpp
 	../src/*.h
+	../src/nessus/*.h
+	../src/nessus/*.hpp
+	../src/nessus/*.cpp
+	../src/nessus/protocols/*.hpp
+	../src/nessus/protocols/*.cpp
 	*.hpp *.cpp *.h
 
 )

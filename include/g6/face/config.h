@@ -8,7 +8,7 @@
 namespace glasssix::face {
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
-        GX_FIELD(abi::string, models_directory);
+        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(int, min_size);
         GX_FIELD(float, threshold);
@@ -27,7 +27,7 @@ namespace glasssix::face {
     };
     struct blur_config {
         GX_BEGIN_FIELDS(blur_config);
-        GX_FIELD(abi::string, models_directory);
+        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_END_FIELDS;
@@ -35,7 +35,7 @@ namespace glasssix::face {
     };
     struct action_live_config {
         GX_BEGIN_FIELDS(action_live_config);
-        GX_FIELD(abi::string, models_directory);
+        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(bool, use_int8);
         GX_FIELD(int, format);
@@ -44,7 +44,7 @@ namespace glasssix::face {
     };
     struct feature_config {
         GX_BEGIN_FIELDS(feature_config);
-        GX_FIELD(abi::string, models_directory);
+        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(bool, use_int8);
         GX_FIELD(int, format);
@@ -55,8 +55,8 @@ namespace glasssix::face {
     };
     struct face_user_config {
         GX_BEGIN_FIELDS(face_user_config);
-        GX_FIELD(abi::string, working_directory);
-        GX_FIELD(abi::string, working_directory_mask);
+        GX_FIELD(std::string, working_directory);
+        GX_FIELD(std::string, working_directory_mask);
         GX_FIELD(int, dimension);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -72,7 +72,7 @@ namespace glasssix::face {
         face_user_config _face_user_config;
 
     private:
-        glasssix::json read_json_file(abi::string path);
+        glasssix::json read_json_file(std::string path);
         void set_detect();
         void set_track();
         void set_blur();
