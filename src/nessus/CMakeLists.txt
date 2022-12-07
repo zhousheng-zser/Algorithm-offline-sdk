@@ -7,11 +7,13 @@ add_library(${target_name})
 file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
+	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.hpp
 	*.hpp
 	*.cpp
 	protocols/*.hpp
 	protocols/*.cpp
 )
+message( "${private_sources}---------------------------")
 
 target_sources(
 	${target_name}
@@ -29,7 +31,7 @@ endif()
 target_include_directories(
 	${target_name}
 	PRIVATE
-		${GX_PUBLIC_INCLUDE_DIR}/g6/hotrail
+		../${GX_PUBLIC_INCLUDE_DIR}/g6/hotrail
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${GX_CV_SDK_INCLUDE}
 )

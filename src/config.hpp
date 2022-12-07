@@ -6,6 +6,14 @@
 
 
 namespace glasssix::face {
+    struct configure_directory {
+        GX_BEGIN_FIELDS(configure_directory);
+        GX_FIELD(std::string, directory);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(std::string, models_directory);
@@ -64,6 +72,7 @@ namespace glasssix::face {
     class config {
     public:
         config();
+        configure_directory _configure_directory;
         detect_config _detect_config;
         track_config _track_config;
         blur_config _blur_config;
@@ -73,6 +82,7 @@ namespace glasssix::face {
 
     private:
         glasssix::json read_json_file(std::string path);
+        void set_configure_directory();
         void set_detect();
         void set_track();
         void set_blur();

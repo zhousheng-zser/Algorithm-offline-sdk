@@ -8,15 +8,13 @@
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/valklyrs.hpp"
+#include "config.hpp"
 
 #include <random>
 
 #include <g6/error_extensions.hpp>
 
-#include <../src/nessus/protocols/face_info.hpp>
 #include <opencv2/opencv.hpp>
-#include <parser_c.hpp>
-#include <process.h>
 
 namespace glasssix::face {
     namespace {
@@ -54,7 +52,6 @@ namespace glasssix::face {
             if (img.empty()) {
                 throw source_code_aware_runtime_error(U8("Error: Could not load image"));
             }
-
             uchar val[105];
             memset(val, 0, sizeof(val));
             std::ifstream in_file(path.c_str(), std::ios::in | std::ios::binary);
@@ -113,17 +110,12 @@ namespace glasssix::face {
         cv::Mat img;
         size_t data_len;
         abi::string type;
-        // abi::string check_type(std::vector<uchar>& val, int len);
-        // abi::string check_type(uchar* val, int len);
     };
 
     gx_img_api::gx_img_api(abi::string path) : impl_{std::make_unique<impl>(path)} {}
     gx_img_api::gx_img_api(std::vector<uchar>& buffer) : impl_{std::make_unique<impl>(buffer)} {}
-
-
     gx_img_api::~gx_img_api() {}
-
-    gx_img_api::gx_img_api(gx_img_api&&) noexcept = default;
+    gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;
     gx_img_api& gx_img_api::operator=(gx_img_api&&) noexcept = default;
 
     int gx_img_api::get_rows() {
@@ -173,7 +165,6 @@ namespace glasssix::face {
 
     gx_face_api::gx_face_api() : impl_{std::make_unique<impl>()} {}
     gx_face_api::~gx_face_api() {}
-
     gx_face_api::gx_face_api(gx_face_api&&) noexcept            = default;
     gx_face_api& gx_face_api::operator=(gx_face_api&&) noexcept = default;
 
@@ -184,8 +175,7 @@ namespace glasssix::face {
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
-            // Temporary manual input
-            protocol_ptr.init("D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta/configure_file/plugin_configure.json");
+            protocol_ptr.init(_config->_configure_directory.directory);
 
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
@@ -259,8 +249,7 @@ namespace glasssix::face {
         abi::vector<face_trace_info> ans;
         if (impl_->cache.index % (impl_->_config->_track_config.detect_intv_before_track) == 0) {
             abi::vector<face_info> faces = gx_detect(mat);
-            for (int i = 0; i < faces.size(); i++) /// TODO    可以优化加一个判断   重合超过60%的人脸框不入队
-            {
+            for (int i = 0; i < faces.size(); i++) {
                 if (!impl_->track_check(faces[i])) {
                     impl_->cache.track_history[faces[i].x * 10000 + faces[i].y]    = faces[i];
                     impl_->cache.track_history_id[faces[i].x * 10000 + faces[i].y] = get_random_string(32);
@@ -282,8 +271,6 @@ namespace glasssix::face {
                     .face          = it->second,
                 },
                 str);
-
-            // result.trace_id = impl_->cache.track_history_id[it->first];
             if (result.trace_success == true) {
                 //更新追踪坐标
                 temp_faces[it->second.x * 10000 + it->second.y]    = result.facerectwithfaceinfo.value();
@@ -391,7 +378,6 @@ namespace glasssix::face {
             return ans;
         }
 
-
         std::array<char, 0> arr{};
         auto selene_result = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
             selene_forward_param{.instance_guid = "",
@@ -406,14 +392,12 @@ namespace glasssix::face {
     }
 
     // 特征值库加载
-    int gx_face_api::gx_user_load(bool is_mask) {
+    void gx_face_api::gx_user_load(bool is_mask) {
 
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::load_databases>(
             is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
             irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
-
-        return 0;
     }
 
     // 特征值库搜索
@@ -422,7 +406,6 @@ namespace glasssix::face {
         faces_feature faces = gx_face_feature(mat);
         if (faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
             return ans;
-        // faces_feature max_face = faces;
 
         std::array<char, 0> arr{};
         auto result =
@@ -440,40 +423,34 @@ namespace glasssix::face {
     }
 
     //特征值库清除缓存
-    int gx_face_api::gx_user_clear(bool is_mask) {
+    void gx_face_api::gx_user_clear(bool is_mask) {
         std::array<char, 0> arr{};
         auto result =
             protocol_ptr.invoke<irisviel::clear>(is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
                 irisviel_clear_param{.instance_guid = ""}, std::span<char>{arr});
-
-        return 0;
     }
 
     //特征值库清空
-    int gx_face_api::gx_user_remove_all(bool is_mask) {
+    void gx_face_api::gx_user_remove_all(bool is_mask) {
 
         std::array<char, 0> arr{};
         auto result =
             protocol_ptr.invoke<irisviel::remove_all>(is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
                 irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
-
-        return 0;
     }
 
     //特征值库批量删除
-    int gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
+    void gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
 
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::remove_records>(
             is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
-
-        return 0;
     }
 
     //特征值库批量添加
     abi::vector<bool> gx_face_api::gx_user_add_records(
-        abi::vector<abi::string>& keys, std::vector<gx_img_api>& mat, bool is_mask) {
+        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask) {
         abi::vector<bool> ans(mat.size(), false);
         abi::vector<database_record> faces;
         if (keys.size() != mat.size())
@@ -482,13 +459,12 @@ namespace glasssix::face {
         for (int i = 0; i < mat.size(); i++) {
             faces_feature temp = gx_face_feature(mat[i]);
             if (temp.features.size() == 0 || keys[i] == "") {
-                // faces.emplace_back(database_record{});
                 ans[i] = false;
             } else {
                 faces.emplace_back(database_record{.feature = temp.features[0].feature, .key = keys[i]});
                 ans[i] = true;
             }
-            // 批量入库就可以释放掉
+            // 批量入库就可以释放掉gx_img_api
         }
         std::array<char, 0> arr{};
         auto result =
@@ -500,7 +476,7 @@ namespace glasssix::face {
 
     //特征值库批量更新
     abi::vector<bool> gx_face_api::gx_user_update_records(
-        abi::vector<abi::string>& keys, std::vector<gx_img_api>& mat, bool is_mask) {
+        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask) {
 
         abi::vector<bool> ans(mat.size(), false);
         abi::vector<database_record> faces;
@@ -510,13 +486,12 @@ namespace glasssix::face {
         for (int i = 0; i < mat.size(); i++) {
             faces_feature temp = gx_face_feature(mat[i]);
             if (temp.features.size() == 0 || keys[i] == "") {
-                // faces.emplace_back(database_record{});
                 ans[i] = false;
             } else {
                 faces.emplace_back(database_record{.feature = temp.features[0].feature, .key = keys[i]});
                 ans[i] = true;
             }
-            // 批量入库就可以释放掉
+            // 批量更新就可以释放掉gx_img_api
         }
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::update_records>(

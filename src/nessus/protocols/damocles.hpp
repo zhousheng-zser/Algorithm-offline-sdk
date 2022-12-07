@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../../../include/g6/face/face_info.hpp"
 #include "../common_protocols.hpp"
 #include "../protocol_object.hpp"
-#include "face_info.hpp"
 
 #include <cstdint>
 #include <string>
@@ -34,14 +34,14 @@ namespace glasssix::face {
     };
 
     struct damocles_spoofing_detect_result {
-        //struct spoofing_probability_info {
-        //    GX_BEGIN_FIELDS(spoofing_probability_info);
-        //    GX_FIELD(abi::vector<float>, prob);
-        //    GX_END_FIELDS;
+        // struct spoofing_probability_info {
+        //     GX_BEGIN_FIELDS(spoofing_probability_info);
+        //     GX_FIELD(abi::vector<float>, prob);
+        //     GX_END_FIELDS;
 
         //    GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         //};
-        //using spoofing_probability_info = spoofing_probability; 
+        // using spoofing_probability_info = spoofing_probability;
         GX_BEGIN_FIELDS(damocles_spoofing_detect_result);
         GX_FIELD(parser_result_status, status);
         GX_FIELD(abi::vector<spoofing_probability>, spoofing_result);

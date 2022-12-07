@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../../../include/g6/face/face_info.hpp"
 #include "../common_protocols.hpp"
-#include "face_info.hpp"
 
 #include <cstdint>
 #include <string>

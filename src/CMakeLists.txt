@@ -13,7 +13,6 @@ file(
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
-	nessus/protocols/*.cpp
 	*.hpp
 	*.cpp
 	*.h

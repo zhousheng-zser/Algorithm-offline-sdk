@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../protocol_object.hpp"
 #include "../common_protocols.hpp"
+#include "../protocol_object.hpp"
 
 #include <cstdint>
 #include <string>

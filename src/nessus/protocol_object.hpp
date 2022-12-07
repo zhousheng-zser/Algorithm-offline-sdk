@@ -9,7 +9,7 @@ namespace glasssix::face {
         std::shared_ptr<void> opaque;
 
         template <std::derived_from<protocol_object> T>
-            requires std::is_aggregate_v<T>
+        requires std::is_aggregate_v<T>
         explicit operator T() const {
             return T{{opaque}};
         }

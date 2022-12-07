@@ -1,12 +1,12 @@
 #pragma once
 
+#include "../../../include/g6/face/face_info.hpp"
 #include "../common_protocols.hpp"
-#include "face_info.hpp"
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
-#include <optional>
 
 #include <g6/json_extensions.hpp>
 
@@ -54,18 +54,6 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-
-    //struct longinus_trace_result {
-    //    GX_BEGIN_FIELDS(longinus_trace_result);
-    //    GX_FIELD(parser_result_status, status);
-    //    GX_FIELD(bool, trace_success);
-    //    GX_FIELD(std::optional<face_info>, facerectwithfaceinfo);
-    //    GX_END_FIELDS;
-    //    abi::string trace_id;
-
-    //    GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-    //};
-
     struct longinus_trace_result {
         GX_BEGIN_FIELDS(longinus_trace_result);
         GX_FIELD(parser_result_status, status);
@@ -74,7 +62,6 @@ namespace glasssix::face {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
 
     struct longinus : protocol_object {
         struct detect : parser_inout<longinus_detect_param, longinus_detect_result> {};

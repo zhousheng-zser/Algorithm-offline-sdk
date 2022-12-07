@@ -14,12 +14,12 @@ namespace glasssix::face {
 
     template <typename T>
     concept has_data_range = requires {
-                                 { data_range<T>::min } -> std::convertible_to<T>;
-                                 { data_range<T>::max } -> std::convertible_to<T>;
-                             };
+        { data_range<T>::min } -> std::convertible_to<T>;
+        { data_range<T>::max } -> std::convertible_to<T>;
+    };
 
     template <typename T>
-        requires meta::reflectable<T> && has_data_range<T>
+    requires meta::reflectable<T> && has_data_range<T>
     void validate_data(const T& data) {
         using fields_t = meta::get_fields_t<T>;
 

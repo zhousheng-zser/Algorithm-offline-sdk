@@ -1,4 +1,4 @@
-#include "../src/nessus/protocols/face_info.hpp"
+#include <face_info.hpp>
 #include <gx_face_api.h>
 
 #include <algorithm>
@@ -230,7 +230,7 @@ namespace glasssix::face {
     void test_user(gx_face_api* _api) {
 
         int flag;
-        std::vector<gx_img_api> imgs;
+        abi::vector<gx_img_api> imgs;
         imgs.push_back(gx_img_api("D:/test/img/B/610111200208264510.jpg"));
         imgs.push_back(gx_img_api("D:/test/img/A/610111200208264510.jpg"));
 
@@ -315,7 +315,7 @@ namespace glasssix::face {
         getFiles(working_directory, namelist);
         for (int i = 2; i < namelist.size();) {
             int T = 10000;
-            std::vector<gx_img_api> imgs;
+            abi::vector<gx_img_api> imgs;
             abi::vector<abi::string> keys;
             while (T--) {
                 imgs.push_back(gx_img_api(working_directory + "/" + namelist[i]));

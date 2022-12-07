@@ -1,14 +1,14 @@
 #pragma once
 
+#include "../../../include/g6/face/face_info.hpp"
 #include "../common_protocols.hpp"
 #include "../protocol_object.hpp"
-#include "face_info.hpp"
 
 #include <cstdint>
 #include <string>
 #include <vector>
-#include <g6/abi/string.hpp>
 
+#include <g6/abi/string.hpp>
 #include <g6/json_extensions.hpp>
 
 namespace glasssix::face {
@@ -58,15 +58,6 @@ namespace glasssix::face {
     };
 
     struct irisviel_search_result {
-        //struct database_result {
-        //    GX_BEGIN_FIELDS(database_result);
-        //    GX_FIELD(database_record, data);
-        //    GX_FIELD(float, similarity);
-        //    GX_END_FIELDS;
-
-        //    GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-        //};
-
         GX_BEGIN_FIELDS(irisviel_search_result);
         GX_FIELD(parser_result_status, status);
         GX_FIELD(abi::vector<faces_search_info::database_result>, result);
@@ -181,8 +172,8 @@ namespace glasssix::face {
     using irisviel_update_record_result  = irisviel_add_record_result;
     using irisviel_update_records_param  = irisviel_add_records_param;
     using irisviel_update_records_result = irisviel_add_records_result;
-    using irisviel_clear_param = irisviel_remove_all_param;
-    using irisviel_clear_result = irisviel_remove_all_result;
+    using irisviel_clear_param           = irisviel_remove_all_param;
+    using irisviel_clear_result          = irisviel_remove_all_result;
 
     struct irisviel : protocol_object {
         struct load_databases : parser_inout<irisviel_load_databases_param, irisviel_load_databases_result> {};
