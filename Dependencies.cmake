@@ -28,19 +28,6 @@ gx_make_install_third_party_library(
     TOOLCHAIN_FILE ${toolchain_file}
 )
 
-gx_make_install_third_party_library(
-    proxy
-    PARALLEL_BUILD
-    SYNC_BUILD_TYPE
-    GENERATOR ${CMAKE_GENERATOR}
-    ${runtime_args}
-    ${additional_args}
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/third-party/proxy
-    TOOLCHAIN_FILE ${toolchain_file}
-    CMAKE_ARGS
-        -DBUILD_TESTING=OFF
-)
-
 message(STATUS "GX_OPENCV_ROOT: ${GX_OPENCV_ROOT}")
 
 find_package(OpenCV REQUIRED HINTS ${GX_OPENCV_ROOT} NO_DEFAULT_PATH)
