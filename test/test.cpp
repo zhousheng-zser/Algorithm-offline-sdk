@@ -568,7 +568,7 @@ int main(int argc, char** argv) {
     int ans;
     try {
         testing::InitGoogleTest(&argc, argv);
-        int ans = RUN_ALL_TESTS();
+        ans = RUN_ALL_TESTS();
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
     }
