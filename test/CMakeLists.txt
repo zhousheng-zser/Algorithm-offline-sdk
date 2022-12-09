@@ -43,9 +43,11 @@ target_link_libraries(
 	PRIVATE
 	Threads::Threads
 	GXMiscellaneous::gx-miscellaneous
+	GTest::gtest
 	${OpenCV_LIBS}
 	${GX_CV_SDK_LIBS}
 )
+
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../config  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)
 

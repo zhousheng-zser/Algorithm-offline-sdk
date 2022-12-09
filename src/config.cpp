@@ -2,8 +2,6 @@
 
 #include "config_validation.hpp"
 
-#include <proxy/proxy.h>
-
 namespace glasssix::face {
     config::config() {
         set_configure_directory();

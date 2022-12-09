@@ -73,13 +73,13 @@ namespace glasssix::face {
         }
         ~impl() {}
 
-        abi::string check_type(std::vector<uchar>& val, int len) {
+        abi::string check_type(std::vector<uchar>& val, size_t len) {
             char s[20], temp[50];
             memset(s, 0, sizeof(s));
             memset(temp, 0, sizeof(temp));
             for (int i = 0; i < len && i < 5; i++) {
-                sprintf(s, "%02X", val[i]);
-                strcat(temp, s);
+                sprintf_s(s, "%02X", val[i]);
+                strcat_s(temp, s);
                 if (strcmp(temp, "FFD8FF") == 0)
                     return ".jpg";
                 else if (strcmp(temp, "89504E47") == 0)
@@ -90,13 +90,13 @@ namespace glasssix::face {
             return "";
         }
 
-        abi::string check_type(uchar* val, int len) {
+        abi::string check_type(uchar* val, size_t len) {
             char s[20], temp[50];
             memset(s, 0, sizeof(s));
             memset(temp, 0, sizeof(temp));
             for (int i = 0; i < len && i < 5; i++) {
-                sprintf(s, "%02X", val[i]);
-                strcat(temp, s);
+                sprintf_s(s, "%02X", val[i]);
+                strcat_s(temp, s);
                 if (strcmp(temp, "FFD8FF") == 0)
                     return ".jpg";
                 else if (strcmp(temp, "89504E47") == 0)
@@ -138,7 +138,7 @@ namespace glasssix::face {
         const static size_t kBlockWidth = 8; // compute 8 floats in one loop
         const float* a                  = emb_1.data();
         const float* b                  = emb_2.data();
-        int k                           = std::min(emb_1.size(), emb_2.size()) / kBlockWidth;
+        size_t k                        = std::min(emb_1.size(), emb_2.size()) / kBlockWidth;
         __m256 ans;
         ans          = _mm256_setzero_ps();
         float tmp[8] = {0};

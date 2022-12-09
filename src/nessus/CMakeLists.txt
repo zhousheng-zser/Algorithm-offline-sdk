@@ -13,7 +13,6 @@ file(
 	protocols/*.hpp
 	protocols/*.cpp
 )
-message( "${private_sources}---------------------------")
 
 target_sources(
 	${target_name}
