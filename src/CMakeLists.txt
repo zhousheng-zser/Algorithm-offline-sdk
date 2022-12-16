@@ -21,7 +21,7 @@ file(
 target_sources(
 	${target_name}
 	PRIVATE ${private_sources}
-)
+ "gx_face_api_c.cpp")
 
 if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
 	include(GXCompat)
