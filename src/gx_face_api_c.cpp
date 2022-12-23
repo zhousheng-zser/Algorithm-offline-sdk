@@ -34,10 +34,10 @@ void gx_user_remove_all(bool is_mask) {
     api->gx_user_remove_all(is_mask);
 }
 
-bool gx_user_remove_records(char* keys, int key_number, bool is_mask) {
+bool gx_user_remove_records(char* keys, bool is_mask) {
     abi::vector<abi::string> _keys;
     json keys_temp = json::parse(keys);
-    for (int i = 0; i < key_number; i++) {
+    for (int i = 0; i < keys_temp["keys"].size(); i++) {
         printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
         _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
     }
@@ -45,11 +45,11 @@ bool gx_user_remove_records(char* keys, int key_number, bool is_mask) {
      return api->gx_user_remove_records(_keys, is_mask);
 }
 
-bool* gx_user_add_records(char* keys, int key_number, char* mat_path, bool is_mask) {
+bool* gx_user_add_records(char* keys, char* mat_path, bool is_mask) {
     abi::vector<bool> result_;
     abi::vector<abi::string> _keys;
     json keys_temp = json::parse(keys);
-    for (int i = 0; i < key_number; i++) {
+    for (int i = 0; i < keys_temp["keys"].size(); i++) {
         printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str()); 
         _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
     }
@@ -57,13 +57,13 @@ bool* gx_user_add_records(char* keys, int key_number, char* mat_path, bool is_ma
     json mat_path_temp = json::parse(mat_path);
     printf("%s ---\n", mat_path_temp.dump().c_str());
     abi::vector<face::gx_img_api> _mat;
-    for (int i = 0; i < key_number; i++) {
+    for (int i = 0; i < mat_path_temp["imgs"].size(); i++) {
         printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
         _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
     }
     result_ = api->gx_user_add_records(_keys, _mat, is_mask);
 
-    for (int i = 0; i < key_number; i++)
+    for (int i = 0; i < _keys.size(); i++)
         printf("result_[%d]: %s\n", i, result_[i] ?  "pass":"fail");
     std::size_t size = result_.size();
     bool* result     = (bool*) gx_alloc(size * sizeof(bool));
@@ -72,18 +72,18 @@ bool* gx_user_add_records(char* keys, int key_number, char* mat_path, bool is_ma
     return result;
 }
 
-bool* gx_user_update_records(char* keys, int key_number, char* mat_path, bool is_mask) {
+bool* gx_user_update_records(char* keys, char* mat_path, bool is_mask) {
     abi::vector<bool> result_;
     abi::vector<abi::string> _keys;
     json keys_temp = json::parse(keys);
-    for (int i = 0; i < key_number; i++) {
+    for (int i = 0; i < keys_temp["keys"].size(); i++) {
         printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
         _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
     }
 
     json mat_path_temp = json::parse(mat_path);
     abi::vector<face::gx_img_api> _mat;
-    for (int i = 0; i < key_number; i++) {
+    for (int i = 0; i < mat_path_temp["imgs"].size(); i++) {
         printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
         _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
     }

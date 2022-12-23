@@ -20,18 +20,18 @@ int main(int argc, char** argv) {
     printf_demo('c', img);
 
     gx_user_load();
-    bool* result = gx_user_add_records(keys, 5, imgs, false); //人员库批量添加
+    bool* result = gx_user_add_records(keys, imgs, false); //人员库批量添加
     char* ss     = gx_user_search(img, 5, 0.4f, false); //人员搜索
     std::cout << ss << std::endl;
 
-    ss = gx_detect_integration(img, 5, 0.4f, false); //人脸识别融合
+    ss = gx_detect_integration(img, 0.4f, false); //人脸识别融合
     std::cout << ss << std::endl;
 
-    gx_user_update_records(keys, 5, imgs, false); //人员库批量更新
-    ss = gx_user_search(img, 5, 0.4f, false); //人员搜索
+    gx_user_update_records(keys, imgs, false); //人员库批量更新
+    ss = gx_user_search(img, 0.4f, false); //人员搜索
     std::cout << ss << std::endl;
 
-    gx_user_remove_records(keys, 5, false); //人员库批量删除记录
+    gx_user_remove_records(keys, false); //人员库批量删除记录
     ss = gx_user_search(img, 5, 0.4f, false); //人员搜索
     std::cout << ss << std::endl;
 
