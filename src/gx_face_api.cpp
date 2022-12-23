@@ -173,13 +173,13 @@ namespace glasssix::face {
         impl() {
             _config     = new config();
             cache.index = 0;
-            cache.track_history.clear();
+            cache.track_history.clear(); 
             cache.track_history_id.clear();
             protocol_ptr.init(_config->_configure_directory.directory);
 
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
-                    .models_directory = _config->_detect_config.models_directory});
+                    .models_directory = _config->_detect_config.models_directory}); 
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.use_int8, _config->_action_live_config.models_directory});
@@ -440,12 +440,13 @@ namespace glasssix::face {
     }
 
     //特征值库批量删除
-    void gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
+    bool gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
 
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::remove_records>(
             is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
+        return true; 
     }
 
     //特征值库批量添加

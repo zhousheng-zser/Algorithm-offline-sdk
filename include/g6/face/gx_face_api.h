@@ -58,7 +58,7 @@ namespace glasssix::face {
         //特征值库清空
         void gx_user_remove_all(bool is_mask = false);
         //特征值库批量删除
-        void gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask = false);
+        bool gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask = false);
         //特征值库批量添加
         abi::vector<bool> gx_user_add_records(
             abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask = false);
