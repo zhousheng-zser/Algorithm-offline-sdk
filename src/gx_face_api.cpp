@@ -173,13 +173,13 @@ namespace glasssix::face {
         impl() {
             _config     = new config();
             cache.index = 0;
-            cache.track_history.clear(); 
+            cache.track_history.clear();
             cache.track_history_id.clear();
             protocol_ptr.init(_config->_configure_directory.directory);
 
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
-                    .models_directory = _config->_detect_config.models_directory}); 
+                    .models_directory = _config->_detect_config.models_directory});
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.use_int8, _config->_action_live_config.models_directory});
@@ -192,6 +192,8 @@ namespace glasssix::face {
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_feature_config.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
+            selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
+                _config->_feature_config.models_directory, 2, _config->_feature_config.use_int8});
             gungnir_handle; //人头检测预留
             valklyrs_handle; //车辆行人预留
         }
@@ -223,6 +225,7 @@ namespace glasssix::face {
         longinus longinus_handle;
         romancia romancia_handle;
         selene selene_handle;
+        selene selene_mask_handle;
         valklyrs valklyrs_handle;
     };
 
@@ -360,7 +363,7 @@ namespace glasssix::face {
     }
 
     //特征提取融合
-    faces_feature gx_face_api::gx_face_feature(gx_img_api& mat) {
+    faces_feature gx_face_api::gx_face_feature(gx_img_api& mat, bool is_mask) {
         faces_feature ans;
         abi::vector<face_info> faces = gx_detect(mat);
         if (faces.size() == 0)
@@ -379,14 +382,22 @@ namespace glasssix::face {
         }
 
         std::array<char, 0> arr{};
-        auto selene_result = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
-            selene_forward_param{.instance_guid = "",
-                .aligned_images                 = romancia_result.aligned_images,
-                .format                         = romancia_result.format},
-            std::span<char>{arr});
-
+        if (is_mask == true) {
+            auto selene_result = protocol_ptr.invoke<selene::make_mask_forward>(impl_->selene_mask_handle,
+                selene_make_mask_forward_param{.instance_guid = "",
+                    .aligned_images                           = romancia_result.aligned_images,
+                    .format                                   = romancia_result.format},
+                std::span<char>{arr});
+            ans.features       = selene_result.features;
+        } else {
+            auto selene_result = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+                selene_forward_param{.instance_guid = "",
+                    .aligned_images                 = romancia_result.aligned_images,
+                    .format                         = romancia_result.format},
+                std::span<char>{arr});
+            ans.features       = selene_result.features;
+        }
         ans.facerectwithfaceinfo_list = faces;
-        ans.features                  = selene_result.features;
 
         return ans;
     }
@@ -403,7 +414,7 @@ namespace glasssix::face {
     // 特征值库搜索
     faces_search_info gx_face_api::gx_user_search(gx_img_api& mat, int top, float min_similarity, bool is_mask) {
         faces_search_info ans;
-        faces_feature faces = gx_face_feature(mat);
+        faces_feature faces = gx_face_feature(mat, is_mask);
         if (faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
             return ans;
 
@@ -446,7 +457,7 @@ namespace glasssix::face {
         auto result = protocol_ptr.invoke<irisviel::remove_records>(
             is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
-        return true; 
+        return true;
     }
 
     //特征值库批量添加
@@ -458,7 +469,7 @@ namespace glasssix::face {
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
-            faces_feature temp = gx_face_feature(mat[i]);
+            faces_feature temp = gx_face_feature(mat[i], is_mask);
             if (temp.features.size() == 0 || keys[i] == "") {
                 ans[i] = false;
             } else {
@@ -485,7 +496,7 @@ namespace glasssix::face {
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
-            faces_feature temp = gx_face_feature(mat[i]);
+            faces_feature temp = gx_face_feature(mat[i], is_mask);
             if (temp.features.size() == 0 || keys[i] == "") {
                 ans[i] = false;
             } else {
@@ -519,10 +530,10 @@ namespace glasssix::face {
     }
 
     // 1:1特征值对比接口
-    double gx_face_api::gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B) {
+    double gx_face_api::gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B, bool is_mask) {
         double ans            = 0;
-        faces_feature faces_A = gx_face_feature(mat_A);
-        faces_feature faces_B = gx_face_feature(mat_B);
+        faces_feature faces_A = gx_face_feature(mat_A, is_mask);
+        faces_feature faces_B = gx_face_feature(mat_B, is_mask);
         if (faces_A.features.size() == 0 || faces_B.features.size() == 0)
             return 0;
 

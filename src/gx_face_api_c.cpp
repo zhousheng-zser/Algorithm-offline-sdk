@@ -8,6 +8,27 @@ using namespace glasssix;
 face::gx_face_api* api = new face::gx_face_api();
 
 
+auto& get_last_error_storage() {
+    struct foo {
+        int code{0};
+        std::string what{""};
+    };
+    thread_local foo storage;
+    return storage;
+}
+
+void set_last_error() {
+    auto&& storage = get_last_error_storage();
+    storage.code = -1;
+    storage.what = "Error";
+}
+
+int get_last_error(const char** what) {
+    *what = get_last_error_storage().what.c_str();
+    return get_last_error_storage().code;
+}
+
+
 void gx_user_load(bool is_mask) {
     api->gx_user_load(is_mask);
 }
@@ -109,10 +130,10 @@ char* gx_detect_integration(char* mat_path, int top, float min_similarity, bool 
     return result;
 }
 
-double gx_feature_comparison(char* mat_A, char* mat_B) {
+double gx_feature_comparison(char* mat_A, char* mat_B, bool is_mask) {
     face::gx_img_api A(abi::string{mat_A});
     face::gx_img_api B(abi::string{mat_B});
-    return api->gx_feature_comparison(A, B);
+    return api->gx_feature_comparison(A, B, is_mask);
 }
 
 

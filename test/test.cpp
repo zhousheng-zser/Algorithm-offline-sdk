@@ -19,6 +19,11 @@ int main(int argc, char** argv) {
         "{\"keys\":[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]}";
 
     char img[] = "D:/test/img/action_live_5.jpg";
+
+    // const char* what[20];
+    // printf("error =  %d\n", get_last_error(what) );
+    // void set_last_error();
+
     printf_demo('c', img);
 
     gx_user_load(false);
@@ -44,7 +49,7 @@ int main(int argc, char** argv) {
 
     char A[] = "D:/test/img/A/610111200208264510.jpg";
     char B[] = "D:/test/img/B/610111200208264510.jpg";
-    std::cout << gx_feature_comparison(A, B) << std::endl;
+    std::cout << gx_feature_comparison(A, B, false) << std::endl;
 
     return 0;
 }
