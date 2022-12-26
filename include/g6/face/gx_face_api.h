@@ -49,26 +49,26 @@ namespace glasssix::face {
         // 1:1特征值对比接口
         double gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B);
         // 特征值库加载
-        void gx_user_load(bool is_mask = false);
+        void gx_user_load(bool is_mask );
         // 特征值库搜索
         faces_search_info gx_user_search(
-            gx_img_api& mat, int top = 1, float min_similarity = 0.4, bool is_mask = false);
+            gx_img_api& mat, int top, float min_similarity , bool is_mask);
         //特征值库清除缓存
-        void gx_user_clear(bool is_mask = false);
+        void gx_user_clear(bool is_mask);
         //特征值库清空
-        void gx_user_remove_all(bool is_mask = false);
+        void gx_user_remove_all(bool is_mask );
         //特征值库批量删除
-        void gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask = false);
+        bool gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask );
         //特征值库批量添加
         abi::vector<bool> gx_user_add_records(
-            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask = false);
+            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask );
         //特征值库批量更新
         abi::vector<bool> gx_user_update_records(
-            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask = false);
+            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask );
 
         //人脸识别流程融合
         faces_search_info gx_detect_integration(
-            gx_img_api& mat, int top = 1, float min_similarity = 0.4, bool is_mask = false);
+            gx_img_api& mat, int top , float min_similarity , bool is_mask );
 
     private:
         class impl;

@@ -440,12 +440,13 @@ namespace glasssix::face {
     }
 
     //特征值库批量删除
-    void gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
+    bool gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
 
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::remove_records>(
             is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
+        return true;
     }
 
     //特征值库批量添加
