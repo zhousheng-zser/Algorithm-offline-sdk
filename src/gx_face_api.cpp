@@ -379,14 +379,23 @@ namespace glasssix::face {
         }
 
         std::array<char, 0> arr{};
-        auto selene_result = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
-            selene_forward_param{.instance_guid = "",
-                .aligned_images                 = romancia_result.aligned_images,
-                .format                         = romancia_result.format},
-            std::span<char>{arr});
 
+        if (impl_->_config->_feature_config.model_type == 2) {
+            auto selene_result = protocol_ptr.invoke<selene::make_mask_forward>(impl_->selene_handle,
+                selene_make_mask_forward_param{.instance_guid = "",
+                    .aligned_images                 = romancia_result.aligned_images,
+                    .format                         = romancia_result.format},
+                std::span<char>{arr});
+            ans.features       = selene_result.features;
+        } else {
+            auto selene_result = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+                selene_forward_param{.instance_guid = "",
+                    .aligned_images                 = romancia_result.aligned_images,
+                    .format                         = romancia_result.format},
+                std::span<char>{arr});
+            ans.features       = selene_result.features;
+        }
         ans.facerectwithfaceinfo_list = faces;
-        ans.features                  = selene_result.features;
 
         return ans;
     }
