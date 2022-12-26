@@ -13,22 +13,24 @@ using namespace glasssix;
 
 int main(int argc, char** argv) {
 
-    char imgs[] = "{\"imgs\":[\"D:/test/img/action_live_0.jpg\",\"D:/test/img/action_live_1.jpg\",\"D:/test/img/action_live_2.jpg\",\"D:/test/img/action_live_3.jpg\",\"D:/test/img/action_live_4.jpg\"]}";
-    char keys[] = "{\"keys\":[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]}";
+    char imgs[] = "{\"imgs\":[\"D:/test/img/action_live_0.jpg\",\"D:/test/img/action_live_1.jpg\",\"D:/test/img/"
+                  "action_live_2.jpg\",\"D:/test/img/action_live_3.jpg\",\"D:/test/img/action_live_4.jpg\"]}";
+    char keys[] =
+        "{\"keys\":[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]}";
 
     char img[] = "D:/test/img/action_live_5.jpg";
     printf_demo('c', img);
 
-    gx_user_load();
+    gx_user_load(false);
     bool* result = gx_user_add_records(keys, imgs, false); //人员库批量添加
     char* ss     = gx_user_search(img, 5, 0.4f, false); //人员搜索
     std::cout << ss << std::endl;
 
-    ss = gx_detect_integration(img, 0.4f, false); //人脸识别融合
+    ss = gx_detect_integration(img, 5, 0.4f, false); //人脸识别融合
     std::cout << ss << std::endl;
 
     gx_user_update_records(keys, imgs, false); //人员库批量更新
-    ss = gx_user_search(img, 0.4f, false); //人员搜索
+    ss = gx_user_search(img, 5, 0.4f, false); //人员搜索
     std::cout << ss << std::endl;
 
     gx_user_remove_records(keys, false); //人员库批量删除记录

@@ -63,7 +63,7 @@ bool* gx_user_add_records(char* keys, char* mat_path, bool is_mask) {
     }
     result_ = api->gx_user_add_records(_keys, _mat, is_mask);
 
-    for (int i = 0; i < _keys.size(); i++)
+    for (int i = 0; i < result_.size(); i++)
         printf("result_[%d]: %s\n", i, result_[i] ?  "pass":"fail");
     std::size_t size = result_.size();
     bool* result     = (bool*) gx_alloc(size * sizeof(bool));
