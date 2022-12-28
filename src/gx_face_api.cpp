@@ -212,6 +212,7 @@ namespace glasssix::face {
             }
             return false;
         }
+
         struct track_cache {
             std::unordered_map<int, face_info> track_history;
             std::unordered_map<int, abi::string> track_history_id;
@@ -292,11 +293,11 @@ namespace glasssix::face {
     }
 
     //清除人脸跟踪历史
-    void gx_face_api::gx_clear_track_history() {
+    bool gx_face_api::gx_clear_track_history() {
         impl_->cache.index = 0;
         impl_->cache.track_history.clear();
         impl_->cache.track_history_id.clear();
-        return;
+        return true;
     }
 
     //人脸质量(模糊度)检测
@@ -363,8 +364,9 @@ namespace glasssix::face {
     }
 
     //特征提取融合
-    faces_feature gx_face_api::gx_face_feature(gx_img_api& mat, bool is_mask) {
-        faces_feature ans;
+    abi::vector<faces_feature> gx_face_api::gx_face_feature(gx_img_api& mat) {
+
+        abi::vector<faces_feature> ans;
         abi::vector<face_info> faces = gx_detect(mat);
         if (faces.size() == 0)
             return ans;
@@ -377,144 +379,184 @@ namespace glasssix::face {
                 .width                               = mat.get_cols(),
                 .facerectwithfaceinfo_list           = faces},
             str);
-        if (romancia_result.aligned_images.size() == 0) {
+        if (romancia_result.aligned_images.size() == 0)
             return ans;
-        }
 
         std::array<char, 0> arr{};
-        if (is_mask == true) {
+        {
+            faces_feature ans_temp;
+            auto selene_result                 = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+                selene_forward_param{.instance_guid = "",
+                                    .aligned_images                 = romancia_result.aligned_images,
+                                    .format                         = romancia_result.format},
+                std::span<char>{arr});
+            ans_temp.features                  = selene_result.features;
+            ans_temp.facerectwithfaceinfo_list = faces;
+            ans.emplace_back(ans_temp);
+        }
+        {
+            faces_feature ans_temp;
             auto selene_result = protocol_ptr.invoke<selene::make_mask_forward>(impl_->selene_mask_handle,
                 selene_make_mask_forward_param{.instance_guid = "",
                     .aligned_images                           = romancia_result.aligned_images,
                     .format                                   = romancia_result.format},
                 std::span<char>{arr});
-            ans.features       = selene_result.features;
-        } else {
-            auto selene_result = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
-                selene_forward_param{.instance_guid = "",
-                    .aligned_images                 = romancia_result.aligned_images,
-                    .format                         = romancia_result.format},
-                std::span<char>{arr});
-            ans.features       = selene_result.features;
+            ans_temp.features  = selene_result.features;
+            ans_temp.facerectwithfaceinfo_list = faces;
+            ans.emplace_back(ans_temp);
         }
-        ans.facerectwithfaceinfo_list = faces;
 
         return ans;
     }
 
     // 特征值库加载
-    void gx_face_api::gx_user_load(bool is_mask) {
+    bool gx_face_api::gx_user_load() {
 
         std::array<char, 0> arr{};
-        auto result = protocol_ptr.invoke<irisviel::load_databases>(
-            is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
-            irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
+        protocol_ptr.invoke<irisviel::load_databases>(
+            impl_->irisivel_mask_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
+
+        protocol_ptr.invoke<irisviel::load_databases>(
+            impl_->irisivel_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
+        return true;
     }
 
     // 特征值库搜索
-    faces_search_info gx_face_api::gx_user_search(gx_img_api& mat, int top, float min_similarity, bool is_mask) {
-        faces_search_info ans;
-        faces_feature faces = gx_face_feature(mat, is_mask);
-        if (faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
+    faces_search_info gx_face_api::gx_user_search(gx_img_api& mat, int top, float min_similarity) {
+        faces_search_info ans_A, ans_B, ans;
+        abi::vector<faces_feature> faces = gx_face_feature(mat);
+        if (faces.size() == 0 || faces[0].facerectwithfaceinfo_list.size() == 0 || faces[0].features.size() == 0
+            || faces[1].facerectwithfaceinfo_list.size() == 0 || faces[1].features.size() == 0)
             return ans;
 
         std::array<char, 0> arr{};
-        auto result =
-            protocol_ptr.invoke<irisviel::search>(is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
+        {
+            auto result  = protocol_ptr.invoke<irisviel::search>(impl_->irisivel_handle,
                 irisviel_search_param{
-                    .instance_guid  = "",
-                    .feature        = faces.features[0].feature,
-                    .top            = top,
-                    .min_similarity = min_similarity,
+                     .instance_guid  = "",
+                     .feature        = faces[0].features[0].feature,
+                     .top            = top,
+                     .min_similarity = min_similarity,
                 },
                 std::span<char>{arr});
-        ans.result = result.result;
+            ans_A.result = result.result;
+        }
+        {
+            auto result  = protocol_ptr.invoke<irisviel::search>(impl_->irisivel_mask_handle,
+                irisviel_search_param{
+                     .instance_guid  = "",
+                     .feature        = faces[1].features[0].feature,
+                     .top            = top,
+                     .min_similarity = min_similarity,
+                },
+                std::span<char>{arr});
+            ans_B.result = result.result;
+        }
+
+        for (int i = 0, j = 0, k = 0; i < top; ++i) {
+            if (j < ans_A.result.size() && k < ans_B.result.size()) {
+                if (ans_A.result[j].similarity >= ans_B.result[k].similarity)
+                    ans.result.emplace_back(ans_A.result[j++]);
+                else
+                    ans.result.emplace_back(ans_B.result[k++]);
+            } else if (j < ans_A.result.size()) {
+                ans.result.emplace_back(ans_A.result[j++]);
+            } else if (k < ans_B.result.size()) {
+                ans.result.emplace_back(ans_B.result[k++]);
+            }
+        }
 
         return ans;
     }
 
     //特征值库清除缓存
-    void gx_face_api::gx_user_clear(bool is_mask) {
+    bool gx_face_api::gx_user_clear() {
         std::array<char, 0> arr{};
-        auto result =
-            protocol_ptr.invoke<irisviel::clear>(is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
-                irisviel_clear_param{.instance_guid = ""}, std::span<char>{arr});
+        protocol_ptr.invoke<irisviel::clear>(
+            impl_->irisivel_mask_handle, irisviel_clear_param{.instance_guid = ""}, std::span<char>{arr});
+        protocol_ptr.invoke<irisviel::clear>(
+            impl_->irisivel_handle, irisviel_clear_param{.instance_guid = ""}, std::span<char>{arr});
+        return true;
     }
 
     //特征值库清空
-    void gx_face_api::gx_user_remove_all(bool is_mask) {
+    bool gx_face_api::gx_user_remove_all() {
 
         std::array<char, 0> arr{};
-        auto result =
-            protocol_ptr.invoke<irisviel::remove_all>(is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
-                irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
+        protocol_ptr.invoke<irisviel::remove_all>(
+            impl_->irisivel_mask_handle, irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
+        protocol_ptr.invoke<irisviel::remove_all>(
+            impl_->irisivel_handle, irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
+        return true;
     }
 
     //特征值库批量删除
-    bool gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys, bool is_mask) {
+    bool gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
 
         std::array<char, 0> arr{};
-        auto result = protocol_ptr.invoke<irisviel::remove_records>(
-            is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
+        protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_mask_handle,
+            irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
+        protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
         return true;
     }
 
     //特征值库批量添加
-    abi::vector<bool> gx_face_api::gx_user_add_records(
-        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask) {
+    abi::vector<bool> gx_face_api::gx_user_add_records(abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat) {
         abi::vector<bool> ans(mat.size(), false);
-        abi::vector<database_record> faces;
-        if (keys.size() != mat.size())
+        abi::vector<database_record> faces_A, faces_B;
+        if (keys.size() != mat.size() || mat.size() == 0)
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
-            faces_feature temp = gx_face_feature(mat[i], is_mask);
-            if (temp.features.size() == 0 || keys[i] == "") {
+            abi::vector<faces_feature> temp = gx_face_feature(mat[i]);
+            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0 || keys[i] == "") {
                 ans[i] = false;
             } else {
-                faces.emplace_back(database_record{.feature = temp.features[0].feature, .key = keys[i]});
+                faces_A.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
+                faces_B.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
                 ans[i] = true;
             }
             // 批量入库就可以释放掉gx_img_api
         }
         std::array<char, 0> arr{};
-        auto result =
-            protocol_ptr.invoke<irisviel::add_records>(is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
-                irisviel_add_records_param{.instance_guid = "", .data = faces}, std::span<char>{arr});
-
+        auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
+            irisviel_add_records_param{.instance_guid = "", .data = faces_A}, std::span<char>{arr});
+        auto result_B = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_mask_handle,
+            irisviel_add_records_param{.instance_guid = "", .data = faces_B}, std::span<char>{arr});
         return ans;
     }
 
     //特征值库批量更新
     abi::vector<bool> gx_face_api::gx_user_update_records(
-        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_mask) {
-
+        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat) {
         abi::vector<bool> ans(mat.size(), false);
-        abi::vector<database_record> faces;
-        if (keys.size() != mat.size())
+        abi::vector<database_record> faces_A, faces_B;
+        if (keys.size() != mat.size() || mat.size() == 0)
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
-            faces_feature temp = gx_face_feature(mat[i], is_mask);
-            if (temp.features.size() == 0 || keys[i] == "") {
+            abi::vector<faces_feature> temp = gx_face_feature(mat[i]);
+            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0 || keys[i] == "") {
                 ans[i] = false;
             } else {
-                faces.emplace_back(database_record{.feature = temp.features[0].feature, .key = keys[i]});
+                faces_A.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
+                faces_B.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
                 ans[i] = true;
             }
             // 批量更新就可以释放掉gx_img_api
         }
         std::array<char, 0> arr{};
-        auto result = protocol_ptr.invoke<irisviel::update_records>(
-            is_mask ? impl_->irisivel_mask_handle : impl_->irisivel_handle,
-            irisviel_update_records_param{.instance_guid = "", .data = faces}, std::span<char>{arr});
+        auto result_A = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
+            irisviel_update_records_param{.instance_guid = "", .data = faces_A}, std::span<char>{arr});
+        auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_mask_handle,
+            irisviel_update_records_param{.instance_guid = "", .data = faces_B}, std::span<char>{arr});
 
         return ans;
     }
 
     //人脸识别流程融合
-    faces_search_info gx_face_api::gx_detect_integration(gx_img_api& mat, int top, float min_similarity, bool is_mask) {
+    faces_search_info gx_face_api::gx_detect_integration(gx_img_api& mat, int top, float min_similarity) {
         faces_search_info ans;
         faces_spoofing faces = gx_face_spoofing_live(mat);
         if (faces.spoofing_result.size() == 0) {
@@ -524,21 +566,38 @@ namespace glasssix::face {
             printf("prob < 0.5 !\n");
             return ans;
         }
-        gx_user_load(is_mask);
-        ans = gx_user_search(mat, top, min_similarity, is_mask);
+        gx_user_load();
+        ans = gx_user_search(mat, top, min_similarity);
         return ans;
     }
 
     // 1:1特征值对比接口
-    double gx_face_api::gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B, bool is_mask) {
-        double ans            = 0;
-        faces_feature faces_A = gx_face_feature(mat_A, is_mask);
-        faces_feature faces_B = gx_face_feature(mat_B, is_mask);
-        if (faces_A.features.size() == 0 || faces_B.features.size() == 0)
+    double gx_face_api::gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B) {
+        double ans = 0;
+
+        abi::vector<face_info> is_mask_A = gx_detect(mat_A);
+        abi::vector<face_info> is_mask_B = gx_detect(mat_B);
+        if (is_mask_A.size() == 0 || is_mask_B.size() == 0)
             return 0;
 
-        abi::vector<float> x = faces_A.features[0].feature;
-        abi::vector<float> y = faces_B.features[0].feature;
+        abi::vector<faces_feature> faces_A = gx_face_feature(mat_A);
+        abi::vector<faces_feature> faces_B = gx_face_feature(mat_B);
+
+        if (faces_A.size() != 2 || faces_B.size() != 2 || faces_A[0].features.size() == 0
+            || faces_A[1].features.size() == 0 || faces_B[0].features.size() == 0 || faces_B[1].features.size() == 0)
+            return 0;
+
+        abi::vector<float> x;
+        abi::vector<float> y;
+
+        if (is_mask_A[0].attributes.has_value() && is_mask_B[0].attributes.has_value()
+            &&( is_mask_A[0].attributes->mask_index == 1 && is_mask_B[0].attributes->mask_index == 1) ) {
+            x = faces_A[1].features[0].feature;
+            y = faces_B[1].features[0].feature;
+        } else {
+            x = faces_A[0].features[0].feature;
+            y = faces_B[0].features[0].feature;
+        }
 
         if (x.size() == 0 || y.size() == 0 || x.size() != y.size())
             return 0;

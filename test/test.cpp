@@ -26,30 +26,30 @@ int main(int argc, char** argv) {
 
     printf_demo('c', img);
 
-    gx_user_load(false);
-    bool* result = gx_user_add_records(keys, imgs, false); //人员库批量添加
-    char* ss     = gx_user_search(img, 5, 0.4f, false); //人员搜索
+    gx_user_load();
+    bool* result = gx_user_add_records(keys, imgs); //人员库批量添加
+    char* ss     = gx_user_search(img, 5, 0.4f); //人员搜索
     std::cout << ss << std::endl;
 
-    ss = gx_detect_integration(img, 5, 0.4f, false); //人脸识别融合
+    ss = gx_detect_integration(img, 5, 0.4f); //人脸识别融合
     std::cout << ss << std::endl;
 
-    gx_user_update_records(keys, imgs, false); //人员库批量更新
-    ss = gx_user_search(img, 5, 0.4f, false); //人员搜索
+    gx_user_update_records(keys, imgs); //人员库批量更新
+    ss = gx_user_search(img, 5, 0.4f); //人员搜索
     std::cout << ss << std::endl;
 
-    gx_user_remove_records(keys, false); //人员库批量删除记录
-    ss = gx_user_search(img, 5, 0.4f, false); //人员搜索
+    gx_user_remove_records(keys); //人员库批量删除记录
+    ss = gx_user_search(img, 5, 0.4f); //人员搜索
     std::cout << ss << std::endl;
 
 
-    gx_user_clear(false); //人员库清除缓存  清内存
-    gx_user_remove_all(false); //人员库清空  清内存和磁盘
+    gx_user_clear(); //人员库清除缓存  清内存
+    gx_user_remove_all(); //人员库清空  清内存和磁盘
 
 
     char A[] = "D:/test/img/A/610111200208264510.jpg";
     char B[] = "D:/test/img/B/610111200208264510.jpg";
-    std::cout << gx_feature_comparison(A, B, false) << std::endl;
+    std::cout << gx_feature_comparison(A, B) << std::endl;
 
     return 0;
 }

@@ -29,15 +29,15 @@ int get_last_error(const char** what) {
 }
 
 
-void gx_user_load(bool is_mask) {
-    api->gx_user_load(is_mask);
+bool gx_user_load() {
+    return api->gx_user_load();
 }
 
-char* gx_user_search(char* mat_path, int top, float min_similarity, bool is_mask) {
+char* gx_user_search(char* mat_path, int top, float min_similarity) {
     abi::string temp{mat_path};
     printf("path = %s\n",temp.c_str() );
     glasssix::face::gx_img_api mat(temp);
-    face::faces_search_info faces = api->gx_user_search(mat, top, min_similarity, is_mask);
+    face::faces_search_info faces = api->gx_user_search(mat, top, min_similarity);
 
     json val            = faces;
     std::string result_ = val.dump();
@@ -47,15 +47,15 @@ char* gx_user_search(char* mat_path, int top, float min_similarity, bool is_mask
     return result;
 }
 
-void gx_user_clear(bool is_mask) {
-    api->gx_user_clear(is_mask);
+bool gx_user_clear() {
+    return api->gx_user_clear();
 }
 
-void gx_user_remove_all(bool is_mask) {
-    api->gx_user_remove_all(is_mask);
+bool gx_user_remove_all() {
+    return api->gx_user_remove_all();
 }
 
-bool gx_user_remove_records(char* keys, bool is_mask) {
+bool gx_user_remove_records(char* keys) {
     abi::vector<abi::string> _keys;
     json keys_temp = json::parse(keys);
     for (int i = 0; i < keys_temp["keys"].size(); i++) {
@@ -63,10 +63,10 @@ bool gx_user_remove_records(char* keys, bool is_mask) {
         _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
     }
 
-     return api->gx_user_remove_records(_keys, is_mask);
+     return api->gx_user_remove_records(_keys);
 }
 
-bool* gx_user_add_records(char* keys, char* mat_path, bool is_mask) {
+bool* gx_user_add_records(char* keys, char* mat_path) {
     abi::vector<bool> result_;
     abi::vector<abi::string> _keys;
     json keys_temp = json::parse(keys);
@@ -82,7 +82,7 @@ bool* gx_user_add_records(char* keys, char* mat_path, bool is_mask) {
         printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
         _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
     }
-    result_ = api->gx_user_add_records(_keys, _mat, is_mask);
+    result_ = api->gx_user_add_records(_keys, _mat);
 
     for (int i = 0; i < result_.size(); i++)
         printf("result_[%d]: %s\n", i, result_[i] ?  "pass":"fail");
@@ -93,7 +93,7 @@ bool* gx_user_add_records(char* keys, char* mat_path, bool is_mask) {
     return result;
 }
 
-bool* gx_user_update_records(char* keys, char* mat_path, bool is_mask) {
+bool* gx_user_update_records(char* keys, char* mat_path) {
     abi::vector<bool> result_;
     abi::vector<abi::string> _keys;
     json keys_temp = json::parse(keys);
@@ -108,7 +108,7 @@ bool* gx_user_update_records(char* keys, char* mat_path, bool is_mask) {
         printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
         _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
     }
-    result_ = api->gx_user_update_records(_keys, _mat, is_mask);
+    result_ = api->gx_user_update_records(_keys, _mat);
 
     std::size_t size = result_.size();
     bool* result     = (bool*) gx_alloc(size * sizeof(bool));
@@ -117,10 +117,10 @@ bool* gx_user_update_records(char* keys, char* mat_path, bool is_mask) {
     return result;
 }
 
-char* gx_detect_integration(char* mat_path, int top, float min_similarity, bool is_mask) {
+char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
 
     glasssix::face::gx_img_api mat(abi::string{mat_path});
-    face::faces_search_info faces = api->gx_detect_integration(mat, top, min_similarity, is_mask);
+    face::faces_search_info faces = api->gx_detect_integration(mat, top, min_similarity);
 
     json val            = faces;
     std::string result_ = val.dump();
@@ -130,15 +130,16 @@ char* gx_detect_integration(char* mat_path, int top, float min_similarity, bool 
     return result;
 }
 
-double gx_feature_comparison(char* mat_A, char* mat_B, bool is_mask) {
+double gx_feature_comparison(char* mat_A, char* mat_B) {
     face::gx_img_api A(abi::string{mat_A});
     face::gx_img_api B(abi::string{mat_B});
-    return api->gx_feature_comparison(A, B, is_mask);
+    return api->gx_feature_comparison(A, B);
 }
 
 
-void gx_free(void* ptr, size_t size) {
+bool gx_free(void* ptr, size_t size) {
     gx_dealloc(ptr, size);
+    return true;
 }
 void printf_demo(char x, char* y) {
     printf("char  = %c\n", x);
