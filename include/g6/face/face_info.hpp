@@ -129,6 +129,19 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+
+    //特征值库增删改结果数组
+    struct faces_user_add {
+        GX_BEGIN_FIELDS(faces_user_add);
+        GX_FIELD(bool, success);
+        GX_FIELD(abi::string, reason);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    using faces_user_remove = faces_user_add;
+    using faces_user_update = faces_user_add;
+
     //动作活体类型枚举
     enum action_live_type {
         BDFACE_ACTION_LIVE_BLINK      = 0, // 眨眨眼

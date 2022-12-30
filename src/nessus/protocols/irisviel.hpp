@@ -109,26 +109,10 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct irisviel_remove_records_result {
-        GX_BEGIN_FIELDS(irisviel_remove_records_result);
-        GX_FIELD(parser_result_status, status);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-    };
-
     struct irisviel_remove_record_param {
         GX_BEGIN_FIELDS(irisviel_remove_record_param);
         GX_FIELD(std::string, instance_guid);
         GX_FIELD(abi::string, key);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-    };
-
-    struct irisviel_remove_record_result {
-        GX_BEGIN_FIELDS(irisviel_remove_record_result);
-        GX_FIELD(parser_result_status, status);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -146,6 +130,7 @@ namespace glasssix::face {
     struct irisviel_add_records_result {
         GX_BEGIN_FIELDS(irisviel_add_records_result);
         GX_FIELD(parser_result_status, status);
+        GX_FIELD(abi::vector<faces_user_add>, result);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -167,11 +152,14 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     using irisviel_update_record_param   = irisviel_add_record_param;
     using irisviel_update_record_result  = irisviel_add_record_result;
     using irisviel_update_records_param  = irisviel_add_records_param;
     using irisviel_update_records_result = irisviel_add_records_result;
+
+    using irisviel_remove_record_result  = irisviel_add_record_result;
+    using irisviel_remove_records_result = irisviel_add_records_result;
+    
     using irisviel_clear_param           = irisviel_remove_all_param;
     using irisviel_clear_result          = irisviel_remove_all_result;
 

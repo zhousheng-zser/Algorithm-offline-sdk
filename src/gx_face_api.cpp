@@ -10,6 +10,7 @@
 #include "../src/nessus/protocols/valklyrs.hpp"
 #include "config.hpp"
 
+#include <cmath>
 #include <random>
 
 #include <g6/error_extensions.hpp>
@@ -424,6 +425,12 @@ namespace glasssix::face {
     // 特征值库搜索
     faces_search_info gx_face_api::gx_user_search(gx_img_api& mat, int top, float min_similarity) {
         faces_search_info ans_A, ans_B, ans;
+        if (top <= 0)
+            throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top <= 0."));
+        if (std::signbit(min_similarity) || min_similarity > 1.001)
+            throw source_code_aware_runtime_error(
+                U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
+
         abi::vector<faces_feature> faces = gx_face_feature(mat);
         if (faces.size() == 0 || faces[0].facerectwithfaceinfo_list.size() == 0 || faces[0].features.size() == 0
             || faces[1].facerectwithfaceinfo_list.size() == 0 || faces[1].features.size() == 0)
@@ -491,31 +498,40 @@ namespace glasssix::face {
     }
 
     //特征值库批量删除
-    bool gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
+    abi::vector<faces_user_remove> gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
 
+        abi::vector<faces_user_remove> ans;
         std::array<char, 0> arr{};
-        protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_mask_handle,
+        auto result = protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_mask_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
         protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
-        return true;
+        ans = result.result;
+        return ans;
     }
 
     //特征值库批量添加
-    abi::vector<bool> gx_face_api::gx_user_add_records(abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat) {
-        abi::vector<bool> ans(mat.size(), false);
+    abi::vector<faces_user_add> gx_face_api::gx_user_add_records(
+        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat) {
+        abi::vector<faces_user_add> ans(mat.size(), {.success = false, .reason = ""});
         abi::vector<database_record> faces_A, faces_B;
-        if (keys.size() != mat.size() || mat.size() == 0)
+        if (keys.size() != mat.size())
+            throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
+        if (mat.size() == 0)
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
             abi::vector<faces_feature> temp = gx_face_feature(mat[i]);
-            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0 || keys[i] == "") {
-                ans[i] = false;
+            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0) {
+                ans[i].success = false;
+                ans[i].reason  = "get feature fail";
+            } else if (keys[i] == "") {
+                ans[i].success = false;
+                ans[i].reason  = "key is empty";
             } else {
                 faces_A.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
                 faces_B.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
-                ans[i] = true;
+                ans[i].success = true;
             }
             // 批量入库就可以释放掉gx_img_api
         }
@@ -524,25 +540,35 @@ namespace glasssix::face {
             irisviel_add_records_param{.instance_guid = "", .data = faces_A}, std::span<char>{arr});
         auto result_B = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_mask_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_B}, std::span<char>{arr});
+        for (int i = 0, j = 0; i < ans.size(); i++) {
+            if (ans[i].success)
+                ans[i] = result_A.result[j++];
+        }
         return ans;
     }
 
     //特征值库批量更新
-    abi::vector<bool> gx_face_api::gx_user_update_records(
+    abi::vector<faces_user_update> gx_face_api::gx_user_update_records(
         abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat) {
-        abi::vector<bool> ans(mat.size(), false);
+        abi::vector<faces_user_update> ans(mat.size(), {.success = false, .reason = ""});
         abi::vector<database_record> faces_A, faces_B;
-        if (keys.size() != mat.size() || mat.size() == 0)
+        if (keys.size() != mat.size())
+            throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
+        if (mat.size() == 0)
             return ans;
 
         for (int i = 0; i < mat.size(); i++) {
             abi::vector<faces_feature> temp = gx_face_feature(mat[i]);
-            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0 || keys[i] == "") {
-                ans[i] = false;
+            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0) {
+                ans[i].success = false;
+                ans[i].reason  = "get feature fail";
+            } else if (keys[i] == "") {
+                ans[i].success = false;
+                ans[i].reason  = "key is empty";
             } else {
                 faces_A.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
                 faces_B.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
-                ans[i] = true;
+                ans[i].success = true;
             }
             // 批量更新就可以释放掉gx_img_api
         }
@@ -551,13 +577,21 @@ namespace glasssix::face {
             irisviel_update_records_param{.instance_guid = "", .data = faces_A}, std::span<char>{arr});
         auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_mask_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_B}, std::span<char>{arr});
-
+        for (int i = 0, j = 0; i < ans.size(); i++) {
+            if (ans[i].success)
+                ans[i] = result_A.result[j++];
+        }
         return ans;
     }
 
     //人脸识别流程融合
     faces_search_info gx_face_api::gx_detect_integration(gx_img_api& mat, int top, float min_similarity) {
         faces_search_info ans;
+        if (top <= 0)
+            throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top <= 0."));
+        if (std::signbit(min_similarity) || min_similarity > 1.001)
+            throw source_code_aware_runtime_error(
+                U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
         faces_spoofing faces = gx_face_spoofing_live(mat);
         if (faces.spoofing_result.size() == 0) {
             printf("no face!\n");
@@ -591,7 +625,7 @@ namespace glasssix::face {
         abi::vector<float> y;
 
         if (is_mask_A[0].attributes.has_value() && is_mask_B[0].attributes.has_value()
-            &&( is_mask_A[0].attributes->mask_index == 1 && is_mask_B[0].attributes->mask_index == 1) ) {
+            && (is_mask_A[0].attributes->mask_index == 1 && is_mask_B[0].attributes->mask_index == 1)) {
             x = faces_A[1].features[0].feature;
             y = faces_B[1].features[0].feature;
         } else {

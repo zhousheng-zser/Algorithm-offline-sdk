@@ -57,12 +57,11 @@ namespace glasssix::face {
         //特征值库清空
         bool gx_user_remove_all();
         //特征值库批量删除
-        bool gx_user_remove_records(abi::vector<abi::string>& keys);
+        abi::vector<faces_user_remove> gx_user_remove_records(abi::vector<abi::string>& keys);
         //特征值库批量添加
-        abi::vector<bool> gx_user_add_records(
-            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat);
+        abi::vector<faces_user_add> gx_user_add_records(abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat);
         //特征值库批量更新
-        abi::vector<bool> gx_user_update_records(
+        abi::vector<faces_user_update> gx_user_update_records(
             abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat);
 
         //人脸识别流程融合

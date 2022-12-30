@@ -10,138 +10,246 @@ face::gx_face_api* api = new face::gx_face_api();
 
 auto& get_last_error_storage() {
     struct foo {
-        int code{0};
-        std::string what{""};
+        std::string what{"OK"};
     };
     thread_local foo storage;
     return storage;
 }
 
-void set_last_error() {
+void set_last_error(std::string what) {
     auto&& storage = get_last_error_storage();
-    storage.code = -1;
-    storage.what = "Error";
+    storage.what   = what;
 }
 
-int get_last_error(const char** what) {
-    *what = get_last_error_storage().what.c_str();
-    return get_last_error_storage().code;
+char* get_last_error() {
+    std::string result_ = get_last_error_storage().what;
+    std::size_t size    = result_.size() + 1;
+    char* result        = (char*) gx_alloc(size * sizeof(char));
+    std::memcpy(result, result_.c_str(), size * sizeof(char));
+    set_last_error(std::string{"OK"});
+    return result;
 }
 
 
 bool gx_user_load() {
-    return api->gx_user_load();
+    try {
+        bool ans = api->gx_user_load();
+        set_last_error(std::string{"OK"});
+        return ans;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
 char* gx_user_search(char* mat_path, int top, float min_similarity) {
-    abi::string temp{mat_path};
-    printf("path = %s\n",temp.c_str() );
-    glasssix::face::gx_img_api mat(temp);
-    face::faces_search_info faces = api->gx_user_search(mat, top, min_similarity);
+    try {
+        abi::string temp{mat_path};
+        printf("path = %s\n", temp.c_str());
+        glasssix::face::gx_img_api mat(temp);
+        face::faces_search_info faces = api->gx_user_search(mat, top, min_similarity);
 
-    json val            = faces;
-    std::string result_ = val.dump();
-    std::size_t size    = result_.size() + 1;
-    char* result        = (char*) gx_alloc(size * sizeof(char));
-    std::memcpy(result, result_.c_str(), size * sizeof(char));
-    return result;
+        json val            = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = (char*) gx_alloc(size * sizeof(char));
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
 bool gx_user_clear() {
-    return api->gx_user_clear();
+    try {
+        bool ans = api->gx_user_clear();
+        set_last_error(std::string{"OK"});
+        return ans;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
 bool gx_user_remove_all() {
-    return api->gx_user_remove_all();
+    try {
+        bool ans = api->gx_user_remove_all();
+        set_last_error(std::string{"OK"});
+        return ans;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
-bool gx_user_remove_records(char* keys) {
-    abi::vector<abi::string> _keys;
-    json keys_temp = json::parse(keys);
-    for (int i = 0; i < keys_temp["keys"].size(); i++) {
-        printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
-        _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
-    }
+char* gx_user_remove_records(char* keys) {
+    try {
 
-     return api->gx_user_remove_records(_keys);
+        abi::vector<abi::string> _keys;
+        json keys_temp = json::parse(keys);
+        for (int i = 0; i < keys_temp["keys"].size(); i++) {
+            printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
+            _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
+        }
+
+        json val            = api->gx_user_remove_records(_keys);
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = (char*) gx_alloc(size * sizeof(char));
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
-bool* gx_user_add_records(char* keys, char* mat_path) {
-    abi::vector<bool> result_;
-    abi::vector<abi::string> _keys;
-    json keys_temp = json::parse(keys);
-    for (int i = 0; i < keys_temp["keys"].size(); i++) {
-        printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str()); 
-        _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
-    }
+char* gx_user_add_records(char* keys, char* mat_path) {
+    std::string err;
+    try {
+        bool flag = 0;
+        abi::vector<abi::string> _keys;
+        abi::vector<face::gx_img_api> _mat;
+        json keys_temp     = json::parse(keys);
+        json mat_path_temp = json::parse(mat_path);
+        if (keys_temp["keys"].size() != mat_path_temp["imgs"].size())
+            throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
+        for (int i = 0; i < keys_temp["keys"].size(); i++) {
+            try {
+                printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
+                _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
 
-    json mat_path_temp = json::parse(mat_path);
-    printf("%s ---\n", mat_path_temp.dump().c_str());
-    abi::vector<face::gx_img_api> _mat;
-    for (int i = 0; i < mat_path_temp["imgs"].size(); i++) {
-        printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
-        _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
-    }
-    result_ = api->gx_user_add_records(_keys, _mat);
+                printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
+                _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
 
-    for (int i = 0; i < result_.size(); i++)
-        printf("result_[%d]: %s\n", i, result_[i] ?  "pass":"fail");
-    std::size_t size = result_.size();
-    bool* result     = (bool*) gx_alloc(size * sizeof(bool));
-    for (int i = 0; i < result_.size(); i++)
-        result[i] = result_[i];
-    return result;
+            } catch (const std::exception& ex) {
+                flag = 1;
+                err += ex.what() + mat_path_temp["imgs"][i].get<std::string>() + " "
+                     + keys_temp["keys"][i].get<std::string>() + "\n";
+            }
+        }
+        json val            = api->gx_user_add_records(_keys, _mat);
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = (char*) gx_alloc(size * sizeof(char));
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        if (!flag)
+            set_last_error(std::string{"OK"});
+        else
+            set_last_error(err);
+        return result;
+    } catch (const std::exception& ex) {
+        err += ex.what();
+        set_last_error(err);
+    }
 }
 
-bool* gx_user_update_records(char* keys, char* mat_path) {
-    abi::vector<bool> result_;
-    abi::vector<abi::string> _keys;
-    json keys_temp = json::parse(keys);
-    for (int i = 0; i < keys_temp["keys"].size(); i++) {
-        printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
-        _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
-    }
+char* gx_user_update_records(char* keys, char* mat_path) {
+    std::string err;
+    try {
+        bool flag = 0;
+        abi::vector<abi::string> _keys;
+        abi::vector<face::gx_img_api> _mat;
+        json keys_temp     = json::parse(keys);
+        json mat_path_temp = json::parse(mat_path);
+        if (keys_temp["keys"].size() != mat_path_temp["imgs"].size())
+            throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
+        for (int i = 0; i < keys_temp["keys"].size(); i++) {
+            try {
+                printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
+                _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
 
-    json mat_path_temp = json::parse(mat_path);
-    abi::vector<face::gx_img_api> _mat;
-    for (int i = 0; i < mat_path_temp["imgs"].size(); i++) {
-        printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
-        _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
-    }
-    result_ = api->gx_user_update_records(_keys, _mat);
+                printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
+                _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
 
-    std::size_t size = result_.size();
-    bool* result     = (bool*) gx_alloc(size * sizeof(bool));
-    for (int i = 0; i < result_.size(); i++)
-        result[i] = result_[i];
-    return result;
+            } catch (const std::exception& ex) {
+                flag = 1;
+                err += ex.what() + mat_path_temp["imgs"][i].get<std::string>() + " "
+                     + keys_temp["keys"][i].get<std::string>() + "\n";
+            }
+        }
+        json val            = api->gx_user_update_records(_keys, _mat);
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = (char*) gx_alloc(size * sizeof(char));
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        if (!flag)
+            set_last_error(std::string{"OK"});
+        else
+            set_last_error(err);
+        return result;
+    } catch (const std::exception& ex) {
+        err += ex.what();
+        set_last_error(err);
+    }
 }
 
 char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
+    try {
+        glasssix::face::gx_img_api mat(abi::string{mat_path});
+        face::faces_search_info faces = api->gx_detect_integration(mat, top, min_similarity);
 
-    glasssix::face::gx_img_api mat(abi::string{mat_path});
-    face::faces_search_info faces = api->gx_detect_integration(mat, top, min_similarity);
-
-    json val            = faces;
-    std::string result_ = val.dump();
-    std::size_t size    = result_.size() + 1;
-    char* result        = (char*) gx_alloc(size * sizeof(char));
-    std::memcpy(result, result_.c_str(), size * sizeof(char));
-    return result;
+        json val            = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = (char*) gx_alloc(size * sizeof(char));
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
 double gx_feature_comparison(char* mat_A, char* mat_B) {
-    face::gx_img_api A(abi::string{mat_A});
-    face::gx_img_api B(abi::string{mat_B});
-    return api->gx_feature_comparison(A, B);
+    try {
+        face::gx_img_api A(abi::string{mat_A});
+        face::gx_img_api B(abi::string{mat_B});
+        set_last_error(std::string{"OK"});
+        return api->gx_feature_comparison(A, B);
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 
 
 bool gx_free(void* ptr, size_t size) {
-    gx_dealloc(ptr, size);
-    return true;
+    try {
+        gx_dealloc(ptr, size);
+        set_last_error(std::string{"OK"});
+        return true;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
 }
 void printf_demo(char x, char* y) {
     printf("char  = %c\n", x);
     printf("char* = %s\n", y);
+}
+
+int get_disk_keys_num(char* path) {
+    int ans = 0;
+    for (int i = 0; i < 4096; i++) {
+        std::string name = path;
+        name += "/" + std::to_string(i) + ".json";
+        std::ifstream fp;
+        fp.open(name, std::ios::binary);
+        std::string result_str;
+        nlohmann::json result;
+        while (std::getline(fp, result_str)) {
+            if (result_str.length() == 0) {
+                break;
+            }
+            result.clear();
+            ans++;
+        }
+        fp.close();
+    }
+    return ans / 16;
 }
