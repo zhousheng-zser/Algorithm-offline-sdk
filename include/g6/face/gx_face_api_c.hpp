@@ -15,4 +15,5 @@ GX_API(GXFACEAPIC) bool gx_free(void* ptr, size_t size);
 GX_API(GXFACEAPIC) void printf_demo(char x, char* y); //到时会删
 GX_API(GXFACEAPIC) int get_disk_keys_num(char* path); //到时会删
 GX_API(GXFACEAPIC) char* get_last_error(); // C接口捕获异常
+GX_API(GXFACEAPIC) float get_memory_usage_info();
 }

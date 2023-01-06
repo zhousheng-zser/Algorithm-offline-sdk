@@ -18,6 +18,7 @@ namespace glasssix::face {
         uchar* get_data();
         size_t get_data_len();
         abi::string get_type();
+        bool rotate(int deg);
 
     private:
         class impl;
@@ -66,6 +67,11 @@ namespace glasssix::face {
 
         //人脸识别流程融合
         faces_search_info gx_detect_integration(gx_img_api& mat, int top, float min_similarity);
+
+        bool set_config(std::string_view name, std::string_view key, int val);
+        bool set_config(std::string_view name, std::string_view key, float val);
+        bool set_config(std::string_view name, std::string_view key, abi::string val);
+        bool set_config(std::string_view name, std::string_view key, bool val);
 
     private:
         class impl;

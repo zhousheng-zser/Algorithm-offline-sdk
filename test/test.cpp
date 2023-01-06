@@ -11,9 +11,11 @@ using namespace glasssix::face;
 using namespace glasssix;
 
 
+
+
 int main(int argc, char** argv) {
 
-
+    get_memory_usage_info();
     char imgs[] = "{\"imgs\":[\"D:/test/img/action_live_0.jpg\",\"D:/test/img/action_live_1.jpg\",\"D:/test/img/"
                   "action_live_2.jpg\",\"D:/test/img/action_live_3.jpg\",\"D:/test/img/action_live_4.jpg\"]}";
     // char imgs[] = "{\"imgs\":[\"D:/test/img/a165_0.jpg\",\"D:/test/img/acti\",\"D:/test/img/"

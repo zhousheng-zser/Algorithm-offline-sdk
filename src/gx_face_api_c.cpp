@@ -3,6 +3,11 @@
 #include "g6/abi/memory.hpp"
 #include "gx_face_api.h"
 
+#define NOMINMAX
+#include <Windows.h>
+#include <iostream>
+#include <psapi.h>
+
 using namespace glasssix;
 
 face::gx_face_api* api = new face::gx_face_api();
@@ -121,6 +126,10 @@ char* gx_user_add_records(char* keys, char* mat_path) {
             try {
                 printf("mat_path[%d]=%s \n", i, mat_path_temp["imgs"][i].get<std::string>().c_str());
                 _mat.push_back(face::gx_img_api{abi::string{mat_path_temp["imgs"][i].get<std::string>()}});
+                _mat[i].rotate(1);
+                _mat[i].rotate(3);
+                _mat[i].rotate(2);
+                _mat[i].rotate(2);
 
                 printf("keys[%d]=%s \n", i, keys_temp["keys"][i].get<std::string>().c_str());
                 _keys.push_back(abi::string{keys_temp["keys"][i].get<std::string>()});
@@ -252,4 +261,16 @@ int get_disk_keys_num(char* path) {
         fp.close();
     }
     return ans / 16;
+}
+
+float get_memory_usage_info() {
+    HANDLE handle = GetCurrentProcess();
+    PROCESS_MEMORY_COUNTERS pmc;
+    GetProcessMemoryInfo(handle, &pmc, sizeof(pmc));
+    float memoryUsage_M = pmc.WorkingSetSize / (1024.0 * 1024.0);
+    float memoryUsage_K = pmc.WorkingSetSize / 1024.0;
+
+    std::cout << std::fixed << std::setprecision(2) << "Memory = " << memoryUsage_K << "K " << memoryUsage_M << "M"
+              << std::endl;
+    return memoryUsage_K;
 }

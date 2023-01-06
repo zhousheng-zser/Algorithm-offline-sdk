@@ -4,6 +4,7 @@
 #include <optional>
 
 #include <g6/json_extensions.hpp>
+typedef unsigned char uchar;
 
 namespace glasssix::face {
     //人脸属性
@@ -105,7 +106,7 @@ namespace glasssix::face {
     // 人脸搜索数据
     struct faces_search_data {
         GX_BEGIN_FIELDS(faces_search_data);
-        GX_FIELD(abi::vector<float>, feature); //人脸特征向量
+        //  GX_FIELD(abi::vector<float>, feature); //人脸特征向量
         GX_FIELD(abi::string, key); //人脸键值
         GX_END_FIELDS;
 
@@ -139,6 +140,21 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+
+    //特征值库操作返回值
+    struct face_user_result {
+        GX_BEGIN_FIELDS(face_user_result);
+        GX_FIELD(abi::string, key);
+        GX_FIELD(int32_t, success);
+        GX_FIELD(std::optional<face_info>, facerectwithfaceinfo);
+        GX_FIELD(abi::vector<uchar>, img_buffer);
+        
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
     using faces_user_remove = faces_user_add;
     using faces_user_update = faces_user_add;
 
@@ -149,6 +165,12 @@ namespace glasssix::face {
         BDFACE_ACTION_LIVE_NOD        = 2, // 点点头
         BDFACE_ACTION_LIVE_LEFT_HEAD  = 3, // 左摇头
         BDFACE_ACTION_LIVE_RIGHT_HEAD = 4 // 右摇头
+    };
+    //动作活体类型枚举
+    enum image_rotation_type {
+        DEG90   = 1,
+        DEG180  = 2,
+        DEG270  = 3
     };
 
 } // namespace glasssix::face

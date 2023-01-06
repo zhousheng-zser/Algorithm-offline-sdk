@@ -20,6 +20,37 @@
 namespace glasssix::face {
     namespace {
         auto&& protocol_ptr = nessus_protocol::instance();
+        config* _config     = new config();
+
+    } // namespace
+
+    inline float DotProductAVX256(const abi::vector<float>& emb_1, const abi::vector<float>& emb_2) {
+        const static size_t kBlockWidth = 8; // compute 8 floats in one loop
+        const float* a                  = emb_1.data();
+        const float* b                  = emb_2.data();
+        size_t k                        = std::min(emb_1.size(), emb_2.size()) / kBlockWidth;
+        __m256 ans;
+        ans          = _mm256_setzero_ps();
+        float tmp[8] = {0};
+        for (int i = 0; i < k; i++) {
+            __m256 ai = _mm256_loadu_ps(a + i * kBlockWidth);
+            __m256 bi = _mm256_loadu_ps(b + i * kBlockWidth);
+            ans       = _mm256_add_ps(ans, _mm256_mul_ps(ai, bi));
+        }
+        _mm256_store_ps(tmp, ans);
+        return tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
+    }
+
+    inline float Cosine_distance_AVX256(abi::vector<float>& x, abi::vector<float>& y) {
+        float sum, a, b;
+        a = DotProductAVX256(x, x);
+        b = DotProductAVX256(y, y);
+        if (a == 0 || b == 0)
+            return 0;
+        sum       = DotProductAVX256(x, y);
+        float ans = sum / (sqrt(a) * sqrt(b));
+        ans       = std::min(1.0f, abs(ans));
+        return ans;
     }
 
     abi::string get_random_string(size_t len) {
@@ -134,34 +165,18 @@ namespace glasssix::face {
     abi::string gx_img_api::get_type() {
         return impl_->type;
     }
-
-    inline float DotProductAVX256(const abi::vector<float>& emb_1, const abi::vector<float>& emb_2) {
-        const static size_t kBlockWidth = 8; // compute 8 floats in one loop
-        const float* a                  = emb_1.data();
-        const float* b                  = emb_2.data();
-        size_t k                        = std::min(emb_1.size(), emb_2.size()) / kBlockWidth;
-        __m256 ans;
-        ans          = _mm256_setzero_ps();
-        float tmp[8] = {0};
-        for (int i = 0; i < k; i++) {
-            __m256 ai = _mm256_loadu_ps(a + i * kBlockWidth);
-            __m256 bi = _mm256_loadu_ps(b + i * kBlockWidth);
-            ans       = _mm256_add_ps(ans, _mm256_mul_ps(ai, bi));
+    bool gx_img_api::rotate(int deg) {
+        if (deg == image_rotation_type::DEG90) {
+            cv::rotate(impl_->img, impl_->img, cv::ROTATE_90_CLOCKWISE);
+        } else if (deg == image_rotation_type::DEG180) {
+            cv::flip(impl_->img, impl_->img, -1);
+        } else if (deg == image_rotation_type::DEG270) {
+            cv::rotate(impl_->img, impl_->img, cv::ROTATE_90_COUNTERCLOCKWISE);
+        } else {
+            return false;
         }
-        _mm256_store_ps(tmp, ans);
-        return tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
-    }
-
-    inline float Cosine_distance_AVX256(abi::vector<float>& x, abi::vector<float>& y) {
-        float sum, a, b;
-        a = DotProductAVX256(x, x);
-        b = DotProductAVX256(y, y);
-        if (a == 0 || b == 0)
-            return 0;
-        sum       = DotProductAVX256(x, y);
-        float ans = sum / (sqrt(a) * sqrt(b));
-        ans       = std::min(1.0f, abs(ans));
-        return ans;
+        impl_->data_len = 1llu * impl_->img.channels() * impl_->img.cols * impl_->img.rows;
+        return true;
     }
 
     gx_face_api::gx_face_api() : impl_{std::make_unique<impl>()} {}
@@ -172,7 +187,7 @@ namespace glasssix::face {
     class gx_face_api::impl {
     public:
         impl() {
-            _config     = new config();
+            //_config     = new config();
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
@@ -219,7 +234,8 @@ namespace glasssix::face {
             std::unordered_map<int, abi::string> track_history_id;
             int index = 0;
         } cache;
-        config* _config;
+        // config* _config;
+        mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
         irisviel irisivel_mask_handle;
@@ -238,12 +254,12 @@ namespace glasssix::face {
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         auto result = protocol_ptr.invoke<longinus::detect>(impl_->longinus_handle,
             longinus_detect_param{.instance_guid = "",
-                .format                          = impl_->_config->_detect_config.format,
+                .format                          = _config->_detect_config.format,
                 .height                          = mat.get_rows(),
                 .width                           = mat.get_cols(),
-                .min_size                        = impl_->_config->_detect_config.min_size,
-                .threshold                       = impl_->_config->_detect_config.threshold,
-                .do_attributing                  = impl_->_config->_detect_config.do_attributing},
+                .min_size                        = _config->_detect_config.min_size,
+                .threshold                       = _config->_detect_config.threshold,
+                .do_attributing                  = _config->_detect_config.do_attributing},
             str);
         ans         = result.facerectwithfaceinfo_list;
         return ans;
@@ -252,7 +268,7 @@ namespace glasssix::face {
     //人脸追踪
     abi::vector<face_trace_info> gx_face_api::gx_track(gx_img_api& mat) {
         abi::vector<face_trace_info> ans;
-        if (impl_->cache.index % (impl_->_config->_track_config.detect_intv_before_track) == 0) {
+        if (impl_->cache.index % (_config->_track_config.detect_intv_before_track) == 0) {
             abi::vector<face_info> faces = gx_detect(mat);
             for (int i = 0; i < faces.size(); i++) {
                 if (!impl_->track_check(faces[i])) {
@@ -270,7 +286,7 @@ namespace glasssix::face {
             auto result = protocol_ptr.invoke<longinus::trace>(impl_->longinus_handle,
                 longinus_trace_param{
                     .instance_guid = "",
-                    .format        = impl_->_config->_detect_config.format,
+                    .format        = _config->_detect_config.format,
                     .height        = mat.get_rows(),
                     .width         = mat.get_cols(),
                     .face          = it->second,
@@ -311,7 +327,7 @@ namespace glasssix::face {
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         auto result                   = protocol_ptr.invoke<romancia::blur_detect>(impl_->romancia_handle,
             romancia_blur_detect_param{.instance_guid = "",
-                                  .format                               = impl_->_config->_blur_config.format,
+                                  .format                               = _config->_blur_config.format,
                                   .height                               = mat.get_rows(),
                                   .width                                = mat.get_cols(),
                                   .facerect_list                        = faces},
@@ -334,7 +350,7 @@ namespace glasssix::face {
         auto result   = protocol_ptr.invoke<damocles::presentation_attack_detect>(impl_->damocles_handle,
             damocles_presentation_attack_detect_param{.instance_guid = "",
                   .action_cmd                                          = action_type,
-                  .format                                              = impl_->_config->_action_live_config.format,
+                  .format                                              = _config->_action_live_config.format,
                   .height                                              = mat.get_rows(),
                   .width                                               = mat.get_cols(),
                   .facerect                                            = ans},
@@ -353,7 +369,7 @@ namespace glasssix::face {
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         auto result                   = protocol_ptr.invoke<damocles::spoofing_detect>(impl_->damocles_handle,
             damocles_spoofing_detect_param{.instance_guid = "",
-                                  .format                                   = impl_->_config->_action_live_config.format,
+                                  .format                                   = _config->_action_live_config.format,
                                   .height                                   = mat.get_rows(),
                                   .width                                    = mat.get_cols(),
                                   .facerect_list                            = faces},
@@ -375,7 +391,7 @@ namespace glasssix::face {
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         auto romancia_result = protocol_ptr.invoke<romancia::alignFace>(impl_->romancia_handle,
             romancia_align_face_param{.instance_guid = "",
-                .format                              = impl_->_config->_feature_config.format,
+                .format                              = _config->_feature_config.format,
                 .height                              = mat.get_rows(),
                 .width                               = mat.get_cols(),
                 .facerectwithfaceinfo_list           = faces},
@@ -639,4 +655,54 @@ namespace glasssix::face {
         return ans;
     }
 
+    template <typename T>
+    bool update_config(std::mutex& mutex, std::string_view name, std::string_view key, T value) {
+        std::scoped_lock lock{mutex};
+        try {
+            json temp;
+            if (name == "action_live.json") {
+                temp                              = _config->_action_live_config;
+                _config->_action_live_config[key] = value;
+            } else if (name == "blur.json") {
+                temp                       = _config->_blur_config;
+                _config->_blur_config[key] = value;
+            } else if (name == "detect.json") {
+                temp                         = _config->_detect_config;
+                _config->_detect_config[key] = value;
+            } else if (name == "face_user.json") {
+                temp                            = _config->_face_user_config;
+                _config->_face_user_config[key] = value;
+            } else if (name == "feature.json") {
+                temp                          = _config->_feature_config;
+                _config->_feature_config[key] = value;
+            } else if (name == "track.json") {
+                temp                        = _config->_track_config;
+                _config->_track_config[key] = value;
+            } else if (name == "configure_directory.json") {
+                temp                               = _config->_configure_directory;
+                _config->_configure_directory[key] = value;
+            } else {
+                return false;
+            }
+            temp[key]        = value;
+            std::string path = "./config/" + name;
+            std::ofstream(path.c_str()) << temp;
+        } catch (const std::exception& ex) {
+            return false;
+        }
+        return true;
+    }
+
+    bool gx_face_api::set_config(std::string_view name, std::string_view key, int val) {
+        return update_config(impl_->mutex_, name, key, val);
+    }
+    bool gx_face_api::set_config(std::string_view name, std::string_view key, float val) {
+        return update_config(impl_->mutex_, name, key, val);
+    }
+    bool gx_face_api::set_config(std::string_view name, std::string_view key, abi::string val) {
+        return update_config(impl_->mutex_, name, key, val);
+    }
+    bool gx_face_api::set_config(std::string_view name, std::string_view key, bool val) {
+        return update_config(impl_->mutex_, name, key, val);
+    }
 } // namespace glasssix::face
