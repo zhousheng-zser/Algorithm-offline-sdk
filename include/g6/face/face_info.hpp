@@ -98,6 +98,7 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(faces_feature);
         GX_FIELD(abi::vector<face_info>, facerectwithfaceinfo_list); // 人脸的定位及信息
         GX_FIELD(abi::vector<feature_info>, features); // 人脸特征值数组
+        GX_FIELD(abi::vector<uchar>, img_buffer); // 最大人脸的图片buffer 
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

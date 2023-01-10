@@ -16,13 +16,9 @@ using namespace glasssix;
 int main(int argc, char** argv) {
 
     get_memory_usage_info();
-    char imgs[] = "{\"imgs\":[\"D:/test/img/action_live_0.jpg\",\"D:/test/img/action_live_1.jpg\",\"D:/test/img/"
-                  "action_live_2.jpg\",\"D:/test/img/action_live_3.jpg\",\"D:/test/img/action_live_4.jpg\"]}";
-    // char imgs[] = "{\"imgs\":[\"D:/test/img/a165_0.jpg\",\"D:/test/img/acti\",\"D:/test/img/"
-    //               "action_live_2.jpg\",\"D:/test/img/ac9844live_3.jpg\",\"D:/test/img/action_live_4.jpg\"]}";
+    char data[] = "[{\"key\":\"action_live_0\",\"imgs\":\"D:/test/img/action_live_0\"},{\"key\":\"action_live_1\",\"imgs\":\"D:/test/img/action_live_1\"},{\"key\":\"action_live_2\",\"imgs\":\"D:/test/img/action_live_2\"},{\"key\":\"action_live_3\",\"imgs\":\"D:/test/img/action_live_3\"},{\"key\":\"action_live_4\",\"imgs\":\"D:/test/img/action_live_4\"}]";
 
-    char keys[] =
-        "{\"keys\":[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]}";
+    char keys[] = "[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]";
 
     char img[] = "D:/test/img/action_live_5.jpg";
 
@@ -33,7 +29,7 @@ int main(int argc, char** argv) {
     // char* ss = gx_user_search(img, 5, 0.4f); //人员搜索
     // std::cout << ss << std::endl;
 
-    char* result = gx_user_add_records(keys, imgs); //人员库批量添加
+    char* result = gx_user_add_records(data , false , false); //人员库批量添加
 
     printf("%s\n", result);
     printf("%s\n", get_last_error());
@@ -46,20 +42,15 @@ int main(int argc, char** argv) {
     ss = gx_detect_integration(img, 5, 0.4f); //人脸识别融合
     // std::cout << ss << std::endl;
 
-    result = gx_user_update_records(keys, imgs); //人员库批量更新
-    printf("%s\n", result);
-    printf("%s\n", get_last_error());
-
     ss = gx_user_search(img, 5, 0.4f); //人员搜索
     std::cout << ss << std::endl;
 
     result = gx_user_remove_records(keys); //人员库批量删除记录
     printf("%s\n", result);
+
     ss = gx_user_search(img, 5, 0.4f); //人员搜索
     std::cout << ss << std::endl;
 
-
-    gx_user_clear(); //人员库清除缓存  清内存
     gx_user_remove_all(); //人员库清空  清内存和磁盘
 
 

@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <face_info.hpp>
+#include <string_view>
 typedef unsigned char uchar;
 
 namespace glasssix::face {
@@ -19,6 +20,7 @@ namespace glasssix::face {
         size_t get_data_len();
         abi::string get_type();
         bool rotate(int deg);
+        abi::vector<uchar> cropped(int x1, int x2, int y1, int y2);
 
     private:
         class impl;
@@ -46,7 +48,7 @@ namespace glasssix::face {
         //静默活体检测
         faces_spoofing gx_face_spoofing_live(gx_img_api& mat);
         //特征提取融合
-        abi::vector<faces_feature> gx_face_feature(gx_img_api& mat);
+        abi::vector<faces_feature> gx_face_feature(gx_img_api& mat, bool is_clip);
         // 1:1特征值对比接口
         double gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B);
         // 特征值库加载
@@ -60,10 +62,15 @@ namespace glasssix::face {
         //特征值库批量删除
         abi::vector<faces_user_remove> gx_user_remove_records(abi::vector<abi::string>& keys);
         //特征值库批量添加
-        abi::vector<faces_user_add> gx_user_add_records(abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat);
-        //特征值库批量更新
-        abi::vector<faces_user_update> gx_user_update_records(
-            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat);
+        abi::vector<face_user_result> gx_user_add_records(
+            abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_clip, bool is_faceinfo);
+        //特征值库批量添加
+        abi::vector<face_user_result> gx_user_add_records(
+            abi::vector<abi::string>& keys, abi::vector<abi::vector<float>>& features);
+        //特征值库键值查询
+        bool gx_user_contains_key(abi::string& key);
+        //特征值库记录总和
+        std::uint64_t gx_user_record_count();
 
         //人脸识别流程融合
         faces_search_info gx_detect_integration(gx_img_api& mat, int top, float min_similarity);
