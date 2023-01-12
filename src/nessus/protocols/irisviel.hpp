@@ -136,6 +136,16 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    struct faces_user_add {
+        GX_BEGIN_FIELDS(faces_user_add);
+        GX_FIELD(bool, success);
+        GX_FIELD(abi::string, reason);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
     struct irisviel_add_records_result {
         GX_BEGIN_FIELDS(irisviel_add_records_result);
         GX_FIELD(parser_result_status, status);

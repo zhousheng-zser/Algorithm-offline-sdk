@@ -54,6 +54,7 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    
     //人脸质量检测结果
     struct faces_blur {
         GX_BEGIN_FIELDS(faces_blur);
@@ -131,12 +132,13 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
-    //特征值库增删改结果数组
-    struct faces_user_add {
-        GX_BEGIN_FIELDS(faces_user_add);
-        GX_FIELD(bool, success);
-        GX_FIELD(abi::string, reason);
+    
+    // 融合人脸识别结果数组
+    struct faces_integration_search_info {
+        // 人脸搜索结果
+        GX_BEGIN_FIELDS(faces_integration_search_info);
+        GX_FIELD(abi::vector<faces_search_info::database_result>, result);
+        GX_FIELD(float, prob); // 活体得分
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -155,9 +157,6 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-
-    using faces_user_remove = faces_user_add;
-    using faces_user_update = faces_user_add;
 
     //动作活体类型枚举
     enum action_live_type {

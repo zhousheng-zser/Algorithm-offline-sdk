@@ -180,8 +180,6 @@ namespace glasssix::face {
     }
     abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) {
         cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2));
-        // cv::imshow("new", cropped_face);
-        // cv::waitKey(5000);
         std::vector<uchar> buffer(1024 * 1024);
         cv::imencode(".jpg", cropped_face, buffer);
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
@@ -219,8 +217,8 @@ namespace glasssix::face {
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
             selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
                 _config->_feature_config.models_directory, 2, _config->_feature_config.use_int8});
-            gungnir_handle; //人头检测预留
-            valklyrs_handle; //车辆行人预留
+            gungnir_handle; // 人头检测预留
+            valklyrs_handle; // 车辆行人预留
         }
         ~impl() {}
 
@@ -257,7 +255,7 @@ namespace glasssix::face {
     };
 
 
-    //人脸检测
+    // 人脸检测
     abi::vector<face_info> gx_face_api::gx_detect(gx_img_api& mat) {
         abi::vector<face_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
@@ -274,7 +272,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //人脸追踪
+    // 人脸追踪
     abi::vector<face_trace_info> gx_face_api::gx_track(gx_img_api& mat) {
         abi::vector<face_trace_info> ans;
         if (impl_->cache.index % (_config->_track_config.detect_intv_before_track) == 0) {
@@ -302,7 +300,7 @@ namespace glasssix::face {
                 },
                 str);
             if (result.trace_success == true) {
-                //更新追踪坐标
+                // 更新追踪坐标
                 temp_faces[it->second.x * 10000 + it->second.y]    = result.facerectwithfaceinfo.value();
                 temp_faces_id[it->second.x * 10000 + it->second.y] = impl_->cache.track_history_id[it->first];
                 ans.emplace_back(face_trace_info{.trace_success = result.trace_success,
@@ -318,7 +316,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //清除人脸跟踪历史
+    // 清除人脸跟踪历史
     bool gx_face_api::gx_clear_track_history() {
         impl_->cache.index = 0;
         impl_->cache.track_history.clear();
@@ -326,7 +324,7 @@ namespace glasssix::face {
         return true;
     }
 
-    //人脸质量(模糊度)检测
+    // 人脸质量(模糊度)检测
     faces_blur gx_face_api::gx_face_blur(gx_img_api& mat) {
         faces_blur ans;
         abi::vector<face_info> faces = gx_detect(mat);
@@ -346,7 +344,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //配合活体检测
+    // 配合活体检测
     face_info gx_face_api::gx_face_action_live(int action_type, bool& action_result, gx_img_api& mat) {
         face_info ans;
         action_result                = 0;
@@ -368,7 +366,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //静默活体检测
+    // 静默活体检测
     faces_spoofing gx_face_api::gx_face_spoofing_live(gx_img_api& mat) {
         faces_spoofing ans;
         abi::vector<face_info> faces = gx_detect(mat);
@@ -389,7 +387,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //特征提取融合
+    // 特征提取融合
     abi::vector<faces_feature> gx_face_api::gx_face_feature(gx_img_api& mat, bool is_clip) {
 
         abi::vector<faces_feature> ans;
@@ -420,10 +418,10 @@ namespace glasssix::face {
             ans_temp.features                  = selene_result.features;
             ans_temp.facerectwithfaceinfo_list = faces;
             int y1, x1, y2, x2;
-            y1 = faces[0].y - faces[0].height * 3 / 5;
-            x1 = faces[0].x - faces[0].width / 2;
-            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 2);
-            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 2);
+            y1 = faces[0].y - faces[0].height * 2 / 10;
+            x1 = faces[0].x - faces[0].width * 2 / 10;
+            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
+            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
             if (is_clip)
                 ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
             else
@@ -440,10 +438,10 @@ namespace glasssix::face {
             ans_temp.features  = selene_result.features;
             ans_temp.facerectwithfaceinfo_list = faces;
             int y1, x1, y2, x2;
-            y1 = faces[0].y - faces[0].height * 3 / 5;
-            x1 = faces[0].x - faces[0].width / 2;
-            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 2);
-            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 2);
+            y1 = faces[0].y - faces[0].height * 2 / 10;
+            x1 = faces[0].x - faces[0].width * 2 / 10;
+            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
+            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
             if (is_clip)
                 ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
             else
@@ -522,17 +520,8 @@ namespace glasssix::face {
         return ans;
     }
 
-    //特征值库清除缓存
-    bool gx_face_api::gx_user_clear() {
-        std::array<char, 0> arr{};
-        protocol_ptr.invoke<irisviel::clear>(
-            impl_->irisivel_mask_handle, irisviel_clear_param{.instance_guid = ""}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::clear>(
-            impl_->irisivel_handle, irisviel_clear_param{.instance_guid = ""}, std::span<char>{arr});
-        return true;
-    }
 
-    //特征值库清空
+    // 特征值库清空
     bool gx_face_api::gx_user_remove_all() {
 
         std::array<char, 0> arr{};
@@ -543,20 +532,25 @@ namespace glasssix::face {
         return true;
     }
 
-    //特征值库批量删除
-    abi::vector<faces_user_remove> gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
+    // 特征值库批量删除
+    abi::vector<face_user_result> gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
 
-        abi::vector<faces_user_remove> ans;
+        abi::vector<face_user_result> ans(keys.size() );
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_mask_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
         protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
-        ans = result.result;
+        for (int i = 0; i < keys.size(); i++) {
+            ans[i].key     = keys[i];
+            ans[i].success = result.result[i].success;
+            ans[i].img_buffer.clear();
+            ans[i].facerectwithfaceinfo = std::nullopt;
+        }
         return ans;
     }
 
-    //特征值库批量添加
+    // 特征值库批量添加
     abi::vector<face_user_result> gx_face_api::gx_user_add_records(
         abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_clip, bool is_faceinfo) {
         abi::vector<face_user_result> ans(mat.size());
@@ -568,7 +562,6 @@ namespace glasssix::face {
             throw source_code_aware_runtime_error(U8("Error: mat.size > 1000"));
         if (mat.size() == 0)
             throw source_code_aware_runtime_error(U8("Error: mat.size == 0"));
-
         for (int i = 0; i < mat.size(); i++) {
             if (keys[i] == "") {
                 ans[i].key     = "";
@@ -607,19 +600,18 @@ namespace glasssix::face {
             // 批量入库就可以释放掉gx_img_api
         }
         std::array<char, 0> arr{};
-        //添加
+        // 添加
         auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});
         protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_mask_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_B_add}, std::span<char>{arr});
-
-        //更新
+        // 更新
         auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_A_update}, std::span<char>{arr});
         protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_mask_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_B_update}, std::span<char>{arr});
         // TODO  AlgorithmZoo 的返回结果还没改 临时这样
-        //之后根据  ans[i].success 来获取异常状态码
+        // 之后根据  ans[i].success 来获取异常状态码
         for (int i = 0; i < ans.size(); i++) {
             if (ans[i].success > 0) {
                 ans[i].success = 0;
@@ -628,7 +620,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //特征值库批量添加
+    // 特征值库批量添加
     abi::vector<face_user_result> gx_face_api::gx_user_add_records(
         abi::vector<abi::string>& keys, abi::vector<abi::vector<float>>& features) {
         abi::vector<face_user_result> ans(features.size());
@@ -664,19 +656,19 @@ namespace glasssix::face {
             // 批量入库就可以释放掉gx_img_api
         }
         std::array<char, 0> arr{};
-        //添加
+        // 添加
         auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});
         protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_mask_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_B_add}, std::span<char>{arr});
 
-        //更新
+        // 更新
         auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_A_update}, std::span<char>{arr});
         protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_mask_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_B_update}, std::span<char>{arr});
         // TODO  AlgorithmZoo 的返回结果还没改 临时这样
-        //之后根据  ans[i].success 来获取异常状态码
+        // 之后根据  ans[i].success 来获取异常状态码
         for (int i = 0; i < ans.size(); i++) {
             if (ans[i].success > 0) {
                 ans[i].success = 0;
@@ -685,7 +677,7 @@ namespace glasssix::face {
         return ans;
     }
 
-    //特征值库键值查询
+    // 特征值库键值查询
     bool gx_face_api::gx_user_contains_key(abi::string& key) {
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::contains_key>(
@@ -693,7 +685,7 @@ namespace glasssix::face {
         return result.result;
     }
 
-    //特征值库记录总和
+    // 特征值库记录总和
     std::uint64_t gx_face_api::gx_user_record_count() {
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::record_count>(
@@ -701,24 +693,20 @@ namespace glasssix::face {
         return result.result;
     }
 
-    //人脸识别流程融合
-    faces_search_info gx_face_api::gx_detect_integration(gx_img_api& mat, int top, float min_similarity) {
-        faces_search_info ans;
-        if (top <= 0)
-            throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top <= 0."));
-        if (std::signbit(min_similarity) || min_similarity > 1.001)
-            throw source_code_aware_runtime_error(
-                U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
+    // 人脸识别流程融合
+    faces_integration_search_info gx_face_api::gx_detect_integration(gx_img_api& mat, int top, float min_similarity) {
+        faces_integration_search_info ans;
         faces_spoofing faces = gx_face_spoofing_live(mat);
         if (faces.spoofing_result.size() == 0) {
-            printf("no face!\n");
             return ans;
-        } else if (faces.spoofing_result[0].prob[1] < 0.5) {
-            printf("prob < 0.5 !\n");
-            return ans;
+        } else {
+            ans.prob = faces.spoofing_result[0].prob[1];
+            if (ans.prob < 0.5)
+                return ans;
         }
         gx_user_load();
-        ans = gx_user_search(mat, top, min_similarity);
+        auto result = gx_user_search(mat, top, min_similarity);
+        ans.result  = result.result;
         return ans;
     }
 
@@ -762,31 +750,45 @@ namespace glasssix::face {
         try {
             json temp;
             if (name == "action_live.json") {
-                temp      = _config->_action_live_config;
+                temp = _config->_action_live_config;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_action_live_config);
             } else if (name == "blur.json") {
-                temp      = _config->_blur_config;
+                temp = _config->_blur_config;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_blur_config);
             } else if (name == "detect.json") {
-                temp      = _config->_detect_config;
+                temp = _config->_detect_config;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_detect_config);
             } else if (name == "face_user.json") {
-                temp      = _config->_face_user_config;
+                temp = _config->_face_user_config;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_face_user_config);
             } else if (name == "feature.json") {
-                temp      = _config->_feature_config;
+                temp = _config->_feature_config;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_feature_config);
             } else if (name == "track.json") {
-                temp      = _config->_track_config;
+                temp = _config->_track_config;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_track_config);
             } else if (name == "configure_directory.json") {
-                temp      = _config->_configure_directory;
+                temp = _config->_configure_directory;
+                if (!temp.contains(key))
+                    return false;
                 temp[key] = value;
                 temp.get_to(_config->_configure_directory);
             } else {
