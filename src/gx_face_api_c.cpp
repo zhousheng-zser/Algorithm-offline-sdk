@@ -182,8 +182,10 @@ double gx_feature_comparison(char* mat_A, char* mat_B) {
 }
 
 
-bool gx_free(void* ptr, size_t size) {
+bool gx_free(char* ptr, size_t size) {
     try {
+        std::cout << "ptr = " << ptr << "\nlen = " << size << "\n"; 
+
         gx_dealloc(ptr, size);
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
