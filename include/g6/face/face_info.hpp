@@ -4,6 +4,7 @@
 #include <optional>
 
 #include <g6/json_extensions.hpp>
+typedef unsigned char uchar;
 
 namespace glasssix::face {
     //人脸属性
@@ -53,6 +54,7 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    
     //人脸质量检测结果
     struct faces_blur {
         GX_BEGIN_FIELDS(faces_blur);
@@ -97,6 +99,7 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(faces_feature);
         GX_FIELD(abi::vector<face_info>, facerectwithfaceinfo_list); // 人脸的定位及信息
         GX_FIELD(abi::vector<feature_info>, features); // 人脸特征值数组
+        GX_FIELD(abi::vector<uchar>, img_buffer); // 最大人脸的图片buffer 
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -105,7 +108,7 @@ namespace glasssix::face {
     // 人脸搜索数据
     struct faces_search_data {
         GX_BEGIN_FIELDS(faces_search_data);
-        GX_FIELD(abi::vector<float>, feature); //人脸特征向量
+        //  GX_FIELD(abi::vector<float>, feature); //人脸特征向量
         GX_FIELD(abi::string, key); //人脸键值
         GX_END_FIELDS;
 
@@ -129,6 +132,32 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    
+    // 融合人脸识别结果数组
+    struct faces_integration_search_info {
+        // 人脸搜索结果
+        GX_BEGIN_FIELDS(faces_integration_search_info);
+        GX_FIELD(abi::vector<faces_search_info::database_result>, result);
+        GX_FIELD(float, prob); // 活体得分
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    //特征值库操作返回值
+    struct face_user_result {
+        GX_BEGIN_FIELDS(face_user_result);
+        GX_FIELD(abi::string, key);
+        GX_FIELD(int32_t, success);
+        GX_FIELD(std::optional<face_info>, facerectwithfaceinfo);
+        GX_FIELD(abi::vector<uchar>, img_buffer);
+        
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
     //动作活体类型枚举
     enum action_live_type {
         BDFACE_ACTION_LIVE_BLINK      = 0, // 眨眨眼
@@ -136,6 +165,12 @@ namespace glasssix::face {
         BDFACE_ACTION_LIVE_NOD        = 2, // 点点头
         BDFACE_ACTION_LIVE_LEFT_HEAD  = 3, // 左摇头
         BDFACE_ACTION_LIVE_RIGHT_HEAD = 4 // 右摇头
+    };
+    //动作活体类型枚举
+    enum image_rotation_type {
+        DEG90   = 1,
+        DEG180  = 2,
+        DEG270  = 3
     };
 
 } // namespace glasssix::face
