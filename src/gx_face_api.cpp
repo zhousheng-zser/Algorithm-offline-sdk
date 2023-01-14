@@ -577,7 +577,6 @@ namespace glasssix::face {
                 ans[i].img_buffer.clear();
                 ans[i].facerectwithfaceinfo = std::nullopt;
             } else if (gx_user_contains_key(keys[i]) == false) {
-                printf("no in \n");
                 ans[i].key        = keys[i];
                 ans[i].success    = 1;
                 ans[i].img_buffer = temp[0].img_buffer;
@@ -588,7 +587,6 @@ namespace glasssix::face {
                 faces_A_add.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
                 faces_B_add.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
             } else {
-                printf("yes in \n");
                 ans[i].key        = keys[i];
                 ans[i].success    = 2;
                 ans[i].img_buffer = temp[0].img_buffer;

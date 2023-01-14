@@ -59,7 +59,7 @@ namespace glasssix::display_test {
 
     void test_track(gx_face_api* _api) {
         cv::VideoCapture capture;
-        capture.open("D:/opencv/test/857102359-1-208.mp4");
+        capture.open("D:/test/video/123456.mp4");
         while (1) {
             cv::Mat img;
             capture >> img;
@@ -110,7 +110,7 @@ namespace glasssix::display_test {
                     cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 255, 0), 2);
             }
 
-            std::cout << "-------------华丽的分割线-----------------\n";
+            std::cout << U8("-------------------------------------\n");
             cv::imshow("video-demo", img);
             cv::waitKey(20);
         }
@@ -189,16 +189,16 @@ namespace glasssix::display_test {
 
     void test_feature(gx_face_api* _api) {
 
-        cv::Mat img = cv::imread("D:/opencv/2.jpg");
-        gx_img_api img_path("D:/opencv/2.jpg");
-        faces_feature faces;
-        faces = _api->gx_face_feature(img_path);
-        for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-            face_info info = faces.facerectwithfaceinfo_list[i];
+        cv::Mat img = cv::imread("D:/test/img/20221208.jpg");
+        gx_img_api img_path("D:/test/img/20221208.jpg");
+        abi::vector<faces_feature> faces;
+        faces = _api->gx_face_feature(img_path,false);
+        for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
+            face_info info = faces[0].facerectwithfaceinfo_list[i];
 
-            for (int j = 0; j < faces.features[i].feature.size(); j++)
-                std::cout << " " << faces.features[i].feature[j];
-            std::cout << "\nsize= " << faces.features[i].feature.size() << "------------\n";
+            for (int j = 0; j < faces[0].features[i].feature.size(); j++)
+                std::cout << " " << faces[0].features[i].feature[j];
+            std::cout << "\nsize= " << faces[0].features[i].feature.size() << "------------\n";
             rectangle(img, cv::Point(info.x, info.y), cv::Point(info.x + info.width, info.y + info.height),
                 cv::Scalar(200, 255, 0), 2);
         }
@@ -229,7 +229,7 @@ namespace glasssix::display_test {
         imgs.push_back(gx_img_api("D:/test/img/B/610111200208264510.jpg"));
         imgs.push_back(gx_img_api("D:/test/img/A/610111200208264510.jpg"));
 
-
+        abi::vector<abi::vector<float>> features;
         abi::vector<abi::string> keys;
         keys.push_back("B-----61011");
         keys.push_back("A-----61011");
@@ -238,22 +238,18 @@ namespace glasssix::display_test {
             printf("Input Irisviel key (0-6), (-1 exit): \n");
             scanf_s("%d", &flag);
             if (flag == 0)
-                _api->gx_user_load(false); //人员库加载
+                _api->gx_user_load(); //人员库加载
             else if (flag == 1)
-                _api->gx_user_search(imgs[0], 5, 0.4f, false); //人员库搜索
+                _api->gx_user_search(imgs[0], 5, 0.4f); //人员库搜索
             else if (flag == 2)
-                _api->gx_user_clear(false); //人员库清除缓存  清内存
+                _api->gx_user_remove_all(); //人员库清空  清内存和磁盘
             else if (flag == 3)
-                _api->gx_user_remove_all(false); //人员库清空  清内存和磁盘
+                _api->gx_user_remove_records(keys ); //人员库批量删除记录
             else if (flag == 4)
-                _api->gx_user_remove_records(keys, false); //人员库批量删除记录
+                _api->gx_user_add_records(keys, imgs,false,false ); //人员库批量添加记录
             else if (flag == 5)
-                _api->gx_user_add_records(keys, imgs, false); //人员库批量添加记录
-            else if (flag == 6) {
-                std::swap(keys[0], keys[1]);
-                _api->gx_user_update_records(keys, imgs, false); //人员库批量更新记录
-                std::swap(keys[0], keys[1]);
-            } else
+                _api->gx_user_add_records(keys, features); // 人员库批量添加记录
+            else
                 break;
         } while (flag != -1);
     }
@@ -270,7 +266,7 @@ namespace glasssix::display_test {
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
             gx_img_api img_buff(buffer);
-            faces_search_info faces = _api->gx_detect_integration(img_buff, 5, 0.4f, false);
+            faces_integration_search_info faces = _api->gx_detect_integration(img_buff, 5, 0.4f);
             for (int i = 0; i < faces.result.size(); i++) {
 
                 // 相似度
@@ -309,7 +305,7 @@ namespace glasssix::display_test {
         std::vector<abi::string> namelist;
         getFiles(working_directory, namelist);
         for (int i = 2; i < namelist.size();) {
-            int T = 10000;
+            int T = 500;
             abi::vector<gx_img_api> imgs;
             abi::vector<abi::string> keys;
             while (T--) {
@@ -317,7 +313,7 @@ namespace glasssix::display_test {
                 keys.push_back(namelist[i]);
                 i++;
             }
-            _api->gx_user_add_records(keys, imgs, false);
+            _api->gx_user_add_records(keys, imgs,false,false);
         }
     }
 
@@ -325,6 +321,7 @@ namespace glasssix::display_test {
 
 
 gx_face_api* _Api;
+
 //人脸检测
 TEST(FaceApi, gx_detect) {
     gx_img_api img("D:/test/img/B/431123200209052539.jpg");
@@ -468,16 +465,16 @@ TEST(FaceApi, gx_face_feature) {
     cv::imencode(".jpg", img, buffer);
     gx_img_api img_buff(buffer);
 
-    faces_feature faces;
+    abi::vector<faces_feature> faces;
 
-    faces = _Api->gx_face_feature(img_buff);
-    EXPECT_EQ(faces.facerectwithfaceinfo_list.size(), faces.features.size());
-    for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
+    faces = _Api->gx_face_feature(img_buff,false);
+    EXPECT_EQ(faces[0].facerectwithfaceinfo_list.size(), faces[0].features.size());
+    for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
 
-        EXPECT_EQ(faces.features[i].feature.size(), 256);
-        for (int j = 0; j < faces.features[i].feature.size(); j++) {
-            EXPECT_GT(faces.features[i].feature[j], -1.0);
-            EXPECT_LT(faces.features[i].feature[j], 1.0);
+        EXPECT_EQ(faces[0].features[i].feature.size(), 256);
+        for (int j = 0; j < faces[0].features[i].feature.size(); j++) {
+            EXPECT_GT(faces[0].features[i].feature[j], -1.0);
+            EXPECT_LT(faces[0].features[i].feature[j], 1.0);
         }
     }
 }
@@ -506,67 +503,68 @@ TEST(FaceApi, gx_user_and_detect_integration) {
     keys.emplace_back("action_live_3");
     keys.emplace_back("action_live_4");
 
-    abi::vector<bool> result;
+    abi::vector<face_user_result> result;
     faces_search_info faces;
+    faces_integration_search_info faces_i;
     gx_img_api img("D:/test/img/action_live_5.jpg");
 
 
-    _Api->gx_user_load(false); //人员库加载
+    _Api->gx_user_load(); //人员库加载
 
 
-    result = _Api->gx_user_add_records(keys, imgs, false); //人员库批量添加记录
+    result = _Api->gx_user_add_records(keys, imgs, false,false); //人员库批量添加记录
     EXPECT_EQ(result.size(), 5);
     for (int i = 0; i < result.size(); i++)
-        EXPECT_TRUE(result[i]);
-    faces = _Api->gx_user_search(img, 5, 0.4f, false); //人员库搜索
+        EXPECT_EQ(result[i].success,0);
+    faces = _Api->gx_user_search(img, 5, 0.4f); //人员库搜索
     ASSERT_LE(faces.result.size(), 5);
     for (int i = 0; i < faces.result.size(); i++) {
         EXPECT_GE(faces.result[i].similarity, 0.4);
-        EXPECT_EQ(faces.result[i].data.feature.size(), 256);
     }
-    ASSERT_STREQ(faces.result[faces.result.size() - 1].data.key.c_str(), "action_live_1");
+    ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
-    faces = _Api->gx_detect_integration(img, 5, 0.4f, false); //融合人脸识别
+    faces_i = _Api->gx_detect_integration(img, 5, 0.4f); // 融合人脸识别
+    ASSERT_LE(faces_i.result.size(), 5);
+    for (int i = 0; i < faces_i.result.size(); i++) {
+        EXPECT_GE(faces_i.result[i].similarity, 0.4);
+    }
+    ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
+
+
+
+    faces = _Api->gx_user_search(img, 5, 0.4f); //人员库搜索
     ASSERT_LE(faces.result.size(), 5);
     for (int i = 0; i < faces.result.size(); i++) {
         EXPECT_GE(faces.result[i].similarity, 0.4);
-        EXPECT_EQ(faces.result[i].data.feature.size(), 256);
     }
-    ASSERT_STREQ(faces.result[faces.result.size() - 1].data.key.c_str(), "action_live_1");
+    ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
 
-    std::swap(keys[0], keys[1]);
-    std::swap(keys[2], keys[3]);
-    result = _Api->gx_user_update_records(keys, imgs, false); //人员库批量更新记录
-    EXPECT_EQ(result.size(), 5);
-    for (int i = 0; i < result.size(); i++)
-        EXPECT_TRUE(result[i]);
-    std::swap(keys[0], keys[1]);
-    std::swap(keys[2], keys[3]);
-    faces = _Api->gx_user_search(img, 5, 0.4f, false); //人员库搜索
-    ASSERT_LE(faces.result.size(), 5);
-    for (int i = 0; i < faces.result.size(); i++) {
-        EXPECT_GE(faces.result[i].similarity, 0.4);
-        EXPECT_EQ(faces.result[i].data.feature.size(), 256);
-    }
-    ASSERT_STREQ(faces.result[faces.result.size() - 1].data.key.c_str(), "action_live_0");
-
-
-    _Api->gx_user_remove_records(keys, false); //人员库批量删除记录
-    faces = _Api->gx_user_search(img, 5, 0.4f, false); //人员库搜索
+    _Api->gx_user_remove_records(keys); //人员库批量删除记录
+    faces = _Api->gx_user_search(img, 5, 0.4f); //人员库搜索
     ASSERT_LE(faces.result.size(), 0);
 
-    _Api->gx_user_clear(false); //人员库清除缓存  清内存
-    _Api->gx_user_remove_all(false); //人员库清空  清内存和磁盘
+    _Api->gx_user_remove_all(); //人员库清空  清内存和磁盘
 }
 
 
 int main(int argc, char** argv) {
 
-    gx_face_api* api = new gx_face_api();
+    gx_face_api* api = new gx_face_api();   
     _Api             = api;
     int ans;
     try {
+        //display_test::test_detect(api);
+        //display_test::test_track(api);
+        //display_test::test_blur(api);
+        //display_test::test_action_live(api);
+        //display_test::test_spoofing_live(api);
+        //display_test::test_feature(api);
+        //display_test::test_feature_comparison(api);
+        //display_test::test_user(api);
+        //display_test::test_detect_integration(api);
+
+
         testing::InitGoogleTest(&argc, argv);
         ans = RUN_ALL_TESTS();
     } catch (const std::exception& ex) {
