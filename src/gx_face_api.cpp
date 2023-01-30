@@ -482,8 +482,8 @@ namespace glasssix::face {
 
         std::array<char, 0> arr{};
         {
-            auto result  = protocol_ptr.invoke<irisviel::search>(impl_->irisivel_handle,
-                irisviel_search_param{
+            auto result  = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
+                irisviel_search_nf_param{
                      .instance_guid  = "",
                      .feature        = faces[0].features[0].feature,
                      .top            = top,
@@ -493,8 +493,8 @@ namespace glasssix::face {
             ans_A.result = result.result;
         }
         {
-            auto result  = protocol_ptr.invoke<irisviel::search>(impl_->irisivel_mask_handle,
-                irisviel_search_param{
+            auto result  = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_mask_handle,
+                irisviel_search_nf_param{
                      .instance_guid  = "",
                      .feature        = faces[1].features[0].feature,
                      .top            = top,

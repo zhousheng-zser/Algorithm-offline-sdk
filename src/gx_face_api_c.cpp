@@ -120,7 +120,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
         bool flag = 0;
         abi::vector<abi::string> _keys;
         abi::vector<face::gx_img_api> _mat;
-        json data_temp = json::parse(data);
+        nlohmann::json data_temp = nlohmann::json::parse(data);
         for (int i = 0; i < data_temp.size(); i++) {
             try {
                 _mat.push_back(face::gx_img_api{abi::string{data_temp[i]["imgs"].get<std::string>()}});
@@ -181,11 +181,8 @@ double gx_feature_comparison(char* mat_A, char* mat_B) {
     return ans;
 }
 
-
 bool gx_free(char* ptr, size_t size) {
     try {
-        std::cout << "ptr = " << ptr << "\nlen = " << size << "\n"; 
-
         gx_dealloc(ptr, size);
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {

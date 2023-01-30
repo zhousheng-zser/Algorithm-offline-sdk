@@ -46,8 +46,8 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct irisviel_search_param {
-        GX_BEGIN_FIELDS(irisviel_search_param);
+    struct irisviel_search_nf_param {
+        GX_BEGIN_FIELDS(irisviel_search_nf_param);
         GX_FIELD(std::string, instance_guid);
         GX_FIELD(abi::vector<float>, feature);
         GX_FIELD(std::optional<std::int32_t>, top);
@@ -57,10 +57,36 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    struct irisviel_search_nf_result {
+        GX_BEGIN_FIELDS(irisviel_search_nf_result);
+        GX_FIELD(parser_result_status, status);
+        GX_FIELD(abi::vector<faces_search_info::database_result>, result);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     struct irisviel_search_result {
         GX_BEGIN_FIELDS(irisviel_search_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(abi::vector<faces_search_info::database_result>, result);
+        struct database_result {
+            GX_BEGIN_FIELDS(database_result);
+            struct faces_search_data {
+                GX_BEGIN_FIELDS(faces_search_data);
+                GX_FIELD(abi::vector<float>, feature); //人脸特征向量
+                GX_FIELD(abi::string, key); // 人脸键值
+                GX_END_FIELDS;
+
+                GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            };
+
+            GX_FIELD(database_result::faces_search_data, data); // 人脸搜索数据
+            GX_FIELD(float, similarity); // 相似度
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_FIELD(abi::vector<irisviel_search_result::database_result>, result);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -182,10 +208,12 @@ namespace glasssix::face {
     using irisviel_clear_param           = irisviel_remove_all_param;
     using irisviel_clear_result          = irisviel_remove_all_result;
     using irisviel_record_count_param    = irisviel_remove_all_param;
+    using irisviel_search_param          = irisviel_search_nf_param;
 
     struct irisviel : protocol_object {
         struct load_databases : parser_inout<irisviel_load_databases_param, irisviel_load_databases_result> {};
         struct search : parser_inout<irisviel_search_param, irisviel_search_result> {};
+        struct search_nf : parser_inout<irisviel_search_nf_param, irisviel_search_nf_result> {};
         struct contains_key : parser_inout<irisviel_contains_key_param, irisviel_contains_key_result> {};
         struct record_count : parser_inout<irisviel_record_count_param, irisviel_record_count_result> {};
         struct add_records : parser_inout<irisviel_add_records_param, irisviel_add_records_result> {};
