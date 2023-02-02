@@ -14,7 +14,7 @@ namespace glasssix::display_test {
     void test_detect(gx_face_api* _api) {
 
         cv::VideoCapture capture;
-        capture.open(0);
+        capture.open("D:/test/img/20230115-092810.jpg");
         int cnt = 0;
         while (1) {
             cnt++;
@@ -53,7 +53,7 @@ namespace glasssix::display_test {
                 }
             }
             cv::imshow("video-demo", img);
-            cv::waitKey(20);
+            cv::waitKey(0);
         }
     }
 
@@ -240,7 +240,7 @@ namespace glasssix::display_test {
             if (flag == 0)
                 _api->gx_user_load(); //人员库加载
             else if (flag == 1)
-                _api->gx_user_search(imgs[0], 5, 0.4f); //人员库搜索
+                 _api->gx_user_search(imgs[0], 5, 0.1f); //人员库搜索
             else if (flag == 2)
                 _api->gx_user_remove_all(); //人员库清空  清内存和磁盘
             else if (flag == 3)
@@ -291,8 +291,13 @@ namespace glasssix::display_test {
 
         if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1) {
             do {
-
-                files.push_back(fileinfo.name);
+                if (strcmp(fileinfo.name, "..") == 0 || strcmp(fileinfo.name, ".") == 0)
+                    continue; 
+                if (fileinfo.attrib == _A_SUBDIR) {
+                    getFiles(path + "/" + fileinfo.name, files);
+                    continue; 
+                }
+                files.push_back(path + "/" + fileinfo.name);
 
             } while (_findnext(hFile, &fileinfo) == 0); //寻找下一个，成功返回0，否则-1
 
@@ -554,6 +559,7 @@ int main(int argc, char** argv) {
     _Api             = api;
     int ans;
     try {
+        // 用于播放视频图片的
         //display_test::test_detect(api);
         //display_test::test_track(api);
         //display_test::test_blur(api);
@@ -563,8 +569,9 @@ int main(int argc, char** argv) {
         //display_test::test_feature_comparison(api);
         //display_test::test_user(api);
         //display_test::test_detect_integration(api);
-
-
+        //display_test::test_add_folder_all(_Api);
+        
+        //单元测试
         testing::InitGoogleTest(&argc, argv);
         ans = RUN_ALL_TESTS();
     } catch (const std::exception& ex) {
