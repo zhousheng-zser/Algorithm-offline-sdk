@@ -92,6 +92,10 @@ namespace glasssix::face {
             if (type == "") {
                 throw source_code_aware_runtime_error(U8("Error: The picture is not in the right format"));
             }
+            if (img.cols * img.rows > 2048 * 1080) {
+                img.release();
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
+            }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
         impl(std::vector<uchar>& buffer) {
@@ -101,6 +105,10 @@ namespace glasssix::face {
                 throw source_code_aware_runtime_error(U8("Error: The picture is not in the right format"));
             }
             img      = cv::imdecode(buffer, cv::IMREAD_COLOR);
+            if (img.cols * img.rows > 2048 * 1080) {
+                img.release();
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
+            }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
         ~impl() {}
