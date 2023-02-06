@@ -52,7 +52,7 @@ char* gx_user_search(char* mat_path, int top, float min_similarity) {
         glasssix::face::gx_img_api mat(temp);
         face::faces_search_info faces = api->gx_user_search(mat, top, min_similarity);
 
-        json val            = faces;
+        nlohmann::json val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = (char*) gx_alloc(size * sizeof(char));
@@ -95,15 +95,15 @@ char* gx_user_remove_records(char* keys) {
     try {
 
         abi::vector<abi::string> _keys;
-        json keys_temp = json::parse(keys);
+        nlohmann::json keys_temp = nlohmann::json::parse(keys);
         for (int i = 0; i < keys_temp.size(); i++) {
             _keys.push_back(abi::string{keys_temp[i].get<std::string>()});
         }
-
-        json val            = api->gx_user_remove_records(_keys);
+        nlohmann::json val  = api->gx_user_remove_records(_keys);
         std::string result_ = val.dump();
-        std::size_t size    = result_.size() + 1;
-        result              = (char*) gx_alloc(size * sizeof(char));
+
+        std::size_t size = result_.size() + 1;
+        result           = (char*) gx_alloc(size * sizeof(char));
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
@@ -132,7 +132,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
                      + data_temp[i]["key"].get<std::string>() + "\n";
             }
         }
-        json val            = api->gx_user_add_records(_keys, _mat, is_clip, is_faceinfo);
+        nlohmann::json val  = api->gx_user_add_records(_keys, _mat, is_clip, is_faceinfo);
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         result              = (char*) gx_alloc(size * sizeof(char));
@@ -154,7 +154,7 @@ char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
         glasssix::face::gx_img_api mat(abi::string{mat_path});
         face::faces_integration_search_info faces = api->gx_detect_integration(mat, top, min_similarity);
 
-        json val            = faces;
+        nlohmann::json val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         result              = (char*) gx_alloc(size * sizeof(char));

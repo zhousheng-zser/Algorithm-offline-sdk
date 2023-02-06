@@ -104,7 +104,7 @@ namespace glasssix::face {
             if (type == "") {
                 throw source_code_aware_runtime_error(U8("Error: The picture is not in the right format"));
             }
-            img      = cv::imdecode(buffer, cv::IMREAD_COLOR);
+            img = cv::imdecode(buffer, cv::IMREAD_COLOR);
             if (img.cols * img.rows > 2048 * 1080) {
                 img.release();
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
@@ -543,7 +543,7 @@ namespace glasssix::face {
     // 特征值库批量删除
     abi::vector<face_user_result> gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
 
-        abi::vector<face_user_result> ans(keys.size() );
+        abi::vector<face_user_result> ans(keys.size());
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_mask_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
@@ -607,7 +607,6 @@ namespace glasssix::face {
             }
             // 批量入库就可以释放掉gx_img_api
         }
-
 
 
         std::array<char, 0> arr{};
@@ -759,7 +758,7 @@ namespace glasssix::face {
     bool update_config(std::mutex& mutex, std::string_view name, std::string_view key, T value) {
         std::scoped_lock lock{mutex};
         try {
-            json temp;
+            nlohmann::json temp;
             if (name == "action_live.json") {
                 temp = _config->_action_live_config;
                 if (!temp.contains(key))
