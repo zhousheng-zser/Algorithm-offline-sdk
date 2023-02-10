@@ -551,7 +551,7 @@ namespace glasssix::face {
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
         for (int i = 0; i < keys.size(); i++) {
             ans[i].key     = keys[i];
-            ans[i].success = result.result[i].success;
+            ans[i].success = 0;
             ans[i].img_buffer.clear();
             ans[i].facerectwithfaceinfo = std::nullopt;
         }
