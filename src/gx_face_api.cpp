@@ -16,6 +16,7 @@
 #include <g6/error_extensions.hpp>
 
 #include <opencv2/opencv.hpp>
+#include <fstream>
 
 namespace glasssix::face {
     namespace {
@@ -202,24 +203,30 @@ namespace glasssix::face {
     class gx_face_api::impl {
     public:
         impl() {
-            //_config     = new config();
+            std::fstream log(".\\log.txt", std::ios::out | std::ios::app);
+            log << "begin gx_face_api::impl\n";
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
+            log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
             protocol_ptr.init(_config->_configure_directory.directory);
-
+            log << "begin make_handle detect\n";
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .models_directory = _config->_detect_config.models_directory});
+            log << "begin make_handle action_live\n";
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.use_int8, _config->_action_live_config.models_directory});
+            log << "begin make_handle face_user\n";
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
             irisivel_mask_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
                 _config->_face_user_config.dimension, _config->_face_user_config.working_directory_mask});
+            log << "begin make_handle blur\n";
             romancia_handle      = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_blur_config.models_directory});
+            log << "begin make_handle feature\n";
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_feature_config.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
@@ -227,6 +234,8 @@ namespace glasssix::face {
                 _config->_feature_config.models_directory, 2, _config->_feature_config.use_int8});
             gungnir_handle; // 人头检测预留
             valklyrs_handle; // 车辆行人预留
+            log << "end make_handle\n";
+            log.close();
         }
         ~impl() {}
 
