@@ -1,4 +1,7 @@
 ﻿#include "gx_face_api.h"
+#include <cmath>
+#include <random>
+#include <mutex>
 
 #include "../src/nessus/protocol.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
@@ -10,14 +13,11 @@
 #include "../src/nessus/protocols/valklyrs.hpp"
 #include "config.hpp"
 
-#include <cmath>
-#include <random>
-
 #include <g6/error_extensions.hpp>
 
 #include <opencv2/opencv.hpp>
 #include <fstream>
-
+#include "distance.hpp"
 namespace glasssix::face {
     namespace {
         auto&& protocol_ptr = nessus_protocol::instance();
@@ -25,33 +25,21 @@ namespace glasssix::face {
 
     } // namespace
 
-    inline float DotProductAVX256(const abi::vector<float>& emb_1, const abi::vector<float>& emb_2) {
-        const static size_t kBlockWidth = 8; // compute 8 floats in one loop
-        const float* a                  = emb_1.data();
-        const float* b                  = emb_2.data();
-        size_t k                        = std::min(emb_1.size(), emb_2.size()) / kBlockWidth;
-        __m256 ans;
-        ans          = _mm256_setzero_ps();
-        float tmp[8] = {0};
-        for (int i = 0; i < k; i++) {
-            __m256 ai = _mm256_loadu_ps(a + i * kBlockWidth);
-            __m256 bi = _mm256_loadu_ps(b + i * kBlockWidth);
-            ans       = _mm256_add_ps(ans, _mm256_mul_ps(ai, bi));
-        }
-        _mm256_store_ps(tmp, ans);
-        return tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7];
-    }
 
     inline float Cosine_distance_AVX256(abi::vector<float>& x, abi::vector<float>& y) {
-        float sum, a, b;
-        a = DotProductAVX256(x, x);
-        b = DotProductAVX256(y, y);
-        if (a == 0 || b == 0)
-            return 0;
-        sum       = DotProductAVX256(x, y);
-        float ans = sum / (sqrt(a) * sqrt(b));
-        ans       = std::min(1.0f, abs(ans));
-        return ans;
+            float sum, a, b;
+            size_t len = x.size();
+            float xx[1024],yy[1024];
+            for (int i = 0; i < x.size(); i++)
+                xx[i] = x[i], yy[i] = y[i];
+            a = glasssix::irisviel::distance_inner_product::compare(xx, xx, (uint32_t)x.size());
+            b = glasssix::irisviel::distance_inner_product::compare(yy, yy, (uint32_t)y.size());
+            if (a == 0 || b == 0)
+                return 0;
+            sum = glasssix::irisviel::distance_inner_product::compare(xx, yy, (uint32_t)x.size());
+            float ans = sum / (sqrt(a) * sqrt(b));
+            ans = std::min(1.0f, static_cast<float>(fabs(ans)));
+            return  ans;
     }
 
     abi::string get_random_string(size_t len) {
@@ -79,10 +67,8 @@ namespace glasssix::face {
 
     class gx_img_api::impl {
     public:
-        impl(abi::string path) {
-
-            img = cv::imread(path.c_str());
-            if (img.empty()) {
+        impl(abi::string path) : img{ cv::imread(path.c_str()) } {
+			if (img.empty()) {
                 throw source_code_aware_runtime_error(U8("Error: Could not load image"));
             }
             uchar val[105];
@@ -112,6 +98,21 @@ namespace glasssix::face {
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
+		
+		impl(std::span<const uchar> bgr_data, int rows, int cols) : img( rows, cols, CV_8UC3) {
+			std::memcpy(img.data, bgr_data.data(), bgr_data.size());
+			
+			if (img.empty()) {
+                throw source_code_aware_runtime_error(U8("Error: Could not load image"));
+            }
+            if (img.cols * img.rows > 2048 * 1080) {
+                img.release();
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
+            }
+            data_len = 1llu * img.channels() * img.cols * img.rows;
+			
+		}
+		
         ~impl() {}
 
         abi::string check_type(std::vector<uchar>& val, size_t len) {
@@ -119,8 +120,13 @@ namespace glasssix::face {
             memset(s, 0, sizeof(s));
             memset(temp, 0, sizeof(temp));
             for (int i = 0; i < len && i < 5; i++) {
+#ifdef _WIN32
                 sprintf_s(s, "%02X", val[i]);
                 strcat_s(temp, s);
+#else
+				sprintf(s, "%02X", val[i]);
+                strcat(temp, s);
+#endif
                 if (strcmp(temp, "FFD8FF") == 0)
                     return ".jpg";
                 else if (strcmp(temp, "89504E47") == 0)
@@ -136,8 +142,13 @@ namespace glasssix::face {
             memset(s, 0, sizeof(s));
             memset(temp, 0, sizeof(temp));
             for (int i = 0; i < len && i < 5; i++) {
-                sprintf_s(s, "%02X", val[i]);
+#ifdef _WIN32
+				sprintf_s(s, "%02X", val[i]);
                 strcat_s(temp, s);
+#else
+				sprintf(s, "%02X", val[i]);
+                strcat(temp, s);
+#endif
                 if (strcmp(temp, "FFD8FF") == 0)
                     return ".jpg";
                 else if (strcmp(temp, "89504E47") == 0)
@@ -155,6 +166,7 @@ namespace glasssix::face {
 
     gx_img_api::gx_img_api(abi::string path) : impl_{std::make_unique<impl>(path)} {}
     gx_img_api::gx_img_api(std::vector<uchar>& buffer) : impl_{std::make_unique<impl>(buffer)} {}
+    gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int rows, int cols ): impl_{std::make_unique<impl>(bgr_data,rows,cols )} {}
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;
     gx_img_api& gx_img_api::operator=(gx_img_api&&) noexcept = default;
@@ -489,8 +501,7 @@ namespace glasssix::face {
         if (top > 50)
             throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top > 50."));
         if (std::signbit(min_similarity) || min_similarity > 1.001)
-            throw source_code_aware_runtime_error(
-                U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
+            throw source_code_aware_runtime_error(U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
 
         abi::vector<faces_feature> faces = gx_face_feature(mat, false);
         if (faces.size() == 0 || faces[0].facerectwithfaceinfo_list.size() == 0 || faces[0].features.size() == 0
@@ -723,7 +734,7 @@ namespace glasssix::face {
             if (ans.prob < 0.5)
                 return ans;
         }
-        gx_user_load();
+        //gx_user_load();
         auto result = gx_user_search(mat, top, min_similarity);
         ans.result  = result.result;
         return ans;
