@@ -30,7 +30,6 @@ endif()
 target_include_directories(
 	${target_name}
 	PRIVATE
-		../${GX_PUBLIC_INCLUDE_DIR}/g6/hotrail
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${GX_CV_SDK_INCLUDE}
 )

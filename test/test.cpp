@@ -5,6 +5,7 @@
 #include <face_info.hpp>
 #include <gtest/gtest.h>
 #include <gx_face_api.h>
+#include <gx_face_api_c.hpp>
 #include <io.h>
 #include <opencv2/opencv.hpp>
 using namespace glasssix::face;
@@ -552,6 +553,49 @@ TEST(FaceApi, gx_user_and_detect_integration) {
     _Api->gx_user_remove_all(); //人员库清空  清内存和磁盘
 }
 
+#include <fstream>
+#include <unordered_map>
+void set_bucket() {
+    std::ifstream file;
+    file.open("C:/Users/zs/Downloads/key_dir.txt", std::ios::in);
+    std::fstream log("D:/test/log.txt", std::ios::out | std::ios::app);
+    _Api->gx_user_load();
+    int sum = 0; 
+    for (int i =0 ;i<100000 ;) {
+        abi::vector<abi::string> keys;
+        abi::vector<gx_img_api> mat;
+        std::unordered_map<abi::string, abi::string> mp;
+        for (int j=0;j<1000 ;j++) {
+            abi::string key, path;
+            file >> key >> path;
+
+            try {
+                mat.emplace_back(gx_img_api(abi::string("D:/test/img/nanhu_2/" + path)));
+                keys.emplace_back(key);
+                mp[key] = path;
+
+            } catch (const std::exception& ex) {
+                std::cout << ex.what() << "\n"; 
+            }
+        }
+            abi::vector<face_user_result> ans = _Api->gx_user_add_records(keys, mat, 0, 0);
+        for (int j = 0; j < ans.size(); j++) {
+            if (ans[j].success == 0) {
+                sum++;
+            }
+            log << "key = " << ans[j].key;
+            log << " path = " << mp[ans[j].key];
+            log << " success = " << ans[j].success << "\n"; 
+        }
+        mp.clear(); 
+        i += 1000; 
+        if (i==5000 || i==10000 || i==20000 || i== 30000 || i== 50000 || i == 100000 ) {
+            std::cout << " please Zip ---" << i << " "<< "-sum =" << sum << "\n";
+            std::getchar();
+        }
+    }
+    file.close(); 
+}
 
 int main(int argc, char** argv) {
 
