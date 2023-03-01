@@ -7,7 +7,7 @@
 typedef unsigned char uchar;
 
 namespace glasssix::face {
-    //人脸属性
+    // 人脸属性
     struct attributes_info {
         GX_BEGIN_FIELDS(attributes_info);
         GX_FIELD(std::int32_t, glass_index); // 0: 不戴眼镜, 1: 戴眼镜，2：戴墨镜
@@ -20,7 +20,7 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //人脸基础信息
+    // 人脸基础信息
     struct face_info {
         // 人脸关键点坐标
         struct point {
@@ -37,25 +37,25 @@ namespace glasssix::face {
         GX_FIELD(std::int32_t, height);
         GX_FIELD(std::int32_t, width);
         GX_FIELD(float, confidence); // 人脸置信度
-        GX_FIELD(std::optional<attributes_info>, attributes); //人脸属性
+        GX_FIELD(std::optional<attributes_info>, attributes); // 人脸属性
         GX_FIELD(abi::vector<point>, landmark); // 人脸关键点坐标
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //人脸追踪结果
+    // 人脸追踪结果
     struct face_trace_info {
         GX_BEGIN_FIELDS(face_trace_info);
-        GX_FIELD(bool, trace_success); //追踪成功与否
-        GX_FIELD(std::optional<face_info>, facerectwithfaceinfo); //追踪人脸的新定位及信息
+        GX_FIELD(bool, trace_success); // 追踪成功与否
+        GX_FIELD(std::optional<face_info>, facerectwithfaceinfo); // 追踪人脸的新定位及信息
         GX_END_FIELDS;
         abi::string trace_id; // 追踪人脸ID
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-    
-    //人脸质量检测结果
+
+    // 人脸质量检测结果
     struct faces_blur {
         GX_BEGIN_FIELDS(faces_blur);
         GX_FIELD(abi::vector<face_info>, facerectwithfaceinfo_list); // 人脸的定位及信息
@@ -69,7 +69,7 @@ namespace glasssix::face {
     struct spoofing_probability {
         GX_BEGIN_FIELDS(spoofing_probability);
         GX_FIELD(
-            abi::vector<float>, prob); //活体检测分类结果:prob[0]:打印图像概率 prob[1]:活体概率 prob[2]:视频图像概率
+            abi::vector<float>, prob); // 活体检测分类结果:prob[0]:打印图像概率 prob[1]:活体概率 prob[2]:视频图像概率
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -88,7 +88,7 @@ namespace glasssix::face {
     // 人脸特征值数据
     struct feature_info {
         GX_BEGIN_FIELDS(feature_info);
-        GX_FIELD(abi::vector<float>, feature); //人脸特征向量
+        GX_FIELD(abi::vector<float>, feature); // 人脸特征向量
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -99,7 +99,7 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(faces_feature);
         GX_FIELD(abi::vector<face_info>, facerectwithfaceinfo_list); // 人脸的定位及信息
         GX_FIELD(abi::vector<feature_info>, features); // 人脸特征值数组
-        GX_FIELD(abi::vector<uchar>, img_buffer); // 最大人脸的图片buffer 
+        GX_FIELD(abi::vector<uchar>, img_buffer); // 最大人脸的图片buffer
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -109,7 +109,7 @@ namespace glasssix::face {
     struct faces_search_data {
         GX_BEGIN_FIELDS(faces_search_data);
         //  GX_FIELD(abi::vector<float>, feature); //人脸特征向量
-        GX_FIELD(abi::string, key); //人脸键值
+        GX_FIELD(abi::string, key); // 人脸键值
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -132,7 +132,7 @@ namespace glasssix::face {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-    
+
     // 融合人脸识别结果数组
     struct faces_integration_search_info {
         // 人脸搜索结果
@@ -144,21 +144,21 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    //特征值库操作返回值
+    // 特征值库操作返回值
     struct face_user_result {
         GX_BEGIN_FIELDS(face_user_result);
         GX_FIELD(abi::string, key);
         GX_FIELD(int32_t, success);
         GX_FIELD(std::optional<face_info>, facerectwithfaceinfo);
         GX_FIELD(abi::vector<uchar>, img_buffer);
-        
+
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
 
-    //动作活体类型枚举
+    // 动作活体类型枚举
     enum action_live_type {
         BDFACE_ACTION_LIVE_BLINK      = 0, // 眨眨眼
         BDFACE_ACTION_LIVE_OPEN_MOUTH = 1, // 张张嘴
@@ -166,11 +166,7 @@ namespace glasssix::face {
         BDFACE_ACTION_LIVE_LEFT_HEAD  = 3, // 左摇头
         BDFACE_ACTION_LIVE_RIGHT_HEAD = 4 // 右摇头
     };
-    //动作活体类型枚举
-    enum image_rotation_type {
-        DEG90   = 1,
-        DEG180  = 2,
-        DEG270  = 3
-    };
+    // 动作活体类型枚举
+    enum image_rotation_type { DEG90 = 1, DEG180 = 2, DEG270 = 3 };
 
 } // namespace glasssix::face

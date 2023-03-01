@@ -23,8 +23,8 @@ namespace glasssix::face {
 
     template <typename T>
     concept parser_status_result = requires(T obj) {
-        { obj.status } -> std::same_as<parser_result_status&>;
-    };
+                                       { obj.status } -> std::same_as<parser_result_status&>;
+                                   };
 
     template <json_serializable In, json_serializable Out>
     struct parser_inout {
@@ -49,7 +49,7 @@ namespace glasssix::face {
     }();
 
     template <typename T>
-    requires parser_status_result<std::decay_t<T>>
+        requires parser_status_result<std::decay_t<T>>
     void check_result(T&& result) {
         std::forward<T>(result).status.ensure();
     }
