@@ -5,7 +5,7 @@
 #include <face_info.hpp>
 #include <gtest/gtest.h>
 #include <gx_face_api.h>
-#include <io.h>
+#include <gx_face_api_c.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix::face;
 using namespace glasssix;
@@ -552,31 +552,131 @@ TEST(FaceApi, gx_user_and_detect_integration) {
     _Api->gx_user_remove_all(); //人员库清空  清内存和磁盘
 }
 
+#include <fstream>
+#include <unordered_map>
+void set_bucket() {
+    std::ifstream file;
+    file.open("C:/Users/zs/Downloads/key_dir.txt", std::ios::in);
+    std::fstream log("D:/test/log.txt", std::ios::out | std::ios::app);
+    _Api->gx_user_load();
+    int sum = 0; 
+    for (int i =0 ;i<100000 ;) {
+        abi::vector<abi::string> keys;
+        abi::vector<gx_img_api> mat;
+        std::unordered_map<abi::string, abi::string> mp;
+        for (int j=0;j<1000 ;j++) {
+            abi::string key, path;
+            file >> key >> path;
+
+            try {
+                mat.emplace_back(gx_img_api(abi::string("D:/test/img/nanhu_2/" + path)));
+                keys.emplace_back(key);
+                mp[key] = path;
+
+            } catch (const std::exception& ex) {
+                std::cout << ex.what() << "\n"; 
+            }
+        }
+            abi::vector<face_user_result> ans = _Api->gx_user_add_records(keys, mat, 0, 0);
+        for (int j = 0; j < ans.size(); j++) {
+            if (ans[j].success == 0) {
+                sum++;
+            }
+            log << "key = " << ans[j].key;
+            log << " path = " << mp[ans[j].key];
+            log << " success = " << ans[j].success << "\n"; 
+        }
+        mp.clear(); 
+        i += 1000; 
+        if (i==5000 || i==10000 || i==20000 || i== 30000 || i== 50000 || i == 100000 ) {
+            std::cout << " please Zip ---" << i << " "<< "-sum =" << sum << "\n";
+            std::getchar();
+        }
+    }
+    file.close(); 
+}
 
 int main(int argc, char** argv) {
-
-    gx_face_api* api = new gx_face_api();   
-    _Api             = api;
-    int ans;
+    /*C接口测试 */
     try {
-        // 用于播放视频图片的
-        //display_test::test_detect(api);
-        //display_test::test_track(api);
-        //display_test::test_blur(api);
-        //display_test::test_action_live(api);
-        //display_test::test_spoofing_live(api);
-        //display_test::test_feature(api);
-        //display_test::test_feature_comparison(api);
-        //display_test::test_user(api);
-        //display_test::test_detect_integration(api);
-        //display_test::test_add_folder_all(_Api);
-        
-        //单元测试
-        testing::InitGoogleTest(&argc, argv);
-        ans = RUN_ALL_TESTS();
+        char data[] = "[{\"key\":\"action_live_0\",\"imgs\":\"/root/test/img/"
+                      "action_live_0.jpg\"},{\"key\":\"action_live_1\",\"imgs\":\"/root/test/img/"
+                      "action_live_1.jpg\"},{\"key\":\"action_live_2\",\"imgs\":\"/root/test/img/"
+                      "action_live_2.jpg\"},{\"key\":\"action_live_3\",\"imgs\":\"/root/test/img/"
+                      "action_live_3.jpg\"},{\"key\":\"action_live_4\",\"imgs\":\"/root/test/img/action_live_4.jpg\"}]";
+        char keys[] = "[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]";
+        char img[]  = "D:/test/img/action_live_5.jpg";
+
+        printf_demo('c', img);
+        gx_user_load();
+        char* ss = gx_detect_integration(img , 10 , 0.2);
+        printf("%s\n", ss); 
+
+        /*
+            result = gx_user_add_records(data , false , true); //人员库批量添加
+            printf("get_last_error = %s\n", get_last_error());
+            printf("%s\n", result);
+
+            count = gx_user_count();
+            printf("count =  %d\n", count);
+
+
+            char path[] = "/root/test/no_mask/LSH_bucket";
+            printf("cnt =  %d\n", get_disk_keys_num(path));
+            char* ss = gx_user_search(img, 5, 0.4f); //人员搜索
+             std::cout << ss << std::endl;
+
+            ss = gx_detect_integration(img, 5, 0.4f); //人脸识别融合
+            // std::cout << ss << std::endl;
+
+            ss = gx_user_search(img, 5, 0.4f); //人员搜索
+            std::cout << ss << std::endl;
+
+            result = gx_user_remove_records(keys); //人员库批量删除记录
+            printf("%s\n", result);
+
+            ss = gx_user_search(img, 5, 0.4f); //人员搜索
+            std::cout << ss << std::endl;
+
+            gx_user_remove_all(); //人员库清空  清内存和磁盘
+
+
+            char A[] = "/root/test/img/A/610111200208264510.jpg";
+            char B[] = "/root/test/img/B/610111200208264510.jpg";
+            std::cout << gx_feature_comparison(A, B) << std::endl;
+            } catch (const std::exception& ex) {
+                std::cout << ex.what() << "----\n";
+            }
+        */
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
     }
-    delete api;
-    return ans;
+
+    /* C++ 接口测试
+gx_face_api* api = new gx_face_api();
+_Api             = api;
+int ans=0;
+try {
+    //_Api->gx_user_load(); //人员库加载
+    // 用于播放视频图片的
+    //display_test::test_detect(api);
+    //display_test::test_track(api);
+    //display_test::test_blur(api);
+    //display_test::test_action_live(api);
+    //display_test::test_spoofing_live(api);
+    //display_test::test_feature(api);
+    //display_test::test_feature_comparison(api);
+    //display_test::test_user(api);
+    //display_test::test_detect_integration(api);
+    //display_test::test_add_folder_all(_Api);
+
+    //单元测试
+    //testing::InitGoogleTest(&argc, argv);
+    //ans = RUN_ALL_TESTS();
+} catch (const std::exception& ex) {
+    std::cout << ex.what() << "----\n";
+}
+delete api;
+    */
+    return 0;
 }

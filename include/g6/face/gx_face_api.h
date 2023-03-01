@@ -1,6 +1,6 @@
 #pragma once
-
 #include <vector>
+#include <span>
 
 #include <face_info.hpp>
 #include <string_view>
@@ -10,6 +10,7 @@ namespace glasssix::face {
     class GX_API(GXOFFLINEFACERECOGNITION) gx_img_api {
     public:
         gx_img_api(abi::string path);
+		gx_img_api(std::span<const uchar> bgr_data, int rows, int cols);
         gx_img_api(std::vector<uchar>& buffer);
         ~gx_img_api();
         gx_img_api(gx_img_api&&) noexcept;

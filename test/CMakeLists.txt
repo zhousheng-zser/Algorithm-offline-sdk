@@ -4,6 +4,7 @@
 file(
 	GLOB private_sources
     CONFIGURE_DEPENDS
+#if debug 
     ${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.hpp
     ${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.h
     ../src/*.cpp
@@ -13,6 +14,7 @@ file(
     ../src/nessus/*.cpp
     ../src/nessus/protocols/*.hpp
     ../src/nessus/protocols/*.cpp
+#endif debug 
     *.hpp *.cpp *.h
 
 )
@@ -46,6 +48,7 @@ target_link_libraries(
     GTest::gtest
     ${OpenCV_LIBS}
     ${GX_CV_SDK_LIBS}
+    #gx-offline-face-recognition
 )
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
