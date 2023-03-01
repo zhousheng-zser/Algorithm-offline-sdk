@@ -1,0 +1,146 @@
+include_guard()
+include(${CMAKE_CURRENT_LIST_DIR}/GXUtil.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/GXCCXXRuntime.cmake)
+
+function(gx_make_install_third_party_library_impl name)
+    set(options SYNC_BUILD_TYPE NO_INHERIT_TOOLCHAIN_FILE PARALLEL_BUILD REQUIRED MODULE DEFAULT_FIND_PACKAGE STATIC_RUNTIME)
+    set(one_value_args SOURCE_DIR BINARY_DIR INSTALL_DIR TOOLCHAIN_FILE GENERATOR)
+    set(multi_value_args CMAKE_ARGS RESULT_INSTALL_DIR PACKAGE_CONFIG_DIRS RESULT_FIND_PACKAGE_OPTIONS)
+    cmake_parse_arguments(PARSE_ARGV 1 ARG "${options}" "${one_value_args}" "${multi_value_args}")
+    gx_ensure_parameters(gx_make_third_party_library ARG SOURCE_DIR RESULT_FIND_PACKAGE_OPTIONS)
+
+    gx_make_default_binary_dir_and_install_dir(
+        SOURCE_DIR ${ARG_SOURCE_DIR}
+        PREFIX third-party
+        RESULT_BINARY_DIR default_binary_dir
+        RESULT_INSTALL_DIR default_install_dir
+    )
+
+    if(ARG_BINARY_DIR)
+        set(binary_dir ${ARG_BINARY_DIR})
+    else()
+        set(binary_dir ${default_binary_dir})
+    endif()
+
+    if(ARG_INSTALL_DIR)
+        set(install_dir ${ARG_INSTALL_DIR})
+    else()
+        set(install_dir ${default_install_dir})
+    endif()
+
+    # Uses an explicit string variable to avoid semicolons from a list.
+    set(cmake_args -DCMAKE_INSTALL_PREFIX=${install_dir})
+
+    if(NOT ARG_NO_INHERIT_TOOLCHAIN_FILE AND NOT ARG_TOOLCHAIN_FILE)
+        list(APPEND cmake_args -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
+    elseif(ARG_TOOLCHAIN_FILE)
+        list(APPEND cmake_args -DCMAKE_TOOLCHAIN_FILE=${ARG_TOOLCHAIN_FILE})
+    endif()
+
+    if(ARG_GENERATOR)
+        list(APPEND cmake_args -G ${ARG_GENERATOR})
+    endif()
+
+    if(ARG_SYNC_BUILD_TYPE)
+        list(APPEND cmake_args -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+    endif()
+    
+    if(ARG_STATIC_RUNTIME)
+        gx_make_c_cxx_runtime_flags(
+            STATIC_RUNTIME
+            RESULT_DEBUG_FLAGS debug_flags
+            RESULT_RELEASE_FLAGS release_flags
+        )
+
+        list(
+            APPEND cmake_args
+            -DCMAKE_C_FLAGS_DEBUG=${debug_flags}
+            -DCMAKE_C_FLAGS_RELEASE=${release_flags}
+            -DCMAKE_CXX_FLAGS_DEBUG=${debug_flags}
+            -DCMAKE_CXX_FLAGS_RELEASE=${release_flags}
+        )
+    endif()
+
+    list(
+        APPEND cmake_args
+        -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+        -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+    )
+
+    file(MAKE_DIRECTORY ${binary_dir})
+
+    # (Re-)configure the project only when neccessary.
+    if(NOT EXISTS ${binary_dir}/CMakeCache.txt)
+        gx_execute_process(
+            COMMAND ${CMAKE_COMMAND} ${cmake_args} ${ARG_CMAKE_ARGS} ${ARG_SOURCE_DIR}
+            WORKING_DIRECTORY ${binary_dir}
+        )
+    endif()
+
+    if(ARG_PARALLEL_BUILD)
+        include(ProcessorCount)
+        ProcessorCount(processor_count)
+
+        set(additional_args -j${processor_count})
+    else()
+        set(additional_args "")
+    endif()
+
+    gx_execute_process(
+        COMMAND ${CMAKE_COMMAND} --build . ${additional_args}
+        WORKING_DIRECTORY ${binary_dir}
+    )
+
+    gx_execute_process(
+        COMMAND ${CMAKE_COMMAND} --build . --target install
+        WORKING_DIRECTORY ${binary_dir}
+    )
+    
+    if(ARG_RESULT_INSTALL_DIR)
+        foreach(item IN LISTS ARG_RESULT_INSTALL_DIR)
+            set(${item} ${install_dir} PARENT_SCOPE)
+        endforeach()
+    endif()
+
+    if(ARG_PACKAGE_CONFIG_DIR)
+        set(package_config_dirs ${install_dir}/${ARG_PACKAGE_CONFIG_DIRS})
+    else()
+        set(package_config_dirs ${install_dir}/lib/cmake ${install_dir}/lib64/cmake)
+    endif()
+
+    if(ARG_REQUIRED)
+        set(find_package_options REQUIRED)
+    else()
+        set(find_package_options "")
+    endif()
+
+    if(ARG_MODULE)
+        list(APPEND find_package_options MODULE)
+    endif()
+
+    if(NOT ARG_DEFAULT_FIND_PACKAGE AND NOT ARG_MODULE)
+        list(
+            APPEND find_package_options
+            HINTS ${package_config_dirs}
+            NO_DEFAULT_PATH
+        )
+    endif()
+
+    set(${ARG_RESULT_FIND_PACKAGE_OPTIONS} ${find_package_options} PARENT_SCOPE)
+endfunction()
+
+macro(gx_make_install_third_party_library name)
+    gx_make_install_third_party_library_impl(
+        name
+        ${ARGN}
+        RESULT_FIND_PACKAGE_OPTIONS gx_make_install_third_party_library_find_package_options
+    )
+
+    # https://cmake.org/cmake/help/latest/policy/CMP0074.html
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0074 NEW)
+    find_package(${name} ${gx_make_install_third_party_library_find_package_options})
+    cmake_policy(POP)
+
+    unset(gx_make_install_third_party_library_find_package_options)
+endmacro()

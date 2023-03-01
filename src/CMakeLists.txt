@@ -1,4 +1,4 @@
-﻿set(target_version 0.0.1)
+﻿set(target_version 0.1)
 set(target_name gx-offline-face-recognition)
 set(package_name GxOfflineFaceRecognition)
 
@@ -21,7 +21,7 @@ file(
 target_sources(
 	${target_name}
 	PRIVATE ${private_sources}
- "gx_face_api_c.cpp")
+ )
 
 if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
 	include(GXCompat)
@@ -45,6 +45,7 @@ target_include_directories(
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
 target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
+target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 
 target_link_libraries(
 	${target_name}
@@ -54,6 +55,17 @@ target_link_libraries(
 	${OpenCV_LIBS}
 	${GX_CV_SDK_LIBS}
 )
+
+if(NOT WIN32)
+target_link_libraries(
+	${target_name}
+	PRIVATE
+	dl
+	rknn_api
+)
+endif()
+
+
 
 set_target_properties(${target_name}
 	PROPERTIES
