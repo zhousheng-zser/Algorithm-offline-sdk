@@ -10,11 +10,9 @@
 #define SIMD_VERSION_NUMBER(major, minor, patch) \
     ((((major) % 100) * 10000000) + (((minor) % 100) * 100000) + ((patch) % 100000))
 
-#define SIMD_VERSION_NUMBER_NOT_AVAILABLE \
-    SIMD_VERSION_NUMBER(0, 0, 0)
+#define SIMD_VERSION_NUMBER_NOT_AVAILABLE SIMD_VERSION_NUMBER(0, 0, 0)
 
-#define SIMD_VERSION_NUMBER_AVAILABLE \
-    SIMD_VERSION_NUMBER(0, 0, 1)
+#define SIMD_VERSION_NUMBER_AVAILABLE SIMD_VERSION_NUMBER(0, 0, 1)
 
 /*************************
  * CLEAR INSTRUCTION SET *
@@ -32,12 +30,12 @@
 #undef SIMD_ARM_INSTR_SET
 #undef SIMD_ARM_INSTR_SET_AVAILABLE
 
- /**********************
-  * USER CONFIGURATION *
-  **********************/
+/**********************
+ * USER CONFIGURATION *
+ **********************/
 
 #ifdef SIMD_FORCE_X86_INSTR_SET
-#define SIMD_X86_INSTR_SET SIMD_FORCE_X86_INSTR_SET
+#define SIMD_X86_INSTR_SET           SIMD_FORCE_X86_INSTR_SET
 #define SIMD_X86_INSTR_SET_AVAILABLE SIMD_VERSION_NUMBER_AVAILABLE
 #ifdef _MSC_VER
 #pragma message("Warning: Forcing X86 instruction set")
@@ -45,7 +43,7 @@
 #warning "Forcing X86 instruction set"
 #endif
 #elif defined(SIMD_FORCE_X86_AMD_INSTR_SET)
-#define SIMD_X86_AMD_INSTR_SET SIMD_FORCE_X86_AMD_INSTR_SET
+#define SIMD_X86_AMD_INSTR_SET           SIMD_FORCE_X86_AMD_INSTR_SET
 #define SIMD_X86_AMD_INSTR_SET_AVAILABLE SIMD_VERSION_NUMBER_AVAILABLE
 #ifdef _MSC_VER
 #pragma message("Warning: Forcing X86 AMD instruction set")
@@ -53,7 +51,7 @@
 #warning "Forcing X86 AMD instruction set"
 #endif
 #elif defined(SIMD_FORCE_PPC_INSTR_SET)
-#define SIMD_PPC_INSTR_SET SIMD_FORCE_PPC_INSTR_SET
+#define SIMD_PPC_INSTR_SET           SIMD_FORCE_PPC_INSTR_SET
 #define SIMD_PPC_INSTR_SET_AVAILABLE SIMD_VERSION_NUMBER_AVAILABLE
 #ifdef _MSC_VER
 #pragma message("Warning: Forcing PPC instruction set")
@@ -61,7 +59,7 @@
 #warning "Forcing PPC instruction set"
 #endif
 #elif defined(arm)
-#define SIMD_ARM_INSTR_SET SIMD_FORCE_ARM_INSTR_SET
+#define SIMD_ARM_INSTR_SET           SIMD_FORCE_ARM_INSTR_SET
 #define SIMD_ARM_INSTR_SET_AVAILABLE SIMD_VERSION_NUMBER_AVAILABLE
 #ifdef _MSC_VER
 #pragma message("Warning: Forcing ARM instruction set")
@@ -105,34 +103,34 @@
 #define __AVX2__
 #endif // !__AVX2__
 #endif
-//#if _MSC_VER >= 19?? (vs2019 16.16 LATER)
-//define __AVX512__
+// #if _MSC_VER >= 19?? (vs2019 16.16 LATER)
+// define __AVX512__
 #endif
 
 /***********************
  * X86 INSTRUCTION SET *
  ***********************/
 
-#define SIMD_X86_SSE_VERSION SIMD_VERSION_NUMBER(1, 0, 0)
-#define SIMD_X86_SSE2_VERSION SIMD_VERSION_NUMBER(2, 0, 0)
-#define SIMD_X86_SSE3_VERSION SIMD_VERSION_NUMBER(3, 0, 0)
-#define SIMD_X86_SSSE3_VERSION SIMD_VERSION_NUMBER(3, 1, 0)
+#define SIMD_X86_SSE_VERSION    SIMD_VERSION_NUMBER(1, 0, 0)
+#define SIMD_X86_SSE2_VERSION   SIMD_VERSION_NUMBER(2, 0, 0)
+#define SIMD_X86_SSE3_VERSION   SIMD_VERSION_NUMBER(3, 0, 0)
+#define SIMD_X86_SSSE3_VERSION  SIMD_VERSION_NUMBER(3, 1, 0)
 #define SIMD_X86_SSE4_1_VERSION SIMD_VERSION_NUMBER(4, 1, 0)
 #define SIMD_X86_SSE4_2_VERSION SIMD_VERSION_NUMBER(4, 2, 0)
-#define SIMD_X86_AVX_VERSION SIMD_VERSION_NUMBER(5, 0, 0)
-#define SIMD_X86_FMA3_VERSION SIMD_VERSION_NUMBER(5, 2, 0)
-#define SIMD_X86_AVX2_VERSION SIMD_VERSION_NUMBER(5, 3, 0)
+#define SIMD_X86_AVX_VERSION    SIMD_VERSION_NUMBER(5, 0, 0)
+#define SIMD_X86_FMA3_VERSION   SIMD_VERSION_NUMBER(5, 2, 0)
+#define SIMD_X86_AVX2_VERSION   SIMD_VERSION_NUMBER(5, 3, 0)
 #define SIMD_X86_AVX512_VERSION SIMD_VERSION_NUMBER(6, 0, 0)
-#define SIMD_X86_MIC_VERSION SIMD_VERSION_NUMBER(9, 0, 0)
+#define SIMD_X86_MIC_VERSION    SIMD_VERSION_NUMBER(9, 0, 0)
 
 #if !defined(SIMD_X86_INSTR_SET) && defined(__MIC__)
 #define SIMD_X86_INSTR_SET SIMD_X86_MIC_VERSION
 #endif
 
- // AVX512 instructions are supported starting with gcc 6
- // see https://www.gnu.org/software/gcc/gcc-6/changes.html
-#if !defined(SIMD_X86_INSTR_SET) && (defined(__AVX512__) || defined(__KNCNI__) || defined(__AVX512F__)\
-    && (!defined(__GNUC__) || __GNUC__ >= 6))
+// AVX512 instructions are supported starting with gcc 6
+// see https://www.gnu.org/software/gcc/gcc-6/changes.html
+#if !defined(SIMD_X86_INSTR_SET) \
+    && (defined(__AVX512__) || defined(__KNCNI__) || defined(__AVX512F__) && (!defined(__GNUC__) || __GNUC__ >= 6))
 #define SIMD_X86_INSTR_SET SIMD_X86_AVX512_VERSION
 #endif
 
@@ -168,7 +166,8 @@
 #define SIMD_X86_INSTR_SET SIMD_X86_SSE3_VERSION
 #endif
 
-#if !defined(SIMD_X86_INSTR_SET) && (defined(__SSE2__) || defined(__x86_64__) || defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2))
+#if !defined(SIMD_X86_INSTR_SET) \
+    && (defined(__SSE2__) || defined(__x86_64__) || defined(_M_X64) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2))
 #define SIMD_X86_INSTR_SET SIMD_X86_SSE2_VERSION
 #endif
 
@@ -187,8 +186,8 @@
  ***************************/
 
 #define SIMD_X86_AMD_SSE4A_VERSION SIMD_VERSION_NUMBER(4, 0, 0)
-#define SIMD_X86_AMD_FMA4_VERSION SIMD_VERSION_NUMBER(5, 1, 0)
-#define SIMD_X86_AMD_XOP_VERSION SIMD_VERSION_NUMBER(5, 1, 1)
+#define SIMD_X86_AMD_FMA4_VERSION  SIMD_VERSION_NUMBER(5, 1, 0)
+#define SIMD_X86_AMD_XOP_VERSION   SIMD_VERSION_NUMBER(5, 1, 1)
 
 #if !defined(SIMD_X86_AMD_INSTR_SET) && defined(__XOP__)
 #define SIMD_X86_AMD_INSTR_SET SIMD_X86_AMD_XOP_VERSION
@@ -205,7 +204,7 @@
 #if !defined(SIMD_X86_AMD_INSTR_SET)
 #define SIMD_X86_AMD_INSTR_SET SIMD_VERSION_NUMBER_NOT_AVAILABLE
 #else
- // X86_AMD implies X86
+// X86_AMD implies X86
 #if SIMD_X86_INSTR_SET > SIMD_X86_AMD_INSTR_SET
 #undef SIMD_X86_AMD_INSTR_SET
 #define SIMD_X86_AMD_INSTR_SET SIMD_X86_INSTR_SET
@@ -217,35 +216,35 @@
  * PPC INSTRUCTION SET *
  ***********************/
 
- // We haven't implemented any support for PPC, so we should
- // not enable detection for this instructoin set
- /*#define SIMD_PPC_VMX_VERSION SIMD_VERSION_NUMBER(1, 0, 0)
- #define SIMD_PPC_VSX_VERSION SIMD_VERSION_NUMBER(1, 1, 0)
- #define SIMD_PPC_QPX_VERSION SIMD_VERSION_NUMBER(2, 0, 0)
- #if !defined(SIMD_PPC_INSTR_SET) && defined(__VECTOR4DOUBLE__)
-	 #define SIMD_PPC_INSTR_SET SIMD_PPC_QPX_VERSION
- #endif
- #if !defined(SIMD_PPC_INSTR_SET) && defined(__VSX__)
-	 #define SIMD_PPC_INSTR_SET SIMD_PPC_VSX_VERSION
- #endif
- #if !defined(SIMD_PPC_INSTR_SET) && (defined(__ALTIVEC__) || defined(__VEC__))
-	 #define SIMD_PPC_INSTR_SET SIMD_PPC_VMX_VERSION
- #endif
- #if !defined(SIMD_PPC_INSTR_SET)
-	 #define SIMD_PPC_INSTR_SET SIMD_VERSION_NUMBER_NOT_AVAILABLE
- #else
-	 #define SIMD_PPC_INSTR_SET_AVAILABLE SIMD_VERSION_NUMBER_AVAILABLE
- #endif*/
+// We haven't implemented any support for PPC, so we should
+// not enable detection for this instructoin set
+/*#define SIMD_PPC_VMX_VERSION SIMD_VERSION_NUMBER(1, 0, 0)
+#define SIMD_PPC_VSX_VERSION SIMD_VERSION_NUMBER(1, 1, 0)
+#define SIMD_PPC_QPX_VERSION SIMD_VERSION_NUMBER(2, 0, 0)
+#if !defined(SIMD_PPC_INSTR_SET) && defined(__VECTOR4DOUBLE__)
+        #define SIMD_PPC_INSTR_SET SIMD_PPC_QPX_VERSION
+#endif
+#if !defined(SIMD_PPC_INSTR_SET) && defined(__VSX__)
+        #define SIMD_PPC_INSTR_SET SIMD_PPC_VSX_VERSION
+#endif
+#if !defined(SIMD_PPC_INSTR_SET) && (defined(__ALTIVEC__) || defined(__VEC__))
+        #define SIMD_PPC_INSTR_SET SIMD_PPC_VMX_VERSION
+#endif
+#if !defined(SIMD_PPC_INSTR_SET)
+        #define SIMD_PPC_INSTR_SET SIMD_VERSION_NUMBER_NOT_AVAILABLE
+#else
+        #define SIMD_PPC_INSTR_SET_AVAILABLE SIMD_VERSION_NUMBER_AVAILABLE
+#endif*/
 
- /***********************
-  * ARM INSTRUCTION SET *
-  ***********************/
+/***********************
+ * ARM INSTRUCTION SET *
+ ***********************/
 
-#define SIMD_ARM7_NEON_VERSION SIMD_VERSION_NUMBER(7, 0, 0)
+#define SIMD_ARM7_NEON_VERSION    SIMD_VERSION_NUMBER(7, 0, 0)
 #define SIMD_ARM8_32_NEON_VERSION SIMD_VERSION_NUMBER(8, 0, 0)
 #define SIMD_ARM8_64_NEON_VERSION SIMD_VERSION_NUMBER(8, 1, 0)
 
-  // TODO __ARM_FEATURE_FMA
+// TODO __ARM_FEATURE_FMA
 #if defined(SIMD_ARM_INSTR_SET) && (defined(__ARM_NEON))
 #if __ARM_ARCH >= 8
 #if defined(__aarch64__)
@@ -256,7 +255,7 @@
 #elif __ARM_ARCH >= 7
 #define SIMD_ARM_INSTR_SET SIMD_ARM7_NEON_VERSION
 #else
-	static_assert("NEON instruction set not supported.", false);
+static_assert("NEON instruction set not supported.", false);
 #endif
 #endif
 
@@ -321,10 +320,10 @@
 #define SIMD_TYPE 0
 #endif // SIMD_X86_INSTR_SET < SIMD_X86_SSE_VERSION
 
-#define SIMDTYPE_NONE 0
-#define SIMDTYPE_SSE 1
-#define SIMDTYPE_AVX 2
-#define SIMDTYPE_AVX2 3
+#define SIMDTYPE_NONE   0
+#define SIMDTYPE_SSE    1
+#define SIMDTYPE_AVX    2
+#define SIMDTYPE_AVX2   3
 #define SIMDTYPE_AVX512 4
 //*****************INCLUDE FILES*********************//
 
@@ -335,25 +334,25 @@
 // x86intrin.h includes header files for whatever instruction
 // sets are specified on the compiler command line, such as:
 // xopintrin.h, fma4intrin.h
-#include <x86intrin.h>         
+#include <x86intrin.h>
 #else
 // MS version of immintrin.h covers AVX, AVX2 and FMA3
-#include <immintrin.h> 
+#include <immintrin.h>
 #endif // __GNUC__
 #elif SIMD_X86_INSTR_SET == SIMD_X86_AVX_VERSION
-#include <immintrin.h>             // AVX
+#include <immintrin.h> // AVX
 #elif SIMD_X86_INSTR_SET == SIMD_X86_SSE4_2_VERSION
-#include <nmmintrin.h>             // SSE4.2
+#include <nmmintrin.h> // SSE4.2
 #elif SIMD_X86_INSTR_SET == SIMD_X86_SSE4_1_VERSION
-#include <smmintrin.h>             // SSE4.1
+#include <smmintrin.h> // SSE4.1
 #elif SIMD_X86_INSTR_SET == SIMD_X86_SSSE3_VERSION
-#include <tmmintrin.h>             // SSSE3
+#include <tmmintrin.h> // SSSE3
 #elif SIMD_X86_INSTR_SET == SIMD_X86_SSE3_VERSION
-#include <pmmintrin.h>             // SSE3
+#include <pmmintrin.h> // SSE3
 #elif SIMD_X86_INSTR_SET == SIMD_X86_SSE2_VERSION
-#include <emmintrin.h>             // SSE2
+#include <emmintrin.h> // SSE2
 #elif SIMD_X8_INSTR_SET == SIMD_X86_SSE_VERSION
-#include <xmmintrin.h>             // SSE
+#include <xmmintrin.h> // SSE
 #endif // SIMD_X86_INSTR_SET
 
 // AMD instruction sets

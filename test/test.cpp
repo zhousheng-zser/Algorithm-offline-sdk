@@ -192,7 +192,7 @@ namespace glasssix::display_test {
         cv::Mat img = cv::imread("D:/test/img/20221208.jpg");
         gx_img_api img_path("D:/test/img/20221208.jpg");
         abi::vector<faces_feature> faces;
-        faces = _api->gx_face_feature(img_path,false);
+        faces = _api->gx_face_feature(img_path, false);
         for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
             face_info info = faces[0].facerectwithfaceinfo_list[i];
 
@@ -238,15 +238,15 @@ namespace glasssix::display_test {
             printf("Input Irisviel key (0-6), (-1 exit): \n");
             scanf_s("%d", &flag);
             if (flag == 0)
-                _api->gx_user_load(); //人员库加载
+                _api->gx_user_load(); // 人员库加载
             else if (flag == 1)
-                 _api->gx_user_search(imgs[0], 5, 0.1f); //人员库搜索
+                _api->gx_user_search(imgs[0], 5, 0.1f); // 人员库搜索
             else if (flag == 2)
-                _api->gx_user_remove_all(); //人员库清空  清内存和磁盘
+                _api->gx_user_remove_all(); // 人员库清空  清内存和磁盘
             else if (flag == 3)
-                _api->gx_user_remove_records(keys ); //人员库批量删除记录
+                _api->gx_user_remove_records(keys); // 人员库批量删除记录
             else if (flag == 4)
-                _api->gx_user_add_records(keys, imgs,false,false ); //人员库批量添加记录
+                _api->gx_user_add_records(keys, imgs, false, false); // 人员库批量添加记录
             else if (flag == 5)
                 _api->gx_user_add_records(keys, features); // 人员库批量添加记录
             else
@@ -292,14 +292,14 @@ namespace glasssix::display_test {
         if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1) {
             do {
                 if (strcmp(fileinfo.name, "..") == 0 || strcmp(fileinfo.name, ".") == 0)
-                    continue; 
+                    continue;
                 if (fileinfo.attrib == _A_SUBDIR) {
                     getFiles(path + "/" + fileinfo.name, files);
-                    continue; 
+                    continue;
                 }
                 files.push_back(path + "/" + fileinfo.name);
 
-            } while (_findnext(hFile, &fileinfo) == 0); //寻找下一个，成功返回0，否则-1
+            } while (_findnext(hFile, &fileinfo) == 0); // 寻找下一个，成功返回0，否则-1
 
             _findclose(hFile);
         }
@@ -318,7 +318,7 @@ namespace glasssix::display_test {
                 keys.push_back(namelist[i]);
                 i++;
             }
-            _api->gx_user_add_records(keys, imgs,false,false);
+            _api->gx_user_add_records(keys, imgs, false, false);
         }
     }
 
@@ -327,7 +327,7 @@ namespace glasssix::display_test {
 
 gx_face_api* _Api;
 
-//人脸检测
+// 人脸检测
 TEST(FaceApi, gx_detect) {
     gx_img_api img("D:/test/img/B/431123200209052539.jpg");
     abi::vector<face_info> faces;
@@ -351,7 +351,7 @@ TEST(FaceApi, gx_detect) {
     EXPECT_LT(info.attributes->roll, 90.0);
 }
 
-//人脸追踪
+// 人脸追踪
 TEST(FaceApi, gx_track) {
     cv::VideoCapture capture;
     capture.open("D:/test/img/20221208.jpg");
@@ -384,7 +384,7 @@ TEST(FaceApi, gx_track) {
     }
 }
 
-//人脸质量检测
+// 人脸质量检测
 TEST(FaceApi, gx_face_blur) {
     gx_img_api img("D:/test/img/20221208.jpg");
     faces_blur faces;
@@ -397,7 +397,7 @@ TEST(FaceApi, gx_face_blur) {
     }
 }
 
-//配合活体检测
+// 配合活体检测
 TEST(FaceApi, gx_face_action_live) {
     abi::vector<gx_img_api> img;
     img.emplace_back(gx_img_api("D:/test/img/action_live_0.jpg"));
@@ -439,7 +439,7 @@ TEST(FaceApi, gx_face_action_live) {
     EXPECT_FALSE(action_result);
 }
 
-//静默活体检测
+// 静默活体检测
 TEST(FaceApi, gx_face_spoofing_live) {
     abi::vector<gx_img_api> img;
     img.emplace_back(gx_img_api("D:/test/img/spoofing_0.jpg"));
@@ -460,7 +460,7 @@ TEST(FaceApi, gx_face_spoofing_live) {
     }
 }
 
-//特征值提取
+// 特征值提取
 TEST(FaceApi, gx_face_feature) {
     cv::VideoCapture capture;
     capture.open("D:/test/img/20221208.jpg");
@@ -472,7 +472,7 @@ TEST(FaceApi, gx_face_feature) {
 
     abi::vector<faces_feature> faces;
 
-    faces = _Api->gx_face_feature(img_buff,false);
+    faces = _Api->gx_face_feature(img_buff, false);
     EXPECT_EQ(faces[0].facerectwithfaceinfo_list.size(), faces[0].features.size());
     for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
 
@@ -492,7 +492,7 @@ TEST(FaceApi, gx_feature_comparison) {
     EXPECT_GT(ans1, 0);
 }
 
-//人脸特征值底库 + 融合人脸识别
+// 人脸特征值底库 + 融合人脸识别
 TEST(FaceApi, gx_user_and_detect_integration) {
 
     abi::vector<gx_img_api> imgs;
@@ -514,14 +514,14 @@ TEST(FaceApi, gx_user_and_detect_integration) {
     gx_img_api img("D:/test/img/action_live_5.jpg");
 
 
-    _Api->gx_user_load(); //人员库加载
+    _Api->gx_user_load(); // 人员库加载
 
 
-    result = _Api->gx_user_add_records(keys, imgs, false,false); //人员库批量添加记录
+    result = _Api->gx_user_add_records(keys, imgs, false, false); // 人员库批量添加记录
     EXPECT_EQ(result.size(), 5);
     for (int i = 0; i < result.size(); i++)
-        EXPECT_EQ(result[i].success,0);
-    faces = _Api->gx_user_search(img, 5, 0.4f); //人员库搜索
+        EXPECT_EQ(result[i].success, 0);
+    faces = _Api->gx_user_search(img, 5, 0.4f); // 人员库搜索
     ASSERT_LE(faces.result.size(), 5);
     for (int i = 0; i < faces.result.size(); i++) {
         EXPECT_GE(faces.result[i].similarity, 0.4);
@@ -536,8 +536,7 @@ TEST(FaceApi, gx_user_and_detect_integration) {
     ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
 
-
-    faces = _Api->gx_user_search(img, 5, 0.4f); //人员库搜索
+    faces = _Api->gx_user_search(img, 5, 0.4f); // 人员库搜索
     ASSERT_LE(faces.result.size(), 5);
     for (int i = 0; i < faces.result.size(); i++) {
         EXPECT_GE(faces.result[i].similarity, 0.4);
@@ -545,11 +544,11 @@ TEST(FaceApi, gx_user_and_detect_integration) {
     ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
 
-    _Api->gx_user_remove_records(keys); //人员库批量删除记录
-    faces = _Api->gx_user_search(img, 5, 0.4f); //人员库搜索
+    _Api->gx_user_remove_records(keys); // 人员库批量删除记录
+    faces = _Api->gx_user_search(img, 5, 0.4f); // 人员库搜索
     ASSERT_LE(faces.result.size(), 0);
 
-    _Api->gx_user_remove_all(); //人员库清空  清内存和磁盘
+    _Api->gx_user_remove_all(); // 人员库清空  清内存和磁盘
 }
 
 #include <fstream>
@@ -559,12 +558,12 @@ void set_bucket() {
     file.open("C:/Users/zs/Downloads/key_dir.txt", std::ios::in);
     std::fstream log("D:/test/log.txt", std::ios::out | std::ios::app);
     _Api->gx_user_load();
-    int sum = 0; 
-    for (int i =0 ;i<100000 ;) {
+    int sum = 0;
+    for (int i = 0; i < 100000;) {
         abi::vector<abi::string> keys;
         abi::vector<gx_img_api> mat;
         std::unordered_map<abi::string, abi::string> mp;
-        for (int j=0;j<1000 ;j++) {
+        for (int j = 0; j < 1000; j++) {
             abi::string key, path;
             file >> key >> path;
 
@@ -574,26 +573,27 @@ void set_bucket() {
                 mp[key] = path;
 
             } catch (const std::exception& ex) {
-                std::cout << ex.what() << "\n"; 
+                std::cout << ex.what() << "\n";
             }
         }
-            abi::vector<face_user_result> ans = _Api->gx_user_add_records(keys, mat, 0, 0);
+        abi::vector<face_user_result> ans = _Api->gx_user_add_records(keys, mat, 0, 0);
         for (int j = 0; j < ans.size(); j++) {
             if (ans[j].success == 0) {
                 sum++;
             }
             log << "key = " << ans[j].key;
             log << " path = " << mp[ans[j].key];
-            log << " success = " << ans[j].success << "\n"; 
+            log << " success = " << ans[j].success << "\n";
         }
-        mp.clear(); 
-        i += 1000; 
-        if (i==5000 || i==10000 || i==20000 || i== 30000 || i== 50000 || i == 100000 ) {
-            std::cout << " please Zip ---" << i << " "<< "-sum =" << sum << "\n";
+        mp.clear();
+        i += 1000;
+        if (i == 5000 || i == 10000 || i == 20000 || i == 30000 || i == 50000 || i == 100000) {
+            std::cout << " please Zip ---" << i << " "
+                      << "-sum =" << sum << "\n";
             std::getchar();
         }
     }
-    file.close(); 
+    file.close();
 }
 
 int main(int argc, char** argv) {
@@ -609,8 +609,8 @@ int main(int argc, char** argv) {
 
         printf_demo('c', img);
         gx_user_load();
-        char* ss = gx_detect_integration(img , 10 , 0.2);
-        printf("%s\n", ss); 
+        char* ss = gx_detect_integration(img, 10, 0.2);
+        printf("%s\n", ss);
 
         /*
             result = gx_user_add_records(data , false , true); //人员库批量添加

@@ -87,7 +87,9 @@ char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
         abi::vector<face::face_trace_info> faces = api->gx_track(Mat_);
 
-        nlohmann::json val  = faces;
+        nlohmann::json val = faces;
+        for (int i = 0; i < faces.size(); i++)
+            val[i]["trace_id"] = faces[0].trace_id;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -226,7 +228,6 @@ bool gx_user_remove_all() {
 }
 
 char* gx_user_remove_records(char* keys) {
-    char* result = NULL;
     try {
 
         abi::vector<abi::string> _keys;
@@ -241,16 +242,15 @@ char* gx_user_remove_records(char* keys) {
         char* result     = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
+        return result;
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
     }
-    return result;
 }
 
 char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
     std::string err;
-    char* result = NULL;
     try {
         bool flag = 0;
         abi::vector<abi::string> _keys;
@@ -276,11 +276,11 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
             set_last_error(std::string{"OK"});
         else
             set_last_error(err);
+        return result;
     } catch (const std::exception& ex) {
         err += ex.what();
         set_last_error(err);
     }
-    return result;
 }
 
 char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
