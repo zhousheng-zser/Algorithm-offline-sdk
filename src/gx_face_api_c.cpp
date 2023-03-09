@@ -87,7 +87,9 @@ char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
         abi::vector<face::face_trace_info> faces = api->gx_track(Mat_);
 
-        nlohmann::json val  = faces;
+        nlohmann::json val = faces;
+        for (int i = 0; i < faces.size(); i++)
+            val[i]["trace_id"] = faces[0].trace_id;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
