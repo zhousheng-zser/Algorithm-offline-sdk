@@ -57,12 +57,8 @@ bool gx_clear_track_history() {
 }
 
 char* gx_detect_inplace(const std::uint8_t* mat, int rows, int cols) {
-    clock_t be, ed;
-    be = clock();
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        printf("%d %d %lld \n", Mat_.get_rows(), Mat_.get_cols(), Mat_.get_data_len());
-
         abi::vector<face::face_info> faces = api->gx_detect(Mat_);
 
         nlohmann::json val  = faces;
@@ -71,18 +67,15 @@ char* gx_detect_inplace(const std::uint8_t* mat, int rows, int cols) {
         char* result        = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
-        ed = clock();
-        printf("------------------time= %.4f\n", 1.0 * (ed - be) / CLOCKS_PER_SEC);
         return result;
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
 char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
-    clock_t be, ed;
-    be = clock();
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
         abi::vector<face::face_trace_info> faces = api->gx_track(Mat_);
@@ -95,18 +88,15 @@ char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
         char* result        = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
-        ed = clock();
-        printf("------------------time= %.4f\n", 1.0 * (ed - be) / CLOCKS_PER_SEC);
         return result;
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
 char* gx_face_feature_inplace(const std::uint8_t* mat, int rows, int cols, bool is_clip) {
-    clock_t be, ed;
-    be = clock();
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
         abi::vector<face::faces_feature> faces = api->gx_face_feature(Mat_, is_clip);
@@ -117,18 +107,15 @@ char* gx_face_feature_inplace(const std::uint8_t* mat, int rows, int cols, bool 
         char* result        = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
-        ed = clock();
-        printf("------------------time= %.4f\n", 1.0 * (ed - be) / CLOCKS_PER_SEC);
         return result;
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
 char* gx_user_search_inplace(const std::uint8_t* mat, int rows, int cols, int top, float min_similarity) {
-    clock_t be, ed;
-    be = clock();
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
         face::faces_search_info faces = api->gx_user_search(Mat_, top, min_similarity);
@@ -139,18 +126,15 @@ char* gx_user_search_inplace(const std::uint8_t* mat, int rows, int cols, int to
         char* result        = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
-        ed = clock();
-        printf("------------------time= %.4f\n", 1.0 * (ed - be) / CLOCKS_PER_SEC);
         return result;
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
 char* gx_detect_integration_inplace(const std::uint8_t* mat, int rows, int cols, int top, float min_similarity) {
-    clock_t be, ed;
-    be = clock();
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
         face::faces_integration_search_info faces = api->gx_detect_integration(Mat_, top, min_similarity);
@@ -161,12 +145,11 @@ char* gx_detect_integration_inplace(const std::uint8_t* mat, int rows, int cols,
         char* result        = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
-        ed = clock();
-        printf("------------------time= %.4f\n", 1.0 * (ed - be) / CLOCKS_PER_SEC);
         return result;
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
@@ -199,6 +182,7 @@ char* gx_user_search(char* mat_path, int top, float min_similarity) {
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
@@ -246,6 +230,7 @@ char* gx_user_remove_records(char* keys) {
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
@@ -280,6 +265,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
     } catch (const std::exception& ex) {
         err += ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 
@@ -298,6 +284,7 @@ char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
     } catch (const std::exception& ex) {
         std::string err = ex.what();
         set_last_error(err);
+        return nullptr;
     }
 }
 

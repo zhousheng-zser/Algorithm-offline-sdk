@@ -8,7 +8,6 @@ endif()
 
 if(CMAKE_CROSSCOMPILING)
     set(additional_args CMAKE_ARGS -DGX_TOOLCHAIN_PREFIX=${GX_TOOLCHAIN_PREFIX} -DGX_WITH_NET=OFF -DGX_WITH_TESTS=OFF -DGX_WITH_JNI=OFF)
-    set(toolchain_file ${CMAKE_CURRENT_LIST_DIR}/third-party/miscellaneous/cmake/RV1109Toolchain.cmake)
 else()
     set(additional_args "")
     set(toolchain_file "")
@@ -43,7 +42,7 @@ if(WIN32)
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/third-party/miscellaneous
     TOOLCHAIN_FILE ${toolchain_file}
     )
-else()
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     find_package(
     GXMiscellaneous
     REQUIRED
@@ -59,17 +58,21 @@ else()
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/package/arm-linux-gnueabihf/lib)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/package/arm-linux-gnueabihf/include)
     set(OpenCV_LIBS opencv_core opencv_imgcodecs opencv_imgproc opencv_calib3d opencv_features2d opencv_flann opencv_highgui opencv_photo opencv_dnn.so.3.4.1 opencv_dnn.so opencv_ml opencv_video opencv_videoio opencv_videostab opencv_objdetect opencv_shape opencv_stitching opencv_superres)
+else()
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/sdk/native/libs/arm64-v8a)
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/sdk/native/jni/include)
+    set(OpenCV_LIBS opencv_java4)
 endif()
 
 if(WIN32)
     set(cvsdk_lib_relative_path "/lib/windows/x64/release")
     set(GX_CV_SDK_LIBS libparser)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    file(STRINGS /etc/os-release linux_distro_id REGEX "^ID=")
-    string(REGEX REPLACE "ID=\"(.+)\"" "\\1" linux_distro_id "${linux_distro_id}")
-    message("Found Linux Distro ID: ${linux_distro_id}")
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")
     set(cvsdk_lib_relative_path "/lib/rv1109/arm-linux-gnueabihf/release")
     set(GX_CV_SDK_LIBS cassius damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
+else()
+    set(cvsdk_lib_relative_path "/lib/android/arm64-v8a/release")
+    set(GX_CV_SDK_LIBS cassius damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service gaius ring)
 endif()
 
 set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)

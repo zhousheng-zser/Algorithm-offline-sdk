@@ -1,6 +1,5 @@
 #pragma once
 
-#include <concepts>
 #include <string_view>
 #include <type_traits>
 #include <utility>
@@ -8,6 +7,8 @@
 #include <g6/json_extensions.hpp>
 #include <g6/meta_string.hpp>
 #include <g6/reflection.hpp>
+
+#include <concepts/concepts.hpp>
 
 namespace glasssix::face {
     struct parser_result_status {
@@ -23,7 +24,7 @@ namespace glasssix::face {
 
     template <typename T>
     concept parser_status_result = requires(T obj) {
-                                       { obj.status } -> std::same_as<parser_result_status&>;
+                                       { obj.status } -> concepts::same_as<parser_result_status&>;
                                    };
 
     template <json_serializable In, json_serializable Out>
