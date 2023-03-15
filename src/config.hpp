@@ -72,6 +72,7 @@ namespace glasssix::face {
     class config {
     public:
         config();
+        config(const abi::string& config);
         configure_directory _configure_directory;
         detect_config _detect_config;
         track_config _track_config;
@@ -81,13 +82,13 @@ namespace glasssix::face {
         face_user_config _face_user_config;
 
     private:
-        glasssix::json read_json_file(std::string path);
-        void set_configure_directory();
-        void set_detect();
-        void set_track();
-        void set_blur();
-        void set_action_live();
-        void set_feature();
-        void set_face_user();
+        glasssix::json read_json_file(const abi::string& path);
+        void set_configure_directory(const abi::string& path = "./config/");
+        void set_detect(const abi::string& path = "./config");
+        void set_track(const abi::string& path = "./config");
+        void set_blur(const abi::string& path = "./config");
+        void set_action_live(const abi::string& path = "./config");
+        void set_feature(const abi::string& path = "./config");
+        void set_face_user(const abi::string& path = "./config");
     };
 } // namespace glasssix::face

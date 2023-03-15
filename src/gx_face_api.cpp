@@ -22,7 +22,7 @@
 namespace glasssix::face {
     namespace {
         auto&& protocol_ptr = nessus_protocol::instance();
-        config* _config     = new config();
+        config* _config  = nullptr;
 
     } // namespace
 
@@ -207,48 +207,64 @@ namespace glasssix::face {
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
         return ans;
     }
-
-    gx_face_api::gx_face_api() : impl_{std::make_unique<impl>()} {}
+    
+    gx_face_api::gx_face_api() : impl_{std::make_unique<impl>()} {
+    }
+    gx_face_api::gx_face_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_face_api::~gx_face_api() {}
     gx_face_api::gx_face_api(gx_face_api&&) noexcept            = default;
     gx_face_api& gx_face_api::operator=(gx_face_api&&) noexcept = default;
 
     class gx_face_api::impl {
     public:
-        impl() {
-            std::fstream log(".\\log.txt", std::ios::out | std::ios::app);
+        void init() {
+            std::fstream log("./log.txt", std::ios::out | std::ios::app);
             log << "begin gx_face_api::impl\n";
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
             log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
             protocol_ptr.init(_config->_configure_directory.directory);
-            log << "begin make_handle detect\n";
+            log << "begin detect\n";
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .models_directory = _config->_detect_config.models_directory});
-            log << "begin make_handle action_live\n";
+            log << "begin action_live\n";
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.use_int8, _config->_action_live_config.models_directory});
-            log << "begin make_handle face_user\n";
+            log << "begin face_user\n";
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
             irisivel_mask_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
                 _config->_face_user_config.dimension, _config->_face_user_config.working_directory_mask});
-            log << "begin make_handle blur\n";
+            log << "begin blur\n";
             romancia_handle = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_blur_config.models_directory});
-            log << "begin make_handle feature\n";
+            log << "begin handle feature\n";
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_feature_config.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
-            selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
-                _config->_feature_config.models_directory, 2, _config->_feature_config.use_int8});
+            log << "begin make_handle feature\n";
+            selene_mask_handle = protocol_ptr.make_instance<selene>(
+                selene_new_param{_config->_feature_config.device,_config->_feature_config.models_directory,
+                2, _config->_feature_config.use_int8});
             gungnir_handle; // 人头检测预留
             valklyrs_handle; // 车辆行人预留
             log << "end make_handle\n";
             log.close();
+        }
+
+        impl() {
+            if (_config == nullptr)
+                _config = new config();
+            init();
+        }
+
+        impl(const abi::string& config_path) {
+            if (_config == nullptr)
+                _config = new config(config_path);
+            init();
         }
         ~impl() {}
 
@@ -265,13 +281,11 @@ namespace glasssix::face {
             }
             return false;
         }
-
         struct track_cache {
             std::unordered_map<int, face_info> track_history;
             std::unordered_map<int, abi::string> track_history_id;
             int index = 0;
         } cache;
-        // config* _config;
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;

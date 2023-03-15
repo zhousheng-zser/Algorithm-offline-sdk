@@ -3,7 +3,7 @@
 #include <string_view>
 #include <vector>
 
-#include <face_info.hpp>
+#include "face_info.hpp"
 typedef unsigned char uchar;
 
 namespace glasssix::face {
@@ -32,6 +32,7 @@ namespace glasssix::face {
     class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
     public:
         gx_face_api();
+        gx_face_api(const abi::string& config_path);
         ~gx_face_api();
         gx_face_api(gx_face_api&&) noexcept;
         gx_face_api& operator=(gx_face_api&&) noexcept;
