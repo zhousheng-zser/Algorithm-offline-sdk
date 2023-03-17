@@ -18,8 +18,8 @@ namespace {
     }
 } // namespace
 
-face::gx_face_api* api = new face::gx_face_api();
-
+face::gx_face_api api_instance;
+const auto api = &api_instance;
 
 auto& get_last_error_storage() {
     struct foo {

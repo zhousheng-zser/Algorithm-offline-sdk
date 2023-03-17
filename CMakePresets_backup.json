@@ -24,11 +24,7 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "/home/zser/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc",
-                "CMAKE_CXX_COMPILER": "/home/zser/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++"
-            }
+            "installDir": "${sourceDir}/out/install/${presetName}"
         },
         {
             "name": "android-base",
@@ -109,7 +105,9 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_COMPILER": "/opt/rh/devtoolset-11/root/usr/bin/gcc",
+                "CMAKE_CXX_COMPILER": "/opt/rh/devtoolset-11/root/usr/bin/g++"
             },
             "condition": {
                 "type": "equals",
@@ -125,6 +123,18 @@
         {
             "name": "linux-release",
             "displayName": "Linux Release",
+            "inherits": "linux-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "GX_TOOLHAIN_TARGET_NAME": "CENTOS",
+                "GX_OPENCV_ROOT": "/root/opencv-3.4.1",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta",
+                "GX_MISCELLANEOUS_ROOT": "/root/.vs/miscellaneous/out/install/linux-release"
+            }
+        },
+        {
+            "name": "rv1109",
+            "displayName": "Linux Release",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
@@ -136,9 +146,9 @@
                 "GX_TOOLCHAIN_PREFIX": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-3.4",
                 "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_2.15.5.20230223_beta",
-                "CMAKE_INSTALL_PREFIX": "/home/zser/tool",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/RV1109-miscellaneous",
-                "GX_GTEST_ROOT": "/home/zser/install/googletest"
+                "GX_GTEST_ROOT": "/home/zser/install/googletest",
+                "GX_TOOLHAIN_TARGET_NAME": "RV1109"
             },
             "condition": {
                 "type": "equals",

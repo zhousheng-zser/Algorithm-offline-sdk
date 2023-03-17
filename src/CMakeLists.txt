@@ -18,6 +18,11 @@ file(
 	*.h
 )
 
+if(NOT GX_USE_PURE_C)
+	list(REMOVE_ITEM private_sources gx_face_api_c.cpp)
+	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_face_api_c.cpp)
+endif()
+
 target_sources(
 	${target_name}
 	PRIVATE ${private_sources}

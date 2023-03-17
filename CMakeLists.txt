@@ -2,6 +2,7 @@
 
 project(gx-offline-face-recognition CXX)
 
+option(GX_USE_PURE_C "Whether to compile C-style APIs." OFF)
 option(GX_STATIC_RUNTIME "Whether to link C/C++ runtime statically." ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -24,4 +25,4 @@ endif()
 
 add_subdirectory(src)
 #add_subdirectory(src/nessus)
-#add_subdirectory(test)
+add_subdirectory(test)
