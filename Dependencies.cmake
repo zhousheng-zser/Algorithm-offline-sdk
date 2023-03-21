@@ -1,5 +1,3 @@
-include(${CMAKE_CURRENT_LIST_DIR}/third-party/miscellaneous/cmake/GXThirdPartyLibrary.cmake)
-
 if(GX_STATIC_RUNTIME)
     set(runtime_args CMAKE_ARGS -DGX_STATIC_RUNTIME=ON)
 else()
@@ -29,16 +27,11 @@ if(WIN32)
     SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/third-party/googletest
     TOOLCHAIN_FILE ${toolchain_file}
     )
-    gx_make_install_third_party_library(
+    find_package(
     GXMiscellaneous
-	REQUIRED
-    PARALLEL_BUILD
-    SYNC_BUILD_TYPE
-    GENERATOR ${CMAKE_GENERATOR}
-    ${runtime_args}
-    ${additional_args}
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/third-party/miscellaneous
-    TOOLCHAIN_FILE ${toolchain_file}
+    REQUIRED
+    HINTS ${GX_MISCELLANEOUS_ROOT}
+    NO_DEFAULT_PATH
     )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     find_package(

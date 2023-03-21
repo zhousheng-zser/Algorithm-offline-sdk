@@ -22,22 +22,21 @@ target_include_directories(
     PRIVATE
         ${GX_PUBLIC_INCLUDE_DIR}/g6/face
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${OpenCV_INCLUDE_DIRS}
         ${GX_CV_SDK_INCLUDE}
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
-target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
-target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 target_link_libraries(
     ${target_name}
     PRIVATE
     Threads::Threads
-    GXMiscellaneous::gx-miscellaneous
     #GTest::gtest
-    ${OpenCV_LIBS}
+    GXMiscellaneous::gx-miscellaneous
+    fmt::fmt
     gx-offline-face-recognition
 )
+
+
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../config  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)

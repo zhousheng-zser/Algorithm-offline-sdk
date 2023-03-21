@@ -11,6 +11,7 @@
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe",
                 "GX_OPENCV_ROOT": "D:/Code/vcpkg/installed/x64-windows",
+                "GX_MISCELLANEOUS_ROOT": "D:/install/miscellaneous/x64-release",
                 "GX_CV_SDK_ROOT": "D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta"
             },
             "condition": {

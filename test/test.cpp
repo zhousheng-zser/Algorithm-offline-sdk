@@ -2,9 +2,9 @@
 #include <iostream>
 #include <optional>
 
-// #include <gtest/gtest.h>
+//#include <gtest/gtest.h>
 #include <gx_face_api.h>
-// #include <gx_face_api_c.hpp>
+//#include <gx_face_api_c.hpp>
 // #include <opencv2/opencv.hpp>
 using namespace glasssix::face;
 using namespace glasssix;
@@ -585,18 +585,23 @@ int main(int argc, char** argv) {
 
         printf_demo('c', img);
         gx_user_load();
+        std::cout << "asdsa4445454sad"<< "----\n";
+        double as = gx_feature_comparison("/root/img/1027/3.png", "/root/img/1027/5.png");
         //char* ss = gx_detect_integration(img, 10, 0.2);
-        //printf("%s\n", ss);
+        printf("%.5f\n", as);
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
-    }
-    */
-
+    }*/
+    
     /* C++ 接口测试*/
-    gx_face_api* api = new gx_face_api();
-    api->gx_user_load();
-    int ans = 0;
+       gx_face_api* api = new gx_face_api();
     try {
+        int ans = 0;
+        api->gx_user_load();
+        gx_img_api img_pathA("/root/img/1027/3.png");
+        gx_img_api img_pathB("/root/img/1027/5.png");
+        double as = api->gx_feature_comparison(img_pathA, img_pathB);
+        printf("%.6f \n", as);
         //_Api->gx_user_load(); //人员库加载
         // 用于播放视频图片的
         // display_test::test_detect(api);
@@ -609,7 +614,7 @@ int main(int argc, char** argv) {
         // display_test::test_user(api);
         // display_test::test_detect_integration(api);
         // display_test::test_add_folder_all(_Api);
-
+        //
         // 单元测试
         // testing::InitGoogleTest(&argc, argv);
         // ans = RUN_ALL_TESTS();

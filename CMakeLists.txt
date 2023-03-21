@@ -1,9 +1,9 @@
-﻿cmake_minimum_required (VERSION 3.14)
+﻿cmake_minimum_required (VERSION 3.20)
 
 project(gx-offline-face-recognition CXX)
 
 option(GX_USE_PURE_C "Whether to compile C-style APIs." OFF)
-option(GX_STATIC_RUNTIME "Whether to link C/C++ runtime statically." ON)
+option(GX_STATIC_RUNTIME "Whether to link C/C++ runtime statically." OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -22,7 +22,6 @@ if(GX_STATIC_RUNTIME)
     include(GXCCXXRuntime)
     gx_replace_c_cxx_runtime_flags(STATIC_RUNTIME)
 endif()
-
 add_subdirectory(src)
 #add_subdirectory(src/nessus)
 add_subdirectory(test)
