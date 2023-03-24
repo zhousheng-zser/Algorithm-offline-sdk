@@ -47,7 +47,7 @@ char* get_last_error() {
 bool gx_clear_track_history() {
     bool ans = 0;
     try {
-        ans = api->gx_clear_track_history();
+        ans = api->clear_track_history();
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
         std::string err = ex.what();
@@ -59,7 +59,7 @@ bool gx_clear_track_history() {
 char* gx_detect_inplace(const std::uint8_t* mat, int rows, int cols) {
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        abi::vector<face::face_info> faces = api->gx_detect(Mat_);
+        abi::vector<face::face_info> faces = api->detect(Mat_);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -78,7 +78,7 @@ char* gx_detect_inplace(const std::uint8_t* mat, int rows, int cols) {
 char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        abi::vector<face::face_trace_info> faces = api->gx_track(Mat_);
+        abi::vector<face::face_trace_info> faces = api->track(Mat_);
 
         nlohmann::json val = faces;
         for (int i = 0; i < faces.size(); i++)
@@ -99,7 +99,7 @@ char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
 char* gx_face_feature_inplace(const std::uint8_t* mat, int rows, int cols, bool is_clip) {
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        abi::vector<face::faces_feature> faces = api->gx_face_feature(Mat_, is_clip);
+        abi::vector<face::faces_feature> faces = api->face_feature(Mat_, is_clip);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -118,7 +118,7 @@ char* gx_face_feature_inplace(const std::uint8_t* mat, int rows, int cols, bool 
 char* gx_user_search_inplace(const std::uint8_t* mat, int rows, int cols, int top, float min_similarity) {
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        face::faces_search_info faces = api->gx_user_search(Mat_, top, min_similarity);
+        face::faces_search_info faces = api->user_search(Mat_, top, min_similarity);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -137,7 +137,7 @@ char* gx_user_search_inplace(const std::uint8_t* mat, int rows, int cols, int to
 char* gx_detect_integration_inplace(const std::uint8_t* mat, int rows, int cols, int top, float min_similarity) {
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        face::faces_integration_search_info faces = api->gx_detect_integration(Mat_, top, min_similarity);
+        face::faces_integration_search_info faces = api->detect_integration(Mat_, top, min_similarity);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -154,10 +154,143 @@ char* gx_detect_integration_inplace(const std::uint8_t* mat, int rows, int cols,
 }
 
 
+char* gx_detect(char* mat_path) {
+    try {
+        abi::string temp{mat_path};
+        glasssix::face::gx_img_api mat(temp);
+        abi::vector<face::face_info> faces = api->detect(mat);
+
+        nlohmann::json val  = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+        return nullptr;
+    }
+}
+
+char* gx_track(char* mat_path) {
+    try {
+        abi::string temp{mat_path};
+        glasssix::face::gx_img_api mat(temp);
+        abi::vector<face::face_trace_info> faces = api->track(mat);
+
+        nlohmann::json val  = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+        return nullptr;
+    }
+}
+
+char* gx_face_blur(char* mat_path) {
+    try {
+        abi::string temp{mat_path};
+        glasssix::face::gx_img_api mat(temp);
+        face::faces_blur faces= api->face_blur(mat);
+
+        nlohmann::json val  = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+        return nullptr;
+    }
+}
+
+char* gx_face_action_live(int action_type, bool& action_result,char* mat_path) {
+    try {
+        abi::string temp{mat_path};
+        glasssix::face::gx_img_api mat(temp);
+        face::face_info faces = api->face_action_live(action_type, action_result, mat);
+
+        nlohmann::json val  = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+        return nullptr;
+    }
+}
+
+char* gx_face_spoofing_live(char* mat_path) {
+    try {
+        abi::string temp{mat_path};
+        glasssix::face::gx_img_api mat(temp);
+        face::faces_spoofing faces = api->face_spoofing_live(mat);
+
+        nlohmann::json val  = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+        return nullptr;
+    }
+}
+
+char* gx_face_feature(char* mat_path, bool is_clip) {
+    try {
+        abi::string temp{mat_path};
+        glasssix::face::gx_img_api mat(temp);
+        abi::vector<face::faces_feature> faces = api->face_feature(mat, is_clip);
+
+        nlohmann::json val  = faces;
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+        return result;
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+        return nullptr;
+    }
+}
+
+bool gx_user_contains_key(char* key) {
+    bool ans = 0;
+    try {
+        abi::string temp{key};
+        ans = api->user_contains_key(temp);
+        set_last_error(std::string{"OK"});
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
+    return ans;
+}
+
 bool gx_user_load() {
     bool ans = 0;
     try {
-        ans = api->gx_user_load();
+        ans = api->user_load();
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
         std::string err = ex.what();
@@ -170,7 +303,7 @@ char* gx_user_search(char* mat_path, int top, float min_similarity) {
     try {
         abi::string temp{mat_path};
         glasssix::face::gx_img_api mat(temp);
-        face::faces_search_info faces = api->gx_user_search(mat, top, min_similarity);
+        face::faces_search_info faces = api->user_search(mat, top, min_similarity);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -189,7 +322,7 @@ char* gx_user_search(char* mat_path, int top, float min_similarity) {
 int gx_user_count() {
     int ans;
     try {
-        ans = (int) api->gx_user_record_count();
+        ans = (int) api->user_record_count();
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
         std::string err = ex.what();
@@ -202,7 +335,7 @@ int gx_user_count() {
 bool gx_user_remove_all() {
     bool ans;
     try {
-        ans = api->gx_user_remove_all();
+        ans = api->user_remove_all();
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
         std::string err = ex.what();
@@ -219,7 +352,7 @@ char* gx_user_remove_records(char* keys) {
         for (int i = 0; i < keys_temp.size(); i++) {
             _keys.push_back(abi::string{keys_temp[i].get<std::string>()});
         }
-        nlohmann::json val  = api->gx_user_remove_records(_keys);
+        nlohmann::json val  = api->user_remove_records(_keys);
         std::string result_ = val.dump();
 
         std::size_t size = result_.size() + 1;
@@ -252,7 +385,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
                      + data_temp[i]["key"].get<std::string>() + "\n";
             }
         }
-        nlohmann::json val  = api->gx_user_add_records(_keys, _mat, is_clip, is_faceinfo);
+        nlohmann::json val  = api->user_add_records(_keys, _mat, is_clip, is_faceinfo);
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -272,7 +405,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
 char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
     try {
         glasssix::face::gx_img_api mat(abi::string{mat_path});
-        face::faces_integration_search_info faces = api->gx_detect_integration(mat, top, min_similarity);
+        face::faces_integration_search_info faces = api->detect_integration(mat, top, min_similarity);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -293,7 +426,7 @@ double gx_feature_comparison(char* mat_A, char* mat_B) {
     try {
         face::gx_img_api A(abi::string{mat_A});
         face::gx_img_api B(abi::string{mat_B});
-        ans = api->gx_feature_comparison(A, B);
+        ans = api->feature_comparison(A, B);
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {
         std::string err = ex.what();

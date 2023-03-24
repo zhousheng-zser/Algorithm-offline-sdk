@@ -1,7 +1,6 @@
 {
-        "models_directory": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta/models",
         "device":0,
-        "min_size": 48,
+        "min_size": 16,
         "threshold": 0.5,
         "format": 1,
         "do_attributing": true

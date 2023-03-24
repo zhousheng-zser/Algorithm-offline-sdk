@@ -30,7 +30,7 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     Threads::Threads
-    #GTest::gtest
+    GTest::gtest
     GXMiscellaneous::gx-miscellaneous
     fmt::fmt
     gx-offline-face-recognition

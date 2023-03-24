@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /CMakePresets.json
 /CMakeSettings.json
+/config-linux-backup
+/config-windows-backup

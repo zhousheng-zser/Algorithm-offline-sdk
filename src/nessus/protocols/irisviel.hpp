@@ -73,15 +73,15 @@ namespace glasssix::face {
             GX_BEGIN_FIELDS(database_result);
             struct faces_search_data {
                 GX_BEGIN_FIELDS(faces_search_data);
-                GX_FIELD(abi::vector<float>, feature); //ÈËÁ³ÌØÕ÷ÏòÁ¿
-                GX_FIELD(abi::string, key); // ÈËÁ³¼üÖµ
+                GX_FIELD(abi::vector<float>, feature); // äººè„¸ç‰¹å¾å‘é‡
+                GX_FIELD(abi::string, key); // äººè„¸é”®å€¼
                 GX_END_FIELDS;
 
                 GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
             };
 
-            GX_FIELD(database_result::faces_search_data, data); // ÈËÁ³ËÑË÷Êı¾İ
-            GX_FIELD(float, similarity); // ÏàËÆ¶È
+            GX_FIELD(database_result::faces_search_data, data); // äººè„¸æœç´¢æ•°æ®
+            GX_FIELD(float, similarity); // ç›¸ä¼¼åº¦
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -204,11 +204,11 @@ namespace glasssix::face {
 
     using irisviel_remove_record_result  = irisviel_add_record_result;
     using irisviel_remove_records_result = irisviel_add_records_result;
-    
-    using irisviel_clear_param           = irisviel_remove_all_param;
-    using irisviel_clear_result          = irisviel_remove_all_result;
-    using irisviel_record_count_param    = irisviel_remove_all_param;
-    using irisviel_search_param          = irisviel_search_nf_param;
+
+    using irisviel_clear_param        = irisviel_remove_all_param;
+    using irisviel_clear_result       = irisviel_remove_all_result;
+    using irisviel_record_count_param = irisviel_remove_all_param;
+    using irisviel_search_param       = irisviel_search_nf_param;
 
     struct irisviel : protocol_object {
         struct load_databases : parser_inout<irisviel_load_databases_param, irisviel_load_databases_result> {};

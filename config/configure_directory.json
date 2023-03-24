@@ -1,3 +1,4 @@
 {
-    "directory":"/root/Glasssix_CV_SDK_2.15.5.20230223_beta/configure_file/plugin_configure.json"
+    "models_directory": "D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta/models",
+    "directory":"D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta/configure_file/plugin_configure.json"
 }

@@ -16,16 +16,11 @@ find_package(Threads REQUIRED)
 
 if(WIN32)
     find_package(OpenCV REQUIRED HINTS ${GX_OPENCV_ROOT} NO_DEFAULT_PATH)
-    gx_make_install_third_party_library(
+    find_package(
     GTest
-	REQUIRED
-    PARALLEL_BUILD
-    SYNC_BUILD_TYPE
-    GENERATOR ${CMAKE_GENERATOR}
-    ${runtime_args}
-    ${additional_args}
-    SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR}/third-party/googletest
-    TOOLCHAIN_FILE ${toolchain_file}
+    REQUIRED
+    HINTS ${GX_GTEST_ROOT}/lib/cmake
+    NO_DEFAULT_PATH
     )
     find_package(
     GXMiscellaneous
@@ -56,12 +51,12 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     HINTS ${GX_MISCELLANEOUS_ROOT}
     NO_DEFAULT_PATH
     )
-    #find_package(
-    #GTest
-    #REQUIRED
-    #HINTS ${GX_GTEST_ROOT}/lib/cmake
-    #NO_DEFAULT_PATH
-    #)
+    find_package(
+    GTest
+    REQUIRED
+    HINTS ${GX_GTEST_ROOT}/lib64/cmake
+    NO_DEFAULT_PATH
+    )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib64)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
     set(OpenCV_LIBS opencv_calib3d opencv_core opencv_dnn opencv_features2d opencv_flann opencv_highgui opencv_imgproc opencv_imgcodecs opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_videoio opencv_video opencv_videostab)
