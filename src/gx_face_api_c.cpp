@@ -198,7 +198,7 @@ char* gx_face_blur(char* mat_path) {
     try {
         abi::string temp{mat_path};
         glasssix::face::gx_img_api mat(temp);
-        face::faces_blur faces= api->face_blur(mat);
+        face::faces_blur faces = api->face_blur(mat);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -214,7 +214,7 @@ char* gx_face_blur(char* mat_path) {
     }
 }
 
-char* gx_face_action_live(int action_type, bool& action_result,char* mat_path) {
+char* gx_face_action_live(int action_type, bool& action_result, char* mat_path) {
     try {
         abi::string temp{mat_path};
         glasssix::face::gx_img_api mat(temp);

@@ -12,7 +12,8 @@
                 "CMAKE_CXX_COMPILER": "cl.exe",
                 "GX_OPENCV_ROOT": "D:/Code/vcpkg/installed/x64-windows",
                 "GX_MISCELLANEOUS_ROOT": "D:/install/miscellaneous/x64-release",
-                "GX_CV_SDK_ROOT": "D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta"
+                "GX_CV_SDK_ROOT": "D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta",
+                "GX_GTEST_ROOT": "D:/Code/googletest/out/install/x64-release"
             },
             "condition": {
                 "type": "equals",
@@ -107,6 +108,11 @@
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
+                "GX_TOOLHAIN_TARGET_NAME": "CENTOS",
+                "GX_OPENCV_ROOT": "/root/opencv-3.4.1",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta",
+                "GX_GTEST_ROOT": "/root/.vs/googletest/out/install/linux-release",
+                "GX_MISCELLANEOUS_ROOT": "/root/.vs/miscellaneous/out/install/linux-release",
                 "CMAKE_C_COMPILER": "/opt/rh/devtoolset-11/root/usr/bin/gcc",
                 "CMAKE_CXX_COMPILER": "/opt/rh/devtoolset-11/root/usr/bin/g++"
             },
@@ -130,6 +136,7 @@
                 "GX_TOOLHAIN_TARGET_NAME": "CENTOS",
                 "GX_OPENCV_ROOT": "/root/opencv-3.4.1",
                 "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta",
+                "GX_GTEST_ROOT": "/root/.vs/googletest/out/install/linux-release",
                 "GX_MISCELLANEOUS_ROOT": "/root/.vs/miscellaneous/out/install/linux-release"
             }
         },

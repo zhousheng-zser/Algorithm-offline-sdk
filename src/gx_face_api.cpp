@@ -9,7 +9,7 @@
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/valklyrs.hpp"
 #include "config.hpp"
-#include "distance.hpp"
+#include "distance/distance.hpp"
 
 #include <cmath>
 #include <fstream>

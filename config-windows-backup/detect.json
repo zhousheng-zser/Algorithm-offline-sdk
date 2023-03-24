@@ -1,5 +1,4 @@
 {
-        "models_directory": "D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta/models",
         "device":0,
         "min_size": 48,
         "threshold": 0.5,

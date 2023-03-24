@@ -460,7 +460,7 @@ namespace glasssix::face {
 
     // 特征值提取
     TEST(FaceApi, Face_feature) {
-        gx_img_api img("D:/test/img/20221209.jpg");
+        gx_img_api img("/root/img/20221209.jpg");
         abi::vector<faces_feature> faces;
 
         faces = api->face_feature(img, false);
@@ -477,8 +477,8 @@ namespace glasssix::face {
 
     // 1:1 人脸对比
     TEST(FaceApi, gx_feature_comparison) {
-        gx_img_api img_pathA("D:/test/img/action_live_1.jpg");
-        gx_img_api img_pathB("D:/test/img/action_live_5.jpg");
+        gx_img_api img_pathA("/root/img/action_live_1.jpg");
+        gx_img_api img_pathB("/root/img/action_live_5.jpg");
 
         double ans1 = api->feature_comparison(img_pathA, img_pathB);
         EXPECT_GT(ans1, 0.9);
@@ -488,11 +488,11 @@ namespace glasssix::face {
     TEST(FaceApi, gx_user_and_detect_integration) {
 
         abi::vector<gx_img_api> imgs;
-        imgs.emplace_back(gx_img_api("D:/test/img/action_live_0.jpg"));
-        imgs.emplace_back(gx_img_api("D:/test/img/action_live_1.jpg"));
-        imgs.emplace_back(gx_img_api("D:/test/img/action_live_2.jpg"));
-        imgs.emplace_back(gx_img_api("D:/test/img/action_live_3.jpg"));
-        imgs.emplace_back(gx_img_api("D:/test/img/action_live_4.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
         abi::vector<abi::string> keys;
         keys.emplace_back("action_live_0");
         keys.emplace_back("action_live_1");
@@ -503,7 +503,7 @@ namespace glasssix::face {
         abi::vector<face_user_result> result;
         faces_search_info faces;
         faces_integration_search_info faces_i;
-        gx_img_api img("D:/test/img/action_live_5.jpg");
+        gx_img_api img("/root/img/action_live_5.jpg");
 
 
         api->user_load(); // 人员库加载

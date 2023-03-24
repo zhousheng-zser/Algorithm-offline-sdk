@@ -1,5 +1,4 @@
 {
-        "models_directory": "D:/Code/Glasssix_CV_SDK_2.9.21.20220811_beta/models",
         "device":0,
         "use_int8":false,
         "format": 1,
