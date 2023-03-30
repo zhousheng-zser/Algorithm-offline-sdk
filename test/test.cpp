@@ -2,14 +2,15 @@
 #include <iostream>
 #include <optional>
 
-#include <face_info.hpp>
 #include <gtest/gtest.h>
 #include <gx_face_api.h>
-#include <gx_face_api_c.hpp>
-#include <opencv2/opencv.hpp>
+
+// #include <gx_face_api_c.hpp>
+// #include <opencv2/opencv.hpp>
 using namespace glasssix::face;
 using namespace glasssix;
 
+/*  //用于windows 播放显示
 namespace glasssix::display_test {
     void test_detect(gx_face_api* _api) {
 
@@ -24,7 +25,7 @@ namespace glasssix::display_test {
             cv::imencode(".jpg", img, buffer);
             gx_img_api img_buff(buffer);
             abi::vector<face_info> faces;
-            faces = _api->gx_detect(img_buff);
+            faces = _api->detect(img_buff);
             if (faces.size() > 0) {
                 for (int i = 0; i < faces.size(); i++) {
                     face_info info = faces[i];
@@ -70,7 +71,7 @@ namespace glasssix::display_test {
             cv::imencode(".jpg", img, buffer);
             gx_img_api img_buff(buffer);
             abi::vector<face_trace_info> faces;
-            faces = _api->gx_track(img_buff);
+            faces = _api->track(img_buff);
             if (faces.size() > 0) {
                 for (int i = 0; i < faces.size(); i++) {
                     if (faces[i].trace_success == true) {
@@ -99,7 +100,7 @@ namespace glasssix::display_test {
             cv::imencode(".jpg", img, buffer);
             gx_img_api img_buff(buffer);
             faces_blur faces;
-            faces = _api->gx_face_blur(img_buff);
+            faces = _api->face_blur(img_buff);
             for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); i++) {
                 face_info info = faces.facerectwithfaceinfo_list[i];
                 std::cout << "detect clarity is:" << faces.clarity[i] << std::endl;
@@ -128,28 +129,28 @@ namespace glasssix::display_test {
             face_info info;
             bool action_result = 0;
             abi::string temp;
-            info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img_buff);
+            info = _api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img_buff);
             if (action_result)
                 std::cout << "----------------------detected success Blink of an eye\n";
             else
                 std::cout << "detected fail Blink of an eye\n";
-            info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img_buff);
+            info = _api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img_buff);
             if (action_result)
                 std::cout << "----------------------detected success Open mouth\n ";
             else
                 std::cout << "detected fail Open mouth\n";
-            info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img_buff);
+            info = _api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img_buff);
             if (action_result)
                 std::cout << "----------------------detected success Nutation\n ";
             else
                 std::cout << "detected fail Nutation\n";
-            info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img_buff);
+            info = _api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img_buff);
             if (action_result)
                 std::cout << "----------------------detected success Left shake head\n ";
             else
                 std::cout << "detected fail Left shake head\n";
 
-            info = _api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img_buff);
+            info = _api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img_buff);
             if (action_result)
                 std::cout << "----------------------detected success Right shake head\n ";
             else
@@ -172,7 +173,7 @@ namespace glasssix::display_test {
             cv::imencode(".jpg", img, buffer);
             gx_img_api img_buff(buffer);
             faces_spoofing faces;
-            faces = _api->gx_face_spoofing_live(img_buff);
+            faces = _api->face_spoofing_live(img_buff);
             for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
                 face_info info = faces.facerectwithfaceinfo_list[i];
                 std::cout << faces.spoofing_result[i].prob[0] << "  " << faces.spoofing_result[i].prob[1] << "  "
@@ -192,7 +193,7 @@ namespace glasssix::display_test {
         cv::Mat img = cv::imread("D:/test/img/20221208.jpg");
         gx_img_api img_path("D:/test/img/20221208.jpg");
         abi::vector<faces_feature> faces;
-        faces = _api->gx_face_feature(img_path, false);
+        faces = _api->face_feature(img_path, false);
         for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
             face_info info = faces[0].facerectwithfaceinfo_list[i];
 
@@ -212,7 +213,7 @@ namespace glasssix::display_test {
 
         gx_img_api img_pathA("D:/test/img/A/610111200208264510.jpg");
         gx_img_api img_pathB("D:/test/img/B/610111200208264510.jpg");
-        double ans = _api->gx_feature_comparison(img_pathA, img_pathB);
+        double ans = _api->feature_comparison(img_pathA, img_pathB);
 
         std::cout << "feature_comparison: " << ans << std::endl;
 
@@ -238,17 +239,17 @@ namespace glasssix::display_test {
             printf("Input Irisviel key (0-6), (-1 exit): \n");
             scanf_s("%d", &flag);
             if (flag == 0)
-                _api->gx_user_load(); // 人员库加载
+                _api->user_load(); // 人员库加载
             else if (flag == 1)
-                _api->gx_user_search(imgs[0], 5, 0.1f); // 人员库搜索
+                _api->user_search(imgs[0], 5, 0.1f); // 人员库搜索
             else if (flag == 2)
-                _api->gx_user_remove_all(); // 人员库清空  清内存和磁盘
+                _api->user_remove_all(); // 人员库清空  清内存和磁盘
             else if (flag == 3)
-                _api->gx_user_remove_records(keys); // 人员库批量删除记录
+                _api->user_remove_records(keys); // 人员库批量删除记录
             else if (flag == 4)
-                _api->gx_user_add_records(keys, imgs, false, false); // 人员库批量添加记录
+                _api->user_add_records(keys, imgs, false, false); // 人员库批量添加记录
             else if (flag == 5)
-                _api->gx_user_add_records(keys, features); // 人员库批量添加记录
+                _api->user_add_records(keys, features); // 人员库批量添加记录
             else
                 break;
         } while (flag != -1);
@@ -266,7 +267,7 @@ namespace glasssix::display_test {
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
             gx_img_api img_buff(buffer);
-            faces_integration_search_info faces = _api->gx_detect_integration(img_buff, 5, 0.4f);
+            faces_integration_search_info faces = _api->detect_integration(img_buff, 5, 0.4f);
             for (int i = 0; i < faces.result.size(); i++) {
 
                 // 相似度
@@ -318,288 +319,232 @@ namespace glasssix::display_test {
                 keys.push_back(namelist[i]);
                 i++;
             }
-            _api->gx_user_add_records(keys, imgs, false, false);
+            _api->user_add_records(keys, imgs, false, false);
         }
     }
 
 } // namespace glasssix::display_test
+*/
 
 
-gx_face_api* _Api;
+namespace glasssix::face {
 
-// 人脸检测
-TEST(FaceApi, gx_detect) {
-    gx_img_api img("D:/test/img/B/431123200209052539.jpg");
-    abi::vector<face_info> faces;
-    faces = _Api->gx_detect(img);
+    gx_face_api* api = new gx_face_api();
+    // 人脸检测
+    TEST(FaceApi, Detect) {
+        gx_img_api img("/root/img/20221209.jpg");
+        abi::vector<face_info> faces;
+        faces = api->detect(img);
 
-    face_info info = faces[0];
+        face_info info = faces[0];
 
-    EXPECT_GT(info.confidence, 0);
-    EXPECT_LT(info.confidence, 1);
-    EXPECT_GT(info.width, 0);
-    EXPECT_GT(info.height, 0);
-    EXPECT_EQ(info.landmark.size(), 5);
-    EXPECT_TRUE(info.attributes.has_value());
-    EXPECT_EQ(info.attributes->glass_index, 1);
-    EXPECT_EQ(info.attributes->mask_index, 0);
-    EXPECT_GT(info.attributes->yaw, -90.0);
-    EXPECT_LT(info.attributes->yaw, 90.0);
-    EXPECT_GT(info.attributes->pitch, -90.0);
-    EXPECT_LT(info.attributes->pitch, 90.0);
-    EXPECT_GT(info.attributes->roll, -90.0);
-    EXPECT_LT(info.attributes->roll, 90.0);
-}
-
-// 人脸追踪
-TEST(FaceApi, gx_track) {
-    cv::VideoCapture capture;
-    capture.open("D:/test/img/20221208.jpg");
-    cv::Mat img;
-    capture >> img;
-    std::vector<uchar> buffer(1024 * 1024);
-    cv::imencode(".jpg", img, buffer);
-    gx_img_api img_buff(buffer);
-    abi::vector<face_trace_info> faces;
-    faces = _Api->gx_track(img_buff);
-
-    EXPECT_GT(faces.size(), 0);
-    for (int i = 0; i < faces.size(); i++) {
-        EXPECT_TRUE(faces[i].trace_success);
-        std::optional<face_info> info = faces[i].facerectwithfaceinfo;
-        EXPECT_TRUE(info.has_value());
-        EXPECT_GT(info->confidence, 0);
-        EXPECT_LT(info->confidence, 1);
-        EXPECT_GT(info->width, 0);
-        EXPECT_GT(info->height, 0);
-        EXPECT_EQ(info->landmark.size(), 5);
-        EXPECT_EQ(info->attributes->glass_index, 0);
-        EXPECT_EQ(info->attributes->mask_index, 0);
-        EXPECT_GT(info->attributes->yaw, -90.0);
-        EXPECT_LT(info->attributes->yaw, 90.0);
-        EXPECT_GT(info->attributes->pitch, -90.0);
-        EXPECT_LT(info->attributes->pitch, 90.0);
-        EXPECT_GT(info->attributes->roll, -90.0);
-        EXPECT_LT(info->attributes->roll, 90.0);
+        EXPECT_GT(info.confidence, 0);
+        EXPECT_LT(info.confidence, 1);
+        EXPECT_GT(info.width, 0);
+        EXPECT_GT(info.height, 0);
+        EXPECT_EQ(info.landmark.size(), 5);
+        EXPECT_TRUE(info.attributes.has_value());
+        EXPECT_EQ(info.attributes->glass_index, 0);
+        EXPECT_EQ(info.attributes->mask_index, 0);
+        EXPECT_GT(info.attributes->yaw, -90.0);
+        EXPECT_LT(info.attributes->yaw, 90.0);
+        EXPECT_GT(info.attributes->pitch, -90.0);
+        EXPECT_LT(info.attributes->pitch, 90.0);
+        EXPECT_GT(info.attributes->roll, -90.0);
+        EXPECT_LT(info.attributes->roll, 90.0);
     }
-}
+    // 人脸追踪
+    TEST(FaceApi, Track) {
+        gx_img_api img("/root/img/img_align_celeba/000011.jpg");
+        abi::vector<face_trace_info> faces;
+        faces = api->track(img);
 
-// 人脸质量检测
-TEST(FaceApi, gx_face_blur) {
-    gx_img_api img("D:/test/img/20221208.jpg");
-    faces_blur faces;
-    faces = _Api->gx_face_blur(img);
-    EXPECT_GT(faces.facerectwithfaceinfo_list.size(), 0);
-    for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); i++) {
-        // face_info info = faces.facerectwithfaceinfo_list[i]; 前面测过了
-        EXPECT_GE(faces.clarity[i], 0.0);
-        EXPECT_LE(faces.clarity[i], 1.0);
-    }
-}
-
-// 配合活体检测
-TEST(FaceApi, gx_face_action_live) {
-    abi::vector<gx_img_api> img;
-    img.emplace_back(gx_img_api("D:/test/img/action_live_0.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/action_live_1.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/action_live_2.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/action_live_3.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/action_live_4.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/action_live_5.jpg"));
-
-    face_info info;
-    bool action_result = 0;
-    info               = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[0]);
-    EXPECT_TRUE(action_result);
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    EXPECT_FALSE(action_result);
-
-
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
-    EXPECT_TRUE(action_result);
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    EXPECT_FALSE(action_result);
-
-
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
-    EXPECT_TRUE(action_result);
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    EXPECT_FALSE(action_result);
-
-
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
-    EXPECT_TRUE(action_result);
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    EXPECT_FALSE(action_result);
-
-
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
-    EXPECT_TRUE(action_result);
-    info = _Api->gx_face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    EXPECT_FALSE(action_result);
-}
-
-// 静默活体检测
-TEST(FaceApi, gx_face_spoofing_live) {
-    abi::vector<gx_img_api> img;
-    img.emplace_back(gx_img_api("D:/test/img/spoofing_0.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/action_live_0.jpg"));
-    img.emplace_back(gx_img_api("D:/test/img/spoofing_2.jpg"));
-    faces_spoofing faces;
-    faces = _Api->gx_face_spoofing_live(img[0]);
-    for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-        EXPECT_GE(faces.spoofing_result[i].prob[0], 0.5);
-    }
-    faces = _Api->gx_face_spoofing_live(img[1]);
-    for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-        EXPECT_GE(faces.spoofing_result[i].prob[1], 0.5);
-    }
-    faces = _Api->gx_face_spoofing_live(img[2]);
-    for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-        EXPECT_GE(faces.spoofing_result[i].prob[2], 0.5);
-    }
-}
-
-// 特征值提取
-TEST(FaceApi, gx_face_feature) {
-    cv::VideoCapture capture;
-    capture.open("D:/test/img/20221208.jpg");
-    cv::Mat img;
-    capture >> img;
-    std::vector<uchar> buffer(1024 * 1024);
-    cv::imencode(".jpg", img, buffer);
-    gx_img_api img_buff(buffer);
-
-    abi::vector<faces_feature> faces;
-
-    faces = _Api->gx_face_feature(img_buff, false);
-    EXPECT_EQ(faces[0].facerectwithfaceinfo_list.size(), faces[0].features.size());
-    for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
-
-        EXPECT_EQ(faces[0].features[i].feature.size(), 256);
-        for (int j = 0; j < faces[0].features[i].feature.size(); j++) {
-            EXPECT_GT(faces[0].features[i].feature[j], -1.0);
-            EXPECT_LT(faces[0].features[i].feature[j], 1.0);
+        EXPECT_GT(faces.size(), 0);
+        for (int i = 0; i < faces.size(); i++) {
+            EXPECT_TRUE(faces[i].trace_success);
+            std::optional<face_info> info = faces[i].facerectwithfaceinfo;
+            EXPECT_TRUE(info.has_value());
+            EXPECT_GT(info->confidence, 0);
+            EXPECT_LT(info->confidence, 1);
+            EXPECT_GT(info->width, 0);
+            EXPECT_GT(info->height, 0);
+            EXPECT_EQ(info->landmark.size(), 5);
+            EXPECT_EQ(info->attributes->glass_index, 0);
+            EXPECT_EQ(info->attributes->mask_index, 0);
+            EXPECT_GT(info->attributes->yaw, -90.0);
+            EXPECT_LT(info->attributes->yaw, 90.0);
+            EXPECT_GT(info->attributes->pitch, -90.0);
+            EXPECT_LT(info->attributes->pitch, 90.0);
+            EXPECT_GT(info->attributes->roll, -90.0);
+            EXPECT_LT(info->attributes->roll, 90.0);
         }
     }
-}
 
-// 1:1 人脸对比
-TEST(FaceApi, gx_feature_comparison) {
-    gx_img_api img_pathA("D:/test/img/A/610111200208264510.jpg");
-    gx_img_api img_pathB("D:/test/img/B/610111200208264510.jpg");
-    double ans1 = _Api->gx_feature_comparison(img_pathA, img_pathB);
-    EXPECT_GT(ans1, 0);
-}
-
-// 人脸特征值底库 + 融合人脸识别
-TEST(FaceApi, gx_user_and_detect_integration) {
-
-    abi::vector<gx_img_api> imgs;
-    imgs.emplace_back(gx_img_api("D:/test/img/action_live_0.jpg"));
-    imgs.emplace_back(gx_img_api("D:/test/img/action_live_1.jpg"));
-    imgs.emplace_back(gx_img_api("D:/test/img/action_live_2.jpg"));
-    imgs.emplace_back(gx_img_api("D:/test/img/action_live_3.jpg"));
-    imgs.emplace_back(gx_img_api("D:/test/img/action_live_4.jpg"));
-    abi::vector<abi::string> keys;
-    keys.emplace_back("action_live_0");
-    keys.emplace_back("action_live_1");
-    keys.emplace_back("action_live_2");
-    keys.emplace_back("action_live_3");
-    keys.emplace_back("action_live_4");
-
-    abi::vector<face_user_result> result;
-    faces_search_info faces;
-    faces_integration_search_info faces_i;
-    gx_img_api img("D:/test/img/action_live_5.jpg");
-
-
-    _Api->gx_user_load(); // 人员库加载
-
-
-    result = _Api->gx_user_add_records(keys, imgs, false, false); // 人员库批量添加记录
-    EXPECT_EQ(result.size(), 5);
-    for (int i = 0; i < result.size(); i++)
-        EXPECT_EQ(result[i].success, 0);
-    faces = _Api->gx_user_search(img, 5, 0.4f); // 人员库搜索
-    ASSERT_LE(faces.result.size(), 5);
-    for (int i = 0; i < faces.result.size(); i++) {
-        EXPECT_GE(faces.result[i].similarity, 0.4);
+    // 人脸质量检测
+    TEST(FaceApi, Face_blur) {
+        gx_img_api img("/root/img/20230323.png");
+        faces_blur faces;
+        faces = api->face_blur(img);
+        EXPECT_GT(faces.facerectwithfaceinfo_list.size(), 0);
+        nlohmann::json x(faces);
+        std::cout << x.dump() << "---------------------------------\n";
+        for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); i++) {
+            // face_info info = faces.facerectwithfaceinfo_list[i]; 前面测过了
+            EXPECT_GE(faces.clarity[i], 0.0);
+            EXPECT_LE(faces.clarity[i], 1.0);
+        }
     }
-    ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
-    faces_i = _Api->gx_detect_integration(img, 5, 0.4f); // 融合人脸识别
-    ASSERT_LE(faces_i.result.size(), 5);
-    for (int i = 0; i < faces_i.result.size(); i++) {
-        EXPECT_GE(faces_i.result[i].similarity, 0.4);
+    // 配合活体检测
+    TEST(FaceApi, Face_action_live) {
+        abi::vector<gx_img_api> img;
+        img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
+        img.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
+        img.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
+        img.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
+        img.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
+        img.emplace_back(gx_img_api("/root/img/action_live_5.jpg"));
+
+        face_info info;
+        bool action_result = 0;
+        info               = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[0]);
+        EXPECT_TRUE(action_result);
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+        EXPECT_FALSE(action_result);
+
+
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
+        EXPECT_TRUE(action_result);
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+        EXPECT_FALSE(action_result);
+
+
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
+        EXPECT_TRUE(action_result);
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+        EXPECT_FALSE(action_result);
+
+
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
+        EXPECT_TRUE(action_result);
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+        EXPECT_FALSE(action_result);
+
+
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
+        EXPECT_TRUE(action_result);
+        info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+        EXPECT_FALSE(action_result);
     }
-    ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
-
-    faces = _Api->gx_user_search(img, 5, 0.4f); // 人员库搜索
-    ASSERT_LE(faces.result.size(), 5);
-    for (int i = 0; i < faces.result.size(); i++) {
-        EXPECT_GE(faces.result[i].similarity, 0.4);
+    // 静默活体检测
+    TEST(FaceApi, Face_spoofing_live) {
+        abi::vector<gx_img_api> img;
+        img.emplace_back(gx_img_api("/root/img/spoofing_0.jpg"));
+        img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
+        img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg"));
+        faces_spoofing faces;
+        faces = api->face_spoofing_live(img[0]);
+        for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
+            EXPECT_GE(faces.spoofing_result[i].prob[0], 0.5);
+        }
+        faces = api->face_spoofing_live(img[1]);
+        for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
+            EXPECT_GE(faces.spoofing_result[i].prob[1], 0.5);
+        }
+        faces = api->face_spoofing_live(img[2]);
+        for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
+            EXPECT_GE(faces.spoofing_result[i].prob[2], 0.5);
+        }
     }
-    ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
 
+    // 特征值提取
+    TEST(FaceApi, Face_feature) {
+        gx_img_api img("/root/img/20221209.jpg");
+        abi::vector<faces_feature> faces;
 
-    _Api->gx_user_remove_records(keys); // 人员库批量删除记录
-    faces = _Api->gx_user_search(img, 5, 0.4f); // 人员库搜索
-    ASSERT_LE(faces.result.size(), 0);
+        faces = api->face_feature(img, false);
+        EXPECT_EQ(faces[0].facerectwithfaceinfo_list.size(), faces[0].features.size());
+        for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
 
-    _Api->gx_user_remove_all(); // 人员库清空  清内存和磁盘
-}
+            EXPECT_EQ(faces[0].features[i].feature.size(), 256);
+            for (int j = 0; j < faces[0].features[i].feature.size(); j++) {
+                EXPECT_GT(faces[0].features[i].feature[j], -1.0);
+                EXPECT_LT(faces[0].features[i].feature[j], 1.0);
+            }
+        }
+    }
 
-#include <fstream>
-#include <unordered_map>
-void set_bucket() {
-    std::ifstream file;
-    file.open("C:/Users/zs/Downloads/key_dir.txt", std::ios::in);
-    std::fstream log("D:/test/log.txt", std::ios::out | std::ios::app);
-    _Api->gx_user_load();
-    int sum = 0;
-    for (int i = 0; i < 100000;) {
+    // 1:1 人脸对比
+    TEST(FaceApi, gx_feature_comparison) {
+        gx_img_api img_pathA("/root/img/action_live_1.jpg");
+        gx_img_api img_pathB("/root/img/action_live_5.jpg");
+
+        double ans1 = api->feature_comparison(img_pathA, img_pathB);
+        EXPECT_GT(ans1, 0.9);
+    }
+
+    // 人脸特征值底库 + 融合人脸识别
+    TEST(FaceApi, gx_user_and_detect_integration) {
+
+        abi::vector<gx_img_api> imgs;
+        imgs.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
         abi::vector<abi::string> keys;
-        abi::vector<gx_img_api> mat;
-        std::unordered_map<abi::string, abi::string> mp;
-        for (int j = 0; j < 1000; j++) {
-            abi::string key, path;
-            file >> key >> path;
+        keys.emplace_back("action_live_0");
+        keys.emplace_back("action_live_1");
+        keys.emplace_back("action_live_2");
+        keys.emplace_back("action_live_3");
+        keys.emplace_back("action_live_4");
 
-            try {
-                mat.emplace_back(gx_img_api(abi::string("D:/test/img/nanhu_2/" + path)));
-                keys.emplace_back(key);
-                mp[key] = path;
+        abi::vector<face_user_result> result;
+        faces_search_info faces;
+        faces_integration_search_info faces_i;
+        gx_img_api img("/root/img/action_live_5.jpg");
 
-            } catch (const std::exception& ex) {
-                std::cout << ex.what() << "\n";
-            }
+
+        api->user_load(); // 人员库加载
+
+        result = api->user_add_records(keys, imgs, false, false); // 人员库批量添加记录
+        EXPECT_EQ(result.size(), 5);
+        for (int i = 0; i < result.size(); i++)
+            EXPECT_EQ(result[i].success, 0);
+
+        faces = api->user_search(img, 5, 0.4f); // 人员库搜索
+        ASSERT_LE(faces.result.size(), 5);
+        for (int i = 0; i < faces.result.size(); i++) {
+            EXPECT_GE(faces.result[i].similarity, 0.4);
         }
-        abi::vector<face_user_result> ans = _Api->gx_user_add_records(keys, mat, 0, 0);
-        for (int j = 0; j < ans.size(); j++) {
-            if (ans[j].success == 0) {
-                sum++;
-            }
-            log << "key = " << ans[j].key;
-            log << " path = " << mp[ans[j].key];
-            log << " success = " << ans[j].success << "\n";
+        ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
+
+        faces_i = api->detect_integration(img, 5, 0.4f); // 融合人脸识别
+        ASSERT_LE(faces_i.result.size(), 5);
+        for (int i = 0; i < faces_i.result.size(); i++) {
+            EXPECT_GE(faces_i.result[i].similarity, 0.4);
         }
-        mp.clear();
-        i += 1000;
-        if (i == 5000 || i == 10000 || i == 20000 || i == 30000 || i == 50000 || i == 100000) {
-            std::cout << " please Zip ---" << i << " "
-                      << "-sum =" << sum << "\n";
-            std::getchar();
-        }
+        ASSERT_STREQ(faces.result[0].data.key.c_str(), "action_live_0");
+
+        result = api->user_add_records(keys, imgs, false, false); // 已存在再批量添加则更新
+        EXPECT_EQ(result.size(), 5);
+        for (int i = 0; i < result.size(); i++)
+            EXPECT_EQ(result[i].success, 0);
+
+
+        api->user_remove_records(keys); // 人员库批量删除记录
+        faces = api->user_search(img, 5, 0.4f); // 人员库搜索
+        ASSERT_LE(faces.result.size(), 0);
+
+        api->user_remove_all(); // 人员库清空  清内存和磁盘
     }
-    file.close();
-}
 
+} // namespace glasssix::face
 int main(int argc, char** argv) {
-    /*C接口测试 */
+    /*C接口测试
     try {
-        char data[] = "[{\"key\":\"action_live_0\",\"imgs\":\"/root/test/img/"
+        char data[] = "[{\"key\":\"action_live_0\",\"imgs\":\"D:/test/test/img/"
                       "action_live_0.jpg\"},{\"key\":\"action_live_1\",\"imgs\":\"/root/test/img/"
                       "action_live_1.jpg\"},{\"key\":\"action_live_2\",\"imgs\":\"/root/test/img/"
                       "action_live_2.jpg\"},{\"key\":\"action_live_3\",\"imgs\":\"/root/test/img/"
@@ -609,74 +554,45 @@ int main(int argc, char** argv) {
 
         printf_demo('c', img);
         gx_user_load();
-        char* ss = gx_detect_integration(img, 10, 0.2);
-        printf("%s\n", ss);
+        std::cout << "asdsa4445454sad"<< "----\n";
+        double as = gx_feature_comparison("/root/img/1027/3.png", "/root/img/1027/5.png");
+        //char* ss = gx_detect_integration(img, 10, 0.2);
+        printf("%.5f\n", as);
+    } catch (const std::exception& ex) {
+        std::cout << ex.what() << "----\n";
+    }*/
 
+    /* C++ 接口测试*/
+    try {
+
+        /*简单测试*/
         /*
-            result = gx_user_add_records(data , false , true); //人员库批量添加
-            printf("get_last_error = %s\n", get_last_error());
-            printf("%s\n", result);
-
-            count = gx_user_count();
-            printf("count =  %d\n", count);
-
-
-            char path[] = "/root/test/no_mask/LSH_bucket";
-            printf("cnt =  %d\n", get_disk_keys_num(path));
-            char* ss = gx_user_search(img, 5, 0.4f); //人员搜索
-             std::cout << ss << std::endl;
-
-            ss = gx_detect_integration(img, 5, 0.4f); //人脸识别融合
-            // std::cout << ss << std::endl;
-
-            ss = gx_user_search(img, 5, 0.4f); //人员搜索
-            std::cout << ss << std::endl;
-
-            result = gx_user_remove_records(keys); //人员库批量删除记录
-            printf("%s\n", result);
-
-            ss = gx_user_search(img, 5, 0.4f); //人员搜索
-            std::cout << ss << std::endl;
-
-            gx_user_remove_all(); //人员库清空  清内存和磁盘
-
-
-            char A[] = "/root/test/img/A/610111200208264510.jpg";
-            char B[] = "/root/test/img/B/610111200208264510.jpg";
-            std::cout << gx_feature_comparison(A, B) << std::endl;
-            } catch (const std::exception& ex) {
-                std::cout << ex.what() << "----\n";
-            }
+        gx_img_api img("D:/test/img/20221209.jpg");
+        faces_blur faces;
+        faces = api->face_blur(img);
+        nlohmann::json x(faces);
+        std::cout << x.dump() << "---------------------------------\n";
         */
+
+        /* 用于windows播放视频或图片的*/
+        // display_test::test_detect(api);
+        // display_test::test_track(api);
+        // display_test::test_blur(api);
+        // display_test::test_action_live(api);
+        // display_test::test_spoofing_live(api);
+        // display_test::test_feature(api);
+        // display_test::test_feature_comparison(api);
+        // display_test::test_user(api);
+        // display_test::test_detect_integration(api);
+        // display_test::test_add_folder_all(_Api);
+
+        /* 单元测试 */
+        testing::InitGoogleTest(&argc, argv);
+        int ans = RUN_ALL_TESTS();
+        std::cout << "RUN_ALL_TESTS = " << ans << "\n";
+        delete api;
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
     }
-
-    /* C++ 接口测试
-gx_face_api* api = new gx_face_api();
-_Api             = api;
-int ans=0;
-try {
-    //_Api->gx_user_load(); //人员库加载
-    // 用于播放视频图片的
-    //display_test::test_detect(api);
-    //display_test::test_track(api);
-    //display_test::test_blur(api);
-    //display_test::test_action_live(api);
-    //display_test::test_spoofing_live(api);
-    //display_test::test_feature(api);
-    //display_test::test_feature_comparison(api);
-    //display_test::test_user(api);
-    //display_test::test_detect_integration(api);
-    //display_test::test_add_folder_all(_Api);
-
-    //单元测试
-    //testing::InitGoogleTest(&argc, argv);
-    //ans = RUN_ALL_TESTS();
-} catch (const std::exception& ex) {
-    std::cout << ex.what() << "----\n";
-}
-delete api;
-    */
     return 0;
 }

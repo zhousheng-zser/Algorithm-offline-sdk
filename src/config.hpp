@@ -8,6 +8,7 @@
 namespace glasssix::face {
     struct configure_directory {
         GX_BEGIN_FIELDS(configure_directory);
+        GX_FIELD(std::string, models_directory);
         GX_FIELD(std::string, directory);
         GX_END_FIELDS;
 
@@ -16,7 +17,6 @@ namespace glasssix::face {
 
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
-        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(int, min_size);
         GX_FIELD(float, threshold);
@@ -35,7 +35,6 @@ namespace glasssix::face {
     };
     struct blur_config {
         GX_BEGIN_FIELDS(blur_config);
-        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_END_FIELDS;
@@ -43,7 +42,6 @@ namespace glasssix::face {
     };
     struct action_live_config {
         GX_BEGIN_FIELDS(action_live_config);
-        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(bool, use_int8);
         GX_FIELD(int, format);
@@ -52,7 +50,6 @@ namespace glasssix::face {
     };
     struct feature_config {
         GX_BEGIN_FIELDS(feature_config);
-        GX_FIELD(std::string, models_directory);
         GX_FIELD(int, device);
         GX_FIELD(bool, use_int8);
         GX_FIELD(int, format);
@@ -72,6 +69,7 @@ namespace glasssix::face {
     class config {
     public:
         config();
+        config(const abi::string& config);
         configure_directory _configure_directory;
         detect_config _detect_config;
         track_config _track_config;
@@ -81,13 +79,13 @@ namespace glasssix::face {
         face_user_config _face_user_config;
 
     private:
-        glasssix::json read_json_file(std::string path);
-        void set_configure_directory();
-        void set_detect();
-        void set_track();
-        void set_blur();
-        void set_action_live();
-        void set_feature();
-        void set_face_user();
+        glasssix::json read_json_file(const abi::string& path);
+        void set_configure_directory(const abi::string& path = "./config/");
+        void set_detect(const abi::string& path = "./config");
+        void set_track(const abi::string& path = "./config");
+        void set_blur(const abi::string& path = "./config");
+        void set_action_live(const abi::string& path = "./config");
+        void set_feature(const abi::string& path = "./config");
+        void set_face_user(const abi::string& path = "./config");
     };
 } // namespace glasssix::face

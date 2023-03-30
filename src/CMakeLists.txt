@@ -9,14 +9,20 @@ file(
 	CONFIGURE_DEPENDS
 	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.hpp
 	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.h
-	nessus/*.h
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
+	distance/*hpp
+	distance/*cpp
+
 	*.hpp
 	*.cpp
-	*.h
 )
+
+if(NOT GX_USE_PURE_C)
+	list(REMOVE_ITEM private_sources gx_face_api_c.cpp)
+	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_face_api_c.cpp)
+endif()
 
 target_sources(
 	${target_name}
@@ -51,12 +57,18 @@ target_link_libraries(
 	${target_name}
 	PRIVATE
 	Threads::Threads
-	GXMiscellaneous::gx-miscellaneous
 	${OpenCV_LIBS}
 	${GX_CV_SDK_LIBS}
 )
+if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
+	target_include_directories(${target_name} PRIVATE ${GX_MISCELLANEOUS_ROOT}/include)
+	target_link_directories(${target_name} PRIVATE ${GX_MISCELLANEOUS_ROOT}/lib)
+	target_link_libraries(${target_name} PRIVATE gx-miscellaneous fmt)
+else()
+	target_link_libraries(${target_name} PRIVATE GXMiscellaneous::gx-miscellaneous)
+endif()
 
-if(NOT WIN32)
+if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
 target_link_libraries(
 	${target_name}
 	PRIVATE

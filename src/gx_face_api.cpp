@@ -9,7 +9,7 @@
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/valklyrs.hpp"
 #include "config.hpp"
-#include "distance.hpp"
+#include "distance/distance.hpp"
 
 #include <cmath>
 #include <fstream>
@@ -22,10 +22,9 @@
 namespace glasssix::face {
     namespace {
         auto&& protocol_ptr = nessus_protocol::instance();
-        config* _config     = new config();
+        config* _config     = nullptr;
 
     } // namespace
-
 
     inline float Cosine_distance_AVX256(abi::vector<float>& x, abi::vector<float>& y) {
         float sum, a, b;
@@ -209,46 +208,60 @@ namespace glasssix::face {
     }
 
     gx_face_api::gx_face_api() : impl_{std::make_unique<impl>()} {}
+    gx_face_api::gx_face_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_face_api::~gx_face_api() {}
     gx_face_api::gx_face_api(gx_face_api&&) noexcept            = default;
     gx_face_api& gx_face_api::operator=(gx_face_api&&) noexcept = default;
 
     class gx_face_api::impl {
     public:
-        impl() {
-            std::fstream log(".\\log.txt", std::ios::out | std::ios::app);
+        void init() {
+            std::fstream log("./log.txt", std::ios::out | std::ios::app);
             log << "begin gx_face_api::impl\n";
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
             log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
             protocol_ptr.init(_config->_configure_directory.directory);
-            log << "begin make_handle detect\n";
+            log << "begin detect\n";
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
-                    .models_directory = _config->_detect_config.models_directory});
-            log << "begin make_handle action_live\n";
+                    .models_directory = _config->_configure_directory.models_directory});
+            log << "begin action_live\n";
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
-                    _config->_action_live_config.use_int8, _config->_action_live_config.models_directory});
-            log << "begin make_handle face_user\n";
+                    _config->_action_live_config.use_int8, _config->_configure_directory.models_directory});
+            log << "begin face_user\n";
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
             irisivel_mask_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
                 _config->_face_user_config.dimension, _config->_face_user_config.working_directory_mask});
-            log << "begin make_handle blur\n";
+            log << "begin blur\n";
             romancia_handle = protocol_ptr.make_instance<romancia>(
-                romancia_new_param{_config->_blur_config.device, _config->_blur_config.models_directory});
-            log << "begin make_handle feature\n";
+                romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
+            log << "begin handle feature\n";
             selene_handle = protocol_ptr.make_instance<selene>(
-                selene_new_param{_config->_feature_config.device, _config->_feature_config.models_directory,
+                selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
+            log << "begin make_handle feature\n";
             selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
-                _config->_feature_config.models_directory, 2, _config->_feature_config.use_int8});
+                _config->_configure_directory.models_directory, 2, _config->_feature_config.use_int8});
             gungnir_handle; // 人头检测预留
             valklyrs_handle; // 车辆行人预留
             log << "end make_handle\n";
             log.close();
+        }
+
+        impl() {
+            if (_config == nullptr)
+                _config = new config();
+            init();
+        }
+
+        impl(const abi::string& config_path) {
+            if (_config == nullptr)
+                _config = new config(config_path);
+            init();
         }
         ~impl() {}
 
@@ -265,13 +278,11 @@ namespace glasssix::face {
             }
             return false;
         }
-
         struct track_cache {
             std::unordered_map<int, face_info> track_history;
             std::unordered_map<int, abi::string> track_history_id;
             int index = 0;
         } cache;
-        // config* _config;
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
@@ -286,7 +297,7 @@ namespace glasssix::face {
 
 
     // 人脸检测
-    abi::vector<face_info> gx_face_api::gx_detect(gx_img_api& mat) {
+    abi::vector<face_info> gx_face_api::detect(gx_img_api& mat) {
         abi::vector<face_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         auto result = protocol_ptr.invoke<longinus::detect>(impl_->longinus_handle,
@@ -303,10 +314,10 @@ namespace glasssix::face {
     }
 
     // 人脸追踪
-    abi::vector<face_trace_info> gx_face_api::gx_track(gx_img_api& mat) {
+    abi::vector<face_trace_info> gx_face_api::track(gx_img_api& mat) {
         abi::vector<face_trace_info> ans;
         if (impl_->cache.index % (_config->_track_config.detect_intv_before_track) == 0) {
-            abi::vector<face_info> faces = gx_detect(mat);
+            abi::vector<face_info> faces = detect(mat);
             for (int i = 0; i < faces.size(); i++) {
                 if (!impl_->track_check(faces[i])) {
                     impl_->cache.track_history[faces[i].x * 10000 + faces[i].y]    = faces[i];
@@ -347,7 +358,7 @@ namespace glasssix::face {
     }
 
     // 清除人脸跟踪历史
-    bool gx_face_api::gx_clear_track_history() {
+    bool gx_face_api::clear_track_history() {
         impl_->cache.index = 0;
         impl_->cache.track_history.clear();
         impl_->cache.track_history_id.clear();
@@ -355,9 +366,9 @@ namespace glasssix::face {
     }
 
     // 人脸质量(模糊度)检测
-    faces_blur gx_face_api::gx_face_blur(gx_img_api& mat) {
+    faces_blur gx_face_api::face_blur(gx_img_api& mat) {
         faces_blur ans;
-        abi::vector<face_info> faces = gx_detect(mat);
+        abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
 
@@ -375,10 +386,10 @@ namespace glasssix::face {
     }
 
     // 配合活体检测
-    face_info gx_face_api::gx_face_action_live(int action_type, bool& action_result, gx_img_api& mat) {
+    face_info gx_face_api::face_action_live(int action_type, bool& action_result, gx_img_api& mat) {
         face_info ans;
         action_result                = 0;
-        abi::vector<face_info> faces = gx_detect(mat);
+        abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
         ans = faces[0];
@@ -397,9 +408,9 @@ namespace glasssix::face {
     }
 
     // 静默活体检测
-    faces_spoofing gx_face_api::gx_face_spoofing_live(gx_img_api& mat) {
+    faces_spoofing gx_face_api::face_spoofing_live(gx_img_api& mat) {
         faces_spoofing ans;
-        abi::vector<face_info> faces = gx_detect(mat);
+        abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
 
@@ -418,10 +429,10 @@ namespace glasssix::face {
     }
 
     // 特征提取融合
-    abi::vector<faces_feature> gx_face_api::gx_face_feature(gx_img_api& mat, bool is_clip) {
+    abi::vector<faces_feature> gx_face_api::face_feature(gx_img_api& mat, bool is_clip) {
 
         abi::vector<faces_feature> ans;
-        abi::vector<face_info> faces = gx_detect(mat);
+        abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
@@ -483,7 +494,7 @@ namespace glasssix::face {
     }
 
     // 特征值库加载
-    bool gx_face_api::gx_user_load() {
+    bool gx_face_api::user_load() {
 
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::load_databases>(
@@ -495,7 +506,7 @@ namespace glasssix::face {
     }
 
     // 特征值库搜索
-    faces_search_info gx_face_api::gx_user_search(gx_img_api& mat, int top, float min_similarity) {
+    faces_search_info gx_face_api::user_search(gx_img_api& mat, int top, float min_similarity) {
         faces_search_info ans_A, ans_B, ans;
         if (top <= 0)
             throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top <= 0."));
@@ -505,7 +516,7 @@ namespace glasssix::face {
             throw source_code_aware_runtime_error(
                 U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
 
-        abi::vector<faces_feature> faces = gx_face_feature(mat, false);
+        abi::vector<faces_feature> faces = face_feature(mat, false);
         if (faces.size() == 0 || faces[0].facerectwithfaceinfo_list.size() == 0 || faces[0].features.size() == 0
             || faces[1].facerectwithfaceinfo_list.size() == 0 || faces[1].features.size() == 0)
             return ans;
@@ -552,7 +563,7 @@ namespace glasssix::face {
 
 
     // 特征值库清空
-    bool gx_face_api::gx_user_remove_all() {
+    bool gx_face_api::user_remove_all() {
 
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::remove_all>(
@@ -563,7 +574,7 @@ namespace glasssix::face {
     }
 
     // 特征值库批量删除
-    abi::vector<face_user_result> gx_face_api::gx_user_remove_records(abi::vector<abi::string>& keys) {
+    abi::vector<face_user_result> gx_face_api::user_remove_records(abi::vector<abi::string>& keys) {
 
         abi::vector<face_user_result> ans(keys.size());
         std::array<char, 0> arr{};
@@ -581,7 +592,7 @@ namespace glasssix::face {
     }
 
     // 特征值库批量添加
-    abi::vector<face_user_result> gx_face_api::gx_user_add_records(
+    abi::vector<face_user_result> gx_face_api::user_add_records(
         abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_clip, bool is_faceinfo) {
         abi::vector<face_user_result> ans(mat.size());
         abi::vector<database_record> faces_A_add, faces_B_add;
@@ -600,13 +611,13 @@ namespace glasssix::face {
                 ans[i].facerectwithfaceinfo = std::nullopt;
                 continue;
             }
-            abi::vector<faces_feature> temp = gx_face_feature(mat[i], is_clip);
+            abi::vector<faces_feature> temp = face_feature(mat[i], is_clip);
             if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0) {
                 ans[i].key     = keys[i];
                 ans[i].success = -2;
                 ans[i].img_buffer.clear();
                 ans[i].facerectwithfaceinfo = std::nullopt;
-            } else if (gx_user_contains_key(keys[i]) == false) {
+            } else if (user_contains_key(keys[i]) == false) {
                 ans[i].key        = keys[i];
                 ans[i].success    = 1;
                 ans[i].img_buffer = temp[0].img_buffer;
@@ -653,7 +664,7 @@ namespace glasssix::face {
     }
 
     // 特征值库批量添加
-    abi::vector<face_user_result> gx_face_api::gx_user_add_records(
+    abi::vector<face_user_result> gx_face_api::user_add_records(
         abi::vector<abi::string>& keys, abi::vector<abi::vector<float>>& features) {
         abi::vector<face_user_result> ans(features.size());
         abi::vector<database_record> faces_A_add, faces_B_add;
@@ -674,7 +685,7 @@ namespace glasssix::face {
             } else if (features[i].size() != _config->_face_user_config.dimension) {
                 ans[i].key     = keys[i];
                 ans[i].success = -3;
-            } else if (gx_user_contains_key(keys[i]) == false) {
+            } else if (user_contains_key(keys[i]) == false) {
                 ans[i].key     = keys[i];
                 ans[i].success = 1;
                 faces_A_add.emplace_back(database_record{.feature = features[i], .key = keys[i]});
@@ -710,7 +721,7 @@ namespace glasssix::face {
     }
 
     // 特征值库键值查询
-    bool gx_face_api::gx_user_contains_key(abi::string& key) {
+    bool gx_face_api::user_contains_key(abi::string& key) {
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::contains_key>(
             impl_->irisivel_handle, irisviel_contains_key_param{.instance_guid = "", .key = key}, std::span<char>{arr});
@@ -718,7 +729,7 @@ namespace glasssix::face {
     }
 
     // 特征值库记录总和
-    std::uint64_t gx_face_api::gx_user_record_count() {
+    std::uint64_t gx_face_api::user_record_count() {
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::record_count>(
             impl_->irisivel_handle, irisviel_record_count_param{.instance_guid = ""}, std::span<char>{arr});
@@ -726,9 +737,9 @@ namespace glasssix::face {
     }
 
     // 人脸识别流程融合
-    faces_integration_search_info gx_face_api::gx_detect_integration(gx_img_api& mat, int top, float min_similarity) {
+    faces_integration_search_info gx_face_api::detect_integration(gx_img_api& mat, int top, float min_similarity) {
         faces_integration_search_info ans;
-        faces_spoofing faces = gx_face_spoofing_live(mat);
+        faces_spoofing faces = face_spoofing_live(mat);
         if (faces.spoofing_result.size() == 0) {
             return ans;
         } else {
@@ -737,22 +748,22 @@ namespace glasssix::face {
                 return ans;
         }
         // gx_user_load();
-        auto result = gx_user_search(mat, top, min_similarity);
+        auto result = user_search(mat, top, min_similarity);
         ans.result  = result.result;
         return ans;
     }
 
     // 1:1特征值对比接口
-    double gx_face_api::gx_feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B) {
+    double gx_face_api::feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B) {
         double ans = 0;
 
-        abi::vector<face_info> is_mask_A = gx_detect(mat_A);
-        abi::vector<face_info> is_mask_B = gx_detect(mat_B);
+        abi::vector<face_info> is_mask_A = detect(mat_A);
+        abi::vector<face_info> is_mask_B = detect(mat_B);
         if (is_mask_A.size() == 0 || is_mask_B.size() == 0)
             return 0;
 
-        abi::vector<faces_feature> faces_A = gx_face_feature(mat_A, false);
-        abi::vector<faces_feature> faces_B = gx_face_feature(mat_B, false);
+        abi::vector<faces_feature> faces_A = face_feature(mat_A, false);
+        abi::vector<faces_feature> faces_B = face_feature(mat_B, false);
 
         if (faces_A.size() != 2 || faces_B.size() != 2 || faces_A[0].features.size() == 0
             || faces_A[1].features.size() == 0 || faces_B[0].features.size() == 0 || faces_B[1].features.size() == 0)

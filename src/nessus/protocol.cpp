@@ -76,7 +76,7 @@ namespace glasssix::face {
                 if (std::same_as<T, json>) {
                     return json_value;
                 } else {
-                    return json_value.get<T>();
+                    return json_value.template get<T>();
                 }
             }
 

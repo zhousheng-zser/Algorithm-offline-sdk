@@ -1,6 +1,5 @@
 #pragma once
 
-#include <concepts>
 #include <type_traits>
 #include <utility>
 
@@ -8,14 +7,16 @@
 #include <g6/error_extensions.hpp>
 #include <g6/reflection.hpp>
 
+#include <concepts/concepts.hpp>
+
 namespace glasssix::face {
     template <typename T>
     struct data_range {};
 
     template <typename T>
     concept has_data_range = requires {
-                                 { data_range<T>::min } -> std::convertible_to<T>;
-                                 { data_range<T>::max } -> std::convertible_to<T>;
+                                 { data_range<T>::min } -> concepts::convertible_to<T>;
+                                 { data_range<T>::max } -> concepts::convertible_to<T>;
                              };
 
     template <typename T>
