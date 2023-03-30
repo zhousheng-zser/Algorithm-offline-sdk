@@ -387,7 +387,6 @@ namespace glasssix::face {
         faces = api->face_blur(img);
         EXPECT_GT(faces.facerectwithfaceinfo_list.size(), 0);
         nlohmann::json x(faces);
-        std::cout << x.dump() << "---------------------------------\n";
         for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); i++) {
             // face_info info = faces.facerectwithfaceinfo_list[i]; 前面测过了
             EXPECT_GE(faces.clarity[i], 0.0);
@@ -541,6 +540,9 @@ namespace glasssix::face {
     }
 
 } // namespace glasssix::face
+
+
+#include <fstream>
 int main(int argc, char** argv) {
     /*C接口测试
     try {
@@ -566,14 +568,33 @@ int main(int argc, char** argv) {
     try {
 
         /*简单测试*/
-        /*
-        gx_img_api img("D:/test/img/20221209.jpg");
-        faces_blur faces;
-        faces = api->face_blur(img);
-        nlohmann::json x(faces);
-        std::cout << x.dump() << "---------------------------------\n";
-        */
-
+        //std::ifstream file;
+        //file.open("C:/Users/zs/Downloads/100000.txt", std::ios::in);
+        //std::vector<glasssix::abi::string> names;
+        //glasssix::abi::string name;
+        //while (file >> name) {
+        //    std::cout << name << "\n";
+        //    names.emplace_back(name);
+        //}
+        //api->user_load();
+        //api->user_remove_all();
+        //std::ofstream ff;
+        //ff.open("./100000.txt", std::ios::app|std::ios::out);
+        //for (int i = 0;i< names.size(); ) {
+        //    int T = 1000;
+        //    glasssix::abi::vector<gx_img_api> imgs;
+        //    glasssix::abi::vector<glasssix::abi::string> keys;
+        //    while (i < names.size() && T--) {
+        //    imgs.push_back(gx_img_api("D:/test/img/nanhu_2/" + names[i]));
+        //    keys.push_back(glasssix::abi::string {std::to_string(i)});
+        //    i++;
+        //    }
+        //    auto ans = api->user_add_records(keys, imgs, false, false);
+        //    for (int j=0;j<ans.size() ;j++) {
+        //        ff << ans[j].key << "|" << names[j] << "|" << ans[j].success << "\n";
+        //    }
+        //}
+       
         /* 用于windows播放视频或图片的*/
         // display_test::test_detect(api);
         // display_test::test_track(api);

@@ -46,7 +46,7 @@ namespace glasssix::face {
         // 人脸质量(模糊度)检测
         faces_blur face_blur(gx_img_api& mat);
         // 配合活体检测
-        face_info face_action_live(int action_type, bool& action_result, gx_img_api& mat);
+        face_info face_action_live(action_live_type action_type, bool& action_result, gx_img_api& mat);
         // 静默活体检测
         faces_spoofing face_spoofing_live(gx_img_api& mat);
         // 特征提取融合

@@ -386,7 +386,7 @@ namespace glasssix::face {
     }
 
     // 配合活体检测
-    face_info gx_face_api::face_action_live(int action_type, bool& action_result, gx_img_api& mat) {
+    face_info gx_face_api::face_action_live(action_live_type action_type, bool& action_result, gx_img_api& mat) {
         face_info ans;
         action_result                = 0;
         abi::vector<face_info> faces = detect(mat);
@@ -837,7 +837,7 @@ namespace glasssix::face {
             } else {
                 return false;
             }
-            std::string path = "./config/";
+            std::string path = _config->_path;
             path += name.data();
             std::ofstream(path.c_str()) << temp;
         } catch (const std::exception& ex) {
