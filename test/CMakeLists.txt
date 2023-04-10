@@ -32,11 +32,8 @@ target_link_libraries(
     Threads::Threads
     GTest::gtest
     GXMiscellaneous::gx-miscellaneous
-    fmt::fmt
     gx-offline-face-recognition
 )
-
-
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../config  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)

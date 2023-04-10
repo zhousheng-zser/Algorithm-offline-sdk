@@ -59,14 +59,8 @@ target_link_libraries(
 	Threads::Threads
 	${OpenCV_LIBS}
 	${GX_CV_SDK_LIBS}
+	GXMiscellaneous::gx-miscellaneous
 )
-if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
-	target_include_directories(${target_name} PRIVATE ${GX_MISCELLANEOUS_ROOT}/include)
-	target_link_directories(${target_name} PRIVATE ${GX_MISCELLANEOUS_ROOT}/lib)
-	target_link_libraries(${target_name} PRIVATE gx-miscellaneous fmt)
-else()
-	target_link_libraries(${target_name} PRIVATE GXMiscellaneous::gx-miscellaneous)
-endif()
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
 target_link_libraries(

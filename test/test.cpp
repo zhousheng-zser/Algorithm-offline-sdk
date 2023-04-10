@@ -10,7 +10,8 @@
 using namespace glasssix::face;
 using namespace glasssix;
 
-/*  //用于windows 播放显示
+// 用于windows 播放显示
+/*
 namespace glasssix::display_test {
     void test_detect(gx_face_api* _api) {
 
@@ -326,13 +327,13 @@ namespace glasssix::display_test {
 } // namespace glasssix::display_test
 */
 
-
+// GoogleTest
 namespace glasssix::face {
 
     gx_face_api* api = new gx_face_api();
     // 人脸检测
     TEST(FaceApi, Detect) {
-        gx_img_api img("/root/img/20221209.jpg");
+        gx_img_api img("/sdcard/img/20221209.jpg");
         abi::vector<face_info> faces;
         faces = api->detect(img);
 
@@ -351,11 +352,11 @@ namespace glasssix::face {
         EXPECT_GT(info.attributes->pitch, -90.0);
         EXPECT_LT(info.attributes->pitch, 90.0);
         EXPECT_GT(info.attributes->roll, -90.0);
-        EXPECT_LT(info.attributes->roll, 90.0);
+        EXPECT_LT(info.attributes->roll, 90.0); 
     }
     // 人脸追踪
     TEST(FaceApi, Track) {
-        gx_img_api img("/root/img/img_align_celeba/000011.jpg");
+        gx_img_api img("/sdcard/img/img_align_celeba/000011.jpg");
         abi::vector<face_trace_info> faces;
         faces = api->track(img);
 
@@ -382,7 +383,7 @@ namespace glasssix::face {
 
     // 人脸质量检测
     TEST(FaceApi, Face_blur) {
-        gx_img_api img("/root/img/20230323.png");
+        gx_img_api img("/sdcard/img/20230323.png");
         faces_blur faces;
         faces = api->face_blur(img);
         EXPECT_GT(faces.facerectwithfaceinfo_list.size(), 0);
@@ -397,12 +398,12 @@ namespace glasssix::face {
     // 配合活体检测
     TEST(FaceApi, Face_action_live) {
         abi::vector<gx_img_api> img;
-        img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_5.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_0.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_1.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_2.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_3.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_4.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_5.jpg"));
 
         face_info info;
         bool action_result = 0;
@@ -439,9 +440,9 @@ namespace glasssix::face {
     // 静默活体检测
     TEST(FaceApi, Face_spoofing_live) {
         abi::vector<gx_img_api> img;
-        img.emplace_back(gx_img_api("/root/img/spoofing_0.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-        img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/spoofing_0.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/action_live_0.jpg"));
+        img.emplace_back(gx_img_api("/sdcard/img/spoofing_2.jpg"));
         faces_spoofing faces;
         faces = api->face_spoofing_live(img[0]);
         for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
@@ -459,7 +460,7 @@ namespace glasssix::face {
 
     // 特征值提取
     TEST(FaceApi, Face_feature) {
-        gx_img_api img("/root/img/20221209.jpg");
+        gx_img_api img("/sdcard/img/20221209.jpg");
         abi::vector<faces_feature> faces;
 
         faces = api->face_feature(img, false);
@@ -476,8 +477,8 @@ namespace glasssix::face {
 
     // 1:1 人脸对比
     TEST(FaceApi, gx_feature_comparison) {
-        gx_img_api img_pathA("/root/img/action_live_1.jpg");
-        gx_img_api img_pathB("/root/img/action_live_5.jpg");
+        gx_img_api img_pathA("/sdcard/img/action_live_1.jpg");
+        gx_img_api img_pathB("/sdcard/img/action_live_5.jpg");
 
         double ans1 = api->feature_comparison(img_pathA, img_pathB);
         EXPECT_GT(ans1, 0.9);
@@ -487,11 +488,11 @@ namespace glasssix::face {
     TEST(FaceApi, gx_user_and_detect_integration) {
 
         abi::vector<gx_img_api> imgs;
-        imgs.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
+        imgs.emplace_back(gx_img_api("/sdcard/img/action_live_0.jpg"));
+        imgs.emplace_back(gx_img_api("/sdcard/img/action_live_1.jpg"));
+        imgs.emplace_back(gx_img_api("/sdcard/img/action_live_2.jpg"));
+        imgs.emplace_back(gx_img_api("/sdcard/img/action_live_3.jpg"));
+        imgs.emplace_back(gx_img_api("/sdcard/img/action_live_4.jpg"));
         abi::vector<abi::string> keys;
         keys.emplace_back("action_live_0");
         keys.emplace_back("action_live_1");
@@ -502,7 +503,7 @@ namespace glasssix::face {
         abi::vector<face_user_result> result;
         faces_search_info faces;
         faces_integration_search_info faces_i;
-        gx_img_api img("/root/img/action_live_5.jpg");
+        gx_img_api img("/sdcard/img/action_live_5.jpg");
 
 
         api->user_load(); // 人员库加载
@@ -541,23 +542,21 @@ namespace glasssix::face {
 
 } // namespace glasssix::face
 
-
-#include <fstream>
 int main(int argc, char** argv) {
     /*C接口测试
     try {
         char data[] = "[{\"key\":\"action_live_0\",\"imgs\":\"D:/test/test/img/"
-                      "action_live_0.jpg\"},{\"key\":\"action_live_1\",\"imgs\":\"/root/test/img/"
-                      "action_live_1.jpg\"},{\"key\":\"action_live_2\",\"imgs\":\"/root/test/img/"
-                      "action_live_2.jpg\"},{\"key\":\"action_live_3\",\"imgs\":\"/root/test/img/"
-                      "action_live_3.jpg\"},{\"key\":\"action_live_4\",\"imgs\":\"/root/test/img/action_live_4.jpg\"}]";
+                      "action_live_0.jpg\"},{\"key\":\"action_live_1\",\"imgs\":\"/sdcard/test/img/"
+                      "action_live_1.jpg\"},{\"key\":\"action_live_2\",\"imgs\":\"/sdcard/test/img/"
+                      "action_live_2.jpg\"},{\"key\":\"action_live_3\",\"imgs\":\"/sdcard/test/img/"
+                      "action_live_3.jpg\"},{\"key\":\"action_live_4\",\"imgs\":\"/sdcard/test/img/action_live_4.jpg\"}]";
         char keys[] = "[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]";
         char img[]  = "D:/test/img/action_live_5.jpg";
 
         printf_demo('c', img);
         gx_user_load();
         std::cout << "asdsa4445454sad"<< "----\n";
-        double as = gx_feature_comparison("/root/img/1027/3.png", "/root/img/1027/5.png");
+        double as = gx_feature_comparison("/sdcard/img/1027/3.png", "/sdcard/img/1027/5.png");
         //char* ss = gx_detect_integration(img, 10, 0.2);
         printf("%.5f\n", as);
     } catch (const std::exception& ex) {
@@ -567,51 +566,30 @@ int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {
 
-        /*简单测试*/
-        //std::ifstream file;
-        //file.open("C:/Users/zs/Downloads/100000.txt", std::ios::in);
-        //std::vector<glasssix::abi::string> names;
-        //glasssix::abi::string name;
-        //while (file >> name) {
-        //    std::cout << name << "\n";
-        //    names.emplace_back(name);
-        //}
-        //api->user_load();
-        //api->user_remove_all();
-        //std::ofstream ff;
-        //ff.open("./100000.txt", std::ios::app|std::ios::out);
-        //for (int i = 0;i< names.size(); ) {
-        //    int T = 1000;
-        //    glasssix::abi::vector<gx_img_api> imgs;
-        //    glasssix::abi::vector<glasssix::abi::string> keys;
-        //    while (i < names.size() && T--) {
-        //    imgs.push_back(gx_img_api("D:/test/img/nanhu_2/" + names[i]));
-        //    keys.push_back(glasssix::abi::string {std::to_string(i)});
-        //    i++;
-        //    }
-        //    auto ans = api->user_add_records(keys, imgs, false, false);
-        //    for (int j=0;j<ans.size() ;j++) {
-        //        ff << ans[j].key << "|" << names[j] << "|" << ans[j].success << "\n";
-        //    }
-        //}
-       
-        /* 用于windows播放视频或图片的*/
-        // display_test::test_detect(api);
-        // display_test::test_track(api);
-        // display_test::test_blur(api);
-        // display_test::test_action_live(api);
-        // display_test::test_spoofing_live(api);
-        // display_test::test_feature(api);
-        // display_test::test_feature_comparison(api);
-        // display_test::test_user(api);
-        // display_test::test_detect_integration(api);
-        // display_test::test_add_folder_all(_Api);
+        // 简单测试
+        std::cout << "hello world\n";
 
-        /* 单元测试 */
+        // 用于windows播放视频或图片的
+        /*
+         display_test::test_detect(api);
+         display_test::test_track(api);
+         display_test::test_blur(api);
+         display_test::test_action_live(api);
+         display_test::test_spoofing_live(api);
+         display_test::test_feature(api);
+         display_test::test_feature_comparison(api);
+         display_test::test_user(api);
+         display_test::test_detect_integration(api);
+         display_test::test_add_folder_all(_Api);
+        */
+
+        // 单元测试
+        
         testing::InitGoogleTest(&argc, argv);
         int ans = RUN_ALL_TESTS();
         std::cout << "RUN_ALL_TESTS = " << ans << "\n";
         delete api;
+        
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
     }

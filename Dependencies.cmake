@@ -60,7 +60,20 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib64)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
     set(OpenCV_LIBS opencv_calib3d opencv_core opencv_dnn opencv_features2d opencv_flann opencv_highgui opencv_imgproc opencv_imgcodecs opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_videoio opencv_video opencv_videostab)
-elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
+elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566"))
+    include(${GX_MISCELLANEOUS_ROOT}/cmake/GXUtil.cmake)
+    gx_find_package_no_root_path(
+    GXMiscellaneous
+    REQUIRED
+    HINTS ${GX_MISCELLANEOUS_ROOT}
+    NO_DEFAULT_PATH
+    )
+    gx_find_package_no_root_path(
+    GTest
+    REQUIRED
+    HINTS ${GX_GTEST_ROOT}/lib/cmake
+    NO_DEFAULT_PATH
+    )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/sdk/native/libs/arm64-v8a)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/sdk/native/jni/include)
     set(OpenCV_LIBS opencv_java4)
@@ -75,7 +88,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     set(cvsdk_lib_relative_path "/lib/centos/x64/release")
     set(GX_CV_SDK_LIBS excalibur primitives selene cassius gaius irisviel parser ring damocles longinus plugin_register romancia vision_service)
-else()
+elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566"))
     set(cvsdk_lib_relative_path "/lib/android/arm64-v8a/release")
     set(GX_CV_SDK_LIBS cassius damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service gaius ring)
 endif()
