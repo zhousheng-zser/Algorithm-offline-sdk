@@ -4,6 +4,7 @@
 
 namespace glasssix::face {
     config::config() {
+        _path = "./config";
         set_configure_directory();
         set_detect();
         set_track();
@@ -12,14 +13,15 @@ namespace glasssix::face {
         set_feature();
         set_face_user();
     }
-    config::config(const abi::string &config ) {
-        set_configure_directory(config);
-        set_detect(config);
-        set_track(config);
-        set_blur(config);
-        set_action_live(config);
-        set_feature(config);
-        set_face_user(config);
+    config::config(const abi::string& path) {
+        _path = path;
+        set_configure_directory(path);
+        set_detect(path);
+        set_track(path);
+        set_blur(path);
+        set_action_live(path);
+        set_feature(path);
+        set_face_user(path);
     }
 
     glasssix::json config::read_json_file(const abi::string& path) {
