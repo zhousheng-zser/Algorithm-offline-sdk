@@ -167,6 +167,6 @@ namespace glasssix::face {
         BDFACE_ACTION_LIVE_RIGHT_HEAD = 4 // 右摇头
     };
     // 动作活体类型枚举
-    enum image_rotation_type { DEG90 = 1, DEG180 = 2, DEG270 = 3 };
+    enum image_rotation_type { DEG90 = 0, DEG180 = 1, DEG270 = 2 };
 
 } // namespace glasssix::face
