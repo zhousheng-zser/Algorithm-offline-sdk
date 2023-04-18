@@ -218,7 +218,8 @@ char* gx_face_action_live(int action_type, bool& action_result, char* mat_path) 
     try {
         abi::string temp{mat_path};
         glasssix::face::gx_img_api mat(temp);
-        face::face_info faces = api->face_action_live(action_type, action_result, mat);
+        glasssix::face::action_live_type type = static_cast<glasssix::face::action_live_type>(action_type);
+        face::face_info faces                 = api->face_action_live(type, action_result, mat);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();

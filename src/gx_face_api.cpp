@@ -747,7 +747,6 @@ namespace glasssix::face {
             if (ans.prob < 0.5)
                 return ans;
         }
-        // gx_user_load();
         auto result = user_search(mat, top, min_similarity);
         ans.result  = result.result;
         return ans;
