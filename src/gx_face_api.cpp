@@ -231,7 +231,8 @@ namespace glasssix::face {
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.use_int8, _config->_configure_directory.models_directory});
-            log << "begin face_user\n";
+            log << "working_directory :" << _config->_face_user_config.working_directory << "\n";
+            log << "working_directory_mask :" << _config->_face_user_config.working_directory_mask << "\n";
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
             irisivel_mask_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
@@ -431,7 +432,7 @@ namespace glasssix::face {
     // 特征提取融合
     abi::vector<faces_feature> gx_face_api::face_feature(gx_img_api& mat, bool is_clip) {
 
-        abi::vector<faces_feature> ans;
+        abi::vector<faces_feature> ans(2);
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
@@ -467,7 +468,7 @@ namespace glasssix::face {
                 ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
             else
                 ans_temp.img_buffer.clear();
-            ans.emplace_back(ans_temp);
+            ans.front() = std::move(ans_temp);
         }
         {
             faces_feature ans_temp;
@@ -487,7 +488,7 @@ namespace glasssix::face {
                 ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
             else
                 ans_temp.img_buffer.clear();
-            ans.emplace_back(ans_temp);
+            ans.back() = std::move(ans_temp);
         }
 
         return ans;
@@ -495,7 +496,7 @@ namespace glasssix::face {
 
     // 特征值库加载
     bool gx_face_api::user_load() {
-
+        
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::load_databases>(
             impl_->irisivel_mask_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
