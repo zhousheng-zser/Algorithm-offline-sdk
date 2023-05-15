@@ -218,33 +218,42 @@ namespace glasssix::face {
         void init() {
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
             log << "begin gx_face_api::impl\n";
+            log.flush();
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
             log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
+            log.flush();
             protocol_ptr.init(_config->_configure_directory.directory);
             log << "begin detect\n";
+            log.flush();
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .models_directory = _config->_configure_directory.models_directory});
             log << "begin action_live\n";
+            log.flush();
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.use_int8, _config->_configure_directory.models_directory});
             log << "working_directory :" << _config->_face_user_config.working_directory << "\n";
+            log.flush();
             log << "working_directory_mask :" << _config->_face_user_config.working_directory_mask << "\n";
+            log.flush();
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
             irisivel_mask_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
                 _config->_face_user_config.dimension, _config->_face_user_config.working_directory_mask});
             log << "begin blur\n";
+            log.flush();
             romancia_handle = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
             log << "begin handle feature\n";
+            log.flush();
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
             log << "begin make_handle feature\n";
+            log.flush();
             selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
                 _config->_configure_directory.models_directory, 2, _config->_feature_config.use_int8});
             gungnir_handle; // 人头检测预留
@@ -496,7 +505,7 @@ namespace glasssix::face {
 
     // 特征值库加载
     bool gx_face_api::user_load() {
-        
+
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::load_databases>(
             impl_->irisivel_mask_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
@@ -545,16 +554,33 @@ namespace glasssix::face {
                 std::span<char>{arr});
             ans_B.result = result.result;
         }
-
+        std::map<abi::string, bool> vis;
         for (int i = 0, j = 0, k = 0; i < top; ++i) {
+            // ans中已经存在的键值 直接跳过
+            if (j < ans_A.result.size() && vis[ans_A.result[j].data.key]) {
+                ++j;
+                --i;
+                continue;
+            }
+            if (k < ans_B.result.size() && vis[ans_B.result[k].data.key]) {
+                ++k;
+                --i;
+                continue;
+            }
+            // 选择相似度大的  并标记键值
             if (j < ans_A.result.size() && k < ans_B.result.size()) {
-                if (ans_A.result[j].similarity >= ans_B.result[k].similarity)
+                if (ans_A.result[j].similarity >= ans_B.result[k].similarity) {
+                    vis[ans_A.result[j].data.key] = true;
                     ans.result.emplace_back(ans_A.result[j++]);
-                else
+                } else {
+                    vis[ans_B.result[k].data.key] = true;
                     ans.result.emplace_back(ans_B.result[k++]);
+                }
             } else if (j < ans_A.result.size()) {
+                vis[ans_A.result[j].data.key] = true;
                 ans.result.emplace_back(ans_A.result[j++]);
             } else if (k < ans_B.result.size()) {
+                vis[ans_B.result[k].data.key] = true;
                 ans.result.emplace_back(ans_B.result[k++]);
             }
         }

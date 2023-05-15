@@ -12,9 +12,8 @@ file(
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
-	distance/*hpp
-	distance/*cpp
-
+	distance/*.hpp
+	distance/*.cpp
 	*.hpp
 	*.cpp
 )
@@ -61,6 +60,15 @@ target_link_libraries(
 	${GX_CV_SDK_LIBS}
 	GXMiscellaneous::gx-miscellaneous
 )
+
+
+if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")  ) # 后续3566将配置进rknn  or (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566") 
+target_link_libraries(
+	${target_name}
+	PRIVATE
+	rknnrt
+)
+endif()
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
 target_link_libraries(

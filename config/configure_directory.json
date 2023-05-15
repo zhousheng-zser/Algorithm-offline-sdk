@@ -1,4 +1,4 @@
 {
-    "models_directory": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta/models",
-    "directory": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta/configure_file/plugin_configure.json"
+    "models_directory": "/root/Glasssix_CV_SDK_2.18.2.20230508_beta/models/rk3588",
+    "directory": "/root/Glasssix_CV_SDK_2.18.2.20230508_beta/configure_file/plugin_configure.json"
 }
