@@ -66,6 +66,29 @@ namespace glasssix::face {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct flame_config {
+        GX_BEGIN_FIELDS(flame_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct helemt_config {
+        GX_BEGIN_FIELDS(helemt_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct refvest_config {
+        GX_BEGIN_FIELDS(refvest_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
     class config {
     public:
         config();
@@ -78,6 +101,9 @@ namespace glasssix::face {
         action_live_config _action_live_config;
         feature_config _feature_config;
         face_user_config _face_user_config;
+        flame_config _flame_config;
+        helemt_config _helemt_config;
+        refvest_config _refvest_config;
 
     private:
         glasssix::json read_json_file(const abi::string& path);
@@ -88,5 +114,8 @@ namespace glasssix::face {
         void set_action_live(const abi::string& path = "./config");
         void set_feature(const abi::string& path = "./config");
         void set_face_user(const abi::string& path = "./config");
+        void set_flame(const abi::string& path = "./config");
+        void set_helemt(const abi::string& path = "./config");
+        void set_refvest(const abi::string& path = "./config");
     };
 } // namespace glasssix::face

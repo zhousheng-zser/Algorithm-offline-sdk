@@ -2,9 +2,12 @@
 
 #include "../src/nessus/protocol.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
+#include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/gungnir.hpp"
+#include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
+#include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/valklyrs.hpp"
@@ -215,6 +218,7 @@ namespace glasssix::face {
 
     class gx_face_api::impl {
     public:
+        // typedef void (impl::*set_protocols_handle)(std::fstream &log);
         void init() {
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
             log << "begin gx_face_api::impl\n";
@@ -256,11 +260,54 @@ namespace glasssix::face {
             log.flush();
             selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
                 _config->_configure_directory.models_directory, 2, _config->_feature_config.use_int8});
-            gungnir_handle; // 人头检测预留
-            valklyrs_handle; // 车辆行人预留
             log << "end make_handle\n";
+            log.flush();
+
+            refvest_handle = protocol_ptr.make_instance<refvest>(
+                refvest_new_param{-1, _config->_configure_directory.models_directory});
+            log << "end refvest_handle\n";
+            log.flush();
+
+            flame_handle =
+                protocol_ptr.make_instance<flame>(flame_new_param{-1, _config->_configure_directory.models_directory});
+            log << "end flame_handle\n";
+            log.flush();
+
+            helmet_handle = protocol_ptr.make_instance<helmet>(
+                helmet_new_param{-1, _config->_configure_directory.models_directory});
+            log << "end helmet_handle\n";
+
             log.close();
         }
+
+        // void init_temp() {
+        //     std::fstream log("./log.txt", std::ios::out | std::ios::app);
+        //     log << "begin gx_face_api::impl\n";
+        //     log.flush();
+        //     cache.index = 0;
+        //     cache.track_history.clear();
+        //     cache.track_history_id.clear();
+        //     log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
+        //     log.flush();
+        //     protocol_ptr.init(_config->_configure_directory.directory);
+        //     log << "begin detect\n";
+        //     log.flush();
+
+        //    std::ifstream configure(_config->_configure_directory.directory);
+        //    nlohmann::json protocols_list = nlohmann::json::parse(configure);
+        //    for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
+        //        std::string temp_str = protocols_list["plugin_list"][i];
+        //        try {
+        //            impl::set_protocols_handle fun = this->Function[temp_str];
+        //            (this->*fun)(log);
+        //        } catch (const std::exception& ex) {
+        //            throw source_code_aware_runtime_error(U8("Error: ") + temp_str+ U8(": ") + ex.what() );
+        //        }
+        //    }
+        //    //TODO ......每个协议的函数写在private里
+        //    log.close();
+        //}
+
 
         impl() {
             if (_config == nullptr)
@@ -293,6 +340,8 @@ namespace glasssix::face {
             std::unordered_map<int, abi::string> track_history_id;
             int index = 0;
         } cache;
+
+        // std::unordered_map<std::string, set_protocols_handle> Function;
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
@@ -303,6 +352,11 @@ namespace glasssix::face {
         selene selene_handle;
         selene selene_mask_handle;
         valklyrs valklyrs_handle;
+
+        refvest refvest_handle; // 安全检测 反光衣
+        flame flame_handle; // 安全监测 烟雾火焰
+        helmet helmet_handle; // 安全监测 安全帽
+    private:
     };
 
 
@@ -810,6 +864,68 @@ namespace glasssix::face {
         if (x.size() == 0 || y.size() == 0 || x.size() != y.size())
             return 0;
         ans = Cosine_distance_AVX256(x, y);
+        return ans;
+    }
+
+    //  安全生产 反光衣检测
+    abi::vector<clothes_info> gx_face_api::safe_production_refvest(gx_img_api& mat) {
+
+        abi::vector<clothes_info> ans;
+        std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+
+        auto result = protocol_ptr.invoke<refvest::detect>(impl_->longinus_handle,
+            refvest_detect_param{.instance_guid = "",
+                .channels                       = 3,
+                .height                         = mat.get_rows(),
+                .width                          = mat.get_cols(),
+                .roi_x                          = 0,
+                .roi_y                          = 0,
+                .roi_width                      = mat.get_rows(),
+                .roi_height                     = mat.get_cols()},
+            str);
+        ans         = result.detect_info;
+        return ans;
+    }
+
+    //  安全生产 烟雾火焰检测
+    flame_info gx_face_api::safe_production_flame(gx_img_api& mat) {
+        flame_info ans;
+        std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+
+        auto result        = protocol_ptr.invoke<flame::detect>(impl_->longinus_handle,
+            flame_detect_param{.instance_guid = "",
+                       .format                       = 1,
+                       .height                       = mat.get_rows(),
+                       .width                        = mat.get_cols(),
+                       .roi_x                        = 0,
+                       .roi_y                        = 0,
+                       .roi_width                    = mat.get_rows(),
+                       .roi_height                   = mat.get_cols(),
+                       .params                       = flame_detect_param::confidence_params{0.1, 0.45}},
+            str);
+        nlohmann::json val = result;
+        std::cout << val.dump() << "******\n";
+        ans = result.detect_info;
+        return ans;
+    }
+
+    //  安全生产 安全帽检测
+    helmet_info gx_face_api::safe_production_helmet(gx_img_api& mat) {
+        helmet_info ans;
+        std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+
+        auto result = protocol_ptr.invoke<helmet::detect>(impl_->longinus_handle,
+            helmet_detect_param{.instance_guid = "",
+                .format                        = 1,
+                .height                        = mat.get_rows(),
+                .width                         = mat.get_cols(),
+                .roi_x                         = 0,
+                .roi_y                         = 0,
+                .roi_width                     = mat.get_rows(),
+                .roi_height                    = mat.get_cols(),
+                .params                        = helmet_detect_param::confidence_params{0.5, 0.5}},
+            str);
+        ans         = result.detect_info;
         return ans;
     }
 

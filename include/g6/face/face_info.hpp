@@ -169,4 +169,82 @@ namespace glasssix::face {
     // 动作活体类型枚举
     enum image_rotation_type { DEG90 = 0, DEG180 = 1, DEG270 = 2 };
 
+    // 反光衣框体信息
+    struct clothes_info {
+        // 人脸关键点坐标
+        struct point {
+            GX_BEGIN_FIELDS(point);
+            GX_FIELD(std::int32_t, x1);
+            GX_FIELD(std::int32_t, x2);
+            GX_FIELD(std::int32_t, y1);
+            GX_FIELD(std::int32_t, y2);
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(clothes_info);
+        GX_FIELD(std::int32_t, category); // 人物类型
+        GX_FIELD(float, score); // 反光衣置信度
+        GX_FIELD(point, location); //坐标
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    // 火焰信息
+    struct flame_info {
+        struct boxes {
+            GX_BEGIN_FIELDS(boxes);
+            GX_FIELD(std::int32_t, x1);
+            GX_FIELD(std::int32_t, x2);
+            GX_FIELD(std::int32_t, y1);
+            GX_FIELD(std::int32_t, y2);
+            GX_END_FIELDS;
+            GX_FIELD(std::int32_t, fire_num);
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(flame_info);
+
+        GX_FIELD(std::int32_t, box_num); //目标数量
+        GX_FIELD(abi::vector<boxes>, boxes_list); 
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    // 头盔信息
+    struct helmet_info {
+        struct detected {
+            GX_BEGIN_FIELDS(detected);
+            GX_FIELD(std::int32_t, x1);
+            GX_FIELD(std::int32_t, x2);
+            GX_FIELD(std::int32_t, y1);
+            GX_FIELD(std::int32_t, y2);
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        struct cant_detected {
+            GX_BEGIN_FIELDS(cant_detected);
+            GX_FIELD(std::int32_t, x1);
+            GX_FIELD(std::int32_t, x2);
+            GX_FIELD(std::int32_t, y1);
+            GX_FIELD(std::int32_t, y2);
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(helmet_info);
+
+        GX_FIELD(std::int32_t, detected_num);  //戴安全帽个数
+        GX_FIELD(abi::vector<detected>, detected_list);
+        GX_FIELD(std::int32_t, cant_detected_num);  //未戴安全帽个数
+        GX_FIELD(abi::vector<cant_detected>, cant_detected_list);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
 } // namespace glasssix::face

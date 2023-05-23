@@ -111,22 +111,22 @@ int main() {
 
             ofp.open("/root/test_log/" + get_time() + "_Track.txt", std::ios::app);
             return g6_start_playback(
-                "rtsp://admin:hk123456@192.168.7.140:554/ch1/main/av_stream", &data_callback_Track, &error_callback);
+                "rtsp://admin:hk123456@192.168.4.140:554/ch1/main/av_stream", &data_callback_Track, &error_callback);
 
         } else if (chose == 2) {
             ofp.open("/root/test_log/" + get_time() + "_Face_feature.txt", std::ios::app);
-            return g6_start_playback("rtsp://admin:hk123456@192.168.7.140:554/ch1/main/av_stream",
+            return g6_start_playback("rtsp://admin:hk123456@192.168.4.140:554/ch1/main/av_stream",
                 &data_callback_Face_feature, &error_callback);
 
         } else if (chose == 3) {
             ofp.open("/root/test_log/" + get_time() + "_Detect_integration.txt", std::ios::app);
-            return g6_start_playback("rtsp://admin:hk123456@192.168.7.140:554/ch1/main/av_stream",
+            return g6_start_playback("rtsp://admin:hk123456@192.168.4.140:554/ch1/main/av_stream",
                 &data_callback_detect_integration, &error_callback);
 
         } else if (chose == 4) {
             ofp.open("/root/test_log/" + get_time() + "_Search.txt", std::ios::app);
             return g6_start_playback(
-                "rtsp://admin:hk123456@192.168.7.140:554/ch1/main/av_stream", &data_callback_search, &error_callback);
+                "rtsp://admin:hk123456@192.168.4.140:554/ch1/main/av_stream", &data_callback_search, &error_callback);
 
         } else {
             std::exit(0);

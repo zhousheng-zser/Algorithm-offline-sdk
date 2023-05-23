@@ -90,6 +90,10 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     set(OpenCV_LIBS ${OpenCV_LIB_DIR}/libopencv_core.so.3.4 
     ${OpenCV_LIB_DIR}/libopencv_imgproc.so.3.4  
     ${OpenCV_LIB_DIR}/libopencv_imgcodecs.so.3.4
+    /root/install/opencv/opencv-4.6.0/build_Release/lib/libopencv_dnn.so.406
+    /root/install/opencv/opencv-4.6.0/build_Release/lib/libopencv_core.so.406
+    /root/install/opencv/opencv-4.6.0/build_Release/lib/libopencv_imgproc.so.406
+    /root/install/opencv/opencv-4.6.0/build_Release/lib//libopencv_imgcodecs.so.406
     )
 endif()
 
@@ -110,7 +114,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566")
     set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     set(cvsdk_lib_relative_path "/lib/rk3588/aarch64-linux-gnu/release")
-    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service flame helmet refvest)
 endif()
 
 set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)
