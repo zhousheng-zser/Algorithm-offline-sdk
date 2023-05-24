@@ -1,5 +1,5 @@
 {
-        "device":0,
-        "use_int8":false,
-        "format": 1
+    "device": 0,
+    "model_type": 1,
+    "format": 1
 }

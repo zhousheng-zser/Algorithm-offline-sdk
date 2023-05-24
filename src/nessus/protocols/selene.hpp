@@ -40,11 +40,8 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    using selene_make_mask_forward_param  = selene_forward_param;
-    using selene_make_mask_forward_result = selene_forward_result;
 
     struct selene : protocol_object {
         struct forward : parser_inout<selene_forward_param, selene_forward_result> {};
-        struct make_mask_forward : parser_inout<selene_make_mask_forward_param, selene_make_mask_forward_result> {};
     };
 } // namespace glasssix::face

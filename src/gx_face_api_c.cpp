@@ -99,7 +99,7 @@ char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
 char* gx_face_feature_inplace(const std::uint8_t* mat, int rows, int cols, bool is_clip) {
     try {
         glasssix::face::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols);
-        abi::vector<face::faces_feature> faces = api->face_feature(Mat_, is_clip);
+        face::faces_feature faces = api->face_feature(Mat_, is_clip);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();
@@ -259,7 +259,7 @@ char* gx_face_feature(char* mat_path, bool is_clip) {
     try {
         abi::string temp{mat_path};
         glasssix::face::gx_img_api mat(temp);
-        abi::vector<face::faces_feature> faces = api->face_feature(mat, is_clip);
+        face::faces_feature faces = api->face_feature(mat, is_clip);
 
         nlohmann::json val  = faces;
         std::string result_ = val.dump();

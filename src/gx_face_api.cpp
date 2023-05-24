@@ -238,15 +238,13 @@ namespace glasssix::face {
             log.flush();
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
-                    _config->_action_live_config.use_int8, _config->_configure_directory.models_directory});
+                    _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
             log << "working_directory :" << _config->_face_user_config.working_directory << "\n";
             log.flush();
             log << "working_directory_mask :" << _config->_face_user_config.working_directory_mask << "\n";
             log.flush();
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
-            irisivel_mask_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
-                _config->_face_user_config.dimension, _config->_face_user_config.working_directory_mask});
             log << "begin blur\n";
             log.flush();
             romancia_handle = protocol_ptr.make_instance<romancia>(
@@ -256,25 +254,19 @@ namespace glasssix::face {
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
-            log << "begin make_handle feature\n";
-            log.flush();
-            selene_mask_handle = protocol_ptr.make_instance<selene>(selene_new_param{_config->_feature_config.device,
-                _config->_configure_directory.models_directory, 2, _config->_feature_config.use_int8});
-            log << "end make_handle\n";
-            log.flush();
 
             refvest_handle = protocol_ptr.make_instance<refvest>(
-                refvest_new_param{-1, _config->_configure_directory.models_directory});
+                refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
             log << "end refvest_handle\n";
             log.flush();
 
-            flame_handle =
-                protocol_ptr.make_instance<flame>(flame_new_param{-1, _config->_configure_directory.models_directory});
+            flame_handle = protocol_ptr.make_instance<flame>(
+                flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
             log << "end flame_handle\n";
             log.flush();
 
             helmet_handle = protocol_ptr.make_instance<helmet>(
-                helmet_new_param{-1, _config->_configure_directory.models_directory});
+                helmet_new_param{_config->_helemt_config.device, _config->_configure_directory.models_directory});
             log << "end helmet_handle\n";
 
             log.close();
@@ -345,12 +337,12 @@ namespace glasssix::face {
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
-        irisviel irisivel_mask_handle;
+        //irisviel irisivel_mask_handle;
         irisviel irisivel_handle;
         longinus longinus_handle;
         romancia romancia_handle;
         selene selene_handle;
-        selene selene_mask_handle;
+        // selene selene_mask_handle;
         valklyrs valklyrs_handle;
 
         refvest refvest_handle; // 安全检测 反光衣
@@ -493,9 +485,9 @@ namespace glasssix::face {
     }
 
     // 特征提取融合
-    abi::vector<faces_feature> gx_face_api::face_feature(gx_img_api& mat, bool is_clip) {
+    faces_feature gx_face_api::face_feature(gx_img_api& mat, bool is_clip) {
 
-        abi::vector<faces_feature> ans(2);
+        faces_feature ans;
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
@@ -513,46 +505,25 @@ namespace glasssix::face {
             return ans;
 
         std::array<char, 0> arr{};
-        {
-            faces_feature ans_temp;
-            auto selene_result                 = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
-                selene_forward_param{.instance_guid = "",
-                                    .aligned_images                 = romancia_result.aligned_images,
-                                    .format                         = romancia_result.format},
-                std::span<char>{arr});
-            ans_temp.features                  = selene_result.features;
-            ans_temp.facerectwithfaceinfo_list = faces;
-            int y1, x1, y2, x2;
-            y1 = faces[0].y - faces[0].height * 2 / 10;
-            x1 = faces[0].x - faces[0].width * 2 / 10;
-            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
-            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
-            if (is_clip)
-                ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
-            else
-                ans_temp.img_buffer.clear();
-            ans.front() = std::move(ans_temp);
-        }
-        {
-            faces_feature ans_temp;
-            auto selene_result = protocol_ptr.invoke<selene::make_mask_forward>(impl_->selene_mask_handle,
-                selene_make_mask_forward_param{.instance_guid = "",
-                    .aligned_images                           = romancia_result.aligned_images,
-                    .format                                   = romancia_result.format},
-                std::span<char>{arr});
-            ans_temp.features  = selene_result.features;
-            ans_temp.facerectwithfaceinfo_list = faces;
-            int y1, x1, y2, x2;
-            y1 = faces[0].y - faces[0].height * 2 / 10;
-            x1 = faces[0].x - faces[0].width * 2 / 10;
-            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
-            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
-            if (is_clip)
-                ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
-            else
-                ans_temp.img_buffer.clear();
-            ans.back() = std::move(ans_temp);
-        }
+
+        faces_feature ans_temp;
+        auto selene_result                 = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+            selene_forward_param{.instance_guid = "",
+                                .aligned_images                 = romancia_result.aligned_images,
+                                .format                         = romancia_result.format},
+            std::span<char>{arr});
+        ans_temp.features                  = selene_result.features;
+        ans_temp.facerectwithfaceinfo_list = faces;
+        int y1, x1, y2, x2;
+        y1 = faces[0].y - faces[0].height * 2 / 10;
+        x1 = faces[0].x - faces[0].width * 2 / 10;
+        y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
+        x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
+        if (is_clip)
+            ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
+        else
+            ans_temp.img_buffer.clear();
+        ans = std::move(ans_temp);
 
         return ans;
     }
@@ -562,16 +533,13 @@ namespace glasssix::face {
 
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::load_databases>(
-            impl_->irisivel_mask_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
-
-        protocol_ptr.invoke<irisviel::load_databases>(
             impl_->irisivel_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
         return true;
     }
 
     // 特征值库搜索
     faces_search_info gx_face_api::user_search(gx_img_api& mat, int top, float min_similarity) {
-        faces_search_info ans_A, ans_B, ans;
+        faces_search_info ans;
         if (top <= 0)
             throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top <= 0."));
         if (top > 50)
@@ -580,64 +548,22 @@ namespace glasssix::face {
             throw source_code_aware_runtime_error(
                 U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
 
-        abi::vector<faces_feature> faces = face_feature(mat, false);
-        if (faces.size() == 0 || faces[0].facerectwithfaceinfo_list.size() == 0 || faces[0].features.size() == 0
-            || faces[1].facerectwithfaceinfo_list.size() == 0 || faces[1].features.size() == 0)
+        faces_feature faces = face_feature(mat, false);
+        if ( faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
             return ans;
 
         std::array<char, 0> arr{};
-        {
-            auto result  = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
-                irisviel_search_nf_param{
-                     .instance_guid  = "",
-                     .feature        = faces[0].features[0].feature,
-                     .top            = top,
-                     .min_similarity = min_similarity,
-                },
-                std::span<char>{arr});
-            ans_A.result = result.result;
-        }
-        {
-            auto result  = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_mask_handle,
-                irisviel_search_nf_param{
-                     .instance_guid  = "",
-                     .feature        = faces[1].features[0].feature,
-                     .top            = top,
-                     .min_similarity = min_similarity,
-                },
-                std::span<char>{arr});
-            ans_B.result = result.result;
-        }
-        std::map<abi::string, bool> vis;
-        for (int i = 0, j = 0, k = 0; i < top; ++i) {
-            // ans中已经存在的键值 直接跳过
-            if (j < ans_A.result.size() && vis[ans_A.result[j].data.key]) {
-                ++j;
-                --i;
-                continue;
-            }
-            if (k < ans_B.result.size() && vis[ans_B.result[k].data.key]) {
-                ++k;
-                --i;
-                continue;
-            }
-            // 选择相似度大的  并标记键值
-            if (j < ans_A.result.size() && k < ans_B.result.size()) {
-                if (ans_A.result[j].similarity >= ans_B.result[k].similarity) {
-                    vis[ans_A.result[j].data.key] = true;
-                    ans.result.emplace_back(ans_A.result[j++]);
-                } else {
-                    vis[ans_B.result[k].data.key] = true;
-                    ans.result.emplace_back(ans_B.result[k++]);
-                }
-            } else if (j < ans_A.result.size()) {
-                vis[ans_A.result[j].data.key] = true;
-                ans.result.emplace_back(ans_A.result[j++]);
-            } else if (k < ans_B.result.size()) {
-                vis[ans_B.result[k].data.key] = true;
-                ans.result.emplace_back(ans_B.result[k++]);
-            }
-        }
+        
+        auto result  = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
+            irisviel_search_nf_param{
+                 .instance_guid  = "",
+                 .feature        = faces.features[0].feature,
+                 .top            = top,
+                 .min_similarity = min_similarity,
+            },
+            std::span<char>{arr});
+        ans.result  = result.result;
+        
 
         return ans;
     }
@@ -648,8 +574,6 @@ namespace glasssix::face {
 
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::remove_all>(
-            impl_->irisivel_mask_handle, irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::remove_all>(
             impl_->irisivel_handle, irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
         return true;
     }
@@ -659,9 +583,7 @@ namespace glasssix::face {
 
         abi::vector<face_user_result> ans(keys.size());
         std::array<char, 0> arr{};
-        auto result = protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_mask_handle,
-            irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_handle,
+        auto result = protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
         for (int i = 0; i < keys.size(); i++) {
             ans[i].key     = keys[i];
@@ -676,8 +598,8 @@ namespace glasssix::face {
     abi::vector<face_user_result> gx_face_api::user_add_records(
         abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_clip, bool is_faceinfo) {
         abi::vector<face_user_result> ans(mat.size());
-        abi::vector<database_record> faces_A_add, faces_B_add;
-        abi::vector<database_record> faces_A_update, faces_B_update;
+        abi::vector<database_record> faces_A_add;
+        abi::vector<database_record> faces_A_update;
         if (keys.size() != mat.size())
             throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
         if (mat.size() > 1000)
@@ -692,8 +614,8 @@ namespace glasssix::face {
                 ans[i].facerectwithfaceinfo = std::nullopt;
                 continue;
             }
-            abi::vector<faces_feature> temp = face_feature(mat[i], is_clip);
-            if (temp.size() != 2 || temp[0].features.size() == 0 || temp[1].features.size() == 0) {
+            faces_feature temp = face_feature(mat[i], is_clip);
+            if (temp.features.size() == 0) {
                 ans[i].key     = keys[i];
                 ans[i].success = -2;
                 ans[i].img_buffer.clear();
@@ -701,39 +623,32 @@ namespace glasssix::face {
             } else if (user_contains_key(keys[i]) == false) {
                 ans[i].key        = keys[i];
                 ans[i].success    = 1;
-                ans[i].img_buffer = temp[0].img_buffer;
+                ans[i].img_buffer = temp.img_buffer;
                 if (is_faceinfo)
-                    ans[i].facerectwithfaceinfo = temp[0].facerectwithfaceinfo_list[0];
+                    ans[i].facerectwithfaceinfo = temp.facerectwithfaceinfo_list[0];
                 else
                     ans[i].facerectwithfaceinfo = std::nullopt;
-                faces_A_add.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
-                faces_B_add.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
+                faces_A_add.emplace_back(database_record{.feature = temp.features[0].feature, .key = keys[i]});
             } else {
                 ans[i].key        = keys[i];
                 ans[i].success    = 2;
-                ans[i].img_buffer = temp[0].img_buffer;
+                ans[i].img_buffer = temp.img_buffer;
                 if (is_faceinfo)
-                    ans[i].facerectwithfaceinfo = temp[0].facerectwithfaceinfo_list[0];
+                    ans[i].facerectwithfaceinfo = temp.facerectwithfaceinfo_list[0];
                 else
                     ans[i].facerectwithfaceinfo = std::nullopt;
-                faces_A_update.emplace_back(database_record{.feature = temp[0].features[0].feature, .key = keys[i]});
-                faces_B_update.emplace_back(database_record{.feature = temp[1].features[0].feature, .key = keys[i]});
+                faces_A_update.emplace_back(database_record{.feature = temp.features[0].feature, .key = keys[i]});
             }
             // 批量入库就可以释放掉gx_img_api
         }
-
 
         std::array<char, 0> arr{};
         // 添加
         auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_mask_handle,
-            irisviel_add_records_param{.instance_guid = "", .data = faces_B_add}, std::span<char>{arr});
         // 更新
         auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_A_update}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_mask_handle,
-            irisviel_update_records_param{.instance_guid = "", .data = faces_B_update}, std::span<char>{arr});
         // TODO  AlgorithmZoo 的返回结果还没改 临时这样
         // 之后根据  ans[i].success 来获取异常状态码
         for (int i = 0; i < ans.size(); i++) {
@@ -748,8 +663,8 @@ namespace glasssix::face {
     abi::vector<face_user_result> gx_face_api::user_add_records(
         abi::vector<abi::string>& keys, abi::vector<abi::vector<float>>& features) {
         abi::vector<face_user_result> ans(features.size());
-        abi::vector<database_record> faces_A_add, faces_B_add;
-        abi::vector<database_record> faces_A_update, faces_B_update;
+        abi::vector<database_record> faces_A_add;
+        abi::vector<database_record> faces_A_update;
         if (keys.size() != features.size())
             throw source_code_aware_runtime_error(U8("Error: keys.size != features.size"));
         if (features.size() > 1000)
@@ -770,12 +685,10 @@ namespace glasssix::face {
                 ans[i].key     = keys[i];
                 ans[i].success = 1;
                 faces_A_add.emplace_back(database_record{.feature = features[i], .key = keys[i]});
-                faces_B_add.emplace_back(database_record{.feature = features[i], .key = keys[i]});
             } else {
                 ans[i].key     = keys[i];
                 ans[i].success = 2;
                 faces_A_update.emplace_back(database_record{.feature = features[i], .key = keys[i]});
-                faces_B_update.emplace_back(database_record{.feature = features[i], .key = keys[i]});
             }
             // 批量入库就可以释放掉gx_img_api
         }
@@ -783,14 +696,10 @@ namespace glasssix::face {
         // 添加
         auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_mask_handle,
-            irisviel_add_records_param{.instance_guid = "", .data = faces_B_add}, std::span<char>{arr});
 
         // 更新
         auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_A_update}, std::span<char>{arr});
-        protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_mask_handle,
-            irisviel_update_records_param{.instance_guid = "", .data = faces_B_update}, std::span<char>{arr});
         // TODO  AlgorithmZoo 的返回结果还没改 临时这样
         // 之后根据  ans[i].success 来获取异常状态码
         for (int i = 0; i < ans.size(); i++) {
@@ -825,7 +734,7 @@ namespace glasssix::face {
             return ans;
         } else {
             ans.prob = faces.spoofing_result[0].prob[1];
-            if (ans.prob < 0.5)
+            if (ans.prob < 0.75)
                 return ans;
         }
         auto result = user_search(mat, top, min_similarity);
@@ -842,24 +751,18 @@ namespace glasssix::face {
         if (is_mask_A.size() == 0 || is_mask_B.size() == 0)
             return 0;
 
-        abi::vector<faces_feature> faces_A = face_feature(mat_A, false);
-        abi::vector<faces_feature> faces_B = face_feature(mat_B, false);
+        faces_feature faces_A = face_feature(mat_A, false);
+        faces_feature faces_B = face_feature(mat_B, false);
 
-        if (faces_A.size() != 2 || faces_B.size() != 2 || faces_A[0].features.size() == 0
-            || faces_A[1].features.size() == 0 || faces_B[0].features.size() == 0 || faces_B[1].features.size() == 0)
+        if ( faces_A.features.size() == 0 || faces_B.features.size() == 0 )
             return 0;
 
         abi::vector<float> x;
         abi::vector<float> y;
 
-        if (is_mask_A[0].attributes.has_value() && is_mask_B[0].attributes.has_value()
-            && (is_mask_A[0].attributes->mask_index == 1 && is_mask_B[0].attributes->mask_index == 1)) {
-            x = faces_A[1].features[0].feature;
-            y = faces_B[1].features[0].feature;
-        } else {
-            x = faces_A[0].features[0].feature;
-            y = faces_B[0].features[0].feature;
-        }
+
+        x = faces_A.features[0].feature;
+        y = faces_B.features[0].feature;
 
         if (x.size() == 0 || y.size() == 0 || x.size() != y.size())
             return 0;

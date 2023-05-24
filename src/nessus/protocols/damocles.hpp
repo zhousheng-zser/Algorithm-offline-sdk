@@ -14,7 +14,7 @@ namespace glasssix::face {
     struct damocles_new_param {
         GX_BEGIN_FIELDS(damocles_new_param);
         GX_FIELD(std::int32_t, device);
-        GX_FIELD(bool, use_int8);
+        GX_FIELD(int, model_type);
         GX_FIELD(std::string, models_directory);
         GX_END_FIELDS;
 

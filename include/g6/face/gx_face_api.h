@@ -50,7 +50,7 @@ namespace glasssix::face {
         // 静默活体检测
         faces_spoofing face_spoofing_live(gx_img_api& mat);
         // 特征提取融合
-        abi::vector<faces_feature> face_feature(gx_img_api& mat, bool is_clip);
+        faces_feature face_feature(gx_img_api& mat, bool is_clip);
         // 1:1特征值对比接口
         double feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B);
         // 特征值库加载

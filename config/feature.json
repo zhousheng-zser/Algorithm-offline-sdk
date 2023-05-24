@@ -2,6 +2,6 @@
         "device":0,
         "use_int8":false,
         "format": 1,
-        "model_type":0,
+        "model_type":3,
         "dimension":256
 }

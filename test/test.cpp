@@ -329,7 +329,7 @@ namespace glasssix::display_test {
 // GoogleTest
 namespace glasssix::face {
 
-    gx_face_api* api = new gx_face_api("/root/test/config");
+    gx_face_api* api = new gx_face_api();
     // 人脸检测
     TEST(FaceApi, Detect) {
         gx_img_api img("/root/img/20221209.jpg");
@@ -439,13 +439,13 @@ namespace glasssix::face {
     // 静默活体检测
     TEST(FaceApi, Face_spoofing_live) {
         abi::vector<gx_img_api> img;
-        img.emplace_back(gx_img_api("/root/img/spoofing_0.jpg"));
+        img.emplace_back(gx_img_api("/root/img/11111.jpg"));
         img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
         img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg"));
         faces_spoofing faces;
         faces = api->face_spoofing_live(img[0]);
         for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-            //  EXPECT_GE(faces.spoofing_result[i].prob[2], 0.5);  //现在画像算活体
+              //   EXPECT_GE(faces.spoofing_result[i].prob[2], 0.5);  //现在画像算活体
         }
         faces = api->face_spoofing_live(img[1]);
         for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
@@ -460,16 +460,16 @@ namespace glasssix::face {
     // 特征值提取
     TEST(FaceApi, Face_feature) {
         gx_img_api img("/root/img/20221209.jpg");
-        abi::vector<faces_feature> faces;
+        faces_feature faces;
 
         faces = api->face_feature(img, false);
-        EXPECT_EQ(faces[0].facerectwithfaceinfo_list.size(), faces[0].features.size());
-        for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
+        EXPECT_EQ(faces.facerectwithfaceinfo_list.size(), faces.features.size());
+        for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
 
-            EXPECT_EQ(faces[0].features[i].feature.size(), 256);
-            for (int j = 0; j < faces[0].features[i].feature.size(); j++) {
-                EXPECT_GT(faces[0].features[i].feature[j], -1.0);
-                EXPECT_LT(faces[0].features[i].feature[j], 1.0);
+            EXPECT_EQ(faces.features[i].feature.size(), 256);
+            for (int j = 0; j < faces.features[i].feature.size(); j++) {
+                EXPECT_GT(faces.features[i].feature[j], -1.0);
+                EXPECT_LT(faces.features[i].feature[j], 1.0);
             }
         }
     }
@@ -567,6 +567,12 @@ int main(int argc, char** argv) {
 
         // 简单测试
         std::cout << "hello world\n";
+        
+        //gx_img_api img("/root/img/safe_production.jpg");
+        //glasssix::face::flame_info x = api->safe_production_flame(img);
+        //std::cout << x.dump() << "++++++\n";
+
+
         // 用于windows播放视频或图片的
         /*
          display_test::test_detect(api);
@@ -582,7 +588,7 @@ int main(int argc, char** argv) {
         */
 
          // 单元测试
-
+        
         testing::InitGoogleTest(&argc, argv);
         int ans = RUN_ALL_TESTS();
         std::cout << "RUN_ALL_TESTS = " << ans << "\n";
@@ -591,5 +597,6 @@ int main(int argc, char** argv) {
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
     }
+    std::getchar();
     return 0;
 }

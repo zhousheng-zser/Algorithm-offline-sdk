@@ -43,7 +43,7 @@ namespace glasssix::face {
     struct action_live_config {
         GX_BEGIN_FIELDS(action_live_config);
         GX_FIELD(int, device);
-        GX_FIELD(bool, use_int8);
+        GX_FIELD(int, model_type);
         GX_FIELD(int, format);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
