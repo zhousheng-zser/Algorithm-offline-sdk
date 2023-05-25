@@ -206,8 +206,10 @@ namespace glasssix::face {
         };
         GX_BEGIN_FIELDS(flame_info);
 
-        GX_FIELD(std::int32_t, box_num); //目标数量
-        GX_FIELD(abi::vector<boxes>, boxes_list); 
+        GX_FIELD(std::int32_t, fire_num); //火焰数量
+        GX_FIELD(std::int32_t, smoke_num); // 火焰数量
+        GX_FIELD(abi::vector<boxes>, fire_list);
+        GX_FIELD(abi::vector<boxes>, smoke_list);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

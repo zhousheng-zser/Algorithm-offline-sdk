@@ -45,23 +45,7 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     Threads::Threads
-	${OpenCV_LIB_DIR}/libopencv_calib3d.so.3.4     
-    ${OpenCV_LIB_DIR}/libopencv_core.so.3.4        
-    ${OpenCV_LIB_DIR}/libopencv_dnn.so.3.4         
-    ${OpenCV_LIB_DIR}/libopencv_features2d.so.3.4  
-    ${OpenCV_LIB_DIR}/libopencv_flann.so.3.4       
-    ${OpenCV_LIB_DIR}/libopencv_highgui.so.3.4     
-    ${OpenCV_LIB_DIR}/libopencv_imgcodecs.so.3.4   
-    ${OpenCV_LIB_DIR}/libopencv_imgproc.so.3.4     
-    ${OpenCV_LIB_DIR}/libopencv_ml.so.3.4          
-    ${OpenCV_LIB_DIR}/libopencv_objdetect.so.3.4   
-    ${OpenCV_LIB_DIR}/libopencv_photo.so.3.4       
-    ${OpenCV_LIB_DIR}/libopencv_shape.so.3.4       
-    ${OpenCV_LIB_DIR}/libopencv_stitching.so.3.4   
-    ${OpenCV_LIB_DIR}/libopencv_superres.so.3.4    
-    ${OpenCV_LIB_DIR}/libopencv_video.so.3.4       
-    ${OpenCV_LIB_DIR}/libopencv_videoio.so.3.4     
-    ${OpenCV_LIB_DIR}/libopencv_videostab.so.3.4
+	${OpenCV_LIBS}
     /root/install/mmp/libgx-mpp.so
     ${FMT_LIBRARIES}
 	gx-offline-face-recognition

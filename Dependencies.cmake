@@ -85,16 +85,9 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     HINTS ${GX_MISCELLANEOUS_ROOT}/lib/cmake
     NO_DEFAULT_PATH
     )
-    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/aarch64-linux-gnu/include)
-    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/aarch64-linux-gnu/release)
-    set(OpenCV_LIBS ${OpenCV_LIB_DIR}/libopencv_core.so.3.4 
-    ${OpenCV_LIB_DIR}/libopencv_imgproc.so.3.4  
-    ${OpenCV_LIB_DIR}/libopencv_imgcodecs.so.3.4
-    /root/install/opencv/opencv-4.6.0/build_Release/lib/libopencv_dnn.so.406
-    /root/install/opencv/opencv-4.6.0/build_Release/lib/libopencv_core.so.406
-    /root/install/opencv/opencv-4.6.0/build_Release/lib/libopencv_imgproc.so.406
-    /root/install/opencv/opencv-4.6.0/build_Release/lib//libopencv_imgcodecs.so.406
-    )
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
+    set(OpenCV_LIBS opencv_world)
 endif()
 
 if(WIN32)

@@ -133,7 +133,6 @@ int main() {
         }
     }();
 
-    ofp.close();
     for (;;) {
         std::this_thread::yield();
     }
