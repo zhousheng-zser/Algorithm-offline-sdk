@@ -137,7 +137,6 @@ namespace glasssix::face {
             if (!instance_uuid.empty()) {
                 param[U8("instance_guid")] = instance_uuid;
             }
-            std::string ss = param.dump();
             void* instanc  = instance_.get();
             return parse_raw_result(parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0));

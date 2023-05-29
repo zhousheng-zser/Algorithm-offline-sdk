@@ -241,8 +241,6 @@ namespace glasssix::face {
                     _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
             log << "working_directory :" << _config->_face_user_config.working_directory << "\n";
             log.flush();
-            log << "working_directory_mask :" << _config->_face_user_config.working_directory_mask << "\n";
-            log.flush();
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
             log << "begin blur\n";
@@ -337,7 +335,7 @@ namespace glasssix::face {
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
-        //irisviel irisivel_mask_handle;
+        // irisviel irisivel_mask_handle;
         irisviel irisivel_handle;
         longinus longinus_handle;
         romancia romancia_handle;
@@ -549,21 +547,21 @@ namespace glasssix::face {
                 U8("Error: Invalid parameter: min_similarity < 0 || min_similarity > 1."));
 
         faces_feature faces = face_feature(mat, false);
-        if ( faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
+        if (faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
             return ans;
 
         std::array<char, 0> arr{};
-        
-        auto result  = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
+
+        auto result = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
             irisviel_search_nf_param{
-                 .instance_guid  = "",
-                 .feature        = faces.features[0].feature,
-                 .top            = top,
-                 .min_similarity = min_similarity,
+                .instance_guid  = "",
+                .feature        = faces.features[0].feature,
+                .top            = top,
+                .min_similarity = min_similarity,
             },
             std::span<char>{arr});
         ans.result  = result.result;
-        
+
 
         return ans;
     }
@@ -754,7 +752,7 @@ namespace glasssix::face {
         faces_feature faces_A = face_feature(mat_A, false);
         faces_feature faces_B = face_feature(mat_B, false);
 
-        if ( faces_A.features.size() == 0 || faces_B.features.size() == 0 )
+        if (faces_A.features.size() == 0 || faces_B.features.size() == 0)
             return 0;
 
         abi::vector<float> x;
@@ -771,64 +769,75 @@ namespace glasssix::face {
     }
 
     //  安全生产 反光衣检测
-    abi::vector<clothes_info> gx_face_api::safe_production_refvest(gx_img_api& mat) {
+    abi::vector<std::optional<abi::vector<clothes_info> > > gx_face_api::safe_production_refvest(
+        gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
 
-        abi::vector<clothes_info> ans;
+        abi::vector<std::optional<abi::vector<clothes_info> > > ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-
-        auto result = protocol_ptr.invoke<refvest::detect>(impl_->longinus_handle,
-            refvest_detect_param{.instance_guid = "",
-                .channels                       = 3,
-                .height                         = mat.get_rows(),
-                .width                          = mat.get_cols(),
-                .roi_x                          = 0,
-                .roi_y                          = 0,
-                .roi_width                      = mat.get_rows(),
-                .roi_height                     = mat.get_cols()},
-            str);
-        ans         = result.detect_info;
+        for (int i = 0; i < roi_list.size(); ++i) {
+            auto result = protocol_ptr.invoke<refvest::detect>(impl_->refvest_handle,
+                refvest_detect_param{.instance_guid = "",
+                    .channels                       = _config->_refvest_config.channels,
+                    .height                         = mat.get_rows(),
+                    .width                          = mat.get_cols(),
+                    .roi_x                          = roi_list[i].roi_x,
+                    .roi_y                          = roi_list[i].roi_y,
+                    .roi_width                      = roi_list[i].roi_width,
+                    .roi_height                     = roi_list[i].roi_height,
+                    .format                         = _config->_refvest_config.format,
+                    .params        =                 refvest_detect_param::confidence_params{
+                    .conf_thres                     = _config->_refvest_config.conf_thres,
+                    .iou_thres                      = _config->_refvest_config.iou_thres
+                }
+                },
+                str);
+            ans.emplace_back(result.detect_info);
+        }
         return ans;
     }
 
     //  安全生产 烟雾火焰检测
-    flame_info gx_face_api::safe_production_flame(gx_img_api& mat) {
-        flame_info ans;
+    abi::vector<flame_info> gx_face_api::safe_production_flame(gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
+        abi::vector<flame_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
 
-        auto result        = protocol_ptr.invoke<flame::detect>(impl_->longinus_handle,
-            flame_detect_param{.instance_guid = "",
-                       .format                       = 1,
-                       .height                       = mat.get_rows(),
-                       .width                        = mat.get_cols(),
-                       .roi_x                        = 0,
-                       .roi_y                        = 0,
-                       .roi_width                    = mat.get_rows(),
-                       .roi_height                   = mat.get_cols(),
-                       .params                       = flame_detect_param::confidence_params{0.1, 0.45}},
-            str);
-        nlohmann::json val = result;
-        std::cout << val.dump() << "******\n";
-        ans = result.detect_info;
+        for (int i = 0; i < roi_list.size(); ++i) {
+            auto result = protocol_ptr.invoke<flame::detect>(impl_->flame_handle,
+                flame_detect_param{.instance_guid = "",
+                    .format                       = _config->_flame_config.format,
+                    .height                       = mat.get_rows(),
+                    .width                        = mat.get_cols(),
+                    .roi_x                        = roi_list[i].roi_x,
+                    .roi_y                        = roi_list[i].roi_y,
+                    .roi_width                    = roi_list[i].roi_width,
+                    .roi_height                   = roi_list[i].roi_height,
+                    .params = flame_detect_param::confidence_params{.conf_thres = _config->_flame_config.conf_thres,
+                        .iou_thres                                              = _config->_flame_config.iou_thres}},
+                str);
+            ans.emplace_back(result.detect_info);
+        }
         return ans;
     }
 
     //  安全生产 安全帽检测
-    helmet_info gx_face_api::safe_production_helmet(gx_img_api& mat) {
-        helmet_info ans;
+    abi::vector<helmet_info> gx_face_api::safe_production_helmet(gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
+        abi::vector<helmet_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-
-        auto result = protocol_ptr.invoke<helmet::detect>(impl_->longinus_handle,
-            helmet_detect_param{.instance_guid = "",
-                .format                        = 1,
-                .height                        = mat.get_rows(),
-                .width                         = mat.get_cols(),
-                .roi_x                         = 0,
-                .roi_y                         = 0,
-                .roi_width                     = mat.get_rows(),
-                .roi_height                    = mat.get_cols(),
-                .params                        = helmet_detect_param::confidence_params{0.5, 0.5}},
-            str);
-        ans         = result.detect_info;
+        for (int i = 0; i < roi_list.size(); ++i) {
+            auto result = protocol_ptr.invoke<helmet::detect>(impl_->helmet_handle,
+                helmet_detect_param{.instance_guid = "",
+                    .format                        = _config->_helemt_config.format,
+                    .height                        = mat.get_rows(),
+                    .width                         = mat.get_cols(),
+                    .roi_x                         = roi_list[i].roi_x,
+                    .roi_y                         = roi_list[i].roi_y,
+                    .roi_width                     = roi_list[i].roi_width,
+                    .roi_height                    = roi_list[i].roi_height,
+                    .params = helmet_detect_param::confidence_params{.conf_thres = _config->_flame_config.conf_thres,
+                        .iou_thres                                               = _config->_flame_config.iou_thres}},
+                str);
+            ans.emplace_back(result.detect_info);
+        }
         return ans;
     }
 

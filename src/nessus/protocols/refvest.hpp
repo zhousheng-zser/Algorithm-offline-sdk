@@ -49,7 +49,7 @@ namespace glasssix::face {
     struct refvest_detect_result {
         GX_BEGIN_FIELDS(refvest_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(abi::vector<clothes_info>, detect_info);
+        GX_FIELD(std::optional<abi::vector<clothes_info> >, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

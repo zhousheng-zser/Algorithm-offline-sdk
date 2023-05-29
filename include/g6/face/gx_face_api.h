@@ -76,13 +76,14 @@ namespace glasssix::face {
         faces_integration_search_info detect_integration(gx_img_api& mat, int top, float min_similarity);
 
         //  安全生产 反光衣检测
-        abi::vector<clothes_info> safe_production_refvest(gx_img_api& mat);
+        abi::vector< std::optional<abi::vector<clothes_info> > > safe_production_refvest(
+            gx_img_api& mat, abi::vector<detecte_roi>& roi_list);
 
         //  安全生产 烟雾火焰检测
-        flame_info safe_production_flame(gx_img_api& mat);
+        abi::vector<flame_info> safe_production_flame(gx_img_api& mat, abi::vector<detecte_roi>& roi_list);
 
         //  安全生产 安全帽检测
-        helmet_info safe_production_helmet(gx_img_api& mat);
+        abi::vector<helmet_info> safe_production_helmet(gx_img_api& mat, abi::vector<detecte_roi>& roi_list);
 
         bool set_config(std::string_view name, std::string_view key, int val);
         bool set_config(std::string_view name, std::string_view key, float val);

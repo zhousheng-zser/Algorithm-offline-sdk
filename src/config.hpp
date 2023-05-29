@@ -61,7 +61,6 @@ namespace glasssix::face {
     struct face_user_config {
         GX_BEGIN_FIELDS(face_user_config);
         GX_FIELD(std::string, working_directory);
-        GX_FIELD(std::string, working_directory_mask);
         GX_FIELD(int, dimension);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -70,6 +69,8 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(flame_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, iou_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -77,6 +78,8 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(helemt_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, iou_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -84,6 +87,9 @@ namespace glasssix::face {
         GX_BEGIN_FIELDS(refvest_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(int, channels);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, iou_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
