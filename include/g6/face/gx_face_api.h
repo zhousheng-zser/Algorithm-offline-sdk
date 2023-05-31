@@ -1,9 +1,9 @@
 #pragma once
+#include "face_info.hpp"
+
 #include <span>
 #include <string_view>
 #include <vector>
-
-#include "face_info.hpp"
 typedef unsigned char uchar;
 
 namespace glasssix::face {
@@ -76,7 +76,7 @@ namespace glasssix::face {
         faces_integration_search_info detect_integration(gx_img_api& mat, int top, float min_similarity);
 
         //  安全生产 反光衣检测
-        abi::vector< std::optional<abi::vector<clothes_info> > > safe_production_refvest(
+        abi::vector<std::optional<abi::vector<clothes_info>>> safe_production_refvest(
             gx_img_api& mat, abi::vector<detecte_roi>& roi_list);
 
         //  安全生产 烟雾火焰检测
@@ -93,6 +93,5 @@ namespace glasssix::face {
     private:
         class impl;
         std::unique_ptr<impl> impl_;
-        // track_cache cache;
     };
 } // namespace glasssix::face

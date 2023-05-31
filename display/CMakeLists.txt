@@ -27,13 +27,14 @@ message(STATUS "FMT_LIBRARY_DIRS: ${FMT_LIBRARY_DIRS}")
 message(STATUS "FMT_LIBRARIES: ${FMT_LIBRARIES}")
 message(STATUS "FMT_INCLUDE_DIRS: ${FMT_INCLUDE_DIRS}")
 
-target_include_directories(${target_name}
-PUBLIC
-        $<BUILD_INTERFACE:${GX_PUBLIC_INCLUDE_DIR}>
-        $<INSTALL_INTERFACE:include>
-PRIVATE
-        ${GX_PUBLIC_INCLUDE_DIR}/g6/face
-        ${CMAKE_CURRENT_SOURCE_DIR}
+target_include_directories(
+    ${target_name}
+    PUBLIC
+    $<BUILD_INTERFACE:${GX_PUBLIC_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:include>
+    PRIVATE
+    ${GX_PUBLIC_INCLUDE_DIR}/g6/face
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_link_directories(${target_name} PRIVATE 

@@ -28,7 +28,8 @@ namespace {
 
 namespace glasssix::face {
 
-gx_face_api* api = new gx_face_api("/root/test/config");
+    //gx_face_api* api = new gx_face_api("/root/test/config");
+    gx_face_api* api = new gx_face_api();
 
 void data_callback_Track(
     const std::uint8_t* data, std::size_t frame_index, std::int32_t stride, std::int32_t width, std::int32_t height) {
