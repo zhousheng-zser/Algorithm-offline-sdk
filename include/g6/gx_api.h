@@ -1,13 +1,13 @@
 #pragma once
-#include "face_info.hpp"
+#include "info.hpp"
 
 #include <span>
 #include <string_view>
 #include <vector>
 typedef unsigned char uchar;
 
-namespace glasssix::face {
-    class GX_API(GXOFFLINEFACERECOGNITION) gx_img_api {
+namespace glasssix {
+    class GX_API(GXOFFLINERECOGNITION) gx_img_api {
     public:
         gx_img_api(abi::string path);
         gx_img_api(std::span<const uchar> bgr_data, int rows, int cols);
@@ -29,13 +29,13 @@ namespace glasssix::face {
     };
 
 
-    class GX_API(GXOFFLINEFACERECOGNITION) gx_face_api {
+    class GX_API(GXOFFLINERECOGNITION) gx_api {
     public:
-        gx_face_api();
-        gx_face_api(const abi::string& config_path);
-        ~gx_face_api();
-        gx_face_api(gx_face_api&&) noexcept;
-        gx_face_api& operator=(gx_face_api&&) noexcept;
+        gx_api();
+        gx_api(const abi::string& config_path);
+        ~gx_api();
+        gx_api(gx_api&&) noexcept;
+        gx_api& operator=(gx_api&&) noexcept;
 
         // 人脸检测
         abi::vector<face_info> detect(gx_img_api& mat);
@@ -94,4 +94,4 @@ namespace glasssix::face {
         class impl;
         std::unique_ptr<impl> impl_;
     };
-} // namespace glasssix::face
+} // namespace glasssix

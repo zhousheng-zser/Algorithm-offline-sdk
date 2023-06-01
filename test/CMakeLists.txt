@@ -1,4 +1,4 @@
-﻿set(target_name gx-offline-face-recognition-test)
+﻿set(target_name gx-offline-recognition-test)
 
 
 file(
@@ -20,7 +20,7 @@ target_include_directories(
         $<BUILD_INTERFACE:${GX_PUBLIC_INCLUDE_DIR}>
         $<INSTALL_INTERFACE:include>
     PRIVATE
-        ${GX_PUBLIC_INCLUDE_DIR}/g6/face
+        ${GX_PUBLIC_INCLUDE_DIR}/g6
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${GX_CV_SDK_INCLUDE}
 )
@@ -31,7 +31,7 @@ target_link_libraries(
     PRIVATE
     Threads::Threads
     GXMiscellaneous::gx-miscellaneous
-	gx-offline-face-recognition
+	gx-offline-recognition
 )
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")

@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.20)
 
-project(gx-offline-face-recognition CXX)
+project(gx-offline-recognition CXX)
 
 option(GX_USE_PURE_C "Whether to compile C-style APIs." OFF)
 option(GX_STATIC_RUNTIME "Whether to link C/C++ runtime statically." ON)
@@ -24,5 +24,5 @@ if(GX_STATIC_RUNTIME)
 endif()
 add_subdirectory(src)
 add_subdirectory(test)
-add_subdirectory(display)
+#add_subdirectory(display)
 #add_subdirectory(demo)

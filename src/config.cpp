@@ -2,7 +2,7 @@
 
 #include "config_validation.hpp"
 
-namespace glasssix::face {
+namespace glasssix {
     config::config() {
         _path = "./config";
         set_configure_directory();
@@ -85,4 +85,4 @@ namespace glasssix::face {
         temp = read_json_file(path + "/refvest.json");
         temp.get_to(_refvest_config);
     }
-} // namespace glasssix::face
+} // namespace glasssix

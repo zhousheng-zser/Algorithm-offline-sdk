@@ -1,14 +1,14 @@
 ﻿set(target_version 0.1)
-set(target_name gx-offline-face-recognition)
-set(package_name GxOfflineFaceRecognition)
+set(target_name gx-offline-recognition)
+set(package_name GxOfflineRecognition)
 
 add_library(${target_name} SHARED)
 
 file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
-	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.hpp
-	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.h
+	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
+	${GX_PUBLIC_INCLUDE_DIR}/g6/*.h
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
@@ -19,8 +19,8 @@ file(
 )
 
 if(NOT GX_USE_PURE_C)
-	list(REMOVE_ITEM private_sources gx_face_api_c.cpp)
-	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_face_api_c.cpp)
+	list(REMOVE_ITEM private_sources gx_api_c.cpp)
+	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_api_c.cpp)
 endif()
 
 target_sources(
@@ -42,7 +42,7 @@ target_include_directories(
 		$<BUILD_INTERFACE:${GX_PUBLIC_INCLUDE_DIR}>
 		$<INSTALL_INTERFACE:include>
 	PRIVATE
-		${GX_PUBLIC_INCLUDE_DIR}/g6/face
+		${GX_PUBLIC_INCLUDE_DIR}/g6
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${OpenCV_INCLUDE_DIRS}
 		${GX_CV_SDK_INCLUDE}

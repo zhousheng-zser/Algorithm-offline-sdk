@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/face/face_info.hpp"
+#include "../../../include/g6/info.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -10,7 +10,7 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct longinus_new_param {
         GX_BEGIN_FIELDS(longinus_new_param);
         GX_FIELD(std::int32_t, device);
@@ -67,4 +67,4 @@ namespace glasssix::face {
         struct detect : parser_inout<longinus_detect_param, longinus_detect_result> {};
         struct trace : parser_inout<longinus_trace_param, longinus_trace_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix

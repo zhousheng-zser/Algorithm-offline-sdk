@@ -3,16 +3,15 @@
 #include <optional>
 
 #include <gtest/gtest.h>
-#include <gx_face_api.h>
+#include <gx_api.h>
 
-// #include <gx_face_api_c.hpp>
-using namespace glasssix::face;
+// #include <gx_api_c.hpp>
 using namespace glasssix;
 
 // 用于windows 播放显示
 /*
 namespace glasssix::display_test {
-    void test_detect(gx_face_api* _api) {
+    void test_detect(gx_api* _api) {
 
         cv::VideoCapture capture;
         capture.open("D:/test/img/20230115-092810.jpg");
@@ -58,7 +57,7 @@ namespace glasssix::display_test {
         }
     }
 
-    void test_track(gx_face_api* _api) {
+    void test_track(gx_api* _api) {
         cv::VideoCapture capture;
         capture.open("D:/test/video/123456.mp4");
         while (1) {
@@ -90,7 +89,7 @@ namespace glasssix::display_test {
         }
     }
 
-    void test_blur(gx_face_api* _api) {
+    void test_blur(gx_api* _api) {
         cv::VideoCapture capture;
         capture.open(0);
         while (1) {
@@ -117,7 +116,7 @@ namespace glasssix::display_test {
         }
     }
 
-    void test_action_live(gx_face_api* _api) {
+    void test_action_live(gx_api* _api) {
         cv::VideoCapture capture;
         capture.open(0);
         while (1) {
@@ -163,7 +162,7 @@ namespace glasssix::display_test {
         }
     }
 
-    void test_spoofing_live(gx_face_api* _api) {
+    void test_spoofing_live(gx_api* _api) {
         cv::VideoCapture capture;
         capture.open(0);
         while (1) {
@@ -188,7 +187,7 @@ namespace glasssix::display_test {
         }
     }
 
-    void test_feature(gx_face_api* _api) {
+    void test_feature(gx_api* _api) {
 
         cv::Mat img = cv::imread("D:/test/img/20221208.jpg");
         gx_img_api img_path("D:/test/img/20221208.jpg");
@@ -209,7 +208,7 @@ namespace glasssix::display_test {
         cv::waitKey(0);
     }
 
-    void test_feature_comparison(gx_face_api* _api) {
+    void test_feature_comparison(gx_api* _api) {
 
         gx_img_api img_pathA("D:/test/img/A/610111200208264510.jpg");
         gx_img_api img_pathB("D:/test/img/B/610111200208264510.jpg");
@@ -223,7 +222,7 @@ namespace glasssix::display_test {
         cv::waitKey(0);
     }
 
-    void test_user(gx_face_api* _api) {
+    void test_user(gx_api* _api) {
 
         int flag;
         abi::vector<gx_img_api> imgs;
@@ -255,7 +254,7 @@ namespace glasssix::display_test {
         } while (flag != -1);
     }
 
-    void test_detect_integration(gx_face_api* _api) {
+    void test_detect_integration(gx_api* _api) {
 
         std::vector<cv::Mat> imgs;
 
@@ -306,7 +305,7 @@ namespace glasssix::display_test {
         }
     }
 
-    void test_add_folder_all(gx_face_api* _api) {
+    void test_add_folder_all(gx_api* _api) {
         abi::string working_directory = "D:/test/img_align_celeba";
         std::vector<abi::string> namelist;
         getFiles(working_directory, namelist);
@@ -327,11 +326,11 @@ namespace glasssix::display_test {
 */
 
 // GoogleTest
-namespace glasssix::face {
+namespace glasssix {
 
-    gx_face_api* api = new gx_face_api();
+    gx_api* api = new gx_api();
     // 人脸检测
-    TEST(FaceApi, Detect) {
+    TEST(Api, Detect) {
         gx_img_api img("/root/img/20221209.jpg");
         abi::vector<face_info> faces;
         faces          = api->detect(img);
@@ -353,7 +352,7 @@ namespace glasssix::face {
     }
 
     //// 人脸追踪
-    // TEST(FaceApi, Track) {
+    // TEST(Api, Track) {
     //     gx_img_api img("/root/img/000011.jpg");
     //     abi::vector<face_trace_info> faces;
     //     faces = api->track(img);
@@ -380,7 +379,7 @@ namespace glasssix::face {
     // }
 
     // 人脸质量检测
-    TEST(FaceApi, Face_blur) {
+    TEST(Api, Face_blur) {
         gx_img_api img("/root/img/20230323.png");
         faces_blur faces;
         faces = api->face_blur(img);
@@ -394,7 +393,7 @@ namespace glasssix::face {
     }
 
     //// 配合活体检测
-    // TEST(FaceApi, Face_action_live) {
+    // TEST(Api, Face_action_live) {
     //     abi::vector<gx_img_api> img;
     //     img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
     //     img.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
@@ -435,7 +434,7 @@ namespace glasssix::face {
     // }
 
     // 静默活体检测
-    TEST(FaceApi, Face_spoofing_live) {
+    TEST(Api, Face_spoofing_live) {
         abi::vector<gx_img_api> img;
         img.emplace_back(gx_img_api("/root/img/11111.jpg"));
         img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
@@ -456,7 +455,7 @@ namespace glasssix::face {
     }
 
     // 特征值提取
-    TEST(FaceApi, Face_feature) {
+    TEST(Api, Face_feature) {
         gx_img_api img("/root/img/20221209.jpg");
         faces_feature faces;
 
@@ -473,7 +472,7 @@ namespace glasssix::face {
     }
 
     // 1:1 人脸对比
-    TEST(FaceApi, gx_feature_comparison) {
+    TEST(Api, gx_feature_comparison) {
         gx_img_api img_pathA("/root/img/action_live_1.jpg");
         gx_img_api img_pathB("/root/img/action_live_5.jpg");
 
@@ -492,7 +491,7 @@ namespace glasssix::face {
     }
 
     // 人脸特征值底库 + 融合人脸识别
-    TEST(FaceApi, gx_user_and_detect_integration) {
+    TEST(Api, gx_user_and_detect_integration) {
 
         abi::vector<gx_img_api> imgs;
         imgs.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
@@ -548,7 +547,7 @@ namespace glasssix::face {
     }
 
     // 火焰检测
-    TEST(FaceApi, Flame) {
+    TEST(Api, Flame) {
         gx_img_api img("/root/img/safe_production.jpg");
         // gx_img_api img640("/root/img/flame.jpg");
         abi::vector<flame_info> result;
@@ -562,7 +561,7 @@ namespace glasssix::face {
     }
 
     // 安全帽检测
-    TEST(FaceApi, Helmet) {
+    TEST(Api, Helmet) {
         gx_img_api img("/root/img/helmet.jpg");
         abi::vector<helmet_info> result;
         abi::vector<detecte_roi> roi_list{
@@ -575,7 +574,7 @@ namespace glasssix::face {
     }
 
     // 反光衣检测
-    TEST(FaceApi, Refvest) {
+    TEST(Api, Refvest) {
         gx_img_api img("/root/img/helmet.jpg");
         abi::vector<std::optional<abi::vector<clothes_info>>> result;
         abi::vector<detecte_roi> roi_list{
@@ -586,7 +585,7 @@ namespace glasssix::face {
             std::cout << val.dump(4) << "\n";
         }
     }
-} // namespace glasssix::face
+} // namespace glasssix
 
 int main(int argc, char** argv) {
     // C接口测试

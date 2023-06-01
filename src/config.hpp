@@ -5,7 +5,7 @@
 #include <g6/logger.hpp>
 
 
-namespace glasssix::face {
+namespace glasssix {
     struct configure_directory {
         GX_BEGIN_FIELDS(configure_directory);
         GX_FIELD(std::string, models_directory);
@@ -124,4 +124,4 @@ namespace glasssix::face {
         void set_helemt(const abi::string& path = "./config");
         void set_refvest(const abi::string& path = "./config");
     };
-} // namespace glasssix::face
+} // namespace glasssix

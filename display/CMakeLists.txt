@@ -33,7 +33,7 @@ target_include_directories(
     $<BUILD_INTERFACE:${GX_PUBLIC_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include>
     PRIVATE
-    ${GX_PUBLIC_INCLUDE_DIR}/g6/face
+    ${GX_PUBLIC_INCLUDE_DIR}/g6
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -49,7 +49,7 @@ target_link_libraries(
 	${OpenCV_LIBS}
     /root/install/mmp/libgx-mpp.so
     ${FMT_LIBRARIES}
-	gx-offline-face-recognition
+	gx-offline-recognition
     GXMiscellaneous::gx-miscellaneous
 )
 

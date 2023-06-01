@@ -4,10 +4,9 @@
 #include <iostream>
 #include <algorithm>
 #include <ctime>
-#include <gx_face_api.h>
+#include <gx_api.h>
 #include <g6/format_remediation.hpp>
 #include <fstream>
-using namespace glasssix::face;
 using namespace glasssix;
 
 namespace {
@@ -26,10 +25,10 @@ namespace {
 
 } // namespace
 
-namespace glasssix::face {
+namespace glasssix {
 
-    //gx_face_api* api = new gx_face_api("/root/test/config");
-    gx_face_api* api = new gx_face_api();
+    //gx_api* api = new gx_api("/root/test/config");
+    gx_api* api = new gx_api();
 
 void data_callback_Track(
     const std::uint8_t* data, std::size_t frame_index, std::int32_t stride, std::int32_t width, std::int32_t height) {

@@ -14,7 +14,7 @@
 
 #include <parser_c.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     namespace {
         template <typename T>
         using nessus_resource = std::unique_ptr<T, decltype([](T* inner) { parser_free(inner); })>;
@@ -175,4 +175,4 @@ namespace glasssix::face {
     }
 
     nessus_protocol::nessus_protocol() : impl_{std::make_unique<impl>()} {}
-} // namespace glasssix::face
+} // namespace glasssix

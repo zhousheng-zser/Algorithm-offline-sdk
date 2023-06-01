@@ -6,7 +6,7 @@
 #include <g6/json_extensions.hpp>
 typedef unsigned char uchar;
 
-namespace glasssix::face {
+namespace glasssix {
     // 人脸属性
     struct attributes_info {
         GX_BEGIN_FIELDS(attributes_info);
@@ -260,4 +260,4 @@ namespace glasssix::face {
     };
 
 
-} // namespace glasssix::face
+} // namespace glasssix

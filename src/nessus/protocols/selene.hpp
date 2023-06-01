@@ -9,7 +9,7 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct selene_new_param {
         GX_BEGIN_FIELDS(selene_new_param);
         GX_FIELD(std::int32_t, device);
@@ -44,4 +44,4 @@ namespace glasssix::face {
     struct selene : protocol_object {
         struct forward : parser_inout<selene_forward_param, selene_forward_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix
