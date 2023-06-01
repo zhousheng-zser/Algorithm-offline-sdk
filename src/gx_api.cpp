@@ -218,85 +218,43 @@ namespace glasssix {
 
     class gx_api::impl {
     public:
-        // typedef void (impl::*set_protocols_handle)(std::fstream &log);
+        typedef void (impl::*set_protocols_handle)();
         void init() {
+            this->Function["flame"]    = &impl::set_protocols_handl_flame;
+            this->Function["refvest"]  = &impl::set_protocols_handl_refvest;
+            this->Function["helmet"]   = &impl::set_protocols_handl_helmet;
+            this->Function["selene"]   = &impl::set_protocols_handl_selene;
+            this->Function["longinus"] = &impl::set_protocols_handl_longinus;
+            this->Function["romancia"] = &impl::set_protocols_handl_romancia;
+            this->Function["damocles"] = &impl::set_protocols_handl_damocles;
+            this->Function["irisviel"]  = &impl::set_protocols_handl_irisviel;
+
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
-            log << "begin gx_api::impl\n";
-            log.flush();
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
             log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
             log.flush();
             protocol_ptr.init(_config->_configure_directory.directory);
-            log << "begin detect\n";
-            log.flush();
-            longinus_handle =
-                protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
-                    .models_directory = _config->_configure_directory.models_directory});
-            log << "begin action_live\n";
-            log.flush();
-            damocles_handle =
-                protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
-                    _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
-            log << "working_directory :" << _config->_face_user_config.working_directory << "\n";
-            log.flush();
-            irisivel_handle = protocol_ptr.make_instance<irisviel>(
-                irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
-            log << "begin blur\n";
-            log.flush();
-            romancia_handle = protocol_ptr.make_instance<romancia>(
-                romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
-            log << "begin handle feature\n";
-            log.flush();
-            selene_handle = protocol_ptr.make_instance<selene>(
-                selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
-                    _config->_feature_config.model_type, _config->_feature_config.use_int8});
 
-            refvest_handle = protocol_ptr.make_instance<refvest>(
-                refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
-            log << "end refvest_handle\n";
-            log.flush();
-
-            flame_handle = protocol_ptr.make_instance<flame>(
-                flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
-            log << "end flame_handle\n";
-            log.flush();
-
-            helmet_handle = protocol_ptr.make_instance<helmet>(
-                helmet_new_param{_config->_helemt_config.device, _config->_configure_directory.models_directory});
-            log << "end helmet_handle\n";
-
+            std::ifstream configure(_config->_configure_directory.directory);
+            nlohmann::json protocols_list = nlohmann::json::parse(configure);
+            for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = protocols_list["plugin_list"][i];
+                try {
+                    impl::set_protocols_handle fun = this->Function[temp_str];
+                    if (fun != nullptr) {
+                        log << "begin " << temp_str << "\n";
+                        log.flush();
+                        (this->*fun)();
+                        log << "end " << temp_str << "\n";
+                    }
+                } catch (const std::exception& ex) {
+                    throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                }
+            }
             log.close();
         }
-
-        // void init_temp() {
-        //     std::fstream log("./log.txt", std::ios::out | std::ios::app);
-        //     log << "begin gx_api::impl\n";
-        //     log.flush();
-        //     cache.index = 0;
-        //     cache.track_history.clear();
-        //     cache.track_history_id.clear();
-        //     log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
-        //     log.flush();
-        //     protocol_ptr.init(_config->_configure_directory.directory);
-        //     log << "begin detect\n";
-        //     log.flush();
-
-        //    std::ifstream configure(_config->_configure_directory.directory);
-        //    nlohmann::json protocols_list = nlohmann::json::parse(configure);
-        //    for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
-        //        std::string temp_str = protocols_list["plugin_list"][i];
-        //        try {
-        //            impl::set_protocols_handle fun = this->Function[temp_str];
-        //            (this->*fun)(log);
-        //        } catch (const std::exception& ex) {
-        //            throw source_code_aware_runtime_error(U8("Error: ") + temp_str+ U8(": ") + ex.what() );
-        //        }
-        //    }
-        //    //TODO ......每个协议的函数写在private里
-        //    log.close();
-        //}
 
 
         impl() {
@@ -331,22 +289,55 @@ namespace glasssix {
             int index = 0;
         } cache;
 
-        // std::unordered_map<std::string, set_protocols_handle> Function;
+        std::unordered_map<std::string, set_protocols_handle> Function;
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
-        // irisviel irisivel_mask_handle;
         irisviel irisivel_handle;
         longinus longinus_handle;
         romancia romancia_handle;
         selene selene_handle;
-        // selene selene_mask_handle;
         valklyrs valklyrs_handle;
 
         refvest refvest_handle; // 安全检测 反光衣
         flame flame_handle; // 安全监测 烟雾火焰
         helmet helmet_handle; // 安全监测 安全帽
     private:
+        void set_protocols_handl_flame() {
+            flame_handle = protocol_ptr.make_instance<flame>(
+                flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_refvest() {
+            refvest_handle = protocol_ptr.make_instance<refvest>(
+                refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_helmet() {
+            helmet_handle = protocol_ptr.make_instance<helmet>(
+                helmet_new_param{_config->_helemt_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_selene() {
+            selene_handle = protocol_ptr.make_instance<selene>(
+                selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
+                    _config->_feature_config.model_type, _config->_feature_config.use_int8});
+        }
+        void set_protocols_handl_longinus() {
+            longinus_handle =
+                protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
+                    .models_directory = _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_romancia() {
+            romancia_handle = protocol_ptr.make_instance<romancia>(
+                romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_damocles() {
+            damocles_handle =
+                protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
+                    _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_irisviel() {
+            irisivel_handle = protocol_ptr.make_instance<irisviel>(
+                irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
+        }
     };
 
 
@@ -769,10 +760,10 @@ namespace glasssix {
     }
 
     //  安全生产 反光衣检测
-    abi::vector<std::optional<abi::vector<clothes_info> > > gx_api::safe_production_refvest(
+    abi::vector<std::optional<abi::vector<clothes_info>>> gx_api::safe_production_refvest(
         gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
 
-        abi::vector<std::optional<abi::vector<clothes_info> > > ans;
+        abi::vector<std::optional<abi::vector<clothes_info>>> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         for (int i = 0; i < roi_list.size(); ++i) {
             auto result = protocol_ptr.invoke<refvest::detect>(impl_->refvest_handle,
@@ -785,11 +776,8 @@ namespace glasssix {
                     .roi_width                      = roi_list[i].roi_width,
                     .roi_height                     = roi_list[i].roi_height,
                     .format                         = _config->_refvest_config.format,
-                    .params        =                 refvest_detect_param::confidence_params{
-                    .conf_thres                     = _config->_refvest_config.conf_thres,
-                    .iou_thres                      = _config->_refvest_config.iou_thres
-                }
-                },
+                    .params = refvest_detect_param::confidence_params{.conf_thres = _config->_refvest_config.conf_thres,
+                        .iou_thres = _config->_refvest_config.iou_thres}},
                 str);
             ans.emplace_back(result.detect_info);
         }
