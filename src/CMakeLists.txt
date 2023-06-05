@@ -8,7 +8,6 @@ file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
 	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
-	${GX_PUBLIC_INCLUDE_DIR}/g6/*.h
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp

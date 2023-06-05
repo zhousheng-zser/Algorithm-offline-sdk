@@ -147,17 +147,9 @@ namespace glasssix {
     struct faces_search_one_info {
         // 人脸搜索结果
         GX_BEGIN_FIELDS(faces_search_one_info);
-        struct database_result {
-            GX_BEGIN_FIELDS(database_result);
-            GX_FIELD(faces_search_data, data); // 人脸搜索数据
-            GX_FIELD(float, similarity); // 相似度
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-        };
-        GX_FIELD(std::optional<database_result>, result);
-        GX_FIELD(float, prob); // 活体得分
-                               // 人脸坐标
+        GX_FIELD(std::optional<faces_search_info::database_result>, result);
+        GX_FIELD(std::optional<float>, prob); // 活体得分
+        GX_FIELD(face_info, facerectwithfaceinfo); // 人脸基础信息
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

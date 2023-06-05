@@ -1,4 +1,4 @@
-﻿#include "gx_api.h"
+﻿#include "gx_api.hpp"
 
 #include "../src/nessus/protocol.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
@@ -729,6 +729,73 @@ namespace glasssix {
         auto result = user_search(mat, top, min_similarity);
         ans.result  = result.result;
         return ans;
+    }
+
+    //多人脸搜索
+    abi::vector<faces_search_one_info> gx_api::detect_many_faces_integration(
+        gx_img_api& mat, bool is_living, float min_similarity) {
+        abi::vector<faces_search_one_info> ans;
+        abi::vector<face_info> faces_temp;
+        if (is_living) {
+            faces_spoofing spoofing = face_spoofing_live(mat);
+            if (spoofing.spoofing_result.size() == 0) 
+                return ans;
+            faces_temp = spoofing.facerectwithfaceinfo_list;
+            for (int i = 0; i < spoofing.spoofing_result.size(); ++i) {
+                    faces_search_one_info temp;
+                    temp.prob                 = spoofing.spoofing_result[i].prob[1];
+                    temp.facerectwithfaceinfo = faces_temp[i];
+                    ans.emplace_back(temp);
+                }
+            
+        } 
+        else {
+            abi::vector<face_info> faces = detect(mat);
+            if (faces.size() == 0)
+                return ans;
+            for (int i = 0; i < faces.size(); ++i) {
+                    faces_search_one_info temp;
+                temp.facerectwithfaceinfo = faces_temp[i];
+                    ans.emplace_back(temp);
+            }
+        }
+
+        //人脸对齐
+        std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+        auto romancia_result = protocol_ptr.invoke<romancia::alignFace>(impl_->romancia_handle,
+            romancia_align_face_param{.instance_guid = "",
+                .format                              = _config->_feature_config.format,
+                .height                              = mat.get_rows(),
+                .width                               = mat.get_cols(),
+                .facerectwithfaceinfo_list           = faces_temp},
+            str);
+        if (romancia_result.aligned_images.size() == 0)
+            return ans;
+
+        //特征提取
+        std::array<char, 0> arr{};
+        faces_feature ans_temp;
+        auto selene_result                 = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+            selene_forward_param{.instance_guid = "",
+                                .aligned_images                 = romancia_result.aligned_images,
+                                .format                         = romancia_result.format},
+            std::span<char>{arr});
+        selene_result.features;
+        
+        //多人脸搜索
+        for (int i = 0; i < selene_result.features.size(); i++) {
+            auto result = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
+                irisviel_search_nf_param{
+                    .instance_guid  = "",
+                    .feature        = selene_result.features[i].feature,
+                    .top            = 1,
+                    .min_similarity = min_similarity,
+                },
+                std::span<char>{arr});
+            if (result.result.size()>0)
+                ans[i].result = std::move(result.result[0]);
+        }
+
     }
 
     // 1:1特征值对比接口

@@ -3,7 +3,7 @@
 #include <optional>
 
 #include <gtest/gtest.h>
-#include <gx_api.h>
+#include <gx_api.hpp>
 
 // #include <gx_api_c.hpp>
 using namespace glasssix;
