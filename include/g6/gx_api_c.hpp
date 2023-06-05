@@ -27,6 +27,11 @@ GX_API(GXAPIC) char* gx_user_remove_records(char* keys);
 GX_API(GXAPIC) char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo);
 GX_API(GXAPIC) char* gx_detect_integration(char* mat_path, int top, float min_similarity);
 GX_API(GXAPIC) double gx_feature_comparison(char* mat_A, char* mat_B);
+
+GX_API(GXAPIC) char* gx_safe_production_refvest(char* mat, char* data);
+GX_API(GXAPIC) char* gx_safe_production_flame(char* mat, char* data);
+GX_API(GXAPIC) char* gx_safe_production_helmet(char* mat, char* data);
+
 GX_API(GXAPIC) bool gx_free(char* ptr);
 GX_API(GXAPIC) void printf_demo(char x, char* y); // 到时会删
 GX_API(GXAPIC) int get_disk_keys_num(char* path); // 到时会删

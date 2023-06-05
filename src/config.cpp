@@ -25,9 +25,9 @@ namespace glasssix {
         set_action_live(path);
         set_feature(path);
         set_face_user(path);
-        set_flame();
-        set_helemt();
-        set_refvest();
+        set_flame(path);
+        set_helemt(path);
+        set_refvest(path);
     }
 
     glasssix::json config::read_json_file(const abi::string& path) {

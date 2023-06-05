@@ -75,6 +75,9 @@ namespace glasssix {
         // 人脸识别流程融合
         faces_integration_search_info detect_integration(gx_img_api& mat, int top, float min_similarity);
 
+        // 多人脸搜索
+        // abi::vector<faces_search_one_info> detect_many_faces_integration(gx_img_api& mat, int top, float min_similarity);
+
         //  安全生产 反光衣检测
         abi::vector<std::optional<abi::vector<clothes_info>>> safe_production_refvest(
             gx_img_api& mat, abi::vector<detecte_roi>& roi_list);

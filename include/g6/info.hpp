@@ -108,7 +108,6 @@ namespace glasssix {
     // 人脸搜索数据
     struct faces_search_data {
         GX_BEGIN_FIELDS(faces_search_data);
-        //  GX_FIELD(abi::vector<float>, feature); //人脸特征向量
         GX_FIELD(abi::string, key); // 人脸键值
         GX_END_FIELDS;
 
@@ -143,6 +142,27 @@ namespace glasssix {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+
+    // 多人脸搜索数组的单个结果 一个人脸只需要最相似的一个结果
+    struct faces_search_one_info {
+        // 人脸搜索结果
+        GX_BEGIN_FIELDS(faces_search_one_info);
+        struct database_result {
+            GX_BEGIN_FIELDS(database_result);
+            GX_FIELD(faces_search_data, data); // 人脸搜索数据
+            GX_FIELD(float, similarity); // 相似度
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_FIELD(std::optional<database_result>, result);
+        GX_FIELD(float, prob); // 活体得分
+                               // 人脸坐标
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
 
     // 特征值库操作返回值
     struct face_user_result {
@@ -195,6 +215,7 @@ namespace glasssix {
     struct flame_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
+            GX_FIELD(float, score);
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
@@ -218,6 +239,7 @@ namespace glasssix {
     struct helmet_info {
         struct detected {
             GX_BEGIN_FIELDS(detected);
+            GX_FIELD(float, score);
             GX_FIELD(std::int32_t, x1);    //检出框体左上坐标x
             GX_FIELD(std::int32_t, y1);    //检出框体左上坐标y
             GX_FIELD(std::int32_t, x2);    //检出框体右下坐标x
@@ -228,6 +250,7 @@ namespace glasssix {
         };
         struct cant_detected {
             GX_BEGIN_FIELDS(cant_detected);
+            GX_FIELD(float, score);
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
@@ -239,7 +262,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(helmet_info);
 
         GX_FIELD(std::int32_t, detected_num); // 戴安全帽个数
-        GX_FIELD(abi::vector<detected>, detected_list);
+        GX_FIELD(std::optional<abi::vector<detected> >, detected_list);
         GX_FIELD(std::int32_t, cant_detected_num); // 未戴安全帽个数
         GX_FIELD(std::optional<abi::vector<cant_detected> >, cant_detected_list);
         GX_END_FIELDS;

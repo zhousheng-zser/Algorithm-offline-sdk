@@ -436,6 +436,78 @@ double gx_feature_comparison(char* mat_A, char* mat_B) {
     return ans;
 }
 
+char* gx_safe_production_refvest(char* mat, char* data) {
+    try {
+        gx_img_api _mat(abi::string{mat});
+        abi::vector<detecte_roi> roi_list;
+
+        nlohmann::json data_temp = nlohmann::json::parse(data);
+        for (int i = 0; i < data_temp.size(); i++) {
+            roi_list.push_back(detecte_roi{
+                data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
+        }
+
+        nlohmann::json val = api->safe_production_refvest(_mat, roi_list);
+        std::string result_ = val.dump();
+        std::size_t size = result_.size() + 1;
+        char* result     = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
+    return ans;
+}
+
+char* gx_safe_production_flame(char* mat, char* data) {
+    try {
+        gx_img_api _mat(abi::string{mat});
+        abi::vector<detecte_roi> roi_list;
+
+        nlohmann::json data_temp = nlohmann::json::parse(data);
+        for (int i = 0; i < data_temp.size(); i++) {
+            roi_list.push_back(detecte_roi{
+                data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
+        }
+
+        nlohmann::json val  = api->safe_production_flame(_mat, roi_list);
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
+    return ans;
+}
+
+char* gx_safe_production_helmet(char* mat, char* data) {
+    try {
+        gx_img_api _mat(abi::string{mat});
+        abi::vector<detecte_roi> roi_list;
+
+        nlohmann::json data_temp = nlohmann::json::parse(data);
+        for (int i = 0; i < data_temp.size(); i++) {
+            roi_list.push_back(detecte_roi{
+                data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
+        }
+
+        nlohmann::json val  = api->safe_production_helmet(_mat, roi_list);
+        std::string result_ = val.dump();
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
+        std::memcpy(result, result_.c_str(), size * sizeof(char));
+        set_last_error(std::string{"OK"});
+    } catch (const std::exception& ex) {
+        std::string err = ex.what();
+        set_last_error(err);
+    }
+    return ans;
+}
+
 bool gx_free(char* ptr) {
     try {
         delete[] ptr;

@@ -3,5 +3,5 @@
         "min_size": 16,
         "threshold": 0.5,
         "format": 1,
-        "do_attributing": false
+        "do_attributing": true
 }

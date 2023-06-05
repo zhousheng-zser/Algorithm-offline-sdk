@@ -340,43 +340,43 @@ namespace glasssix {
         EXPECT_GT(info.width, 0);
         EXPECT_GT(info.height, 0);
         EXPECT_EQ(info.landmark.size(), 5);
-        // EXPECT_TRUE(info.attributes.has_value());
-        // EXPECT_EQ(info.attributes->glass_index, 0);
-        // EXPECT_EQ(info.attributes->mask_index, 0);
-        // EXPECT_GT(info.attributes->yaw, -90.0);
-        // EXPECT_LT(info.attributes->yaw, 90.0);
-        // EXPECT_GT(info.attributes->pitch, -90.0);
-        // EXPECT_LT(info.attributes->pitch, 90.0);
-        // EXPECT_GT(info.attributes->roll, -90.0);
-        // EXPECT_LT(info.attributes->roll, 90.0);
+         EXPECT_TRUE(info.attributes.has_value());
+         EXPECT_EQ(info.attributes->glass_index, 0);
+         EXPECT_EQ(info.attributes->mask_index, 0);
+         EXPECT_GT(info.attributes->yaw, -90.0);
+         EXPECT_LT(info.attributes->yaw, 90.0);
+         EXPECT_GT(info.attributes->pitch, -90.0);
+         EXPECT_LT(info.attributes->pitch, 90.0);
+         EXPECT_GT(info.attributes->roll, -90.0);
+         EXPECT_LT(info.attributes->roll, 90.0);
     }
 
-    //// 人脸追踪
-    // TEST(Api, Track) {
-    //     gx_img_api img("/root/img/000011.jpg");
-    //     abi::vector<face_trace_info> faces;
-    //     faces = api->track(img);
-    //
-    //     EXPECT_GT(faces.size(), 0);
-    //     for (int i = 0; i < faces.size(); i++) {
-    //         EXPECT_TRUE(faces[i].trace_success);
-    //         std::optional<face_info> info = faces[i].facerectwithfaceinfo;
-    //         EXPECT_TRUE(info.has_value());
-    //         EXPECT_GE(info->confidence, 0);
-    //         EXPECT_LE(info->confidence, 1);
-    //         EXPECT_GT(info->width, 0);
-    //         EXPECT_GT(info->height, 0);
-    //         EXPECT_EQ(info->landmark.size(), 5);
-    //         EXPECT_EQ(info->attributes->glass_index, 0);
-    //         EXPECT_EQ(info->attributes->mask_index, 0);
-    //         EXPECT_GT(info->attributes->yaw, -90.0);
-    //         EXPECT_LT(info->attributes->yaw, 90.0);
-    //         EXPECT_GT(info->attributes->pitch, -90.0);
-    //         EXPECT_LT(info->attributes->pitch, 90.0);
-    //         EXPECT_GT(info->attributes->roll, -90.0);
-    //         EXPECT_LT(info->attributes->roll, 90.0);
-    //     }
-    // }
+    // 人脸追踪
+     TEST(Api, Track) {
+         gx_img_api img("/root/img/000011.jpg");
+         abi::vector<face_trace_info> faces;
+         faces = api->track(img);
+    
+         EXPECT_GT(faces.size(), 0);
+         for (int i = 0; i < faces.size(); i++) {
+             EXPECT_TRUE(faces[i].trace_success);
+             std::optional<face_info> info = faces[i].facerectwithfaceinfo;
+             EXPECT_TRUE(info.has_value());
+             EXPECT_GE(info->confidence, 0);
+             EXPECT_LE(info->confidence, 1);
+             EXPECT_GT(info->width, 0);
+             EXPECT_GT(info->height, 0);
+             EXPECT_EQ(info->landmark.size(), 5);
+             EXPECT_EQ(info->attributes->glass_index, 0);
+             EXPECT_EQ(info->attributes->mask_index, 0);
+             EXPECT_GT(info->attributes->yaw, -90.0);
+             EXPECT_LT(info->attributes->yaw, 90.0);
+             EXPECT_GT(info->attributes->pitch, -90.0);
+             EXPECT_LT(info->attributes->pitch, 90.0);
+             EXPECT_GT(info->attributes->roll, -90.0);
+             EXPECT_LT(info->attributes->roll, 90.0);
+         }
+     }
 
     // 人脸质量检测
     TEST(Api, Face_blur) {
@@ -392,51 +392,55 @@ namespace glasssix {
         }
     }
 
-    //// 配合活体检测
-    // TEST(Api, Face_action_live) {
-    //     abi::vector<gx_img_api> img;
-    //     img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-    //     img.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
-    //     img.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
-    //     img.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
-    //     img.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
-    //     img.emplace_back(gx_img_api("/root/img/action_live_5.jpg"));
-    //
-    //     face_info info;
-    //     bool action_result = 0;
-    //     info               = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result,
-    //     img[0]); EXPECT_TRUE(action_result); info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK,
-    //     action_result, img[5]); EXPECT_FALSE(action_result);
-    //
-    //
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
-    //     EXPECT_TRUE(action_result);
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    //     EXPECT_FALSE(action_result);
-    //
-    //
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
-    //     EXPECT_TRUE(action_result);
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    //     EXPECT_FALSE(action_result);
-    //
-    //
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
-    //     EXPECT_TRUE(action_result);
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    //     EXPECT_FALSE(action_result);
-    //
-    //
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
-    //     EXPECT_TRUE(action_result);
-    //     info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
-    //     EXPECT_FALSE(action_result);
-    // }
+    // 配合活体检测
+     TEST(Api, Face_action_live) {
+         abi::vector<gx_img_api> img;
+         img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
+         img.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
+         img.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
+         img.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
+         img.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
+         img.emplace_back(gx_img_api("/root/img/action_live_5.jpg"));
+    
+         face_info info;
+         bool action_result = 0;
+         info               = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result,
+         img[0]); EXPECT_TRUE(action_result); info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK,
+         action_result, img[5]); EXPECT_FALSE(action_result);
+         printf("ans = %d\n", action_result);
+    
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
+         EXPECT_TRUE(action_result);
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+         EXPECT_FALSE(action_result);
+         printf("ans = %d\n", action_result);
+    
+    
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
+         EXPECT_TRUE(action_result);
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+         EXPECT_FALSE(action_result);
+         printf("ans = %d\n", action_result);
+    
+    
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
+         EXPECT_TRUE(action_result);
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+         EXPECT_FALSE(action_result);
+         printf("ans = %d\n", action_result);
+    
+    
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
+         EXPECT_TRUE(action_result);
+         info = api->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[5]);
+         EXPECT_FALSE(action_result);
+         printf("ans = %d\n", action_result);
+     }
 
     // 静默活体检测
     TEST(Api, Face_spoofing_live) {
         abi::vector<gx_img_api> img;
-        img.emplace_back(gx_img_api("/root/img/11111.jpg"));
+        img.emplace_back(gx_img_api("/root/img/33333.jpg"));
         img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
         img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg"));
         faces_spoofing faces;
@@ -479,15 +483,15 @@ namespace glasssix {
         double ans1 = api->feature_comparison(img_pathA, img_pathB);
         EXPECT_GT(ans1, 0.9);
 
-        // gx_img_api A("/root/img/A.png");
-        // gx_img_api B("/root/img/B.png");
-        // gx_img_api C("/root/img/C.png");
-        // double ans_ab, ans_ac, ans_bc;
-        // ans_ac = api->feature_comparison(A, C);
-        // ans_ab = api->feature_comparison(A, B);
-        // ans_bc = api->feature_comparison(C, B);
-        // EXPECT_GT(ans_ab, ans_ac);
-        // EXPECT_GT(ans_ab, ans_bc);
+         gx_img_api A("/root/img/A.png");
+         gx_img_api B("/root/img/B.png");
+         gx_img_api C("/root/img/C.png");
+         double ans_ab, ans_ac, ans_bc;
+         ans_ac = api->feature_comparison(A, C);
+         ans_ab = api->feature_comparison(A, B);
+         ans_bc = api->feature_comparison(C, B);
+         EXPECT_GT(ans_ab, ans_ac);
+         EXPECT_GT(ans_ab, ans_bc);
     }
 
     // 人脸特征值底库 + 融合人脸识别
