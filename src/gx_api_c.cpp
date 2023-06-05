@@ -1,7 +1,7 @@
 #include "gx_api_c.hpp"
 
 #include "g6/abi/memory.hpp"
-#include "gx_api.h"
+#include "gx_api.hpp"
 
 #define NOMINMAX
 #include <iostream>

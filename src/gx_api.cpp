@@ -220,23 +220,12 @@ namespace glasssix {
     public:
         typedef void (impl::*set_protocols_handle)();
         void init() {
-            this->Function["flame"]    = &impl::set_protocols_handl_flame;
-            this->Function["refvest"]  = &impl::set_protocols_handl_refvest;
-            this->Function["helmet"]   = &impl::set_protocols_handl_helmet;
-            this->Function["selene"]   = &impl::set_protocols_handl_selene;
-            this->Function["longinus"] = &impl::set_protocols_handl_longinus;
-            this->Function["romancia"] = &impl::set_protocols_handl_romancia;
-            this->Function["damocles"] = &impl::set_protocols_handl_damocles;
-            this->Function["irisviel"]  = &impl::set_protocols_handl_irisviel;
 
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
-            log << "configure_directory.directory= " << _config->_configure_directory.directory << "\n";
-            log.flush();
-            protocol_ptr.init(_config->_configure_directory.directory);
-
+            set_Function();
             std::ifstream configure(_config->_configure_directory.directory);
             nlohmann::json protocols_list = nlohmann::json::parse(configure);
             for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
@@ -258,14 +247,18 @@ namespace glasssix {
 
 
         impl() {
-            if (_config == nullptr)
+            if (_config == nullptr) {
                 _config = new config();
+                protocol_ptr.init(_config->_configure_directory.directory);
+            }
             init();
         }
 
         impl(const abi::string& config_path) {
-            if (_config == nullptr)
+            if (_config == nullptr) {
                 _config = new config(config_path);
+                protocol_ptr.init(_config->_configure_directory.directory);
+            }
             init();
         }
         ~impl() {}
@@ -288,8 +281,6 @@ namespace glasssix {
             std::unordered_map<int, abi::string> track_history_id;
             int index = 0;
         } cache;
-
-        std::unordered_map<std::string, set_protocols_handle> Function;
         mutable std::mutex mutex_;
         damocles damocles_handle;
         gungnir gungnir_handle;
@@ -303,6 +294,17 @@ namespace glasssix {
         flame flame_handle; // 安全监测 烟雾火焰
         helmet helmet_handle; // 安全监测 安全帽
     private:
+        std::unordered_map<std::string, set_protocols_handle> Function;
+        void set_Function() {
+            Function["flame"]    = &impl::set_protocols_handl_flame;
+            Function["refvest"]  = &impl::set_protocols_handl_refvest;
+            Function["helmet"]   = &impl::set_protocols_handl_helmet;
+            Function["selene"]   = &impl::set_protocols_handl_selene;
+            Function["longinus"] = &impl::set_protocols_handl_longinus;
+            Function["romancia"] = &impl::set_protocols_handl_romancia;
+            Function["damocles"] = &impl::set_protocols_handl_damocles;
+            Function["irisviel"] = &impl::set_protocols_handl_irisviel;
+        }
         void set_protocols_handl_flame() {
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
