@@ -33,8 +33,6 @@ target_link_libraries(
     GXMiscellaneous::gx-miscellaneous
 	gx-offline-recognition
 )
-#target_include_directories(${target_name} PRIVATE /root/install/authorization-system)
-#target_link_libraries(${target_name} PRIVATE /root/install/authorization-system/liblicense_client.so)
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")
     target_include_directories(${target_name} PRIVATE ${GX_GTEST_ROOT}/include )

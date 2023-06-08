@@ -10,6 +10,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(configure_directory);
         GX_FIELD(std::string, models_directory);
         GX_FIELD(std::string, directory);
+        GX_FIELD(std::string, license_directory);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <ctime>
-#include <gx_api.h>
+#include <gx_api.hpp>
 #include <g6/format_remediation.hpp>
 #include <fstream>
 using namespace glasssix;

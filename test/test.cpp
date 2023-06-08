@@ -589,8 +589,28 @@ namespace glasssix {
             std::cout << val.dump(4) << "\n";
         }
     }
+    void thread_function(int id) {
+        gx_api* api_temp = new gx_api();
+        //api_temp->set_config("detect.json", "min_size", 16);
+        while (1) {
+            std::cout << "Thread " << id << " is running\n";
+            gx_img_api img("/root/img/helmet.jpg");
+            abi::vector<helmet_info> result;
+            abi::vector<detecte_roi> roi_list{
+                detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
+            result = api_temp->safe_production_helmet(img, roi_list);
+            for (int i = 0; i < result.size(); i++) {
+                nlohmann::json val = result[i];
+                std::cout << val.dump() << "----\n";
+            }
+            sleep(5);
+        }
+            //delete api_temp;
+        
+    }
 } // namespace glasssix
 
+#include <thread>
 int main(int argc, char** argv) {
     // C接口测试
     /*
@@ -617,7 +637,12 @@ int main(int argc, char** argv) {
     try {
 
         // 简单测试
-        std::cout << "hello world\n";
+        //std::cout << "hello world\n";
+        //std::thread t[100];
+        //for (int i =0;i<100;i++)
+        //    t[i] = std::thread(thread_function, i);
+        //for (int i = 0; i < 100; i++)
+        //    t[i].join();
 
 
         // 用于windows播放视频或图片的

@@ -13,6 +13,7 @@ file(
 	nessus/protocols/*.hpp
 	distance/*.hpp
 	distance/*.cpp
+	decode/*.hpp
 	*.hpp
 	*.cpp
 )
@@ -24,8 +25,7 @@ endif()
 
 target_sources(
 	${target_name}
-	PRIVATE ${private_sources}
- )
+	PRIVATE ${private_sources})
 
 if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
 	include(GXCompat)
@@ -60,6 +60,9 @@ target_link_libraries(
 	GXMiscellaneous::gx-miscellaneous
 )
 
+#没打包 临时指绝对路径
+target_include_directories(${target_name} PRIVATE /root/install/authorization-system/client)
+target_link_libraries(${target_name} PRIVATE /root/install/authorization-system/liblicense_client.so)
 
 if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")  ) # 后续3566将配置进rknn  or (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566") 
 target_link_libraries(

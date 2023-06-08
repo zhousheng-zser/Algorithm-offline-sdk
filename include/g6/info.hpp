@@ -219,7 +219,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(flame_info);
 
         GX_FIELD(std::int32_t, fire_num); // 火焰数量
-        GX_FIELD(std::int32_t, smoke_num); // 火焰数量
+        GX_FIELD(std::int32_t, smoke_num); // 烟雾数量
         GX_FIELD(std::optional<abi::vector<boxes> >, fire_list);
         GX_FIELD(std::optional<abi::vector<boxes> >, smoke_list);
         GX_END_FIELDS;
@@ -227,7 +227,7 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    // 头盔信息
+    // 安全帽信息
     struct helmet_info {
         struct detected {
             GX_BEGIN_FIELDS(detected);

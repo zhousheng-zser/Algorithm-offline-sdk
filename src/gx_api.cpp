@@ -13,6 +13,8 @@
 #include "../src/nessus/protocols/valklyrs.hpp"
 #include "config.hpp"
 #include "distance/distance.hpp"
+#include "SecretKey_empower.hpp"
+#include "decode/decode.hpp"
 
 #include <cmath>
 #include <fstream>
@@ -26,8 +28,38 @@ namespace glasssix {
     namespace {
         auto&& protocol_ptr = nessus_protocol::instance();
         config* _config     = nullptr;
+        damocles damocles_handle;
+        gungnir gungnir_handle;
+        irisviel irisivel_handle;
+        longinus longinus_handle;
+        romancia romancia_handle;
+        selene selene_handle;
+        valklyrs valklyrs_handle;
+
+        refvest refvest_handle; // 安全检测 反光衣
+        flame flame_handle; // 安全监测 烟雾火焰
+        helmet helmet_handle; // 安全监测 安全帽
+        static std::mutex mutex_;
 
     } // namespace
+
+    
+    void empower_Callback(void* context, std::string success, const char* message, std::int64_t remaining_seconds) {
+        int T=3;
+        long long time_ll = std::stoll(get_time_code());
+        while (T--) {
+            std::string time = glasssix::format(U8("{:016}"), time_ll);
+            try {
+                std::string ans = empower_time_decode(time, success);
+                if (ans == "Empower_is_True") {
+                    return;
+                }
+            } catch(...) {;}
+            time_ll--;
+        }
+        throw source_code_aware_runtime_error(U8("Error: empower Fail"));
+        
+    }
 
     inline float Cosine_distance_AVX256(abi::vector<float>& x, abi::vector<float>& y) {
         float sum, a, b;
@@ -219,9 +251,17 @@ namespace glasssix {
     class gx_api::impl {
     public:
         typedef void (impl::*set_protocols_handle)();
-        void init() {
 
+        void init() {
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
+            log << "license_directory " << _config->_configure_directory.license_directory << "\n";
+            //   empower_key = get_empower_key(_config->_configure_directory.license_directory);
+            empower_key = "GoAwY3YSRTRKSwd/"
+                          "PToCBDxYG24sVQ8eUiwK7Yr1QrqDzl3qPHz2eqQeY4Y2DZWqpMWeXZCsWR6DU4NyOoX9ZkffD2dwEnJbvyFEhMaEnMWZ"
+                          "koZGO0EcChaqgO2K9WGI87wGgLL8bt4JSvxLw18B1Fc/xf/WvPUnwMM/"
+                          "ULsq8SRS67AhNKVOPRV0Py33diz+jPSqverqzzx6N1Fvbshll8aGEo20giXZeCa3PulmJ/"
+                          "x+T9Oe67L4HtnBPVzLNvdDXfeFFxWtVkg1JwYdiWp207HA8ITSxs0yA3l3bD34S5fCwCn25PNg4A==4A53D548";
+            empower.set_license(empower_key.c_str());
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
@@ -250,16 +290,16 @@ namespace glasssix {
             if (_config == nullptr) {
                 _config = new config();
                 protocol_ptr.init(_config->_configure_directory.directory);
+                init();
             }
-            init();
         }
 
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
                 protocol_ptr.init(_config->_configure_directory.directory);
+                init();
             }
-            init();
         }
         ~impl() {}
 
@@ -281,19 +321,46 @@ namespace glasssix {
             std::unordered_map<int, abi::string> track_history_id;
             int index = 0;
         } cache;
-        mutable std::mutex mutex_;
-        damocles damocles_handle;
-        gungnir gungnir_handle;
-        irisviel irisivel_handle;
-        longinus longinus_handle;
-        romancia romancia_handle;
-        selene selene_handle;
-        valklyrs valklyrs_handle;
+        abi::vector<helmet_info> safe_production_helmet(gx_img_api& mat, const abi::vector<detecte_roi>& roi_list) {
+            std::scoped_lock lock{mutex_};
+            std::cout << "begin()\n";
+            abi::vector<helmet_info> ans;
+            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            for (int i = 0; i < roi_list.size(); ++i) {
+                auto result = protocol_ptr.invoke<helmet::detect>(helmet_handle,
+                    helmet_detect_param{.instance_guid = "",
+                        .format                        = _config->_helemt_config.format,
+                        .height                        = mat.get_rows(),
+                        .width                         = mat.get_cols(),
+                        .roi_x                         = roi_list[i].roi_x,
+                        .roi_y                         = roi_list[i].roi_y,
+                        .roi_width                     = roi_list[i].roi_width,
+                        .roi_height                    = roi_list[i].roi_height,
+                        .params =
+                            helmet_detect_param::confidence_params{.conf_thres = _config->_flame_config.conf_thres,
+                                .iou_thres                                     = _config->_flame_config.iou_thres}},
+                    str);
+                ans.emplace_back(result.detect_info);
+            }
+            std::cout << "end()\n";
+            return ans;
+        }
+    
 
-        refvest refvest_handle; // 安全检测 反光衣
-        flame flame_handle; // 安全监测 烟雾火焰
-        helmet helmet_handle; // 安全监测 安全帽
     private:
+        SecretKey_empower empower;
+        std::string empower_key = "";
+        std::string empower_algorithm_id = "RK3588_C++";
+        std::string get_empower_key(std::string& path) {
+            std::ifstream key(path, std::ios::in);
+            if (!key.is_open()) {
+                key.close();
+                throw source_code_aware_runtime_error(U8("Error: license_directory :Failed to open file"));
+            }
+            std::string ans;
+            key>>ans;
+            return ans;
+        }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
             Function["flame"]    = &impl::set_protocols_handl_flame;
@@ -308,46 +375,86 @@ namespace glasssix {
         void set_protocols_handl_flame() {
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_flame_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() );
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_refvest() {
             refvest_handle = protocol_ptr.make_instance<refvest>(
                 refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_refvest_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_helmet() {
             helmet_handle = protocol_ptr.make_instance<helmet>(
                 helmet_new_param{_config->_helemt_config.device, _config->_configure_directory.models_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_helmet_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_selene() {
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_selene_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_longinus() {
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .models_directory = _config->_configure_directory.models_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_longinus_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_romancia() {
             romancia_handle = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_romancia_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_damocles() {
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_damocles_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_irisviel() {
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
+            empower.set_algorithm_id("123456"); // 临时
+            // // 以后
+            // std::string id = empower_algorithm_id + "_irisviel_" + "V1.1.0";
+            // empower.set_algorithm_id(id.c_str() ); 
+            empower.evaluate_license(empower_Callback, nullptr);
         }
-    };
+};
 
 
     // 人脸检测
     abi::vector<face_info> gx_api::detect(gx_img_api& mat) {
         abi::vector<face_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-        auto result = protocol_ptr.invoke<longinus::detect>(impl_->longinus_handle,
+        auto result = protocol_ptr.invoke<longinus::detect>(longinus_handle,
             longinus_detect_param{.instance_guid = "",
                 .format                          = _config->_detect_config.format,
                 .height                          = mat.get_rows(),
@@ -378,7 +485,7 @@ namespace glasssix {
         std::unordered_map<int, abi::string> temp_faces_id;
         for (it = impl_->cache.track_history.begin(); it != impl_->cache.track_history.end(); it++) {
             std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-            auto result = protocol_ptr.invoke<longinus::trace>(impl_->longinus_handle,
+            auto result = protocol_ptr.invoke<longinus::trace>(longinus_handle,
                 longinus_trace_param{
                     .instance_guid = "",
                     .format        = _config->_detect_config.format,
@@ -420,7 +527,7 @@ namespace glasssix {
             return ans;
 
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-        auto result                   = protocol_ptr.invoke<romancia::blur_detect>(impl_->romancia_handle,
+        auto result                   = protocol_ptr.invoke<romancia::blur_detect>(romancia_handle,
             romancia_blur_detect_param{.instance_guid = "",
                                   .format                               = _config->_blur_config.format,
                                   .height                               = mat.get_rows(),
@@ -442,7 +549,7 @@ namespace glasssix {
         ans = faces[0];
 
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-        auto result   = protocol_ptr.invoke<damocles::presentation_attack_detect>(impl_->damocles_handle,
+        auto result   = protocol_ptr.invoke<damocles::presentation_attack_detect>(damocles_handle,
             damocles_presentation_attack_detect_param{.instance_guid = "",
                   .action_cmd                                          = action_type,
                   .format                                              = _config->_action_live_config.format,
@@ -462,7 +569,7 @@ namespace glasssix {
             return ans;
 
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-        auto result                   = protocol_ptr.invoke<damocles::spoofing_detect>(impl_->damocles_handle,
+        auto result                   = protocol_ptr.invoke<damocles::spoofing_detect>(damocles_handle,
             damocles_spoofing_detect_param{.instance_guid = "",
                                   .format                                   = _config->_action_live_config.format,
                                   .height                                   = mat.get_rows(),
@@ -485,7 +592,7 @@ namespace glasssix {
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
 
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-        auto romancia_result = protocol_ptr.invoke<romancia::alignFace>(impl_->romancia_handle,
+        auto romancia_result = protocol_ptr.invoke<romancia::alignFace>(romancia_handle,
             romancia_align_face_param{.instance_guid = "",
                 .format                              = _config->_feature_config.format,
                 .height                              = mat.get_rows(),
@@ -498,7 +605,7 @@ namespace glasssix {
         std::array<char, 0> arr{};
 
         faces_feature ans_temp;
-        auto selene_result                 = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+        auto selene_result                 = protocol_ptr.invoke<selene::forward>(selene_handle,
             selene_forward_param{.instance_guid = "",
                                 .aligned_images                 = romancia_result.aligned_images,
                                 .format                         = romancia_result.format},
@@ -524,7 +631,7 @@ namespace glasssix {
 
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::load_databases>(
-            impl_->irisivel_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
+            irisivel_handle, irisviel_load_databases_param{.instance_guid = ""}, std::span<char>{arr});
         return true;
     }
 
@@ -545,7 +652,7 @@ namespace glasssix {
 
         std::array<char, 0> arr{};
 
-        auto result = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
+        auto result = protocol_ptr.invoke<irisviel::search_nf>(irisivel_handle,
             irisviel_search_nf_param{
                 .instance_guid  = "",
                 .feature        = faces.features[0].feature,
@@ -565,7 +672,7 @@ namespace glasssix {
 
         std::array<char, 0> arr{};
         protocol_ptr.invoke<irisviel::remove_all>(
-            impl_->irisivel_handle, irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
+            irisivel_handle, irisviel_remove_all_param{.instance_guid = ""}, std::span<char>{arr});
         return true;
     }
 
@@ -574,7 +681,7 @@ namespace glasssix {
 
         abi::vector<face_user_result> ans(keys.size());
         std::array<char, 0> arr{};
-        auto result = protocol_ptr.invoke<irisviel::remove_records>(impl_->irisivel_handle,
+        auto result = protocol_ptr.invoke<irisviel::remove_records>(irisivel_handle,
             irisviel_remove_records_param{.instance_guid = "", .keys = keys}, std::span<char>{arr});
         for (int i = 0; i < keys.size(); i++) {
             ans[i].key     = keys[i];
@@ -635,10 +742,10 @@ namespace glasssix {
 
         std::array<char, 0> arr{};
         // 添加
-        auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
+        auto result_A = protocol_ptr.invoke<irisviel::add_records>(irisivel_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});
         // 更新
-        auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
+        auto result_B = protocol_ptr.invoke<irisviel::update_records>(irisivel_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_A_update}, std::span<char>{arr});
         // TODO  AlgorithmZoo 的返回结果还没改 临时这样
         // 之后根据  ans[i].success 来获取异常状态码
@@ -685,11 +792,11 @@ namespace glasssix {
         }
         std::array<char, 0> arr{};
         // 添加
-        auto result_A = protocol_ptr.invoke<irisviel::add_records>(impl_->irisivel_handle,
+        auto result_A = protocol_ptr.invoke<irisviel::add_records>(irisivel_handle,
             irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});
 
         // 更新
-        auto result_B = protocol_ptr.invoke<irisviel::update_records>(impl_->irisivel_handle,
+        auto result_B = protocol_ptr.invoke<irisviel::update_records>(irisivel_handle,
             irisviel_update_records_param{.instance_guid = "", .data = faces_A_update}, std::span<char>{arr});
         // TODO  AlgorithmZoo 的返回结果还没改 临时这样
         // 之后根据  ans[i].success 来获取异常状态码
@@ -705,7 +812,7 @@ namespace glasssix {
     bool gx_api::user_contains_key(abi::string& key) {
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::contains_key>(
-            impl_->irisivel_handle, irisviel_contains_key_param{.instance_guid = "", .key = key}, std::span<char>{arr});
+            irisivel_handle, irisviel_contains_key_param{.instance_guid = "", .key = key}, std::span<char>{arr});
         return result.result;
     }
 
@@ -713,7 +820,7 @@ namespace glasssix {
     std::uint64_t gx_api::user_record_count() {
         std::array<char, 0> arr{};
         auto result = protocol_ptr.invoke<irisviel::record_count>(
-            impl_->irisivel_handle, irisviel_record_count_param{.instance_guid = ""}, std::span<char>{arr});
+            irisivel_handle, irisviel_record_count_param{.instance_guid = ""}, std::span<char>{arr});
         return result.result;
     }
 
@@ -764,7 +871,7 @@ namespace glasssix {
 
         //人脸对齐
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-        auto romancia_result = protocol_ptr.invoke<romancia::alignFace>(impl_->romancia_handle,
+        auto romancia_result = protocol_ptr.invoke<romancia::alignFace>(romancia_handle,
             romancia_align_face_param{.instance_guid = "",
                 .format                              = _config->_feature_config.format,
                 .height                              = mat.get_rows(),
@@ -777,7 +884,7 @@ namespace glasssix {
         //特征提取
         std::array<char, 0> arr{};
         faces_feature ans_temp;
-        auto selene_result                 = protocol_ptr.invoke<selene::forward>(impl_->selene_handle,
+        auto selene_result                 = protocol_ptr.invoke<selene::forward>(selene_handle,
             selene_forward_param{.instance_guid = "",
                                 .aligned_images                 = romancia_result.aligned_images,
                                 .format                         = romancia_result.format},
@@ -786,7 +893,7 @@ namespace glasssix {
         
         //多人脸搜索
         for (int i = 0; i < selene_result.features.size(); i++) {
-            auto result = protocol_ptr.invoke<irisviel::search_nf>(impl_->irisivel_handle,
+            auto result = protocol_ptr.invoke<irisviel::search_nf>(irisivel_handle,
                 irisviel_search_nf_param{
                     .instance_guid  = "",
                     .feature        = selene_result.features[i].feature,
@@ -797,7 +904,7 @@ namespace glasssix {
             if (result.result.size()>0)
                 ans[i].result = std::move(result.result[0]);
         }
-
+        return ans;
     }
 
     // 1:1特征值对比接口
@@ -830,12 +937,12 @@ namespace glasssix {
 
     //  安全生产 反光衣检测
     abi::vector<std::optional<abi::vector<clothes_info>>> gx_api::safe_production_refvest(
-        gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
+        gx_img_api& mat, const abi::vector<detecte_roi>& roi_list) {
 
         abi::vector<std::optional<abi::vector<clothes_info>>> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         for (int i = 0; i < roi_list.size(); ++i) {
-            auto result = protocol_ptr.invoke<refvest::detect>(impl_->refvest_handle,
+            auto result = protocol_ptr.invoke<refvest::detect>(refvest_handle,
                 refvest_detect_param{.instance_guid = "",
                     .channels                       = _config->_refvest_config.channels,
                     .height                         = mat.get_rows(),
@@ -854,12 +961,12 @@ namespace glasssix {
     }
 
     //  安全生产 烟雾火焰检测
-    abi::vector<flame_info> gx_api::safe_production_flame(gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
+    abi::vector<flame_info> gx_api::safe_production_flame(gx_img_api& mat, const abi::vector<detecte_roi>& roi_list) {
         abi::vector<flame_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
 
         for (int i = 0; i < roi_list.size(); ++i) {
-            auto result = protocol_ptr.invoke<flame::detect>(impl_->flame_handle,
+            auto result = protocol_ptr.invoke<flame::detect>(flame_handle,
                 flame_detect_param{.instance_guid = "",
                     .format                       = _config->_flame_config.format,
                     .height                       = mat.get_rows(),
@@ -877,11 +984,13 @@ namespace glasssix {
     }
 
     //  安全生产 安全帽检测
-    abi::vector<helmet_info> gx_api::safe_production_helmet(gx_img_api& mat, abi::vector<detecte_roi>& roi_list) {
+    abi::vector<helmet_info> gx_api::safe_production_helmet(gx_img_api& mat, const  abi::vector<detecte_roi>& roi_list) {
+        return impl_->safe_production_helmet(mat, roi_list);
+        /*std::cout << "begin()\n";
         abi::vector<helmet_info> ans;
         std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
         for (int i = 0; i < roi_list.size(); ++i) {
-            auto result = protocol_ptr.invoke<helmet::detect>(impl_->helmet_handle,
+            auto result = protocol_ptr.invoke<helmet::detect>(helmet_handle,
                 helmet_detect_param{.instance_guid = "",
                     .format                        = _config->_helemt_config.format,
                     .height                        = mat.get_rows(),
@@ -895,12 +1004,16 @@ namespace glasssix {
                 str);
             ans.emplace_back(result.detect_info);
         }
-        return ans;
+        std::cout << "end()\n";
+        return ans;*/
     }
-
+    /*
     template <typename T>
     bool update_config(std::mutex& mutex, std::string_view name, std::string_view key, T value) {
-        std::scoped_lock lock{mutex};
+        //std::scoped_lock lock{mutex};
+        //std::lock_guard<std::mutex> lock(mutex);
+        std::cout << "begin()\n";
+        sleep(5);
         try {
             nlohmann::json temp;
             if (name == "action_live.json") {
@@ -954,6 +1067,7 @@ namespace glasssix {
         } catch (const std::exception& ex) {
             return false;
         }
+        std::cout << "end()\n";
         return true;
     }
 
@@ -968,5 +1082,5 @@ namespace glasssix {
     }
     bool gx_api::set_config(std::string_view name, std::string_view key, bool val) {
         return update_config(impl_->mutex_, name, key, val);
-    }
+    }*/
 } // namespace glasssix
