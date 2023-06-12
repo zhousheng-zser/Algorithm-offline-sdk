@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 #include <gx_api.hpp>
+#include <thread>
+#include <filesystem>
 
 // #include <gx_api_c.hpp>
 using namespace glasssix;
@@ -608,9 +610,77 @@ namespace glasssix {
             //delete api_temp;
         
     }
+
+    std::vector<abi::string> find_file(std::filesystem::path folder_path) {
+        std::vector<abi::string> ans_list;
+        for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+            if (entry.is_regular_file()) {
+                std::string temp(entry.path());
+                ans_list.emplace_back(temp);
+            }
+        }
+        return ans_list;
+    }
+    void safe_test1() {
+        std::ofstream safe_file("./flame.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path="/root/img/production/fire";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#";
+            try {
+                gx_img_api img(img_list[i]);
+                abi::vector<detecte_roi> roi_list{
+                    detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
+                nlohmann::json val = api->safe_production_flame(img, roi_list);
+                safe_file << val;
+
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    void safe_test2() {
+        std::ofstream safe_file("./refvest.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path="/root/img/production/ref_benchmark";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#";
+            try {
+                gx_img_api img(img_list[i]);
+                abi::vector<detecte_roi> roi_list{
+                    detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
+                nlohmann::json val = api->safe_production_refvest(img, roi_list);
+                safe_file << val;
+
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    void safe_test3() {
+        std::ofstream safe_file("./helmet.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path="/root/img/production/val2017";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#";
+            try {
+                gx_img_api img(img_list[i]);
+                abi::vector<detecte_roi> roi_list{
+                    detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
+                nlohmann::json val = api->safe_production_helmet(img, roi_list);
+                safe_file << val;
+
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    
 } // namespace glasssix
 
-#include <thread>
 int main(int argc, char** argv) {
     // C接口测试
     /*
@@ -658,7 +728,9 @@ int main(int argc, char** argv) {
          display_test::test_detect_integration(api);
          display_test::test_add_folder_all(_Api);
         */
-
+        safe_test1();
+        safe_test2();
+        safe_test3();
         // 单元测试
 
         testing::InitGoogleTest(&argc, argv);

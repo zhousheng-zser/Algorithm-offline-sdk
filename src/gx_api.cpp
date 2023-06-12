@@ -43,14 +43,23 @@ namespace glasssix {
 
     } // namespace
 
-    
+    std::string getSubstring(const std::string& str64, int pos_t) {
+        if (pos_t < 0 || pos_t + 15 > 64) 
+            return "";
+
+        std::string substring = str64.substr(pos_t, 15);
+        return substring;
+    }
+
     void empower_Callback(void* context, std::string success, const char* message, std::int64_t remaining_seconds) {
         int T=3;
         long long time_ll = std::stoll(get_time_code());
         while (T--) {
             std::string time = glasssix::format(U8("{:016}"), time_ll);
             try {
-                std::string ans = empower_time_decode(time, success);
+                std::string ans = getSubstring(success, time_ll % 48);
+                std::cout << "ans .size = " << ans.length() << " " << ans.size() << "\n";
+                ans = empower_time_decode(time, ans);
                 if (ans == "Empower_is_True") {
                     return;
                 }
@@ -255,12 +264,8 @@ namespace glasssix {
         void init() {
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
             log << "license_directory " << _config->_configure_directory.license_directory << "\n";
-            //   empower_key = get_empower_key(_config->_configure_directory.license_directory);
-            empower_key = "GoAwY3YSRTRKSwd/"
-                          "PToCBDxYG24sVQ8eUiwK7Yr1QrqDzl3qPHz2eqQeY4Y2DZWqpMWeXZCsWR6DU4NyOoX9ZkffD2dwEnJbvyFEhMaEnMWZ"
-                          "koZGO0EcChaqgO2K9WGI87wGgLL8bt4JSvxLw18B1Fc/xf/WvPUnwMM/"
-                          "ULsq8SRS67AhNKVOPRV0Py33diz+jPSqverqzzx6N1Fvbshll8aGEo20giXZeCa3PulmJ/"
-                          "x+T9Oe67L4HtnBPVzLNvdDXfeFFxWtVkg1JwYdiWp207HA8ITSxs0yA3l3bD34S5fCwCn25PNg4A==4A53D548";
+            empower_key = get_empower_key(_config->_configure_directory.license_directory);
+            std::cout << "empower_key= " << empower_key << "\n";
             empower.set_license(empower_key.c_str());
             cache.index = 0;
             cache.track_history.clear();
@@ -268,6 +273,10 @@ namespace glasssix {
             set_Function();
             std::ifstream configure(_config->_configure_directory.directory);
             nlohmann::json protocols_list = nlohmann::json::parse(configure);
+            
+            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            //empower.evaluate_license(empower_Callback, nullptr);
+
             for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
                 std::string temp_str = protocols_list["plugin_list"][i];
                 try {
@@ -350,7 +359,7 @@ namespace glasssix {
     private:
         SecretKey_empower empower;
         std::string empower_key = "";
-        std::string empower_algorithm_id = "RK3588_C++";
+        std::string empower_algorithm_id = "RK3588_C++_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -375,77 +384,37 @@ namespace glasssix {
         void set_protocols_handl_flame() {
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_flame_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() );
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_refvest() {
             refvest_handle = protocol_ptr.make_instance<refvest>(
                 refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_refvest_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_helmet() {
             helmet_handle = protocol_ptr.make_instance<helmet>(
                 helmet_new_param{_config->_helemt_config.device, _config->_configure_directory.models_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_helmet_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_selene() {
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_selene_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_longinus() {
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .models_directory = _config->_configure_directory.models_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_longinus_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_romancia() {
             romancia_handle = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_romancia_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_damocles() {
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_damocles_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
         void set_protocols_handl_irisviel() {
             irisivel_handle = protocol_ptr.make_instance<irisviel>(
                 irisviel_new_param{_config->_face_user_config.dimension, _config->_face_user_config.working_directory});
-            empower.set_algorithm_id("123456"); // 临时
-            // // 以后
-            // std::string id = empower_algorithm_id + "_irisviel_" + "V1.1.0";
-            // empower.set_algorithm_id(id.c_str() ); 
-            empower.evaluate_license(empower_Callback, nullptr);
         }
 };
 
