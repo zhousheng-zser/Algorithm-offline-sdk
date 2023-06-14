@@ -8,7 +8,7 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct gungnir_new_param {
         GX_BEGIN_FIELDS(gungnir_new_param);
         GX_FIELD(std::int32_t, device);
@@ -54,4 +54,4 @@ namespace glasssix::face {
     struct gungnir : protocol_object {
         struct detect : parser_inout<gungnir_detect_param, gungnir_detect_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix

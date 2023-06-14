@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/face/face_info.hpp"
+#include "../../../include/g6/info.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -9,7 +9,7 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct romancia_new_param {
         GX_BEGIN_FIELDS(romancia_new_param);
         GX_FIELD(std::int32_t, device);
@@ -66,4 +66,4 @@ namespace glasssix::face {
         struct alignFace : parser_inout<romancia_align_face_param, romancia_align_face_result> {};
         struct blur_detect : parser_inout<romancia_blur_detect_param, romancia_blur_detect_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix

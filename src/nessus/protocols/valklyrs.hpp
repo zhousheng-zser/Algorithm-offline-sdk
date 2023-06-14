@@ -9,7 +9,7 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct valklyrs_new_param {
         GX_BEGIN_FIELDS(valklyrs_new_param);
         GX_FIELD(std::int32_t, device);
@@ -92,4 +92,4 @@ namespace glasssix::face {
     struct valklyrs : protocol_object {
         struct detect : parser_inout<valklyrs_detect_param, valklyrs_detect_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix

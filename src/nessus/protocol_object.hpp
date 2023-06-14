@@ -5,7 +5,7 @@
 
 #include <concepts/concepts.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct protocol_object {
         std::shared_ptr<void> opaque;
 
@@ -18,4 +18,4 @@ namespace glasssix::face {
 
     template <typename T>
     concept concrete_protocol_object = concepts::derived_from<T, protocol_object> && std::is_aggregate_v<T>;
-} // namespace glasssix::face
+} // namespace glasssix

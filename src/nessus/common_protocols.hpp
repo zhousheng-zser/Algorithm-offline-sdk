@@ -10,7 +10,7 @@
 
 #include <concepts/concepts.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct parser_result_status {
         GX_BEGIN_FIELDS(parser_result_status);
         GX_FIELD(std::int32_t, code);
@@ -54,4 +54,4 @@ namespace glasssix::face {
     void check_result(T&& result) {
         std::forward<T>(result).status.ensure();
     }
-} // namespace glasssix::face
+} // namespace glasssix

@@ -1,4 +1,5 @@
 {
-    "models_directory": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta/models",
-    "directory": "/root/Glasssix_CV_SDK_2.15.5.20230223_beta/configure_file/plugin_configure.json"
+    "license_directory": "/root/license/empower_file.txt",
+    "models_directory": "/root/Glasssix_CV_SDK_2.20.3.20230602_beta/models/rk3588",
+    "directory": "/root/Glasssix_CV_SDK_2.20.3.20230602_beta/configure_file/plugin_configure.json"
 }

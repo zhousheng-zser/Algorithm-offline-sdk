@@ -1,33 +1,31 @@
 ﻿set(target_version 0.1)
-set(target_name gx-offline-face-recognition)
-set(package_name GxOfflineFaceRecognition)
+set(target_name gx-offline-recognition)
+set(package_name GxOfflineRecognition)
 
 add_library(${target_name} SHARED)
 
 file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
-	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.hpp
-	${GX_PUBLIC_INCLUDE_DIR}/g6/face/*.h
+	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
-	distance/*hpp
-	distance/*cpp
-
+	distance/*.hpp
+	distance/*.cpp
+	decode/*.hpp
 	*.hpp
 	*.cpp
 )
 
 if(NOT GX_USE_PURE_C)
-	list(REMOVE_ITEM private_sources gx_face_api_c.cpp)
-	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_face_api_c.cpp)
+	list(REMOVE_ITEM private_sources gx_api_c.cpp)
+	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_api_c.cpp)
 endif()
 
 target_sources(
 	${target_name}
-	PRIVATE ${private_sources}
- )
+	PRIVATE ${private_sources})
 
 if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
 	include(GXCompat)
@@ -43,10 +41,12 @@ target_include_directories(
 		$<BUILD_INTERFACE:${GX_PUBLIC_INCLUDE_DIR}>
 		$<INSTALL_INTERFACE:include>
 	PRIVATE
-		${GX_PUBLIC_INCLUDE_DIR}/g6/face
+		${GX_PUBLIC_INCLUDE_DIR}/g6
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${OpenCV_INCLUDE_DIRS}
 		${GX_CV_SDK_INCLUDE}
+		#"/root/install/nessus/include"
+		#"/root/install/nessus/include/Primitives"
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
@@ -61,6 +61,18 @@ target_link_libraries(
 	${GX_CV_SDK_LIBS}
 	GXMiscellaneous::gx-miscellaneous
 )
+
+#没打包 临时指绝对路径
+target_include_directories(${target_name} PRIVATE /root/install/authorization-system/client)
+target_link_libraries(${target_name} PRIVATE /root/install/authorization-system/liblicense_client.so)
+
+if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")  ) # 后续3566将配置进rknn  or (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566") 
+target_link_libraries(
+	${target_name}
+	PRIVATE
+	rknnrt
+)
+endif()
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
 target_link_libraries(

@@ -6,7 +6,7 @@
 #include <g6/json_extensions.hpp>
 typedef unsigned char uchar;
 
-namespace glasssix::face {
+namespace glasssix {
     // 人脸属性
     struct attributes_info {
         GX_BEGIN_FIELDS(attributes_info);
@@ -108,7 +108,6 @@ namespace glasssix::face {
     // 人脸搜索数据
     struct faces_search_data {
         GX_BEGIN_FIELDS(faces_search_data);
-        //  GX_FIELD(abi::vector<float>, feature); //人脸特征向量
         GX_FIELD(abi::string, key); // 人脸键值
         GX_END_FIELDS;
 
@@ -144,13 +143,26 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    // 多人脸搜索数组的单个结果 一个人脸只需要最相似的一个结果
+    struct faces_search_one_info {
+        // 人脸搜索结果
+        GX_BEGIN_FIELDS(faces_search_one_info);
+        GX_FIELD(std::optional<faces_search_info::database_result>, result);
+        GX_FIELD(std::optional<float>, prob); // 活体得分
+        GX_FIELD(face_info, facerectwithfaceinfo); // 人脸基础信息
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
     // 特征值库操作返回值
     struct face_user_result {
         GX_BEGIN_FIELDS(face_user_result);
-        GX_FIELD(abi::string, key);
-        GX_FIELD(int32_t, success);
-        GX_FIELD(std::optional<face_info>, facerectwithfaceinfo);
-        GX_FIELD(abi::vector<uchar>, img_buffer);
+        GX_FIELD(abi::string, key);//键值
+        GX_FIELD(int32_t, success);//状态码
+        GX_FIELD(std::optional<face_info>, facerectwithfaceinfo);//人脸基础信息
+        GX_FIELD(abi::vector<uchar>, img_buffer);//裁剪后的图片
 
         GX_END_FIELDS;
 
@@ -169,4 +181,98 @@ namespace glasssix::face {
     // 动作活体类型枚举
     enum image_rotation_type { DEG90 = 0, DEG180 = 1, DEG270 = 2 };
 
-} // namespace glasssix::face
+    // 反光衣框体信息
+    struct clothes_info {
+        // 人脸关键点坐标
+        struct point {
+            GX_BEGIN_FIELDS(point);
+            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
+            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
+            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
+            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(clothes_info);
+        GX_FIELD(std::int32_t, category); // 人物类型
+        GX_FIELD(float, score); // 反光衣置信度
+        GX_FIELD(point, location); // 坐标
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    // 火焰信息
+    struct flame_info {
+        struct boxes {
+            GX_BEGIN_FIELDS(boxes);
+            GX_FIELD(float, score);
+            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
+            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
+            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
+            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(flame_info);
+
+        GX_FIELD(std::int32_t, fire_num); // 火焰数量
+        GX_FIELD(std::int32_t, smoke_num); // 烟雾数量
+        GX_FIELD(std::optional<abi::vector<boxes> >, fire_list);
+        GX_FIELD(std::optional<abi::vector<boxes> >, smoke_list);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    // 安全帽信息
+    struct helmet_info {
+        struct detected {
+            GX_BEGIN_FIELDS(detected);
+            GX_FIELD(float, score);
+            GX_FIELD(std::int32_t, x1);    //检出框体左上坐标x
+            GX_FIELD(std::int32_t, y1);    //检出框体左上坐标y
+            GX_FIELD(std::int32_t, x2);    //检出框体右下坐标x
+            GX_FIELD(std::int32_t, y2);    //检出框体右下坐标y
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        struct cant_detected {
+            GX_BEGIN_FIELDS(cant_detected);
+            GX_FIELD(float, score);
+            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
+            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
+            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
+            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(helmet_info);
+
+        GX_FIELD(std::int32_t, detected_num); // 戴安全帽个数
+        GX_FIELD(std::optional<abi::vector<detected> >, detected_list);
+        GX_FIELD(std::int32_t, cant_detected_num); // 未戴安全帽个数
+        GX_FIELD(std::optional<abi::vector<cant_detected> >, cant_detected_list);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    // 框选区域
+    struct detecte_roi {
+        GX_BEGIN_FIELDS(detecte_roi);
+        GX_FIELD(std::int32_t, roi_x); // Roi左上角x坐标
+        GX_FIELD(std::int32_t, roi_y); // Roi左上角y坐标
+        GX_FIELD(std::int32_t, roi_width); // Roi 宽度坐标
+        GX_FIELD(std::int32_t, roi_height); // Roi 高度坐标
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
+} // namespace glasssix

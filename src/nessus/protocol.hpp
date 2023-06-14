@@ -14,7 +14,7 @@
 #include <g6/naming_convention.hpp>
 #include <g6/reflection.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     namespace detail {
         template <typename T>
         struct protocol_family {
@@ -63,4 +63,4 @@ namespace glasssix::face {
 
         std::unique_ptr<impl> impl_;
     };
-} // namespace glasssix::face
+} // namespace glasssix

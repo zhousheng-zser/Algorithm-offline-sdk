@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/face/face_info.hpp"
+#include "../../../include/g6/info.hpp"
 #include "../common_protocols.hpp"
 #include "../protocol_object.hpp"
 
@@ -10,11 +10,11 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct damocles_new_param {
         GX_BEGIN_FIELDS(damocles_new_param);
         GX_FIELD(std::int32_t, device);
-        GX_FIELD(bool, use_int8);
+        GX_FIELD(int, model_type);
         GX_FIELD(std::string, models_directory);
         GX_END_FIELDS;
 
@@ -78,4 +78,4 @@ namespace glasssix::face {
             : parser_inout<damocles_presentation_attack_detect_param, damocles_presentation_attack_detect_result> {};
     };
 
-} // namespace glasssix::face
+} // namespace glasssix

@@ -9,7 +9,7 @@
 
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct selene_new_param {
         GX_BEGIN_FIELDS(selene_new_param);
         GX_FIELD(std::int32_t, device);
@@ -40,11 +40,8 @@ namespace glasssix::face {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    using selene_make_mask_forward_param  = selene_forward_param;
-    using selene_make_mask_forward_result = selene_forward_result;
 
     struct selene : protocol_object {
         struct forward : parser_inout<selene_forward_param, selene_forward_result> {};
-        struct make_mask_forward : parser_inout<selene_make_mask_forward_param, selene_make_mask_forward_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix

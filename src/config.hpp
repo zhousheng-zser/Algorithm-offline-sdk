@@ -5,11 +5,12 @@
 #include <g6/logger.hpp>
 
 
-namespace glasssix::face {
+namespace glasssix {
     struct configure_directory {
         GX_BEGIN_FIELDS(configure_directory);
         GX_FIELD(std::string, models_directory);
         GX_FIELD(std::string, directory);
+        GX_FIELD(std::string, license_directory);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -43,7 +44,7 @@ namespace glasssix::face {
     struct action_live_config {
         GX_BEGIN_FIELDS(action_live_config);
         GX_FIELD(int, device);
-        GX_FIELD(bool, use_int8);
+        GX_FIELD(int, model_type);
         GX_FIELD(int, format);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -61,11 +62,40 @@ namespace glasssix::face {
     struct face_user_config {
         GX_BEGIN_FIELDS(face_user_config);
         GX_FIELD(std::string, working_directory);
-        GX_FIELD(std::string, working_directory_mask);
         GX_FIELD(int, dimension);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct flame_config {
+        GX_BEGIN_FIELDS(flame_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, iou_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct helemt_config {
+        GX_BEGIN_FIELDS(helemt_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, iou_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct refvest_config {
+        GX_BEGIN_FIELDS(refvest_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(int, channels);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, iou_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+
     class config {
     public:
         config();
@@ -78,6 +108,9 @@ namespace glasssix::face {
         action_live_config _action_live_config;
         feature_config _feature_config;
         face_user_config _face_user_config;
+        flame_config _flame_config;
+        helemt_config _helemt_config;
+        refvest_config _refvest_config;
 
     private:
         glasssix::json read_json_file(const abi::string& path);
@@ -88,5 +121,8 @@ namespace glasssix::face {
         void set_action_live(const abi::string& path = "./config");
         void set_feature(const abi::string& path = "./config");
         void set_face_user(const abi::string& path = "./config");
+        void set_flame(const abi::string& path = "./config");
+        void set_helemt(const abi::string& path = "./config");
+        void set_refvest(const abi::string& path = "./config");
     };
-} // namespace glasssix::face
+} // namespace glasssix

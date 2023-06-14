@@ -1,4 +1,4 @@
-# Glasssix Offline Face SDK
+# Glasssix Offline SDK
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin http://gitlab.glasssix.io/r_d_center/product-r-d-department/glasssix-offline-face-sdk.git
+git remote add origin http://gitlab.glasssix.io/r_d_center/product-r-d-department/glasssix-offline-sdk.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](http://gitlab.glasssix.io/r_d_center/product-r-d-department/glasssix-offline-face-sdk/-/settings/integrations)
+- [ ] [Set up project integrations](http://gitlab.glasssix.io/r_d_center/product-r-d-department/glasssix-offline-sdk/-/settings/integrations)
 
 ## Collaborate with your team
 

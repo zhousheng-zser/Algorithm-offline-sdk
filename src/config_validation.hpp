@@ -9,7 +9,7 @@
 
 #include <concepts/concepts.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     template <typename T>
     struct data_range {};
 
@@ -41,4 +41,4 @@ namespace glasssix::face {
             (validator(std::type_identity<Ts>{}), ...);
         });
     }
-} // namespace glasssix::face
+} // namespace glasssix

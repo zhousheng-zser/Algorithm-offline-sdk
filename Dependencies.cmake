@@ -77,6 +77,17 @@ elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME S
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/sdk/native/libs/arm64-v8a)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/sdk/native/jni/include)
     set(OpenCV_LIBS opencv_java4)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
+    include(${GX_MISCELLANEOUS_ROOT}/cmake/GXUtil.cmake)
+    gx_find_package_no_root_path(
+    GXMiscellaneous
+    REQUIRED
+    HINTS ${GX_MISCELLANEOUS_ROOT}/lib/cmake
+    NO_DEFAULT_PATH
+    )
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
+    set(OpenCV_LIBS opencv_world)
 endif()
 
 if(WIN32)
@@ -84,13 +95,19 @@ if(WIN32)
     set(GX_CV_SDK_LIBS libparser)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")
     set(cvsdk_lib_relative_path "/lib/rv1109/arm-linux-gnueabihf/release")
-    set(GX_CV_SDK_LIBS cassius damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     set(cvsdk_lib_relative_path "/lib/centos/x64/release")
-    set(GX_CV_SDK_LIBS excalibur primitives selene cassius gaius irisviel parser ring damocles longinus plugin_register romancia vision_service)
-elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566"))
+    set(GX_CV_SDK_LIBS excalibur primitives selene irisviel parser damocles longinus plugin_register romancia vision_service)
+elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" ))
     set(cvsdk_lib_relative_path "/lib/android/arm64-v8a/release")
-    set(GX_CV_SDK_LIBS cassius damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service gaius ring)
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566")
+    set(cvsdk_lib_relative_path "/lib/rk3566/android/arm64-v8a/release")
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
+    set(cvsdk_lib_relative_path "/lib/rk3588/aarch64-linux-gnu/release")
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service flame helmet refvest)
 endif()
 
 set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)

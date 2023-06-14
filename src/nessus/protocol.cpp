@@ -13,8 +13,9 @@
 #include <g6/reflection.hpp>
 
 #include <parser_c.hpp>
+//#include "include/parser.hpp"
 
-namespace glasssix::face {
+namespace glasssix {
     namespace {
         template <typename T>
         using nessus_resource = std::unique_ptr<T, decltype([](T* inner) { parser_free(inner); })>;
@@ -137,7 +138,6 @@ namespace glasssix::face {
             if (!instance_uuid.empty()) {
                 param[U8("instance_guid")] = instance_uuid;
             }
-            std::string ss = param.dump();
             void* instanc  = instance_.get();
             return parse_raw_result(parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0));
@@ -176,4 +176,4 @@ namespace glasssix::face {
     }
 
     nessus_protocol::nessus_protocol() : impl_{std::make_unique<impl>()} {}
-} // namespace glasssix::face
+} // namespace glasssix

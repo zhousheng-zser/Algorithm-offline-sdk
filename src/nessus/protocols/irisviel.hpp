@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/face/face_info.hpp"
+#include "../../../include/g6/info.hpp"
 #include "../common_protocols.hpp"
 #include "../protocol_object.hpp"
 
@@ -11,7 +11,7 @@
 #include <g6/abi/string.hpp>
 #include <g6/json_extensions.hpp>
 
-namespace glasssix::face {
+namespace glasssix {
     struct database_record {
         GX_BEGIN_FIELDS(database_record);
         GX_FIELD(abi::vector<float>, feature);
@@ -225,4 +225,4 @@ namespace glasssix::face {
         struct remove_all : parser_inout<irisviel_remove_all_param, irisviel_remove_all_result> {};
         struct clear : parser_inout<irisviel_clear_param, irisviel_clear_result> {};
     };
-} // namespace glasssix::face
+} // namespace glasssix

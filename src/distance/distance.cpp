@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 namespace glasssix {
-    namespace irisviel {
         float distance_l2::compare(const float* a, const float* b, uint32_t size) {
             float result = 0;
             float diff0, diff1, diff2, diff3;
@@ -146,5 +145,4 @@ namespace glasssix {
 
             return result;
         }
-    } // namespace irisviel
 } // namespace glasssix

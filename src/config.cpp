@@ -2,7 +2,7 @@
 
 #include "config_validation.hpp"
 
-namespace glasssix::face {
+namespace glasssix {
     config::config() {
         _path = "./config";
         set_configure_directory();
@@ -12,6 +12,9 @@ namespace glasssix::face {
         set_action_live();
         set_feature();
         set_face_user();
+        set_flame();
+        set_helemt();
+        set_refvest();
     }
     config::config(const abi::string& path) {
         _path = path;
@@ -22,6 +25,9 @@ namespace glasssix::face {
         set_action_live(path);
         set_feature(path);
         set_face_user(path);
+        set_flame(path);
+        set_helemt(path);
+        set_refvest(path);
     }
 
     glasssix::json config::read_json_file(const abi::string& path) {
@@ -64,4 +70,19 @@ namespace glasssix::face {
         temp = read_json_file(path  + "/face_user.json");
         temp.get_to(_face_user_config);
     }
-} // namespace glasssix::face
+    void config::set_flame(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/flame.json");
+        temp.get_to(_flame_config);
+    }
+    void config::set_helemt(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/helemt.json");
+        temp.get_to(_helemt_config);
+    }
+    void config::set_refvest(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/refvest.json");
+        temp.get_to(_refvest_config);
+    }
+} // namespace glasssix
