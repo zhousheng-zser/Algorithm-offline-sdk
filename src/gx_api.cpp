@@ -44,10 +44,10 @@ namespace glasssix {
     } // namespace
 
     std::string getSubstring(const std::string& str64, int pos_t) {
-        if (pos_t < 0 || pos_t + 15 > 64) 
+        if (pos_t < 0 || pos_t + 24 > 64) 
             return "";
 
-        std::string substring = str64.substr(pos_t, 15);
+        std::string substring = str64.substr(pos_t, 24);
         return substring;
     }
 
@@ -57,8 +57,7 @@ namespace glasssix {
         while (T--) {
             std::string time = glasssix::format(U8("{:016}"), time_ll);
             try {
-                std::string ans = getSubstring(success, time_ll % 48);
-                std::cout << "ans .size = " << ans.length() << " " << ans.size() << "\n";
+                std::string ans = getSubstring(success, time_ll % 39);
                 ans = empower_time_decode(time, ans);
                 if (ans == "Empower_is_True") {
                     return;
@@ -111,7 +110,7 @@ namespace glasssix {
 
     class gx_img_api::impl {
     public:
-        impl(abi::string path) : img{cv::imread(path.c_str())} {
+        impl(abi::string path, int limit) : img{cv::imread(path.c_str())} {
             if (img.empty()) {
                 throw source_code_aware_runtime_error(U8("Error: Could not load image"));
             }
@@ -123,35 +122,36 @@ namespace glasssix {
             if (type == "") {
                 throw source_code_aware_runtime_error(U8("Error: The picture is not in the right format"));
             }
-            if (img.cols * img.rows > 2048 * 1080) {
+            if (img.cols * img.rows > limit ) {
                 img.release();
-                throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
-        impl(std::vector<uchar>& buffer) {
+        impl(std::vector<uchar>& buffer, int limit) {
 
             type = check_type(buffer, 10);
             if (type == "") {
                 throw source_code_aware_runtime_error(U8("Error: The picture is not in the right format"));
             }
             img = cv::imdecode(buffer, cv::IMREAD_COLOR);
-            if (img.cols * img.rows > 2048 * 1080) {
+            if (img.cols * img.rows > limit) {
                 img.release();
-                throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
 
-        impl(std::span<const uchar> bgr_data, int rows, int cols) : img(rows, cols, CV_8UC3) {
+        impl(std::span<const uchar> bgr_data, int rows, int cols, int limit)
+            : img(rows, cols, CV_8UC3) {
             std::memcpy(img.data, bgr_data.data(), bgr_data.size());
 
             if (img.empty()) {
                 throw source_code_aware_runtime_error(U8("Error: Could not load image"));
             }
-            if (img.cols * img.rows > 2048 * 1080) {
+            if (img.cols * img.rows > limit) {
                 img.release();
-                throw source_code_aware_runtime_error(U8("Error: The picture has more than 2048*1080 pixels"));
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
@@ -207,10 +207,10 @@ namespace glasssix {
         abi::string type;
     };
 
-    gx_img_api::gx_img_api(abi::string path) : impl_{std::make_unique<impl>(path)} {}
-    gx_img_api::gx_img_api(std::vector<uchar>& buffer) : impl_{std::make_unique<impl>(buffer)} {}
-    gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int rows, int cols)
-        : impl_{std::make_unique<impl>(bgr_data, rows, cols)} {}
+    gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_unique<impl>(path,  limit)} {}
+    gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_unique<impl>(buffer, limit)} {}
+    gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int rows, int cols, int limit)
+        : impl_{std::make_unique<impl>(bgr_data, rows, cols, limit)} {}
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;
     gx_img_api& gx_img_api::operator=(gx_img_api&&) noexcept = default;
@@ -265,8 +265,9 @@ namespace glasssix {
             std::fstream log("./log.txt", std::ios::out | std::ios::app);
             log << "license_directory " << _config->_configure_directory.license_directory << "\n";
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
-            std::cout << "empower_key= " << empower_key << "\n";
             empower.set_license(empower_key.c_str());
+            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            empower.evaluate_license(empower_Callback, nullptr);
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
@@ -274,9 +275,6 @@ namespace glasssix {
             std::ifstream configure(_config->_configure_directory.directory);
             nlohmann::json protocols_list = nlohmann::json::parse(configure);
             
-            empower.set_algorithm_id(empower_algorithm_id.c_str());
-            //empower.evaluate_license(empower_Callback, nullptr);
-
             for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
                 std::string temp_str = protocols_list["plugin_list"][i];
                 try {

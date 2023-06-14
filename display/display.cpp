@@ -34,7 +34,7 @@ void data_callback_Track(
     const std::uint8_t* data, std::size_t frame_index, std::int32_t stride, std::int32_t width, std::int32_t height) {
         if (frame_index % 2)
             return;
-        gx_img_api mat(make_buffer(data, height * width * 3), height, width);
+        gx_img_api mat(make_buffer(data, height * width * 3), height, width, IMG_2K);
         nlohmann::json ans = api->track(mat);
         ofp << ans.dump() << "\n";
         ofp.flush();
@@ -49,7 +49,7 @@ void data_callback_Face_feature(
     const std::uint8_t* data, std::size_t frame_index, std::int32_t stride, std::int32_t width, std::int32_t height) {
         if (frame_index % 2)
             return;
-        gx_img_api mat(make_buffer(data, height * width * 3), height, width);
+        gx_img_api mat(make_buffer(data, height * width * 3), height, width, IMG_2K);
         nlohmann::json ans = api->face_feature(mat, false);
         ofp << ans.dump() << "\n";
         ofp.flush();
@@ -64,7 +64,7 @@ void data_callback_detect_integration(
     const std::uint8_t* data, std::size_t frame_index, std::int32_t stride, std::int32_t width, std::int32_t height) {
     if (frame_index % 2)
         return;
-    gx_img_api mat(make_buffer(data, height * width * 3), height, width);
+    gx_img_api mat(make_buffer(data, height * width * 3), height, width, IMG_2K);
     nlohmann::json ans = api->detect_integration(mat, 1, 0.0);
     ofp << ans.dump() << "\n";
     ofp.flush();
@@ -79,7 +79,7 @@ void data_callback_search(
     const std::uint8_t* data, std::size_t frame_index, std::int32_t stride, std::int32_t width, std::int32_t height) {
     if (frame_index % 2)
         return; 
-    gx_img_api mat(make_buffer(data, height*width*3), height, width);
+    gx_img_api mat(make_buffer(data, height * width * 3), height, width, IMG_2K);
     nlohmann::json ans = api->user_search(mat, 1, 0.0);
     ofp << ans.dump() << "\n";
     ofp.flush();

@@ -45,6 +45,8 @@ target_include_directories(
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${OpenCV_INCLUDE_DIRS}
 		${GX_CV_SDK_INCLUDE}
+		#"/root/install/nessus/include"
+		#"/root/install/nessus/include/Primitives"
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)

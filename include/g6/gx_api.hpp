@@ -5,13 +5,16 @@
 #include <string_view>
 #include <vector>
 typedef unsigned char uchar;
+const int IMG_2K               = 2048 * 1080;
+const int IMG_4K               = 3840 * 2160;
+const int IMG_Full_Aperture_4K = 4096 * 3112;
 
 namespace glasssix {
     class GX_API(GXOFFLINERECOGNITION) gx_img_api {
     public:
-        gx_img_api(abi::string path);
-        gx_img_api(std::span<const uchar> bgr_data, int rows, int cols);
-        gx_img_api(std::vector<uchar>& buffer);
+        gx_img_api(abi::string path, int limit);
+        gx_img_api(std::span<const uchar> bgr_data, int rows, int cols, int limit);
+        gx_img_api(std::vector<uchar>& buffer, int limit);
         ~gx_img_api();
         gx_img_api(gx_img_api&&) noexcept;
         gx_img_api& operator=(gx_img_api&&) noexcept;

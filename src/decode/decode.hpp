@@ -18,6 +18,6 @@ std::string get_time_code() {
     auto now       = std::chrono::system_clock::now();
     auto duration  = now.time_since_epoch();
     auto timestamp = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
-    std::string timestampStr = glasssix::format(U8("{:016}"), timestamp);
-    return timestampStr;
+    std::string timestampStr = std::to_string(timestamp);
+    return glasssix::format(U8("{:016}"), timestamp);
 }

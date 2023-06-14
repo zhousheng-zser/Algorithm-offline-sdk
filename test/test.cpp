@@ -24,7 +24,7 @@ namespace glasssix::display_test {
             capture >> img;
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
-            gx_img_api img_buff(buffer);
+            gx_img_api img_buff(buffer, IMG_2K);
             abi::vector<face_info> faces;
             faces = _api->detect(img_buff);
             if (faces.size() > 0) {
@@ -70,7 +70,7 @@ namespace glasssix::display_test {
             std::vector<uchar> buffer(1024 * 1024);
 
             cv::imencode(".jpg", img, buffer);
-            gx_img_api img_buff(buffer);
+            gx_img_api img_buff(buffer, IMG_2K);
             abi::vector<face_trace_info> faces;
             faces = _api->track(img_buff);
             if (faces.size() > 0) {
@@ -99,7 +99,7 @@ namespace glasssix::display_test {
             capture >> img;
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
-            gx_img_api img_buff(buffer);
+            gx_img_api img_buff(buffer, IMG_2K);
             faces_blur faces;
             faces = _api->face_blur(img_buff);
             for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); i++) {
@@ -126,7 +126,7 @@ namespace glasssix::display_test {
             capture >> img;
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
-            gx_img_api img_buff(buffer);
+            gx_img_api img_buff(buffer, IMG_2K);
             face_info info;
             bool action_result = 0;
             abi::string temp;
@@ -172,7 +172,7 @@ namespace glasssix::display_test {
             capture >> img;
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
-            gx_img_api img_buff(buffer);
+            gx_img_api img_buff(buffer, IMG_2K);
             faces_spoofing faces;
             faces = _api->face_spoofing_live(img_buff);
             for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
@@ -192,7 +192,7 @@ namespace glasssix::display_test {
     void test_feature(gx_api* _api) {
 
         cv::Mat img = cv::imread("D:/test/img/20221208.jpg");
-        gx_img_api img_path("D:/test/img/20221208.jpg");
+        gx_img_api img_path("D:/test/img/20221208.jpg", IMG_2K);
         abi::vector<faces_feature> faces;
         faces = _api->face_feature(img_path, false);
         for (int i = 0; i < faces[0].facerectwithfaceinfo_list.size(); ++i) {
@@ -212,8 +212,8 @@ namespace glasssix::display_test {
 
     void test_feature_comparison(gx_api* _api) {
 
-        gx_img_api img_pathA("D:/test/img/A/610111200208264510.jpg");
-        gx_img_api img_pathB("D:/test/img/B/610111200208264510.jpg");
+        gx_img_api img_pathA("D:/test/img/A/610111200208264510.jpg", IMG_2K);
+        gx_img_api img_pathB("D:/test/img/B/610111200208264510.jpg", IMG_2K);
         double ans = _api->feature_comparison(img_pathA, img_pathB);
 
         std::cout << "feature_comparison: " << ans << std::endl;
@@ -267,7 +267,7 @@ namespace glasssix::display_test {
             capture >> img;
             std::vector<uchar> buffer(1024 * 1024);
             cv::imencode(".jpg", img, buffer);
-            gx_img_api img_buff(buffer);
+            gx_img_api img_buff(buffer, IMG_2K);
             faces_integration_search_info faces = _api->detect_integration(img_buff, 5, 0.4f);
             for (int i = 0; i < faces.result.size(); i++) {
 
@@ -333,7 +333,7 @@ namespace glasssix {
     gx_api* api = new gx_api();
     // 人脸检测
     TEST(Api, Detect) {
-        gx_img_api img("/root/img/20221209.jpg");
+        gx_img_api img("/root/img/20221209.jpg", IMG_2K);
         abi::vector<face_info> faces;
         faces          = api->detect(img);
         face_info info = faces[0];
@@ -355,7 +355,7 @@ namespace glasssix {
 
     // 人脸追踪
      TEST(Api, Track) {
-         gx_img_api img("/root/img/000011.jpg");
+         gx_img_api img("/root/img/000011.jpg", IMG_2K);
          abi::vector<face_trace_info> faces;
          faces = api->track(img);
     
@@ -382,7 +382,7 @@ namespace glasssix {
 
     // 人脸质量检测
     TEST(Api, Face_blur) {
-        gx_img_api img("/root/img/20230323.png");
+         gx_img_api img("/root/img/20230323.png", IMG_2K);
         faces_blur faces;
         faces = api->face_blur(img);
         EXPECT_GT(faces.facerectwithfaceinfo_list.size(), 0);
@@ -397,12 +397,12 @@ namespace glasssix {
     // 配合活体检测
      TEST(Api, Face_action_live) {
          abi::vector<gx_img_api> img;
-         img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-         img.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
-         img.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
-         img.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
-         img.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
-         img.emplace_back(gx_img_api("/root/img/action_live_5.jpg"));
+         img.emplace_back(gx_img_api("/root/img/action_live_0.jpg", IMG_2K));
+         img.emplace_back(gx_img_api("/root/img/action_live_1.jpg", IMG_2K));
+         img.emplace_back(gx_img_api("/root/img/action_live_2.jpg", IMG_2K));
+         img.emplace_back(gx_img_api("/root/img/action_live_3.jpg", IMG_2K));
+         img.emplace_back(gx_img_api("/root/img/action_live_4.jpg", IMG_2K));
+         img.emplace_back(gx_img_api("/root/img/action_live_5.jpg", IMG_2K));
     
          face_info info;
          bool action_result = 0;
@@ -442,9 +442,9 @@ namespace glasssix {
     // 静默活体检测
     TEST(Api, Face_spoofing_live) {
         abi::vector<gx_img_api> img;
-        img.emplace_back(gx_img_api("/root/img/33333.jpg"));
-        img.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-        img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg"));
+         img.emplace_back(gx_img_api("/root/img/33333.jpg", IMG_2K));
+        img.emplace_back(gx_img_api("/root/img/action_live_0.jpg", IMG_2K));
+         img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg", IMG_2K));
         faces_spoofing faces;
         faces = api->face_spoofing_live(img[0]);
         for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
@@ -462,7 +462,7 @@ namespace glasssix {
 
     // 特征值提取
     TEST(Api, Face_feature) {
-        gx_img_api img("/root/img/20221209.jpg");
+        gx_img_api img("/root/img/20221209.jpg", IMG_2K);
         faces_feature faces;
 
         faces = api->face_feature(img, false);
@@ -479,15 +479,15 @@ namespace glasssix {
 
     // 1:1 人脸对比
     TEST(Api, gx_feature_comparison) {
-        gx_img_api img_pathA("/root/img/action_live_1.jpg");
-        gx_img_api img_pathB("/root/img/action_live_5.jpg");
+        gx_img_api img_pathA("/root/img/action_live_1.jpg", IMG_2K);
+        gx_img_api img_pathB("/root/img/action_live_5.jpg", IMG_2K);
 
         double ans1 = api->feature_comparison(img_pathA, img_pathB);
         EXPECT_GT(ans1, 0.9);
 
-         gx_img_api A("/root/img/A.png");
-         gx_img_api B("/root/img/B.png");
-         gx_img_api C("/root/img/C.png");
+         gx_img_api A("/root/img/A.png", IMG_2K);
+        gx_img_api B("/root/img/B.png", IMG_2K);
+         gx_img_api C("/root/img/C.png", IMG_2K);
          double ans_ab, ans_ac, ans_bc;
          ans_ac = api->feature_comparison(A, C);
          ans_ab = api->feature_comparison(A, B);
@@ -500,11 +500,11 @@ namespace glasssix {
     TEST(Api, gx_user_and_detect_integration) {
 
         abi::vector<gx_img_api> imgs;
-        imgs.emplace_back(gx_img_api("/root/img/action_live_0.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_1.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_2.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_3.jpg"));
-        imgs.emplace_back(gx_img_api("/root/img/action_live_4.jpg"));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_0.jpg", IMG_2K));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_1.jpg", IMG_2K));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_2.jpg", IMG_2K));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_3.jpg", IMG_2K));
+        imgs.emplace_back(gx_img_api("/root/img/action_live_4.jpg", IMG_2K));
         abi::vector<abi::string> keys;
         keys.emplace_back("action_live_0");
         keys.emplace_back("action_live_1");
@@ -515,7 +515,7 @@ namespace glasssix {
         abi::vector<face_user_result> result;
         faces_search_info faces;
         faces_integration_search_info faces_i;
-        gx_img_api img("/root/img/action_live_5.jpg");
+        gx_img_api img("/root/img/action_live_5.jpg", IMG_2K);
 
 
         api->user_load(); // 人员库加载
@@ -554,8 +554,8 @@ namespace glasssix {
 
     // 火焰检测
     TEST(Api, Flame) {
-        gx_img_api img("/root/img/safe_production.jpg");
-        // gx_img_api img640("/root/img/flame.jpg");
+        gx_img_api img("/root/img/safe_production.jpg", IMG_2K);
+        // gx_img_api img640("/root/img/flame.jpg", IMG_2K);
         abi::vector<flame_info> result;
         abi::vector<detecte_roi> roi_list{
             detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
@@ -568,7 +568,7 @@ namespace glasssix {
 
     // 安全帽检测
     TEST(Api, Helmet) {
-        gx_img_api img("/root/img/helmet.jpg");
+        gx_img_api img("/root/img/helmet.jpg", IMG_2K);
         abi::vector<helmet_info> result;
         abi::vector<detecte_roi> roi_list{
             detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
@@ -581,7 +581,7 @@ namespace glasssix {
 
     // 反光衣检测
     TEST(Api, Refvest) {
-        gx_img_api img("/root/img/helmet.jpg");
+        gx_img_api img("/root/img/helmet.jpg", IMG_2K);
         abi::vector<std::optional<abi::vector<clothes_info>>> result;
         abi::vector<detecte_roi> roi_list{
             detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
@@ -591,24 +591,79 @@ namespace glasssix {
             std::cout << val.dump(4) << "\n";
         }
     }
-    void thread_function(int id) {
+    void thread_function_helmet(int id) {
         gx_api* api_temp = new gx_api();
         //api_temp->set_config("detect.json", "min_size", 16);
+        id = 0;
+        clockid_t be, ed;
+
         while (1) {
-            std::cout << "Thread " << id << " is running\n";
-            gx_img_api img("/root/img/helmet.jpg");
+        be = clock();
+            gx_img_api img("/root/img/helmet.jpg", IMG_2K);
             abi::vector<helmet_info> result;
             abi::vector<detecte_roi> roi_list{
                 detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
             result = api_temp->safe_production_helmet(img, roi_list);
-            for (int i = 0; i < result.size(); i++) {
-                nlohmann::json val = result[i];
-                std::cout << val.dump() << "----\n";
-            }
-            sleep(5);
+            id++;
+            ed = clock();
+            printf("%d %.6f\n", id, 1.0 * (ed - be) / CLOCKS_PER_SEC);
+            // for (int i = 0; i < result.size(); i++) {
+            //     nlohmann::json val = result[i];
+            //     std::cout << val.dump() << "----\n";
+            // }
+            // sleep(5);
         }
-            //delete api_temp;
+            delete api_temp;
         
+    }
+
+    void thread_function_flame(int id) {
+        gx_api* api_temp = new gx_api();
+        // api_temp->set_config("detect.json", "min_size", 16);
+        id = 0;
+        clockid_t be, ed;
+
+        while (1) {
+        be = clock();
+        gx_img_api img("/root/img/safe_production.jpg", IMG_2K);
+        abi::vector<flame_info> result;
+        abi::vector<detecte_roi> roi_list{
+            detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
+        result = api_temp->safe_production_flame(img, roi_list);
+        id++;
+        ed = clock();
+        printf("%d--%.6f\n", id, 1.0 * (ed - be) / CLOCKS_PER_SEC);
+        // for (int i = 0; i < result.size(); i++) {
+        //     nlohmann::json val = result[i];
+        //     std::cout << val.dump() << "----\n";
+        // }
+        // sleep(5);
+        }
+        delete api_temp;
+    }
+    void thread_function_refvest(int id) {
+        gx_api* api_temp = new gx_api();
+        // api_temp->set_config("detect.json", "min_size", 16);
+        id = 0;
+        clockid_t be, ed;
+
+        while (1) {
+        be = clock();
+        gx_img_api img("/root/img/helmet.jpg", IMG_2K);
+        abi::vector<std::optional<abi::vector<clothes_info>>> result ;
+        abi::vector<detecte_roi> roi_list{
+            detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
+        result = api_temp->safe_production_refvest(img, roi_list);
+        id++;
+        ed = clock();
+        printf("%d**%.6f\n", id, 1.0 * (ed - be) / CLOCKS_PER_SEC);
+        // for (int i = 0; i < result.size(); i++) {
+        //     nlohmann::json val = result[i];
+        //     std::cout << val.dump() << "----\n";
+        // }
+        // sleep(5);
+        }
+        delete api_temp;
     }
 
     std::vector<abi::string> find_file(std::filesystem::path folder_path) {
@@ -628,7 +683,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#";
             try {
-                gx_img_api img(img_list[i]);
+                gx_img_api img(img_list[i], 1 << 30);
                 abi::vector<detecte_roi> roi_list{
                     detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
                 nlohmann::json val = api->safe_production_flame(img, roi_list);
@@ -647,7 +702,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#";
             try {
-                gx_img_api img(img_list[i]);
+                gx_img_api img(img_list[i], 1<<30 );
                 abi::vector<detecte_roi> roi_list{
                     detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
                 nlohmann::json val = api->safe_production_refvest(img, roi_list);
@@ -666,7 +721,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#";
             try {
-                gx_img_api img(img_list[i]);
+                gx_img_api img(img_list[i], 1 << 30);
                 abi::vector<detecte_roi> roi_list{
                     detecte_roi{.roi_x = 0, .roi_y = 0, .roi_width = img.get_cols(), .roi_height = img.get_rows()}};
                 nlohmann::json val = api->safe_production_helmet(img, roi_list);
@@ -707,12 +762,18 @@ int main(int argc, char** argv) {
     try {
 
         // 简单测试
-        //std::cout << "hello world\n";
-        //std::thread t[100];
-        //for (int i =0;i<100;i++)
-        //    t[i] = std::thread(thread_function, i);
-        //for (int i = 0; i < 100; i++)
-        //    t[i].join();
+        //safe_test1();
+        //safe_test2();
+        //safe_test3();
+        
+        std::cout << "hello world\n";
+        std::thread t[5];
+        //t[0] = std::thread(thread_function_helmet, 0);
+        t[1] = std::thread(thread_function_flame, 0);
+        t[2] = std::thread(thread_function_refvest, 0);
+        //t[0].join();
+        t[1].join();
+        t[2].join();
 
 
         // 用于windows播放视频或图片的
@@ -728,15 +789,13 @@ int main(int argc, char** argv) {
          display_test::test_detect_integration(api);
          display_test::test_add_folder_all(_Api);
         */
-        safe_test1();
-        safe_test2();
-        safe_test3();
+
         // 单元测试
 
-        testing::InitGoogleTest(&argc, argv);
-        int ans = RUN_ALL_TESTS();
-        std::cout << "RUN_ALL_TESTS = " << ans << "\n";
-        delete api;
+        // testing::InitGoogleTest(&argc, argv);
+        // int ans = RUN_ALL_TESTS();
+        // std::cout << "RUN_ALL_TESTS = " << ans << "\n";
+        // delete api;
 
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "----\n";
