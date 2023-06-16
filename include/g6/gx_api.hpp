@@ -13,7 +13,7 @@ namespace glasssix {
     class GX_API(GXOFFLINERECOGNITION) gx_img_api {
     public:
         gx_img_api(abi::string path, int limit);
-        gx_img_api(std::span<const uchar> bgr_data, int rows, int cols, int limit);
+        gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit);
         gx_img_api(std::vector<uchar>& buffer, int limit);
         ~gx_img_api();
         gx_img_api(gx_img_api&&) noexcept;
@@ -80,12 +80,11 @@ namespace glasssix {
         abi::vector<faces_search_one_info> detect_many_faces_integration(
             gx_img_api& mat, bool is_living, float min_similarity);
         //  安全生产 反光衣检测
-        abi::vector<std::optional<abi::vector<clothes_info>>> safe_production_refvest(
-            gx_img_api& mat, const abi::vector<detecte_roi>& roi_list);
+        std::optional<abi::vector<clothes_info>> safe_production_refvest(gx_img_api& mat);
         //  安全生产 烟雾火焰检测
-        abi::vector<flame_info> safe_production_flame(gx_img_api& mat, const abi::vector<detecte_roi>& roi_list);
+        flame_info safe_production_flame(gx_img_api& mat);
         //  安全生产 安全帽检测
-        abi::vector<helmet_info> safe_production_helmet(gx_img_api& mat, const abi::vector<detecte_roi>& roi_list);
+        helmet_info safe_production_helmet(gx_img_api& mat);
         /*
         bool set_config(std::string_view name, std::string_view key, int val);
         bool set_config(std::string_view name, std::string_view key, float val);

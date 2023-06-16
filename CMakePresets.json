@@ -187,7 +187,7 @@
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_2.20.3.20230602_beta",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_2.20.4.20230614_beta",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous",
                 "GX_GTEST_ROOT": "/usr/src/gtest",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",

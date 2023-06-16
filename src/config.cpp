@@ -13,7 +13,7 @@ namespace glasssix {
         set_feature();
         set_face_user();
         set_flame();
-        set_helemt();
+        set_helmet();
         set_refvest();
     }
     config::config(const abi::string& path) {
@@ -26,7 +26,7 @@ namespace glasssix {
         set_feature(path);
         set_face_user(path);
         set_flame(path);
-        set_helemt(path);
+        set_helmet(path);
         set_refvest(path);
     }
 
@@ -37,7 +37,7 @@ namespace glasssix {
     }
     void config::set_configure_directory(const abi::string& path) {
         glasssix::json temp;
-        temp = read_json_file(path +"/configure_directory.json");
+        temp = read_json_file(path + "/configure_directory.json");
         temp.get_to(_configure_directory);
     }
     void config::set_detect(const abi::string& path) {
@@ -67,7 +67,7 @@ namespace glasssix {
     }
     void config::set_face_user(const abi::string& path) {
         glasssix::json temp;
-        temp = read_json_file(path  + "/face_user.json");
+        temp = read_json_file(path + "/face_user.json");
         temp.get_to(_face_user_config);
     }
     void config::set_flame(const abi::string& path) {
@@ -75,10 +75,10 @@ namespace glasssix {
         temp = read_json_file(path + "/flame.json");
         temp.get_to(_flame_config);
     }
-    void config::set_helemt(const abi::string& path) {
+    void config::set_helmet(const abi::string& path) {
         glasssix::json temp;
-        temp = read_json_file(path + "/helemt.json");
-        temp.get_to(_helemt_config);
+        temp = read_json_file(path + "/helmet.json");
+        temp.get_to(_helmet_config);
     }
     void config::set_refvest(const abi::string& path) {
         glasssix::json temp;
