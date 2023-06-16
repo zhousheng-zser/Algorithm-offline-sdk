@@ -27,10 +27,10 @@ namespace glasssix {
 
     class nessus_protocol {
     public:
+        nessus_protocol();
         nessus_protocol(nessus_protocol&&) noexcept = delete;
         ~nessus_protocol();
         nessus_protocol& operator=(nessus_protocol&&) noexcept = delete;
-        static const nessus_protocol& instance();
         void init(std::string_view config_file_path) const;
         protocol_object make_instance(std::string_view family, const json& param) const;
         json invoke(
@@ -58,7 +58,6 @@ namespace glasssix {
         }
 
     private:
-        nessus_protocol();
         class impl;
 
         std::unique_ptr<impl> impl_;

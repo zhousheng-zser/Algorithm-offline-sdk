@@ -156,11 +156,6 @@ namespace glasssix {
 
     nessus_protocol::~nessus_protocol() {}
 
-    const nessus_protocol& nessus_protocol::instance() {
-        static const nessus_protocol instance;
-
-        return instance;
-    }
 
     void nessus_protocol::init(std::string_view config_file_path) const {
         impl_->init(config_file_path);
