@@ -128,7 +128,7 @@ namespace glasssix {
 
     algo_irisviel_ptr* thread_algo_irisviel_ptr;
     std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
-    ThreadPool pool(3);
+    ThreadPool* pool=nullptr;
     ThreadPool pool_irisviel(1);
 
     std::string getSubstring(const std::string& str64, int pos_t) {
@@ -348,12 +348,14 @@ namespace glasssix {
         impl() {
             if (_config == nullptr) {
                 _config = new config();
+                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
+                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
@@ -396,7 +398,7 @@ namespace glasssix {
 
     // 人脸检测
     abi::vector<face_info> gx_api::detect(gx_img_api& mat) {
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -431,7 +433,7 @@ namespace glasssix {
                 }
             }
         }
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -484,7 +486,7 @@ namespace glasssix {
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -513,7 +515,7 @@ namespace glasssix {
         if (faces.size() == 0)
             return ans;
         ans              = faces[0];
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -540,7 +542,7 @@ namespace glasssix {
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -569,7 +571,7 @@ namespace glasssix {
         if (faces.size() == 0)
             return ans;
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -894,7 +896,7 @@ namespace glasssix {
                 ans.emplace_back(temp);
             }
         }
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
 
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -972,7 +974,7 @@ namespace glasssix {
 
     //  安全生产 反光衣检测
     std::optional<abi::vector<clothes_info>> gx_api::safe_production_refvest(gx_img_api& mat) {
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -1001,7 +1003,7 @@ namespace glasssix {
 
     //  安全生产 烟雾火焰检测
     flame_info gx_api::safe_production_flame(gx_img_api& mat) {
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -1030,7 +1032,7 @@ namespace glasssix {
 
     //  安全生产 安全帽检测
     helmet_info gx_api::safe_production_helmet(gx_img_api& mat) {
-        auto result_pool = pool.enqueue([&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
