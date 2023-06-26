@@ -1,7 +1,7 @@
 {
-        "device":0,
-        "use_int8":false,
-        "format": 1,
-        "model_type":3,
-        "dimension":256
+    "device": -1,
+    "use_int8": false,
+    "format": 1,
+    "model_type": 3,
+    "dimension": 256
 }
