@@ -1,7 +1,5 @@
 #include "config.hpp"
 
-#include "config_validation.hpp"
-
 namespace glasssix {
     config::config() {
         _path = "./config";

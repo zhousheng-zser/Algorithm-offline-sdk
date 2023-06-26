@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/info.hpp"
+#include "../../../include/g6/info_refvest.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -49,7 +49,7 @@ namespace glasssix {
     struct refvest_detect_result {
         GX_BEGIN_FIELDS(refvest_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(std::optional<abi::vector<clothes_info> >, detect_info);
+        GX_FIELD(abi::vector<refvest_info>, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

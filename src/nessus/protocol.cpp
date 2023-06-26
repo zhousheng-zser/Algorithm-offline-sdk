@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <functional>
 
-#include <g6/error_extensions.hpp>
 #include <g6/exception.hpp>
 #include <g6/format_remediation.hpp>
 #include <g6/functional.hpp>
