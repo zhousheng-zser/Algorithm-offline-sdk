@@ -447,10 +447,10 @@ char* gx_safe_production_refvest(char* mat, char* data) {
                 data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
         }
 
-        nlohmann::json val = api->safe_production_refvest(_mat, roi_list);
+        nlohmann::json val  = api->safe_production_refvest(_mat, roi_list);
         std::string result_ = val.dump();
-        std::size_t size = result_.size() + 1;
-        char* result     = new char[size];
+        std::size_t size    = result_.size() + 1;
+        char* result        = new char[size];
         std::memcpy(result, result_.c_str(), size * sizeof(char));
         set_last_error(std::string{"OK"});
     } catch (const std::exception& ex) {

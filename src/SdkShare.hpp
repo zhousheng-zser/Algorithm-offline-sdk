@@ -1,0 +1,129 @@
+#pragma once
+#include "../src/nessus/protocol.hpp"
+#include "../src/nessus/protocols/damocles.hpp"
+#include "../src/nessus/protocols/flame.hpp"
+#include "../src/nessus/protocols/gungnir.hpp"
+#include "../src/nessus/protocols/helmet.hpp"
+#include "../src/nessus/protocols/irisviel.hpp"
+#include "../src/nessus/protocols/longinus.hpp"
+#include "../src/nessus/protocols/refvest.hpp"
+#include "../src/nessus/protocols/romancia.hpp"
+#include "../src/nessus/protocols/selene.hpp"
+
+//#include "decode/decode.hpp"
+#include "SecretKey_empower.hpp"
+#include "ThreadPool.hpp"
+#include "config.hpp"
+
+#include <mutex>
+
+
+#include <chrono>
+
+#include <g6/char8_t_remediation.hpp>
+#include <g6/crypto/symmetric_cipher_provider.hpp>
+namespace glasssix {
+    extern config* _config;
+    // static std::mutex mutex_;
+    class algo_irisviel_ptr {
+    public:
+        algo_irisviel_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            std::ifstream configure(_config->_configure_directory.directory);
+            nlohmann::json protocols_list = nlohmann::json::parse(configure);
+            for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = protocols_list["plugin_list"][i];
+                if (temp_str == "irisviel") {
+                    try {
+                        irisivel_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
+                            _config->_face_user_config.dimension, _config->_face_user_config.working_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        irisviel irisivel_handle;
+    };
+    class algo_ptr {
+    public:
+        typedef void (algo_ptr::*set_protocols_handle)();
+        algo_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            set_Function();
+            std::ifstream configure(_config->_configure_directory.directory);
+            nlohmann::json protocols_list = nlohmann::json::parse(configure);
+            for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = protocols_list["plugin_list"][i];
+                try {
+                    set_protocols_handle fun = this->Function[temp_str];
+                    if (fun != nullptr) {
+                        (this->*fun)();
+                    }
+                } catch (const std::exception& ex) {
+                    throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                }
+            }
+        }
+        std::unordered_map<std::string, set_protocols_handle> Function;
+        void set_Function() {
+            Function["flame"]    = &algo_ptr::set_protocols_handl_flame;
+            Function["refvest"]  = &algo_ptr::set_protocols_handl_refvest;
+            Function["helmet"]   = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]   = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"] = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"] = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"] = &algo_ptr::set_protocols_handl_damocles;
+        }
+        void set_protocols_handl_flame() {
+            flame_handle = protocol_ptr.make_instance<flame>(
+                flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_refvest() {
+            refvest_handle = protocol_ptr.make_instance<refvest>(
+                refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_helmet() {
+            helmet_handle = protocol_ptr.make_instance<helmet>(
+                helmet_new_param{_config->_helmet_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_selene() {
+            selene_handle = protocol_ptr.make_instance<selene>(
+                selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
+                    _config->_feature_config.model_type, _config->_feature_config.use_int8});
+        }
+        void set_protocols_handl_longinus() {
+            longinus_handle =
+                protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
+                    .models_directory = _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_romancia() {
+            romancia_handle = protocol_ptr.make_instance<romancia>(
+                romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_damocles() {
+            damocles_handle =
+                protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
+                    _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
+        }
+
+        nessus_protocol protocol_ptr;
+        damocles damocles_handle;
+        gungnir gungnir_handle;
+        longinus longinus_handle;
+        romancia romancia_handle;
+        selene selene_handle;
+        refvest refvest_handle;
+        flame flame_handle;
+        helmet helmet_handle;
+    };
+    extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
+    extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
+    extern ThreadPool* pool;
+    extern void empower_Callback(
+        void* context, std::string success, const char* message, std::int64_t remaining_seconds);
+    extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);
+    extern std::string get_time_code();
+    extern std::string getSubstring(const std::string& str64, int pos_t);
+} // namespace glasssix

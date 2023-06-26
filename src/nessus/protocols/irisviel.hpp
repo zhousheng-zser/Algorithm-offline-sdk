@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/info.hpp"
+#include "../../../include/g6/info_face.hpp"
 #include "../common_protocols.hpp"
 #include "../protocol_object.hpp"
 

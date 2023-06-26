@@ -1,9 +1,9 @@
-/*
-
 #pragma once
-#include "info.hpp"
- 
+#include "gx_api.hpp"
+#include "info_face.hpp"
+
 namespace glasssix {
+
     class GX_API(GXOFFLINERECOGNITION) gx_face_api {
     public:
         gx_face_api();
@@ -46,10 +46,8 @@ namespace glasssix {
         bool user_contains_key(abi::string& key);
         // 特征值库记录总和
         std::uint64_t user_record_count();
-
         // 人脸识别流程融合
         faces_integration_search_info detect_integration(gx_img_api& mat, int top, float min_similarity);
-
         // 多人脸搜索
         abi::vector<faces_search_one_info> detect_many_faces_integration(
             gx_img_api& mat, bool is_living, float min_similarity);
@@ -58,4 +56,3 @@ namespace glasssix {
         std::unique_ptr<impl> impl_;
     };
 } // namespace glasssix
-*/

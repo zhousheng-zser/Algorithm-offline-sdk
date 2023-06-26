@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <functional>
 
-#include <g6/error_extensions.hpp>
 #include <g6/exception.hpp>
 #include <g6/format_remediation.hpp>
 #include <g6/functional.hpp>
@@ -13,7 +12,7 @@
 #include <g6/reflection.hpp>
 
 #include <parser_c.hpp>
-//#include "include/parser.hpp"
+// #include "include/parser.hpp"
 
 namespace glasssix {
     namespace {
@@ -138,7 +137,7 @@ namespace glasssix {
             if (!instance_uuid.empty()) {
                 param[U8("instance_guid")] = instance_uuid;
             }
-            void* instanc  = instance_.get();
+            void* instanc = instance_.get();
             return parse_raw_result(parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0));
         }
@@ -156,11 +155,6 @@ namespace glasssix {
 
     nessus_protocol::~nessus_protocol() {}
 
-    const nessus_protocol& nessus_protocol::instance() {
-        static const nessus_protocol instance;
-
-        return instance;
-    }
 
     void nessus_protocol::init(std::string_view config_file_path) const {
         impl_->init(config_file_path);

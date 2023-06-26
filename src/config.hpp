@@ -11,6 +11,7 @@ namespace glasssix {
         GX_FIELD(std::string, models_directory);
         GX_FIELD(std::string, directory);
         GX_FIELD(std::string, license_directory);
+        GX_FIELD(int, thread_pool_num);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -75,8 +76,8 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-    struct helemt_config {
-        GX_BEGIN_FIELDS(helemt_config);
+    struct helmet_config {
+        GX_BEGIN_FIELDS(helmet_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
@@ -109,7 +110,7 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         flame_config _flame_config;
-        helemt_config _helemt_config;
+        helmet_config _helmet_config;
         refvest_config _refvest_config;
 
     private:
@@ -122,7 +123,7 @@ namespace glasssix {
         void set_feature(const abi::string& path = "./config");
         void set_face_user(const abi::string& path = "./config");
         void set_flame(const abi::string& path = "./config");
-        void set_helemt(const abi::string& path = "./config");
+        void set_helmet(const abi::string& path = "./config");
         void set_refvest(const abi::string& path = "./config");
     };
 } // namespace glasssix

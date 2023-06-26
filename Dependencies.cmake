@@ -78,12 +78,12 @@ elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME S
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/sdk/native/jni/include)
     set(OpenCV_LIBS opencv_java4)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
-    include(${GX_MISCELLANEOUS_ROOT}/cmake/GXUtil.cmake)
-    gx_find_package_no_root_path(
+    find_package(
     GXMiscellaneous
     REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}/lib/cmake
     NO_DEFAULT_PATH
+    HINTS
+    ${GX_MISCELLANEOUS_ROOT}
     )
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
