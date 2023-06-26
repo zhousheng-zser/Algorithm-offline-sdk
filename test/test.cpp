@@ -594,61 +594,58 @@ namespace glasssix {
         }
         return ans_list;
     }
-    // void safe_test1() {
-    //     std::ofstream safe_file("./flame.log", std::ios::out | std::ios::trunc);
-    //     // std::filesystem::path folder_path          = "/root/img/production/fire";
-    //     std::filesystem::path folder_path = "/root/img/production/no_flame";
+     //安全生产指标测试  
+     void safe_test1() {
+         std::ofstream safe_file("./flame.log", std::ios::out | std::ios::trunc);
+         // std::filesystem::path folder_path          = "/root/img/production/fire";
+         std::filesystem::path folder_path = "/root/img/production/no_flame";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                nlohmann::json val = api->safe_production_flame(img);
+                safe_file << val;
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+     void safe_test2() {
+        std::ofstream safe_file("./refvest.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path = "/root/img/production/ref_benchmark";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                nlohmann::json val = api->safe_production_refvest(img);
+                safe_file << val;
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+     void safe_test3() {
+        std::ofstream safe_file("./helmet.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path = "/root/img/production/val2017";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                nlohmann::json val = api->safe_production_helmet(img);
+                safe_file << val;
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
 
-    //    std::vector<abi::string> img_list = find_file(folder_path);
-    //    for (int i = 0; i < img_list.size(); ++i) {
-    //        safe_file << img_list[i] << "#";
-    //        try {
-    //            gx_img_api img(img_list[i], 1 << 30);
-    //            nlohmann::json val = api->safe_production_flame(img);
-    //            safe_file << val;
-
-    //        } catch (const std::exception& ex) {
-    //            safe_file << ex.what();
-    //        }
-    //        safe_file << "\n";
-    //    }
-    //}
-    // void safe_test2() {
-    //    std::ofstream safe_file("./refvest.log", std::ios::out | std::ios::trunc);
-    //    std::filesystem::path folder_path = "/root/img/production/ref_benchmark";
-    //    std::vector<abi::string> img_list = find_file(folder_path);
-    //    for (int i = 0; i < img_list.size(); ++i) {
-    //        safe_file << img_list[i] << "#";
-    //        try {
-    //            gx_img_api img(img_list[i], 1 << 30);
-    //            nlohmann::json val = api->safe_production_refvest(img);
-    //            safe_file << val;
-
-    //        } catch (const std::exception& ex) {
-    //            safe_file << ex.what();
-    //        }
-    //        safe_file << "\n";
-    //    }
-    //}
-    // void safe_test3() {
-    //    std::ofstream safe_file("./helmet.log", std::ios::out | std::ios::trunc);
-    //    std::filesystem::path folder_path = "/root/img/production/val2017";
-    //    std::vector<abi::string> img_list = find_file(folder_path);
-    //    for (int i = 0; i < img_list.size(); ++i) {
-    //        safe_file << img_list[i] << "#";
-    //        try {
-    //            gx_img_api img(img_list[i], 1 << 30);
-    //            nlohmann::json val = api->safe_production_helmet(img);
-    //            safe_file << val;
-
-    //        } catch (const std::exception& ex) {
-    //            safe_file << ex.what();
-    //        }
-    //        safe_file << "\n";
-    //    }
-    //}
-
-
+    //多线程测安全帽
     void thread_function_helmet() {
         gx_helmet_api* api_temp           = new gx_helmet_api();
         std::filesystem::path folder_path = "/home/helmet";
@@ -670,6 +667,7 @@ namespace glasssix {
         std::cout << "helmet time = " << duration.count() << " 微秒" << std::endl;
         delete api_temp;
     }
+    // 多线程测火焰
     void thread_function_flame() {
         gx_flame_api* api_temp            = new gx_flame_api();
         std::filesystem::path folder_path = "/home/fire";
@@ -691,6 +689,7 @@ namespace glasssix {
         std::cout << "flame time = " << duration.count() << " 微秒" << std::endl;
         delete api_temp;
     }
+    // 多线程测反光衣
     void thread_function_refvest() {
         gx_refvest_api* api_temp          = new gx_refvest_api();
         std::filesystem::path folder_path = "/home/Reflective_clothing";
@@ -712,43 +711,53 @@ namespace glasssix {
         std::cout << "refvest time = " << duration.count() << " 微秒" << std::endl;
         delete api_temp;
     }
+    // 多线程测搜索
     void thread_function_search() {
         gx_face_api* api_temp = new gx_face_api();
         api_temp->user_load();
+        std::cout << api_temp->user_record_count() << "*****************************\n";
         std::fstream path_file("/home/paths.txt", std::ios::in);
         abi::string path, key;
-        auto start = std::chrono::high_resolution_clock::now();
         int T      = 10000;
         while (path_file >> path >> key, T--) {
-
+            if ((T + 1) % 300 == 0)
+                printf("T ===== %d\n", T + 1);
             try {
+        auto start = std::chrono::high_resolution_clock::now();
                 gx_img_api img("/home/" + path, static_cast<int>(1e9));
                 nlohmann::json val = api_temp->user_search(img, 1, 0.9);
                  //std::cout << val.dump() << "\n";
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "refvest time = " << duration.count() << " 微秒" << std::endl;
 
             } catch (const std::exception& ex) {
                 std::cout << "path = /home/" + path << "  " << ex.what() << "\n";
             }
         }
-        auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        std::cout << "refvest time = " << duration.count() << " 微秒" << std::endl;
         delete api_temp;
 
     }
+    // 多线程测融合搜索
     void thread_function_integration() {
         gx_face_api* api_temp = new gx_face_api();
         api_temp->user_load();
+        std::cout << api_temp->user_record_count() << "*****************************\n";
         std::fstream path_file("/home/paths.txt", std::ios::in);
         abi::string path, key;
         auto start = std::chrono::high_resolution_clock::now();
         int T      = 10000;
         while (path_file >> path >> key, T--) {
-
+            if ((T + 1) % 300 == 0)
+                printf("T ===== %d\n", T + 1);
             try {
+                auto start = std::chrono::high_resolution_clock::now();
                 gx_img_api img("/home/" + path, static_cast<int>(1e9));
                 nlohmann::json val = api_temp->detect_integration(img, 1, 0.9);
                 // std::cout << val.dump() << "\n";
+                auto end      = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+                std::cout << "refvest time = " << duration.count() << " 微秒" << std::endl;
 
             } catch (const std::exception& ex) {
                 std::cout << "path = /home/" + path << "  " << ex.what() << "\n";
@@ -759,6 +768,7 @@ namespace glasssix {
         std::cout << "refvest time = " << duration.count() << " 微秒" << std::endl;
         delete api_temp;
     }
+    // 人脸入库
     void test_add_face_all() {
         gx_face_api* _api = new gx_face_api();
         _api->user_load();
@@ -812,28 +822,28 @@ int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {
         std::cout << "hello world\n";
-        // 简单测试
+        // 安全生产 指标测试
         // safe_test1();
         // safe_test2();
         // safe_test3();
 
+        //人脸入库
         //test_add_face_all();
 
+
+        // 多线程测性能测试
         std::thread t[7];
-        thread_function_search();
-        thread_function_integration();
         auto start = std::chrono::high_resolution_clock::now();
         //t[0]       = std::thread(thread_function_helmet);
         //t[1]       = std::thread(thread_function_flame);
         //t[2]       = std::thread(thread_function_refvest);
         //t[3]       = std::thread(thread_function_search);
-        //t[4]       = std::thread(thread_function_integration);
-
+        t[4]       = std::thread(thread_function_integration);
         // t[0].join();
         // t[1].join();
         // t[2].join();
         // t[3].join();
-         //t[4].join();
+         t[4].join();
         // t[5].join();
         // t[6].join();
 

@@ -1,4 +1,4 @@
 {
-        "working_directory": "/root/test/no_mask",
-        "dimension":256
+    "working_directory": "/root/test/no_mask",
+    "dimension": 256
 }
