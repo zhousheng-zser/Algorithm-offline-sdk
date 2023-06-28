@@ -3,29 +3,16 @@
 namespace glasssix {
     config::config() {
         _path = "./config";
-        set_configure_directory();
-        set_detect();
-        set_track();
-        set_blur();
-        set_action_live();
-        set_feature();
-        set_face_user();
-        set_flame();
-        set_helmet();
-        set_refvest();
+        set_configure_directory(_path);
+        std::ifstream configure(_configure_directory.directory);
+        protocols_list = nlohmann::json::parse(configure);
+
     }
     config::config(const abi::string& path) {
         _path = path;
-        set_configure_directory(path);
-        set_detect(path);
-        set_track(path);
-        set_blur(path);
-        set_action_live(path);
-        set_feature(path);
-        set_face_user(path);
-        set_flame(path);
-        set_helmet(path);
-        set_refvest(path);
+        set_configure_directory(_path);
+        std::ifstream configure(_configure_directory.directory);
+        protocols_list = nlohmann::json::parse(configure);
     }
 
     glasssix::json config::read_json_file(const abi::string& path) {
