@@ -34,4 +34,22 @@ namespace glasssix {
         class impl;
         std::unique_ptr<impl> impl_;
     };
+
+    class GX_API(GXOFFLINERECOGNITION) gx_config_api {
+    public:
+        gx_config_api();
+        ~gx_config_api();
+        gx_config_api(gx_config_api&&) noexcept;
+        gx_config_api& operator=(gx_config_api&&) noexcept;
+        
+        int set_config(const abi::string &name, const abi::string &key, int val);
+        int set_config(const abi::string &name, const abi::string &key, float val);
+        int set_config(const abi::string &name, const abi::string &key, abi::string val);
+        int set_config(const abi::string &name, const abi::string &key, bool val);
+        
+    private:
+        class impl;
+        std::unique_ptr<impl> impl_;
+    };
+
 } // namespace glasssix

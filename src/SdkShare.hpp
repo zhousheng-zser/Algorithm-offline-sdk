@@ -23,7 +23,6 @@
 #include <g6/crypto/symmetric_cipher_provider.hpp>
 namespace glasssix {
     extern config* _config;
-    // static std::mutex mutex_;
     class algo_irisviel_ptr {
     public:
         algo_irisviel_ptr() {
