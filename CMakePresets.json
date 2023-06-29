@@ -191,6 +191,7 @@
                 "GX_GTEST_ROOT": "/usr/src/gtest",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
+                "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",
                 "CMAKE_C_COMPILER": "gcc-11",
                 "CMAKE_CXX_COMPILER": "g++-11"
             },

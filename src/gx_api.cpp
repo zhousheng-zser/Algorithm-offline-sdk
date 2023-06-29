@@ -1,7 +1,8 @@
 ﻿#include "gx_api.hpp"
 
-#include <g6/error_extensions.hpp>
 #include "SdkShare.hpp"
+
+#include <g6/error_extensions.hpp>
 
 #include <opencv2/opencv.hpp>
 namespace glasssix {
@@ -143,17 +144,15 @@ namespace glasssix {
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
         return ans;
     }
-    
-    
+
+
     class gx_config_api::impl {
     public:
-        impl(){}
+        impl() {}
         ~impl() {}
 
-        nlohmann::json temp;
-        nlohmann::json name_config;
-        void init() {
-            name_config.clear();
+        nlohmann::json init() {
+            nlohmann::json name_config;
             name_config["action_live.json"]         = _config->_action_live_config;
             name_config["blur.json"]                = _config->_blur_config;
             name_config["configure_directory.json"] = _config->_configure_directory;
@@ -164,99 +163,79 @@ namespace glasssix {
             name_config["helmet.json"]              = _config->_helmet_config;
             name_config["refvest.json"]             = _config->_refvest_config;
             name_config["track.json"]               = _config->_track_config;
+            return name_config;
         }
-        template <typename T>
-        void zser(const abi::string& name, const abi::string& key, T value) {
-            temp[std::string{key}] = value;
-            abi::string path = _config->_path + name;
-            std::ofstream(path.c_str(), std::ios::trunc) << temp;
-        }
+        //template <typename T>
+        //void zser(const abi::string& name, const abi::string& key, T value) {
+        //    temp[std::string{key}] = value;
+        //    abi::string path       = _config->_path + name;
+        //    std::ofstream(path.c_str(), std::ios::trunc) << temp;
+        //}
 
         template <typename T>
         int update_config(const abi::string& name, const abi::string& key, T value) {
             std::scoped_lock lock{mutex_};
             try {
-                //没有config指针就报错  有config指针没这个文件也报错(没有这个文件或者没有这个算法对象或者没有这个键值),这个文件不属于项目
+                nlohmann::json temp;
+                nlohmann::json name_config;
+                // 没有config指针就报错
+                // 有config指针没这个文件也报错(没有这个文件或者没有这个算法对象或者没有这个键值),这个文件不属于项目
                 if (_config == nullptr)
                     return -1;
-                init();
-                
+                name_config = init();
+                if (!name_config.contains(std::string{name} ))
+                    return -2;//这个文件不属于项目
+                temp = name_config[std::string{name}];
+                if (!temp.contains(std::string{key}))
+                    return -4;//没有这个键值
 
-                if (name == "action_live.json") {
-                    temp = _config->_action_live_config;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name,key, value);
+                temp[std::string{key}] = value;
+                abi::string path       = _config->_path + name;
+                std::ofstream(path.c_str(), std::ios::trunc) << temp;
+
+                if (name == "action_live.json") 
                     temp.get_to(_config->_action_live_config);
-                }
-                else if (name == "blur.json") {
-                    temp = _config->_blur_config;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name, key, value);
+                else if (name == "blur.json") 
                     temp.get_to(_config->_blur_config);
-                }
-                  else if (name == "detect.json") {
-                    temp = _config->_detect_config;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name, key, value);
+                else if (name == "detect.json") 
                     temp.get_to(_config->_detect_config);
-                }
-                  else if (name == "face_user.json") {
-                    temp = _config->_face_user_config;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name, key, value);
+                else if (name == "face_user.json") 
                     temp.get_to(_config->_face_user_config);
-                } 
-                 else if (name == "feature.json") {
-                    temp = _config->_feature_config;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name, key, value);
+                else if (name == "feature.json") 
                     temp.get_to(_config->_feature_config);
-                } 
-                 else if (name == "track.json") {
-                    temp = _config->_track_config;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name, key, value);
+                else if (name == "track.json") 
                     temp.get_to(_config->_track_config);
-                } 
-                 else if (name == "configure_directory.json") {
-                    temp = _config->_configure_directory;
-                    if (!temp.contains(std::string{key}))
-                        return -4;//没有这个键值
-                    zser(name, key, value);
+                else if (name == "configure_directory.json") 
                     temp.get_to(_config->_configure_directory);
-                } 
-                else {
-                    return -2;//没有这个文件或者文件不属于该项目
-                }
+                else if(name == "flame.json")
+                    temp.get_to(_config->_flame_config);
+                else if(name == "helmet.json")
+                    temp.get_to(_config->_helmet_config);
+                else if(name == "refvest.json")
+                    temp.get_to(_config->_refvest_config);
             } catch (const std::exception& ex) {
-                return -3;   //没有这个算法对象或者键值类型不对
+                std::cout << ex.what() << "+++++++\n";
+                return -3; // 没有这个算法对象或者键值类型不对
             }
             return 0;
         }
-
     };
 
     gx_config_api::gx_config_api() {}
     gx_config_api::~gx_config_api() {}
-    gx_config_api::gx_config_api(gx_config_api&&) noexcept         = default;
+    gx_config_api::gx_config_api(gx_config_api&&) noexcept            = default;
     gx_config_api& gx_config_api::operator=(gx_config_api&&) noexcept = default;
     int gx_config_api::set_config(const abi::string& name, const abi::string& key, int val) {
-        return impl_->update_config( name, key, val);
+        return impl_->update_config(name, key, val);
     }
     int gx_config_api::set_config(const abi::string& name, const abi::string& key, float val) {
-        return impl_->update_config( name, key, val);
+        return impl_->update_config(name, key, val);
     }
     int gx_config_api::set_config(const abi::string& name, const abi::string& key, abi::string val) {
-        return impl_->update_config( name, key, val);
+        return impl_->update_config(name, key, val);
     }
     int gx_config_api::set_config(const abi::string& name, const abi::string& key, bool val) {
-        return impl_->update_config( name, key, val);
+        return impl_->update_config(name, key, val);
     }
 
 } // namespace glasssix
