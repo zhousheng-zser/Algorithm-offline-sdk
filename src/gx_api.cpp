@@ -165,12 +165,7 @@ namespace glasssix {
             name_config["track.json"]               = _config->_track_config;
             return name_config;
         }
-        //template <typename T>
-        //void zser(const abi::string& name, const abi::string& key, T value) {
-        //    temp[std::string{key}] = value;
-        //    abi::string path       = _config->_path + name;
-        //    std::ofstream(path.c_str(), std::ios::trunc) << temp;
-        //}
+
 
         template <typename T>
         int update_config(const abi::string& name, const abi::string& key, T value) {
@@ -183,39 +178,39 @@ namespace glasssix {
                 if (_config == nullptr)
                     return -1;
                 name_config = init();
-                if (!name_config.contains(std::string{name} ))
-                    return -2;//这个文件不属于项目
+                if (!name_config.contains(std::string{name}))
+                    return -2; // 这个文件不属于项目
                 temp = name_config[std::string{name}];
                 if (!temp.contains(std::string{key}))
-                    return -4;//没有这个键值
+                    return -4; // 没有这个键值
 
                 temp[std::string{key}] = value;
-                abi::string path       = _config->_path + name;
-                std::ofstream(path.c_str(), std::ios::trunc) << temp;
+                abi::string path       = _config->_path + "/" + name;
+                std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
 
-                if (name == "action_live.json") 
+                if (name == "action_live.json")
                     temp.get_to(_config->_action_live_config);
-                else if (name == "blur.json") 
+                else if (name == "blur.json")
                     temp.get_to(_config->_blur_config);
-                else if (name == "detect.json") 
+                else if (name == "detect.json")
                     temp.get_to(_config->_detect_config);
-                else if (name == "face_user.json") 
+                else if (name == "face_user.json")
                     temp.get_to(_config->_face_user_config);
-                else if (name == "feature.json") 
+                else if (name == "feature.json")
                     temp.get_to(_config->_feature_config);
-                else if (name == "track.json") 
+                else if (name == "track.json")
                     temp.get_to(_config->_track_config);
-                else if (name == "configure_directory.json") 
+                else if (name == "configure_directory.json")
                     temp.get_to(_config->_configure_directory);
-                else if(name == "flame.json")
+                else if (name == "flame.json")
                     temp.get_to(_config->_flame_config);
-                else if(name == "helmet.json")
+                else if (name == "helmet.json")
                     temp.get_to(_config->_helmet_config);
-                else if(name == "refvest.json")
+                else if (name == "refvest.json")
                     temp.get_to(_config->_refvest_config);
             } catch (const std::exception& ex) {
-                std::cout << ex.what() << "+++++++\n";
-                return -3; // 没有这个算法对象或者键值类型不对
+                std::cout << ex.what() << "\n";
+                return -3; // 写文件失败 或者 类型错误
             }
             return 0;
         }
