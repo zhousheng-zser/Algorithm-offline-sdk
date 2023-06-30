@@ -176,7 +176,7 @@ namespace glasssix {
                 // 没有config指针就报错
                 // 有config指针没这个文件也报错(没有这个文件或者没有这个算法对象或者没有这个键值),这个文件不属于项目
                 if (_config == nullptr)
-                    return -1;
+                    return -1; // 文件对应的算法未构建实例
                 name_config = init();
                 if (!name_config.contains(std::string{name}))
                     return -2; // 这个文件不属于项目
@@ -188,26 +188,39 @@ namespace glasssix {
                 abi::string path       = _config->_path + "/" + name;
                 std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
 
-                if (name == "action_live.json")
+                if (name == "action_live.json" && _config->action_live_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_action_live_config);
-                else if (name == "blur.json")
+                } else if (name == "blur.json" && _config->blur_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_blur_config);
-                else if (name == "detect.json")
+                } else if (name == "detect.json" && _config->detect_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_detect_config);
-                else if (name == "face_user.json")
+                } else if (name == "face_user.json" && _config->face_user_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_face_user_config);
-                else if (name == "feature.json")
+                } else if (name == "feature.json" && _config->feature_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_feature_config);
-                else if (name == "track.json")
+                } else if (name == "track.json" && _config->track_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_track_config);
-                else if (name == "configure_directory.json")
+                } else if (name == "configure_directory.json" && _config->configure_directory_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_configure_directory);
-                else if (name == "flame.json")
+                } else if (name == "flame.json" && _config->flame_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);
-                else if (name == "helmet.json")
+                } else if (name == "helmet.json" && _config->helmet_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_helmet_config);
-                else if (name == "refvest.json")
+                } else if (name == "refvest.json" && _config->refvest_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_refvest_config);
+                } else {
+                    return -1; // 文件对应的算法未构建实例
+                }
             } catch (const std::exception& ex) {
                 std::cout << ex.what() << "\n";
                 return -3; // 写文件失败 或者 类型错误

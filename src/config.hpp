@@ -124,6 +124,16 @@ namespace glasssix {
         void set_helmet(const abi::string& path);
         void set_refvest(const abi::string& path);
 
+        bool configure_directory_is_load = false;
+        bool detect_is_load              = false;
+        bool track_is_load               = false;
+        bool blur_is_load                = false;
+        bool action_live_is_load         = false;
+        bool feature_is_load             = false;
+        bool face_user_is_load           = false;
+        bool flame_is_load               = false;
+        bool helmet_is_load              = false;
+        bool refvest_is_load             = false;
     private:
         glasssix::json read_json_file(const abi::string& path);
     };

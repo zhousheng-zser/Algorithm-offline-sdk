@@ -6,7 +6,6 @@ namespace glasssix {
         set_configure_directory(_path);
         std::ifstream configure(_configure_directory.directory);
         protocols_list = nlohmann::json::parse(configure);
-
     }
     config::config(const abi::string& path) {
         _path = path;
@@ -24,50 +23,60 @@ namespace glasssix {
         glasssix::json temp;
         temp = read_json_file(path + "/configure_directory.json");
         temp.get_to(_configure_directory);
+        configure_directory_is_load = true;
     }
     void config::set_detect(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/detect.json");
         temp.get_to(_detect_config);
+        detect_is_load = true;
     }
     void config::set_track(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/track.json");
         temp.get_to(_track_config);
+        track_is_load = true;
     }
     void config::set_blur(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/blur.json");
         temp.get_to(_blur_config);
+        blur_is_load = true;
     }
     void config::set_action_live(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/action_live.json");
         temp.get_to(_action_live_config);
+        action_live_is_load = true;
     }
     void config::set_feature(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/feature.json");
         temp.get_to(_feature_config);
+        feature_is_load = true;
     }
     void config::set_face_user(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/face_user.json");
         temp.get_to(_face_user_config);
+        face_user_is_load = true;
     }
     void config::set_flame(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/flame.json");
         temp.get_to(_flame_config);
+        flame_is_load = true;
     }
     void config::set_helmet(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/helmet.json");
         temp.get_to(_helmet_config);
+        helmet_is_load = true;
     }
     void config::set_refvest(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/refvest.json");
         temp.get_to(_refvest_config);
+        refvest_is_load = true;
     }
 } // namespace glasssix
