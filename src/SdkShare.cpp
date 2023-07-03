@@ -1,6 +1,6 @@
 #include "SdkShare.hpp"
 namespace glasssix {
-    config* _config = nullptr;
+    config* _config                             = nullptr;
     algo_irisviel_ptr* thread_algo_irisviel_ptr = nullptr;
     std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     ThreadPool* pool = nullptr;
@@ -17,7 +17,6 @@ namespace glasssix {
                     return;
                 }
             } catch (...) {
-                ;
             }
             time_ll--;
         }

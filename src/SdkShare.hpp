@@ -10,7 +10,6 @@
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
 
-//#include "decode/decode.hpp"
 #include "SecretKey_empower.hpp"
 #include "ThreadPool.hpp"
 #include "config.hpp"
@@ -24,17 +23,15 @@
 #include <g6/crypto/symmetric_cipher_provider.hpp>
 namespace glasssix {
     extern config* _config;
-    // static std::mutex mutex_;
     class algo_irisviel_ptr {
     public:
         algo_irisviel_ptr() {
             protocol_ptr.init(_config->_configure_directory.directory);
-            std::ifstream configure(_config->_configure_directory.directory);
-            nlohmann::json protocols_list = nlohmann::json::parse(configure);
-            for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
-                std::string temp_str = protocols_list["plugin_list"][i];
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
                 if (temp_str == "irisviel") {
                     try {
+                        _config->set_face_user(_config->_path);
                         irisivel_handle = protocol_ptr.make_instance<irisviel>(irisviel_new_param{
                             _config->_face_user_config.dimension, _config->_face_user_config.working_directory});
                     } catch (const std::exception& ex) {
@@ -52,10 +49,8 @@ namespace glasssix {
         algo_ptr() {
             protocol_ptr.init(_config->_configure_directory.directory);
             set_Function();
-            std::ifstream configure(_config->_configure_directory.directory);
-            nlohmann::json protocols_list = nlohmann::json::parse(configure);
-            for (int i = 0; i < protocols_list["plugin_list"].size(); ++i) {
-                std::string temp_str = protocols_list["plugin_list"][i];
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
                 try {
                     set_protocols_handle fun = this->Function[temp_str];
                     if (fun != nullptr) {
@@ -77,32 +72,40 @@ namespace glasssix {
             Function["damocles"] = &algo_ptr::set_protocols_handl_damocles;
         }
         void set_protocols_handl_flame() {
+            _config->set_flame(_config->_path);
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_refvest() {
+            _config->set_refvest(_config->_path);
             refvest_handle = protocol_ptr.make_instance<refvest>(
                 refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_helmet() {
+            _config->set_helmet(_config->_path);
             helmet_handle = protocol_ptr.make_instance<helmet>(
                 helmet_new_param{_config->_helmet_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_selene() {
+            _config->set_feature(_config->_path);
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
         }
         void set_protocols_handl_longinus() {
+            _config->set_detect(_config->_path);
+            _config->set_track(_config->_path);
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {
+            _config->set_blur(_config->_path);
             romancia_handle = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_damocles() {
+            _config->set_action_live(_config->_path);
             damocles_handle =
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.model_type, _config->_configure_directory.models_directory});

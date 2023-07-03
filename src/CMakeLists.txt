@@ -60,11 +60,8 @@ target_link_libraries(
 	${OpenCV_LIBS}
 	${GX_CV_SDK_LIBS}
 	GXMiscellaneous::gx-miscellaneous
+	LicenseClient::license_client
 )
-
-#没打包 临时指绝对路径
-target_include_directories(${target_name} PRIVATE /root/install/authorization-system/client)
-target_link_libraries(${target_name} PRIVATE /root/install/glasssix-offline-sdk/lib/liblicense_client.so)
 
 if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")  ) # 后续3566将配置进rknn  or (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566") 
 target_link_libraries(
