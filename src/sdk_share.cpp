@@ -1,9 +1,9 @@
-#include "SdkShare.hpp"
+#include "sdk_share.hpp"
 namespace glasssix {
     config* _config                             = nullptr;
     algo_irisviel_ptr* thread_algo_irisviel_ptr = nullptr;
     std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
-    ThreadPool* pool = nullptr;
+    thread_pool* pool = nullptr;
 
     void empower_Callback(void* context, std::string success, const char* message, std::int64_t remaining_seconds) {
         int T             = 3;

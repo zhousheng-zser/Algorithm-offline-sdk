@@ -1,6 +1,6 @@
 ﻿#include "gx_api.hpp"
 
-#include "SdkShare.hpp"
+#include "sdk_share.hpp"
 
 #include <g6/error_extensions.hpp>
 
@@ -163,6 +163,8 @@ namespace glasssix {
             name_config["helmet.json"]              = _config->_helmet_config;
             name_config["refvest.json"]             = _config->_refvest_config;
             name_config["track.json"]               = _config->_track_config;
+            name_config["sleep.json"]               = _config->_sleep_config;
+            name_config["leavepost.json"]               = _config->_sleep_config;
             return name_config;
         }
 
@@ -218,6 +220,12 @@ namespace glasssix {
                 } else if (name == "refvest.json" && _config->refvest_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_refvest_config);
+                } else if (name == "sleep.json" && _config->sleep_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_sleep_config);
+                } else if (name == "leavepost.json" && _config->leavepost_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_leavepost_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例
                 }

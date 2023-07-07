@@ -79,4 +79,16 @@ namespace glasssix {
         temp.get_to(_refvest_config);
         refvest_is_load = true;
     }
+    void config::set_sleep(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/sleep.json");
+        temp.get_to(_sleep_config);
+        sleep_is_load = true;
+    }
+    void config::set_leavepost(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/leavepost.json");
+        temp.get_to(_leavepost_config);
+        leavepost_is_load = true;
+    }
 } // namespace glasssix

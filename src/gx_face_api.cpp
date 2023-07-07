@@ -1,5 +1,5 @@
 ﻿#include "gx_face_api.hpp"
-#include "SdkShare.hpp"
+#include "sdk_share.hpp"
 
 #include <cmath>
 #include "distance/distance.hpp"
@@ -8,7 +8,7 @@
 
 namespace glasssix {
 
-    ThreadPool pool_irisviel(1);
+    thread_pool pool_irisviel(1);
     inline float Cosine_distance_AVX256(abi::vector<float>& x, abi::vector<float>& y) {
         float sum, a, b;
         size_t len     = x.size();
@@ -65,14 +65,14 @@ namespace glasssix {
         impl() {
             if (_config == nullptr) {
                 _config = new config();
-                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
-                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
@@ -98,7 +98,7 @@ namespace glasssix {
         } cache;
 
     private:
-        SecretKey_empower empower;
+        secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_id = "RK3588_C++_FACE_V1.0.0";
         std::string get_empower_key(std::string& path) {

@@ -1,14 +1,14 @@
-﻿#include "gx_refvest_api.hpp"
+﻿#include "gx_sleep_api.hpp"
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_refvest_api::gx_refvest_api() : impl_{std::make_unique<impl>()} {}
-    gx_refvest_api::gx_refvest_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_refvest_api::~gx_refvest_api() {}
-    gx_refvest_api::gx_refvest_api(gx_refvest_api&&) noexcept            = default;
-    gx_refvest_api& gx_refvest_api::operator=(gx_refvest_api&&) noexcept = default;
-    class gx_refvest_api::impl {
+    gx_sleep_api::gx_sleep_api() : impl_{std::make_unique<impl>()} {}
+    gx_sleep_api::gx_sleep_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_sleep_api::~gx_sleep_api() {}
+    gx_sleep_api::gx_sleep_api(gx_sleep_api&&) noexcept      = default;
+    gx_sleep_api& gx_sleep_api::operator=(gx_sleep_api&&) noexcept = default;
+    class gx_sleep_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -35,7 +35,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_REFVEST_V1.0.0";
+        std::string empower_algorithm_id = "RK3588_C++_SLEEP_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -48,30 +48,30 @@ namespace glasssix {
         }
     };
 
-
-    //  安全生产 反光衣检测
-    abi::vector<refvest_info> gx_refvest_api::safe_production_refvest(gx_img_api& mat) {
+    //  睡岗检测
+    sleep_info gx_sleep_api::safe_production_sleep(gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            abi::vector<refvest_info> ans;
+            sleep_info ans;
             std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<refvest::detect>(ptr->refvest_handle,
-                refvest_detect_param{.instance_guid = "",
-                    .height                         = mat.get_rows(),
-                    .width                          = mat.get_cols(),
-                    .roi_x                          = 0,
-                    .roi_y                          = 0,
-                    .roi_width                      = mat.get_cols(),
-                    .roi_height                     = mat.get_rows(),
-                    .format                         = _config->_refvest_config.format,
-                    .params = refvest_detect_param::confidence_params{.conf_thres = _config->_refvest_config.conf_thres,
-                        .iou_thres = _config->_refvest_config.iou_thres}},
+            auto result = ptr->protocol_ptr.invoke<sleep::detect>(ptr->sleep_handle,
+                sleep_detect_param{.instance_guid = "",
+                    .format                       = _config->_sleep_config.format,
+                    .height                       = mat.get_rows(),
+                    .width                        = mat.get_cols(),
+                    .roi_x                        = 0,
+                    .roi_y                        = 0,
+                    .roi_width                    = mat.get_cols(),
+                    .roi_height                   = mat.get_rows(),
+                    .params = sleep_detect_param::confidence_params{.conf_thres = _config->_sleep_config.conf_thres,
+                        .iou_thres                                              = _config->_sleep_config.iou_thres}},
                 str);
-            ans         = std::move(result.detect_info);
+
+            ans = std::move(result.detect_info);
             return ans;
         });
         return result_pool.get();

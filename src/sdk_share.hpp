@@ -2,16 +2,17 @@
 #include "../src/nessus/protocol.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/flame.hpp"
-#include "../src/nessus/protocols/gungnir.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
+#include "../src/nessus/protocols/sleep.hpp"
+#include "../src/nessus/protocols/leavepost.hpp"
 
-#include "SecretKey_empower.hpp"
-#include "ThreadPool.hpp"
+#include "secret_key_empower.hpp"
+#include "thread_pool.hpp"
 #include "config.hpp"
 
 #include <mutex>
@@ -70,6 +71,8 @@ namespace glasssix {
             Function["longinus"] = &algo_ptr::set_protocols_handl_longinus;
             Function["romancia"] = &algo_ptr::set_protocols_handl_romancia;
             Function["damocles"] = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]    = &algo_ptr::set_protocols_handl_sleep;
+            Function["leavepost"]  = &algo_ptr::set_protocols_handl_leavepost;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -110,20 +113,31 @@ namespace glasssix {
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_sleep() {
+            _config->set_sleep(_config->_path);
+            sleep_handle = protocol_ptr.make_instance<sleep>(
+                sleep_new_param{_config->_sleep_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_leavepost() {
+            _config->set_leavepost(_config->_path);
+            leavepost_handle = protocol_ptr.make_instance<leavepost>(
+                leavepost_new_param{_config->_leavepost_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         damocles damocles_handle;
-        gungnir gungnir_handle;
         longinus longinus_handle;
         romancia romancia_handle;
         selene selene_handle;
         refvest refvest_handle;
         flame flame_handle;
         helmet helmet_handle;
+        sleep sleep_handle;
+        leavepost leavepost_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
-    extern ThreadPool* pool;
+    extern thread_pool* pool;
     extern void empower_Callback(
         void* context, std::string success, const char* message, std::int64_t remaining_seconds);
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);

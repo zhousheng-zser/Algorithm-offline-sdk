@@ -1,14 +1,14 @@
-﻿#include "gx_refvest_api.hpp"
+﻿#include "gx_leavepost_api.hpp"
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_refvest_api::gx_refvest_api() : impl_{std::make_unique<impl>()} {}
-    gx_refvest_api::gx_refvest_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_refvest_api::~gx_refvest_api() {}
-    gx_refvest_api::gx_refvest_api(gx_refvest_api&&) noexcept            = default;
-    gx_refvest_api& gx_refvest_api::operator=(gx_refvest_api&&) noexcept = default;
-    class gx_refvest_api::impl {
+    gx_leavepost_api::gx_leavepost_api() : impl_{std::make_unique<impl>()} {}
+    gx_leavepost_api::gx_leavepost_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_leavepost_api::~gx_leavepost_api() {}
+    gx_leavepost_api::gx_leavepost_api(gx_leavepost_api&&) noexcept      = default;
+    gx_leavepost_api& gx_leavepost_api::operator=(gx_leavepost_api&&) noexcept = default;
+    class gx_leavepost_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -35,7 +35,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_REFVEST_V1.0.0";
+        std::string empower_algorithm_id = "RK3588_C++_LEAVEPOST_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -48,30 +48,30 @@ namespace glasssix {
         }
     };
 
-
-    //  安全生产 反光衣检测
-    abi::vector<refvest_info> gx_refvest_api::safe_production_refvest(gx_img_api& mat) {
+    //  离岗检测
+    leavepost_info gx_leavepost_api::safe_production_leavepost(gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            abi::vector<refvest_info> ans;
+            leavepost_info ans;
             std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<refvest::detect>(ptr->refvest_handle,
-                refvest_detect_param{.instance_guid = "",
-                    .height                         = mat.get_rows(),
-                    .width                          = mat.get_cols(),
-                    .roi_x                          = 0,
-                    .roi_y                          = 0,
-                    .roi_width                      = mat.get_cols(),
-                    .roi_height                     = mat.get_rows(),
-                    .format                         = _config->_refvest_config.format,
-                    .params = refvest_detect_param::confidence_params{.conf_thres = _config->_refvest_config.conf_thres,
-                        .iou_thres = _config->_refvest_config.iou_thres}},
+            auto result = ptr->protocol_ptr.invoke<leavepost::detect>(ptr->leavepost_handle,
+                leavepost_detect_param{.instance_guid = "",
+                    .format                           = _config->_leavepost_config.format,
+                    .height                       = mat.get_rows(),
+                    .width                        = mat.get_cols(),
+                    .roi_x                        = 0,
+                    .roi_y                        = 0,
+                    .roi_width                    = mat.get_cols(),
+                    .roi_height                   = mat.get_rows(),
+                    .params = leavepost_detect_param::confidence_params{.conf_thres = _config->_leavepost_config.conf_thres,
+                        .iou_thres                                              = _config->_leavepost_config.iou_thres}},
                 str);
-            ans         = std::move(result.detect_info);
+
+            ans = std::move(result.detect_info);
             return ans;
         });
         return result_pool.get();

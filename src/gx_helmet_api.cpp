@@ -1,6 +1,6 @@
 ﻿#include "gx_helmet_api.hpp"
 
-#include "SdkShare.hpp"
+#include "sdk_share.hpp"
 
 namespace glasssix {
 
@@ -20,21 +20,21 @@ namespace glasssix {
         impl() {
             if (_config == nullptr) {
                 _config = new config();
-                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
-                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         ~impl() {}
 
     private:
-        SecretKey_empower empower;
+        secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_id = "RK3588_C++_HELMET_V1.0.0";
         std::string get_empower_key(std::string& path) {

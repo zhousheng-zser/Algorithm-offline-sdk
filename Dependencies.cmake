@@ -114,7 +114,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566")
     set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     set(cvsdk_lib_relative_path "/lib/rk3588/aarch64-linux-gnu/release")
-    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service flame helmet refvest)
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service flame helmet refvest sleep leavepost)
 endif()
 
 set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)
