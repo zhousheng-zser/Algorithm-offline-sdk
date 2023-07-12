@@ -85,6 +85,12 @@ namespace glasssix {
         temp.get_to(_sleep_config);
         sleep_is_load = true;
     }
+    void config::set_smoke(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/smoke.json");
+        temp.get_to(_smoke_config);
+        smoke_is_load = true;
+    }
     void config::set_leavepost(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/leavepost.json");

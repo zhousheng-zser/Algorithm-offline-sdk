@@ -1,10 +1,14 @@
 ﻿#include "gx_face_api.hpp"
+
+#include "distance/distance.hpp"
+#include "glass6/secret_key_empower.hpp"
 #include "sdk_share.hpp"
 
 #include <cmath>
-#include "distance/distance.hpp"
 #include <fstream>
 #include <random>
+
+#include <g6/json_extensions.hpp>
 
 namespace glasssix {
 
@@ -56,7 +60,7 @@ namespace glasssix {
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_license(empower_key.c_str());
-            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            empower.set_algorithm_id(empower_algorithm_id);
             empower.evaluate_license(empower_Callback, nullptr);
             cache.index = 0;
             cache.track_history.clear();
@@ -604,10 +608,10 @@ namespace glasssix {
             }
 
         } else {
-            abi::vector<face_info> faces = detect(mat);
-            if (faces.size() == 0)
+            faces_temp = detect(mat);
+            if (faces_temp.size() == 0)
                 return ans;
-            for (int i = 0; i < faces.size(); ++i) {
+            for (int i = 0; i < faces_temp.size(); ++i) {
                 faces_search_one_info temp;
                 temp.prob                 = std::nullopt;
                 temp.facerectwithfaceinfo = faces_temp[i];

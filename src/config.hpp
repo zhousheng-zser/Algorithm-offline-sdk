@@ -72,7 +72,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
-        GX_FIELD(float, iou_thres);
+        GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -81,7 +81,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
-        GX_FIELD(float, iou_thres);
+        GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -90,7 +90,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
-        GX_FIELD(float, iou_thres);
+        GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -100,7 +100,17 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
-        GX_FIELD(float, iou_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct smoke_config {
+        GX_BEGIN_FIELDS(smoke_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -110,7 +120,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
-        GX_FIELD(float, iou_thres);
+        GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -132,6 +142,7 @@ namespace glasssix {
         helmet_config _helmet_config;
         refvest_config _refvest_config;
         sleep_config _sleep_config;
+        sleep_config _smoke_config;
         leavepost_config _leavepost_config;
         void set_configure_directory(const abi::string& path);
         void set_detect(const abi::string& path);
@@ -144,6 +155,7 @@ namespace glasssix {
         void set_helmet(const abi::string& path);
         void set_refvest(const abi::string& path);
         void set_sleep(const abi::string& path);
+        void set_smoke(const abi::string& path);
         void set_leavepost(const abi::string& path);
 
         bool configure_directory_is_load = false;
@@ -157,6 +169,7 @@ namespace glasssix {
         bool helmet_is_load              = false;
         bool refvest_is_load             = false;
         bool sleep_is_load               = false;
+        bool smoke_is_load               = false;
         bool leavepost_is_load           = false;
 
     private:

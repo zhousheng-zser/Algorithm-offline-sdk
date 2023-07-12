@@ -30,6 +30,7 @@ namespace glasssix {
         struct parser_init_plugin_result {
             GX_BEGIN_FIELDS(parser_init_plugin_result);
             GX_FIELD(parser_result_status, status);
+            GX_FIELD(std::string, nessus_version);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE_DEFAULT;
@@ -96,10 +97,9 @@ namespace glasssix {
 
         void init(std::string_view config_file_path) const {
             throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
-                auto result = parse_raw_result<parser_init_plugin_result>(
-                    parser_init_plugin(instance_.get(), config_file_path.data(), U8("")));
-
-                check_result(result);
+                parser_init_plugin(instance_.get(), config_file_path.data(), U8(""));
+                //auto result = parse_raw_result<parser_init_plugin_result>();
+                //check_result(result);
             });
         }
 

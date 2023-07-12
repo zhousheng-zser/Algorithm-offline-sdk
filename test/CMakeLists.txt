@@ -22,7 +22,7 @@ target_include_directories(
     PRIVATE
         ${GX_PUBLIC_INCLUDE_DIR}/g6
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${GX_CV_SDK_INCLUDE}
+		${GX_CV_SDK_INCLUDE}
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)

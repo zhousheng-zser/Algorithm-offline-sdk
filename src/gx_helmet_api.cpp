@@ -14,7 +14,7 @@ namespace glasssix {
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_license(empower_key.c_str());
-            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            empower.set_algorithm_id(empower_algorithm_id);
             empower.evaluate_license(empower_Callback, nullptr);
         }
         impl() {
@@ -70,12 +70,12 @@ namespace glasssix {
                     .roi_width                     = mat.get_cols(),
                     .roi_height                    = mat.get_rows(),
                     .params = helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
-                        .iou_thres                                               = _config->_helmet_config.iou_thres}},
+                        .nms_thres                                               = _config->_helmet_config.nms_thres}},
                 str);
             ans         = std::move(result.detect_info);
             return ans;
         });
         return result_pool.get();
     }
-    
+
 } // namespace glasssix

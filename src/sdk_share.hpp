@@ -4,21 +4,19 @@
 #include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
+#include "../src/nessus/protocols/leavepost.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/sleep.hpp"
-#include "../src/nessus/protocols/leavepost.hpp"
-
-#include "secret_key_empower.hpp"
-#include "thread_pool.hpp"
+#include "../src/nessus/protocols/smoke.hpp"
 #include "config.hpp"
-
-#include <mutex>
-
+#include "glass6/secret_key_empower.hpp"
+#include "thread_pool.hpp"
 
 #include <chrono>
+#include <mutex>
 
 #include <g6/char8_t_remediation.hpp>
 #include <g6/crypto/symmetric_cipher_provider.hpp>
@@ -64,15 +62,16 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
-            Function["flame"]    = &algo_ptr::set_protocols_handl_flame;
-            Function["refvest"]  = &algo_ptr::set_protocols_handl_refvest;
-            Function["helmet"]   = &algo_ptr::set_protocols_handl_helmet;
-            Function["selene"]   = &algo_ptr::set_protocols_handl_selene;
-            Function["longinus"] = &algo_ptr::set_protocols_handl_longinus;
-            Function["romancia"] = &algo_ptr::set_protocols_handl_romancia;
-            Function["damocles"] = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]    = &algo_ptr::set_protocols_handl_sleep;
-            Function["leavepost"]  = &algo_ptr::set_protocols_handl_leavepost;
+            Function["flame"]     = &algo_ptr::set_protocols_handl_flame;
+            Function["refvest"]   = &algo_ptr::set_protocols_handl_refvest;
+            Function["helmet"]    = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]    = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"]  = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"]  = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"]  = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]     = &algo_ptr::set_protocols_handl_sleep;
+            Function["smoke"]     = &algo_ptr::set_protocols_handl_smoke;
+            Function["leavepost"] = &algo_ptr::set_protocols_handl_leavepost;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -118,6 +117,11 @@ namespace glasssix {
             sleep_handle = protocol_ptr.make_instance<sleep>(
                 sleep_new_param{_config->_sleep_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_smoke() {
+            _config->set_smoke(_config->_path);
+            smoke_handle = protocol_ptr.make_instance<smoke>(
+                smoke_new_param{_config->_smoke_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_leavepost() {
             _config->set_leavepost(_config->_path);
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
@@ -133,6 +137,7 @@ namespace glasssix {
         flame flame_handle;
         helmet helmet_handle;
         sleep sleep_handle;
+        smoke smoke_handle;
         leavepost leavepost_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;

@@ -1,4 +1,5 @@
 ﻿#include "gx_sleep_api.hpp"
+
 #include "sdk_share.hpp"
 
 namespace glasssix {
@@ -6,14 +7,14 @@ namespace glasssix {
     gx_sleep_api::gx_sleep_api() : impl_{std::make_unique<impl>()} {}
     gx_sleep_api::gx_sleep_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_sleep_api::~gx_sleep_api() {}
-    gx_sleep_api::gx_sleep_api(gx_sleep_api&&) noexcept      = default;
+    gx_sleep_api::gx_sleep_api(gx_sleep_api&&) noexcept            = default;
     gx_sleep_api& gx_sleep_api::operator=(gx_sleep_api&&) noexcept = default;
     class gx_sleep_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_license(empower_key.c_str());
-            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            empower.set_algorithm_id(empower_algorithm_id);
             empower.evaluate_license(empower_Callback, nullptr);
         }
         impl() {
@@ -68,7 +69,7 @@ namespace glasssix {
                     .roi_width                    = mat.get_cols(),
                     .roi_height                   = mat.get_rows(),
                     .params = sleep_detect_param::confidence_params{.conf_thres = _config->_sleep_config.conf_thres,
-                        .iou_thres                                              = _config->_sleep_config.iou_thres}},
+                        .nms_thres                                              = _config->_sleep_config.nms_thres}},
                 str);
 
             ans = std::move(result.detect_info);

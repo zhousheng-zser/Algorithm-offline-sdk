@@ -1,0 +1,22 @@
+#pragma once
+#include "gx_api.hpp"
+#include "info_smoke.hpp"
+
+namespace glasssix {
+
+    class GX_API(GXOFFLINERECOGNITION) gx_smoke_api {
+    public:
+        gx_smoke_api();
+        gx_smoke_api(const abi::string& config_path);
+        ~gx_smoke_api();
+        gx_smoke_api(gx_smoke_api&&) noexcept;
+        gx_smoke_api& operator=(gx_smoke_api&&) noexcept;
+        
+        //  Ë¯¸Ú¼ì²â
+       smoke_info safe_production_smoke(gx_img_api& mat);
+
+    private:
+        class impl;
+        std::unique_ptr<impl> impl_;
+    };
+} // namespace glasssix

@@ -42,6 +42,7 @@ namespace glasssix {
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
+#if __has_include(<span>)
         impl(std::span<const uchar> bgr_data, int rows, int cols, int limit) : img(rows, cols, CV_8UC3) {
             std::memcpy(img.data, bgr_data.data(), bgr_data.size());
             if (img.empty()) {
@@ -53,6 +54,7 @@ namespace glasssix {
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
+#endif
         ~impl() {}
 
         abi::string check_type(std::vector<uchar>& val, size_t len) {
@@ -103,7 +105,9 @@ namespace glasssix {
         abi::string type;
     };
     gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_unique<impl>(path, limit)} {}
+#if __has_include(<span>)
     gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_unique<impl>(buffer, limit)} {}
+#endif
     gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit) // 对外接口是先宽再高
         : impl_{std::make_unique<impl>(bgr_data, rows, cols, limit)} {} // opencv 构造是先高再宽
     gx_img_api::~gx_img_api() {}
@@ -164,7 +168,8 @@ namespace glasssix {
             name_config["refvest.json"]             = _config->_refvest_config;
             name_config["track.json"]               = _config->_track_config;
             name_config["sleep.json"]               = _config->_sleep_config;
-            name_config["leavepost.json"]               = _config->_sleep_config;
+            name_config["smoke.json"]               = _config->_smoke_config;
+            name_config["leavepost.json"]           = _config->_leavepost_config;
             return name_config;
         }
 
@@ -223,6 +228,9 @@ namespace glasssix {
                 } else if (name == "sleep.json" && _config->sleep_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_sleep_config);
+                } else if (name == "smoke.json" && _config->sleep_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_smoke_config);
                 } else if (name == "leavepost.json" && _config->leavepost_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_leavepost_config);

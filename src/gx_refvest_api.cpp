@@ -1,4 +1,5 @@
 ﻿#include "gx_refvest_api.hpp"
+
 #include "sdk_share.hpp"
 
 namespace glasssix {
@@ -13,7 +14,7 @@ namespace glasssix {
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_license(empower_key.c_str());
-            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            empower.set_algorithm_id(empower_algorithm_id);
             empower.evaluate_license(empower_Callback, nullptr);
         }
         impl() {
@@ -50,14 +51,14 @@ namespace glasssix {
 
 
     //  安全生产 反光衣检测
-    abi::vector<refvest_info> gx_refvest_api::safe_production_refvest(gx_img_api& mat) {
+    refvest_info gx_refvest_api::safe_production_refvest(gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            abi::vector<refvest_info> ans;
+            refvest_info ans;
             std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<refvest::detect>(ptr->refvest_handle,
                 refvest_detect_param{.instance_guid = "",
@@ -69,7 +70,7 @@ namespace glasssix {
                     .roi_height                     = mat.get_rows(),
                     .format                         = _config->_refvest_config.format,
                     .params = refvest_detect_param::confidence_params{.conf_thres = _config->_refvest_config.conf_thres,
-                        .iou_thres = _config->_refvest_config.iou_thres}},
+                        .nms_thres = _config->_refvest_config.nms_thres}},
                 str);
             ans         = std::move(result.detect_info);
             return ans;

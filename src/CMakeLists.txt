@@ -49,7 +49,7 @@ target_include_directories(
 		#"/root/install/nessus/include/Primitives"
 )
 
-target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
+target_compile_definitions(${target_name} PRIVATE GX_IS_GXOFFLINERECOGNITION_IMPL=1)
 target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
 target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 
