@@ -99,12 +99,12 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     HINTS
     ${GX_LICENSECLIENT_ROOT}
     )
-    find_package(
-    GTest
-    REQUIRED
-    HINTS ${GX_GTEST_ROOT}/lib/cmake
-    NO_DEFAULT_PATH
-    )
+    #find_package(
+    #GTest
+    #REQUIRED
+    #HINTS ${GX_GTEST_ROOT}/lib/cmake
+    #NO_DEFAULT_PATH
+    #)
 
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
