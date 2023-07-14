@@ -2,10 +2,13 @@
 
 #include <cstdint>
 
+#if GX_IS_GXOFFLINERECOGNITION_IMPL
 #include <g6/json_extensions.hpp>
+#endif
 typedef unsigned char uchar;
 
 namespace glasssix {
+#include "detail/reflection_directive_compat_start.frag.hpp"
     // 安全帽信息
     struct helmet_info {
         struct detected {
@@ -32,12 +35,12 @@ namespace glasssix {
         };
         GX_BEGIN_FIELDS(helmet_info);
 
-        GX_FIELD(abi::vector<detected>, detected_list);
-        GX_FIELD(abi::vector<cant_detected>, cant_detected_list);
+        GX_FIELD(abi::vector<cant_detected>, without_helmet_list); // 没带安全帽
+        GX_FIELD(abi::vector<detected>, with_helmet_list);// 带了安全帽
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
+#include "detail/reflection_directive_compat_end.frag.hpp"
 
 } // namespace glasssix

@@ -36,14 +36,21 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     NO_DEFAULT_PATH
     )
     find_package(
+    LicenseClient
+    REQUIRED
+    NO_DEFAULT_PATH
+    HINTS
+    ${GX_LICENSECLIENT_ROOT}
+    )
+    find_package(
     GTest
     REQUIRED
     HINTS ${GX_GTEST_ROOT}/lib/cmake
     NO_DEFAULT_PATH
     )
-    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/package/arm-linux-gnueabihf/lib)
-    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/package/arm-linux-gnueabihf/include)
-    set(OpenCV_LIBS opencv_core opencv_imgcodecs opencv_imgproc opencv_calib3d opencv_features2d opencv_flann opencv_highgui opencv_photo opencv_dnn.so.3.4.1 opencv_dnn.so opencv_ml opencv_video opencv_videoio opencv_videostab opencv_objdetect opencv_shape opencv_stitching opencv_superres)
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
+    set(OpenCV_LIBS opencv_world)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     find_package(
     GXMiscellaneous
@@ -92,6 +99,13 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     HINTS
     ${GX_LICENSECLIENT_ROOT}
     )
+    find_package(
+    GTest
+    REQUIRED
+    HINTS ${GX_GTEST_ROOT}/lib/cmake
+    NO_DEFAULT_PATH
+    )
+
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_LIBS opencv_world)
@@ -114,7 +128,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566")
     set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     set(cvsdk_lib_relative_path "/lib/rk3588/aarch64-linux-gnu/release")
-    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service flame helmet refvest)
+    set(GX_CV_SDK_LIBS damocles excalibur irisviel longinus parser plugin_register primitives romancia selene vision_service flame helmet refvest sleep leavepost smoke)
 endif()
 
 set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)

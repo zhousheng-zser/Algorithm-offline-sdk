@@ -1,23 +1,30 @@
 #pragma once
-#include <g6/json_extensions.hpp>
-
+#if __has_include(<span>)
 #include <span>
+#endif
 #include <string_view>
 #include <vector>
+
+#include <g6/abi/string.hpp>
+#include <g6/abi/vector.hpp>
+#include <g6/compat.hpp>
+
 typedef unsigned char uchar;
 const int IMG_2K               = 2048 * 1080;
 const int IMG_4K               = 3840 * 2160;
 const int IMG_Full_Aperture_4K = 4096 * 3112;
 
 namespace glasssix {
-    
+
     // 图片旋转角度枚举
     enum image_rotation_type { DEG90 = 0, DEG180 = 1, DEG270 = 2 };
 
     class GX_API(GXOFFLINERECOGNITION) gx_img_api {
     public:
         gx_img_api(abi::string path, int limit);
+#if __has_include(<span>)
         gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit);
+#endif
         gx_img_api(std::vector<uchar>& buffer, int limit);
         ~gx_img_api();
         gx_img_api(gx_img_api&&) noexcept;
@@ -41,12 +48,12 @@ namespace glasssix {
         ~gx_config_api();
         gx_config_api(gx_config_api&&) noexcept;
         gx_config_api& operator=(gx_config_api&&) noexcept;
-        
-        int set_config(const abi::string &name, const abi::string &key, int val);
-        int set_config(const abi::string &name, const abi::string &key, float val);
-        int set_config(const abi::string &name, const abi::string &key, abi::string val);
-        int set_config(const abi::string &name, const abi::string &key, bool val);
-        
+
+        int set_config(const abi::string& name, const abi::string& key, int val);
+        int set_config(const abi::string& name, const abi::string& key, float val);
+        int set_config(const abi::string& name, const abi::string& key, abi::string val);
+        int set_config(const abi::string& name, const abi::string& key, bool val);
+
     private:
         class impl;
         std::unique_ptr<impl> impl_;

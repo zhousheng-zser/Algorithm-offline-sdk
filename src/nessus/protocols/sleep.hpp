@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/info_helmet.hpp"
+#include "../../../include/g6/info_sleep.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -10,8 +10,8 @@
 #include <g6/json_extensions.hpp>
 
 namespace glasssix {
-    struct helmet_new_param {
-        GX_BEGIN_FIELDS(helmet_new_param);
+    struct sleep_new_param {
+        GX_BEGIN_FIELDS(sleep_new_param);
         GX_FIELD(std::int32_t, device);
         GX_FIELD(std::string, models_directory);
         GX_END_FIELDS;
@@ -19,7 +19,7 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct helmet_detect_param {
+    struct sleep_detect_param {
 
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
@@ -30,7 +30,7 @@ namespace glasssix {
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
 
-        GX_BEGIN_FIELDS(helmet_detect_param);
+        GX_BEGIN_FIELDS(sleep_detect_param);
         GX_FIELD(std::string, instance_guid);
         GX_FIELD(std::int32_t, format);
         GX_FIELD(std::int32_t, height);
@@ -45,15 +45,15 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct helmet_detect_result {
-        GX_BEGIN_FIELDS(helmet_detect_result);
+    struct sleep_detect_result {
+        GX_BEGIN_FIELDS(sleep_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(helmet_info, detect_info);
+        GX_FIELD(sleep_info, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct helmet : protocol_object {
-        struct detect : parser_inout<helmet_detect_param, helmet_detect_result> {};
+    struct sleep : protocol_object {
+        struct detect : parser_inout<sleep_detect_param, sleep_detect_result> {};
     };
 } // namespace glasssix

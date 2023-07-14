@@ -1,15 +1,15 @@
-﻿#include "gx_flame_api.hpp"
+﻿#include "gx_sleep_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_flame_api::gx_flame_api() : impl_{std::make_unique<impl>()} {}
-    gx_flame_api::gx_flame_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_flame_api::~gx_flame_api() {}
-    gx_flame_api::gx_flame_api(gx_flame_api&&) noexcept            = default;
-    gx_flame_api& gx_flame_api::operator=(gx_flame_api&&) noexcept = default;
-    class gx_flame_api::impl {
+    gx_sleep_api::gx_sleep_api() : impl_{std::make_unique<impl>()} {}
+    gx_sleep_api::gx_sleep_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_sleep_api::~gx_sleep_api() {}
+    gx_sleep_api::gx_sleep_api(gx_sleep_api&&) noexcept            = default;
+    gx_sleep_api& gx_sleep_api::operator=(gx_sleep_api&&) noexcept = default;
+    class gx_sleep_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_FLAME_V1.0.0";
+        std::string empower_algorithm_id = "RK3588_C++_SLEEP_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -49,27 +49,27 @@ namespace glasssix {
         }
     };
 
-    //  安全生产 烟雾火焰检测
-    flame_info gx_flame_api::safe_production_flame(gx_img_api& mat) {
+    //  睡岗检测
+    sleep_info gx_sleep_api::safe_production_sleep(gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            flame_info ans;
+            sleep_info ans;
             std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<flame::detect>(ptr->flame_handle,
-                flame_detect_param{.instance_guid = "",
-                    .format                       = _config->_flame_config.format,
+            auto result = ptr->protocol_ptr.invoke<sleep::detect>(ptr->sleep_handle,
+                sleep_detect_param{.instance_guid = "",
+                    .format                       = _config->_sleep_config.format,
                     .height                       = mat.get_rows(),
                     .width                        = mat.get_cols(),
                     .roi_x                        = 0,
                     .roi_y                        = 0,
                     .roi_width                    = mat.get_cols(),
                     .roi_height                   = mat.get_rows(),
-                    .params = flame_detect_param::confidence_params{.conf_thres = _config->_flame_config.conf_thres,
-                        .nms_thres                                              = _config->_flame_config.nms_thres}},
+                    .params = sleep_detect_param::confidence_params{.conf_thres = _config->_sleep_config.conf_thres,
+                        .nms_thres                                              = _config->_sleep_config.nms_thres}},
                 str);
 
             ans = std::move(result.detect_info);

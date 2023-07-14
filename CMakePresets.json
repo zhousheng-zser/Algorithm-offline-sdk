@@ -154,15 +154,16 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc",
                 "CMAKE_CXX_COMPILER": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-g++",
+                "GX_TOOLCHAIN_PREFIX": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1109Toolchain.cmake",
-                "GX_TOOLCHAIN_PREFIX": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-",
-                "GX_OPENCV_ROOT": "/home/zser/Code/opencv-3.4",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_2.15.5.20230223_beta",
-                "GX_MISCELLANEOUS_ROOT": "/home/zser/install/RV1109-miscellaneous",
+                "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_2.22.1.20230706_beta",
+                "GX_MISCELLANEOUS_ROOT": "/home/zser/install/gx-miscellaneous-1.0.0-no-net-arm-rv1109-linux",
                 "GX_GTEST_ROOT": "/home/zser/install/RV1109-googletest",
+                "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient",
                 "GX_TOOLHAIN_TARGET_NAME": "RV1109",
-                "GX_USE_PURE_C": "ON"
+                "GX_USE_PURE_C": "OFF"
             },
             "condition": {
                 "type": "equals",
@@ -187,8 +188,8 @@
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_2.20.5.20230621_beta",
-                "GX_GTEST_ROOT": "/usr/src/gtest",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20230710_beta",
+                "GX_GTEST_ROOT": "/root/.vs/googletest/out/install/rk3588",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",

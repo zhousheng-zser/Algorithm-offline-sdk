@@ -24,7 +24,7 @@ namespace glasssix {
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
             GX_FIELD(std::optional<float>, conf_thres);
-            GX_FIELD(std::optional<float>, iou_thres);
+            GX_FIELD(std::optional<float>, nms_thres);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -32,7 +32,6 @@ namespace glasssix {
 
         GX_BEGIN_FIELDS(refvest_detect_param);
         GX_FIELD(std::string, instance_guid);
-        GX_FIELD(std::int32_t, channels);
         GX_FIELD(std::int32_t, height);
         GX_FIELD(std::int32_t, width);
         GX_FIELD(std::int32_t, roi_x);
@@ -49,7 +48,7 @@ namespace glasssix {
     struct refvest_detect_result {
         GX_BEGIN_FIELDS(refvest_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(abi::vector<refvest_info>, detect_info);
+        GX_FIELD(refvest_info, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

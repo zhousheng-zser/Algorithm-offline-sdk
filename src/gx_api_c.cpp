@@ -61,7 +61,7 @@ char* gx_detect_inplace(const std::uint8_t* mat, int rows, int cols) {
         glasssix::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols, IMG_2K);
         abi::vector<face_info> faces = api->detect(Mat_);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -80,7 +80,7 @@ char* gx_track_inplace(const std::uint8_t* mat, int rows, int cols) {
         glasssix::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols, IMG_2K);
         abi::vector<face_trace_info> faces = api->track(Mat_);
 
-        nlohmann::json val = faces;
+        auto val = faces;
         for (int i = 0; i < faces.size(); i++)
             val[i]["trace_id"] = faces[0].trace_id;
         std::string result_ = val.dump();
@@ -101,7 +101,7 @@ char* gx_face_feature_inplace(const std::uint8_t* mat, int rows, int cols, bool 
         glasssix::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols, IMG_2K);
         faces_feature faces = api->face_feature(Mat_, is_clip);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -120,7 +120,7 @@ char* gx_user_search_inplace(const std::uint8_t* mat, int rows, int cols, int to
         glasssix::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols, IMG_2K);
         faces_search_info faces = api->user_search(Mat_, top, min_similarity);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -139,7 +139,7 @@ char* gx_detect_integration_inplace(const std::uint8_t* mat, int rows, int cols,
         glasssix::gx_img_api Mat_(make_buffer(mat, rows, cols), rows, cols, IMG_2K);
         faces_integration_search_info faces = api->detect_integration(Mat_, top, min_similarity);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -160,7 +160,7 @@ char* gx_detect(char* mat_path) {
         glasssix::gx_img_api mat(temp, IMG_2K);
         abi::vector<face_info> faces = api->detect(mat);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -180,7 +180,7 @@ char* gx_track(char* mat_path) {
         glasssix::gx_img_api mat(temp, IMG_2K);
         abi::vector<face_trace_info> faces = api->track(mat);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -200,7 +200,7 @@ char* gx_face_blur(char* mat_path) {
         glasssix::gx_img_api mat(temp, IMG_2K);
         faces_blur faces = api->face_blur(mat);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -221,7 +221,7 @@ char* gx_face_action_live(int action_type, bool& action_result, char* mat_path) 
         glasssix::action_live_type type = static_cast<glasssix::action_live_type>(action_type);
         face_info faces                 = api->face_action_live(type, action_result, mat);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -241,7 +241,7 @@ char* gx_face_spoofing_live(char* mat_path) {
         glasssix::gx_img_api mat(temp, IMG_2K);
         faces_spoofing faces = api->face_spoofing_live(mat);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -261,7 +261,7 @@ char* gx_face_feature(char* mat_path, bool is_clip) {
         glasssix::gx_img_api mat(temp, IMG_2K);
         faces_feature faces = api->face_feature(mat, is_clip);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -306,7 +306,7 @@ char* gx_user_search(char* mat_path, int top, float min_similarity) {
         glasssix::gx_img_api mat(temp, IMG_2K);
         faces_search_info faces = api->user_search(mat, top, min_similarity);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -349,11 +349,11 @@ char* gx_user_remove_records(char* keys) {
     try {
 
         abi::vector<abi::string> _keys;
-        nlohmann::json keys_temp = nlohmann::json::parse(keys);
+        auto keys_temp = auto::parse(keys);
         for (int i = 0; i < keys_temp.size(); i++) {
             _keys.push_back(abi::string{keys_temp[i].get<std::string>()});
         }
-        nlohmann::json val  = api->user_remove_records(_keys);
+        auto val  = api->user_remove_records(_keys);
         std::string result_ = val.dump();
 
         std::size_t size = result_.size() + 1;
@@ -374,7 +374,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
         bool flag = 0;
         abi::vector<abi::string> _keys;
         abi::vector<gx_img_api> _mat;
-        nlohmann::json data_temp = nlohmann::json::parse(data);
+        auto data_temp = auto::parse(data);
         for (int i = 0; i < data_temp.size(); i++) {
             try {
                 _mat.push_back(gx_img_api{abi::string{data_temp[i]["imgs"].get<std::string>()}});
@@ -386,7 +386,7 @@ char* gx_user_add_records(char* data, bool is_clip, bool is_faceinfo) {
                      + data_temp[i]["key"].get<std::string>() + "\n";
             }
         }
-        nlohmann::json val  = api->user_add_records(_keys, _mat, is_clip, is_faceinfo);
+        auto val  = api->user_add_records(_keys, _mat, is_clip, is_faceinfo);
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -408,7 +408,7 @@ char* gx_detect_integration(char* mat_path, int top, float min_similarity) {
         glasssix::gx_img_api mat(abi::string{mat_path}, IMG_2K);
         faces_integration_search_info faces = api->detect_integration(mat, top, min_similarity);
 
-        nlohmann::json val  = faces;
+        auto val  = faces;
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -441,13 +441,13 @@ char* gx_safe_production_refvest(char* mat, char* data) {
         gx_img_api _mat(abi::string{mat}, IMG_2K);
         abi::vector<detecte_roi> roi_list;
 
-        nlohmann::json data_temp = nlohmann::json::parse(data);
+        auto data_temp = auto::parse(data);
         for (int i = 0; i < data_temp.size(); i++) {
             roi_list.push_back(detecte_roi{
                 data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
         }
 
-        nlohmann::json val  = api->safe_production_refvest(_mat, roi_list);
+        auto val  = api->safe_production_refvest(_mat, roi_list);
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -465,13 +465,13 @@ char* gx_safe_production_flame(char* mat, char* data) {
         gx_img_api _mat(abi::string{mat}, IMG_2K);
         abi::vector<detecte_roi> roi_list;
 
-        nlohmann::json data_temp = nlohmann::json::parse(data);
+        auto data_temp = auto::parse(data);
         for (int i = 0; i < data_temp.size(); i++) {
             roi_list.push_back(detecte_roi{
                 data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
         }
 
-        nlohmann::json val  = api->safe_production_flame(_mat, roi_list);
+        auto val  = api->safe_production_flame(_mat, roi_list);
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -489,13 +489,13 @@ char* gx_safe_production_helmet(char* mat, char* data) {
         gx_img_api _mat(abi::string{mat}, IMG_2K);
         abi::vector<detecte_roi> roi_list;
 
-        nlohmann::json data_temp = nlohmann::json::parse(data);
+        auto data_temp = auto::parse(data);
         for (int i = 0; i < data_temp.size(); i++) {
             roi_list.push_back(detecte_roi{
                 data_temp[i]["roi_x"], data_temp[i]["roi_y"], data_temp[i]["roi_width"], data_temp[i]["roi_height"]});
         }
 
-        nlohmann::json val  = api->safe_production_helmet(_mat, roi_list);
+        auto val  = api->safe_production_helmet(_mat, roi_list);
         std::string result_ = val.dump();
         std::size_t size    = result_.size() + 1;
         char* result        = new char[size];
@@ -532,7 +532,7 @@ int get_disk_keys_num(char* path) {
         std::ifstream fp;
         fp.open(name, std::ios::binary);
         std::string result_str;
-        nlohmann::json result;
+        auto result;
         while (std::getline(fp, result_str)) {
             if (result_str.length() == 0) {
                 break;

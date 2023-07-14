@@ -1,6 +1,6 @@
 ﻿#include "gx_helmet_api.hpp"
 
-#include "SdkShare.hpp"
+#include "sdk_share.hpp"
 
 namespace glasssix {
 
@@ -14,27 +14,27 @@ namespace glasssix {
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_license(empower_key.c_str());
-            empower.set_algorithm_id(empower_algorithm_id.c_str());
+            empower.set_algorithm_id(empower_algorithm_id);
             empower.evaluate_license(empower_Callback, nullptr);
         }
         impl() {
             if (_config == nullptr) {
                 _config = new config();
-                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
-                pool    = new ThreadPool(_config->_configure_directory.thread_pool_num);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         ~impl() {}
 
     private:
-        SecretKey_empower empower;
+        secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_id = "RK3588_C++_HELMET_V1.0.0";
         std::string get_empower_key(std::string& path) {
@@ -70,12 +70,12 @@ namespace glasssix {
                     .roi_width                     = mat.get_cols(),
                     .roi_height                    = mat.get_rows(),
                     .params = helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
-                        .iou_thres                                               = _config->_helmet_config.iou_thres}},
+                        .nms_thres                                               = _config->_helmet_config.nms_thres}},
                 str);
             ans         = std::move(result.detect_info);
             return ans;
         });
         return result_pool.get();
     }
-    
+
 } // namespace glasssix

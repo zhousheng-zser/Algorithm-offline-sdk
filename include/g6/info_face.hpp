@@ -3,10 +3,13 @@
 #include <cstdint>
 #include <optional>
 
+#if GX_IS_GXOFFLINERECOGNITION_IMPL
 #include <g6/json_extensions.hpp>
+#endif
 typedef unsigned char uchar;
 
 namespace glasssix {
+#include "detail/reflection_directive_compat_start.frag.hpp"
     // 人脸属性
     struct attributes_info {
         GX_BEGIN_FIELDS(attributes_info);
@@ -169,7 +172,7 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-
+#include "detail/reflection_directive_compat_end.frag.hpp"
     // 动作活体类型枚举
     enum action_live_type {
         BDFACE_ACTION_LIVE_BLINK      = 0, // 眨眨眼
