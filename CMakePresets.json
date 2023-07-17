@@ -237,4 +237,19 @@
             }
         }
     ]
+    ,
+    "buildPresets": [
+        {
+            "name": "rk3588",
+            "configurePreset": "rk3588",
+            "configuration": "Release",
+            "jobs": 3
+        },
+        {
+            "name": "rk3588-debug",
+            "configurePreset": "rk3588-debug",
+            "configuration": "Debug",
+            "jobs": 3
+        }
+    ]
 }

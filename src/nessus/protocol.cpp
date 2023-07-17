@@ -33,7 +33,7 @@ namespace glasssix {
             GX_FIELD(std::string, nessus_version);
             GX_END_FIELDS;
 
-            GX_JSON_SERIALIZABLE_DEFAULT;
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
 
         struct parser_new_result {
@@ -97,9 +97,9 @@ namespace glasssix {
 
         void init(std::string_view config_file_path) const {
             throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
-                parser_init_plugin(instance_.get(), config_file_path.data(), U8(""));
-                //auto result = parse_raw_result<parser_init_plugin_result>();
-                //check_result(result);
+                auto result = parse_raw_result<parser_init_plugin_result>(
+                    parser_init_plugin(instance_.get(), config_file_path.data(), U8("")));
+                check_result(result);
             });
         }
 

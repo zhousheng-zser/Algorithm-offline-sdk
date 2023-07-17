@@ -9,8 +9,8 @@ typedef unsigned char uchar;
 
 namespace glasssix {
 #include "detail/reflection_directive_compat_start.frag.hpp"
-    // 安全帽信息
-    struct helmet_info {
+    // 睡岗信息
+    struct playphone_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
             GX_FIELD(float, score);
@@ -22,14 +22,13 @@ namespace glasssix {
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
-        GX_BEGIN_FIELDS(helmet_info);
+        GX_BEGIN_FIELDS(playphone_info);
 
-        GX_FIELD(abi::vector<boxes>, without_helmet_list); // 没带安全帽
-        GX_FIELD(abi::vector<boxes>, with_helmet_list); // 带了安全帽
+        GX_FIELD(abi::vector<boxes>, no_phone_list); //   没玩手机
+        GX_FIELD(abi::vector<boxes>, phone_list); //  在玩手机
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 #include "detail/reflection_directive_compat_end.frag.hpp"
-
 } // namespace glasssix

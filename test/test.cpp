@@ -12,10 +12,13 @@
 #include <gx_flame_api.hpp>
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
+#include <gx_onphone_api.hpp>
+#include <gx_playphone_api.hpp>
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smoke_api.hpp>
 // #include <gx_api_c.hpp>
+#include <g6/json_extensions.hpp>
 using namespace glasssix;
 
 // 用于windows 播放显示
@@ -552,59 +555,151 @@ namespace glasssix {
         }
         return ans_list;
     }
-    //    // 安全生产指标测试 烟火
-    //    //void safe_test1() {
-    //    //    std::ofstream safe_file("./flame.log", std::ios::out | std::ios::trunc);
-    //    //    // std::filesystem::path folder_path          = "/root/img/production/fire";
-    //    //    std::filesystem::path folder_path = "/root/img/production/no_flame";
-    //    //    std::vector<abi::string> img_list = find_file(folder_path);
-    //    //    for (int i = 0; i < img_list.size(); ++i) {
-    //    //        safe_file << img_list[i] << "#";
-    //    //        try {
-    //    //            gx_img_api img(img_list[i], 1 << 30);
-    //    //            auto val = api->safe_production_flame(img);
-    //    //            safe_file << val;
-    //    //        } catch (const std::exception& ex) {
-    //    //            safe_file << ex.what();
-    //    //        }
-    //    //        safe_file << "\n";
-    //    //    }
-    //    //}
-    //    // 安全生产指标测试 反光衣
-    //    //void safe_test2() {
-    //    //    std::ofstream safe_file("./refvest.log", std::ios::out | std::ios::trunc);
-    //    //    std::filesystem::path folder_path = "/root/img/production/ref_benchmark";
-    //    //    std::vector<abi::string> img_list = find_file(folder_path);
-    //    //    for (int i = 0; i < img_list.size(); ++i) {
-    //    //        safe_file << img_list[i] << "#";
-    //    //        try {
-    //    //            gx_img_api img(img_list[i], 1 << 30);
-    //    //            auto val = api->safe_production_refvest(img);
-    //    //            safe_file << val;
-    //    //        } catch (const std::exception& ex) {
-    //    //            safe_file << ex.what();
-    //    //        }
-    //    //        safe_file << "\n";
-    //    //    }
-    //    //}
-    //    // 安全生产指标测试 安全帽
-    //    //void safe_test3() {
-    //    //    std::ofstream safe_file("./helmet.log", std::ios::out | std::ios::trunc);
-    //    //    std::filesystem::path folder_path = "/root/img/production/val2017";
-    //    //    std::vector<abi::string> img_list = find_file(folder_path);
-    //    //    for (int i = 0; i < img_list.size(); ++i) {
-    //    //        safe_file << img_list[i] << "#";
-    //    //        try {
-    //    //            gx_img_api img(img_list[i], 1 << 30);
-    //    //            auto val = api->safe_production_helmet(img);
-    //    //            safe_file << val;
-    //    //        } catch (const std::exception& ex) {
-    //    //            safe_file << ex.what();
-    //    //        }
-    //    //        safe_file << "\n";
-    //    //    }
-    //    //}
-    //
+    // 安全生产指标测试 烟火
+    void safe_test1() {
+        gx_flame_api* api_temp = new gx_flame_api();
+        std::ofstream safe_file("./flame.log", std::ios::out | std::ios::trunc);
+        // std::filesystem::path folder_path          = "/root/img/production/fire";
+        std::filesystem::path folder_path = "/root/img/production/no_flame";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#####\n";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                auto val = api_temp->safe_production_flame(img);
+                safe_file << "fire_list = " << val.fire_list.size() << "\n";
+                for (int j = 0; j < val.fire_list.size(); j++)
+                    safe_file << "score = " << val.fire_list[j].score << " x1 = " << val.fire_list[j].x1
+                              << " y1 = " << val.fire_list[j].y1 << " x2 = " << val.fire_list[j].x2
+                              << " y2 = " << val.fire_list[j].y2 << "\n";
+                safe_file << "smoke_list = " << val.smoke_list.size() << "\n";
+                for (int j = 0; j < val.smoke_list.size(); j++)
+                    safe_file << "score = " << val.smoke_list[j].score << " x1 = " << val.smoke_list[j].x1
+                              << " y1 = " << val.smoke_list[j].y1 << " x2 = " << val.smoke_list[j].x2
+                              << " y2 = " << val.smoke_list[j].y2 << "\n";
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    // 安全生产指标测试 反光衣
+    void safe_test2() {
+        gx_refvest_api* api_temp = new gx_refvest_api();
+        std::ofstream safe_file("./refvest.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path = "/root/img/production/ref_benchmark";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#####\n";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                auto val = api_temp->safe_production_refvest(img);
+                safe_file << "without_refvest_list = " << val.without_refvest_list.size() << "\n";
+                for (int j = 0; j < val.without_refvest_list.size(); j++)
+                    safe_file << "score = " << val.without_refvest_list[j].score
+                              << " x1 = " << val.without_refvest_list[j].x1
+                              << " y1 = " << val.without_refvest_list[j].y1
+                              << " x2 = " << val.without_refvest_list[j].x2
+                              << " y2 = " << val.without_refvest_list[j].y2 << "\n";
+                safe_file << "with_refvest_list = " << val.with_refvest_list.size() << "\n";
+                for (int j = 0; j < val.with_refvest_list.size(); j++)
+                    safe_file << "score = " << val.with_refvest_list[j].score << " x1 = " << val.with_refvest_list[j].x1
+                              << " y1 = " << val.with_refvest_list[j].y1 << " x2 = " << val.with_refvest_list[j].x2
+                              << " y2 = " << val.with_refvest_list[j].y2 << "\n";
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    // 安全生产指标测试 安全帽
+    void safe_test3() {
+        gx_helmet_api* api_temp = new gx_helmet_api();
+        std::ofstream safe_file("./helmet.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path = "/root/img/production/val2017";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#####\n";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                auto val = api_temp->safe_production_helmet(img);
+                safe_file << "with_helmet_list = " << val.with_helmet_list.size() << "\n";
+                for (int j = 0; j < val.with_helmet_list.size(); j++)
+                    safe_file << "score = " << val.with_helmet_list[j].score << " x1 = " << val.with_helmet_list[j].x1
+                              << " y1 = " << val.with_helmet_list[j].y1 << " x2 = " << val.with_helmet_list[j].x2
+                              << " y2 = " << val.with_helmet_list[j].y2 << "\n";
+                safe_file << "with_helmet_list = " << val.with_helmet_list.size() << "\n";
+                for (int j = 0; j < val.with_helmet_list.size(); j++)
+                    safe_file << "score = " << val.with_helmet_list[j].score << " x1 = " << val.with_helmet_list[j].x1
+                              << " y1 = " << val.with_helmet_list[j].y1 << " x2 = " << val.with_helmet_list[j].x2
+                              << " y2 = " << val.with_helmet_list[j].y2 << "\n";
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    // 安全生产指标测试 睡岗
+    void safe_test4() {
+        gx_sleep_api* api_temp = new gx_sleep_api();
+        std::ofstream safe_file("./sleep.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path = "/root/img/production/sleep";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#####\n";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                auto val = api_temp->safe_production_sleep(img);
+                safe_file << "desk_list = " << val.desk_list.size() << "\n";
+                for (int j = 0; j < val.desk_list.size(); j++)
+                    safe_file << "score = " << val.desk_list[j].score << " x1 = " << val.desk_list[j].x1
+                              << " y1 = " << val.desk_list[j].y1 << " x2 = " << val.desk_list[j].x2
+                              << " y2 = " << val.desk_list[j].y2 << "\n";
+                safe_file << "lying_list = " << val.lying_list.size() << "\n";
+                for (int j = 0; j < val.lying_list.size(); j++)
+                    safe_file << "score = " << val.lying_list[j].score << " x1 = " << val.lying_list[j].x1
+                              << " y1 = " << val.lying_list[j].y1 << " x2 = " << val.lying_list[j].x2
+                              << " y2 = " << val.lying_list[j].y2 << "\n";
+                safe_file << "standing_list = " << val.standing_list.size() << "\n";
+                for (int j = 0; j < val.standing_list.size(); j++)
+                    safe_file << "score = " << val.standing_list[j].score << " x1 = " << val.standing_list[j].x1
+                              << " y1 = " << val.standing_list[j].y1 << " x2 = " << val.standing_list[j].x2
+                              << " y2 = " << val.standing_list[j].y2 << "\n";
+                safe_file << "work_list = " << val.work_list.size() << "\n";
+                for (int j = 0; j < val.work_list.size(); j++)
+                    safe_file << "score = " << val.work_list[j].score << " x1 = " << val.work_list[j].x1
+                              << " y1 = " << val.work_list[j].y1 << " x2 = " << val.work_list[j].x2
+                              << " y2 = " << val.work_list[j].y2 << "\n";
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+    // 安全生产指标测试 离岗
+    void safe_test5() {
+        gx_leavepost_api* api_temp = new gx_leavepost_api();
+        std::ofstream safe_file("./leavepost.log", std::ios::out | std::ios::trunc);
+        std::filesystem::path folder_path = "/root/img/production/leavepost";
+        std::vector<abi::string> img_list = find_file(folder_path);
+        for (int i = 0; i < img_list.size(); ++i) {
+            safe_file << img_list[i] << "#####\n";
+            try {
+                gx_img_api img(img_list[i], 1 << 30);
+                auto val = api_temp->safe_production_leavepost(img);
+
+                safe_file << "hat_list = " << val.hat_list.size() << "\n";
+                for (int j = 0; j < val.hat_list.size(); j++)
+                    safe_file << "score = " << val.hat_list[j].score << " x1 = " << val.hat_list[j].x1
+                              << " y1 = " << val.hat_list[j].y1 << " x2 = " << val.hat_list[j].x2
+                              << " y2 = " << val.hat_list[j].y2 << "\n";
+            } catch (const std::exception& ex) {
+                safe_file << ex.what();
+            }
+            safe_file << "\n";
+        }
+    }
+
     // 多线程测安全帽
     void thread_function_helmet() {
         gx_helmet_api* api_temp = new gx_helmet_api();
@@ -677,7 +772,6 @@ namespace glasssix {
             try {
                 gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
                 auto val = api_temp->user_search(img, 1, 0.5);
-                // printf(val.dump() << "\n";
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -695,10 +789,9 @@ namespace glasssix {
         int T      = 500;
         while (T--) {
             try {
-                //gx_img_api img("/root/img/bbb.jpg", static_cast<int>(1e9));
+                // gx_img_api img("/root/img/bbb.jpg", static_cast<int>(1e9));
                 gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
                 auto val = api_temp->detect_integration(img, 1, 0.5);
-                // printf(val.dump() << "\n";
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -797,6 +890,47 @@ namespace glasssix {
         printf("leavepost time = %d microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测玩手机
+    void thread_function_playphone() {
+        gx_playphone_api* api_temp = new gx_playphone_api();
+        int T                      = 1000;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_playphone(img);
+                printf("phone_list = %d no_phone_list= %d\n", val.phone_list.size(), val.no_phone_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("playphone time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // 多线程测打电话
+    void thread_function_onphone() {
+        gx_onphone_api* api_temp = new gx_onphone_api();
+        int T                    = 1000;
+        auto start               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/onphone.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_onphone(img);
+                printf("norm_list = %d onphone_list = %d\n", val.norm_list.size(), val.onphone_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("onphone time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
+
 } // namespace glasssix
 
 
@@ -829,6 +963,8 @@ int main(int argc, char** argv) {
         // safe_test1();
         // safe_test2();
         // safe_test3();
+        // safe_test4();
+        // safe_test5();
 
         // 人脸入库
         // test_add_face_all();
@@ -836,23 +972,27 @@ int main(int argc, char** argv) {
 
         // 多线程测性能测试
         std::thread t[30];
-        // t[0]       = std::thread(thread_function_helmet);
-        // t[1]       = std::thread(thread_function_flame);
-        // t[2]       = std::thread(thread_function_refvest);
+        t[0] = std::thread(thread_function_helmet);
+        t[1] = std::thread(thread_function_flame);
+        t[2] = std::thread(thread_function_refvest);
         // t[3]       = std::thread(thread_function_search);
-        t[4] = std::thread(thread_function_integration);
-        // t[5] = std::thread(thread_function_leavepost);
-        // t[6] = std::thread(thread_function_sleep);
-        // t[7] = std::thread(thread_function_smoke);
+        // t[4] = std::thread(thread_function_integration);
+        t[5] = std::thread(thread_function_leavepost);
+        // t[6] = std::thread(thread_function_sleep); // parser_init_plugin崩溃
+        t[7] = std::thread(thread_function_smoke);
+        t[8] = std::thread(thread_function_playphone);
+        t[9] = std::thread(thread_function_onphone);
 
-        // t[0].join();
-        // t[1].join();
-        // t[2].join();
+        t[0].join();
+        t[1].join();
+        t[2].join();
         // t[3].join();
-        t[4].join();
-        // t[5].join();
-        //  t[6].join();
-        // t[7].join();
+        // t[4].join();
+        t[5].join();
+        // t[6].join();
+        t[7].join();
+        t[8].join();
+        t[9].join();
 
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();

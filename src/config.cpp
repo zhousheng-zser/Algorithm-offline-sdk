@@ -97,4 +97,16 @@ namespace glasssix {
         temp.get_to(_leavepost_config);
         leavepost_is_load = true;
     }
+    void config::set_onphone(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/onphone.json");
+        temp.get_to(_onphone_config);
+        onphone_is_load = true;
+    }
+    void config::set_playphone(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/playphone.json");
+        temp.get_to(_playphone_config);
+        playphone_is_load = true;
+    }
 } // namespace glasssix

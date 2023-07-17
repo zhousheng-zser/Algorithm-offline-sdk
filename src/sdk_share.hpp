@@ -6,6 +6,8 @@
 #include "../src/nessus/protocols/irisviel.hpp"
 #include "../src/nessus/protocols/leavepost.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
+#include "../src/nessus/protocols/onphone.hpp"
+#include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
@@ -72,6 +74,8 @@ namespace glasssix {
             Function["sleep"]     = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]     = &algo_ptr::set_protocols_handl_smoke;
             Function["leavepost"] = &algo_ptr::set_protocols_handl_leavepost;
+            Function["playphone"] = &algo_ptr::set_protocols_handl_playphone;
+            Function["onphone"]   = &algo_ptr::set_protocols_handl_onphone;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -127,6 +131,16 @@ namespace glasssix {
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
                 leavepost_new_param{_config->_leavepost_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_onphone() {
+            _config->set_onphone(_config->_path);
+            onphone_handle = protocol_ptr.make_instance<onphone>(
+                onphone_new_param{_config->_onphone_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_playphone() {
+            _config->set_playphone(_config->_path);
+            playphone_handle = protocol_ptr.make_instance<playphone>(
+                playphone_new_param{_config->_playphone_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         damocles damocles_handle;
@@ -139,6 +153,8 @@ namespace glasssix {
         sleep sleep_handle;
         smoke smoke_handle;
         leavepost leavepost_handle;
+        playphone playphone_handle;
+        onphone onphone_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;

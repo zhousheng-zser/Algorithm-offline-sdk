@@ -170,6 +170,8 @@ namespace glasssix {
             name_config["sleep.json"]               = _config->_sleep_config;
             name_config["smoke.json"]               = _config->_smoke_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
+            name_config["playphone.json"]           = _config->_playphone_config;
+            name_config["onphone.json"]             = _config->_onphone_config;
             return name_config;
         }
 
@@ -228,12 +230,18 @@ namespace glasssix {
                 } else if (name == "sleep.json" && _config->sleep_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_sleep_config);
-                } else if (name == "smoke.json" && _config->sleep_is_load) {
+                } else if (name == "smoke.json" && _config->smoke_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_smoke_config);
                 } else if (name == "leavepost.json" && _config->leavepost_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_leavepost_config);
+                } else if (name == "playphone.json" && _config->playphone_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_playphone_config);
+                } else if (name == "onphone.json" && _config->onphone_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_onphone_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例
                 }
