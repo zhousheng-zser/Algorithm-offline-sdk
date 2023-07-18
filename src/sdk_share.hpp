@@ -13,6 +13,7 @@
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
+#include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
@@ -76,6 +77,7 @@ namespace glasssix {
             Function["leavepost"] = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"] = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]   = &algo_ptr::set_protocols_handl_onphone;
+            Function["workcloth"]   = &algo_ptr::set_protocols_handl_workcloth;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -141,6 +143,11 @@ namespace glasssix {
             playphone_handle = protocol_ptr.make_instance<playphone>(
                 playphone_new_param{_config->_playphone_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_workcloth() {
+            _config->set_workcloth(_config->_path);
+            workcloth_handle = protocol_ptr.make_instance<workcloth>(
+                workcloth_new_param{_config->_workcloth_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         damocles damocles_handle;
@@ -155,6 +162,7 @@ namespace glasssix {
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;
+        workcloth workcloth_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;

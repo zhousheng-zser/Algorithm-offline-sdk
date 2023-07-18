@@ -109,4 +109,10 @@ namespace glasssix {
         temp.get_to(_playphone_config);
         playphone_is_load = true;
     }
+    void config::set_workcloth(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/workcloth.json");
+        temp.get_to(_workcloth_config);
+        workcloth_is_load = true;
+    }
 } // namespace glasssix

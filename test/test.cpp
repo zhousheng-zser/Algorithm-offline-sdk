@@ -17,6 +17,7 @@
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smoke_api.hpp>
+#include <gx_workcloth_api.hpp>
 // #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
 using namespace glasssix;
@@ -930,6 +931,25 @@ namespace glasssix {
         printf("onphone time = %d microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测工服检测
+    void thread_function_workcloth() {
+        gx_workcloth_api* api_temp = new gx_workcloth_api();
+        int T                    = 1000;
+        auto start               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/workcloth.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_workcloth(img);
+                printf("workcloth_list = %d\n", val.workcloth_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("workcloth time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
 
 } // namespace glasssix
 
@@ -978,10 +998,11 @@ int main(int argc, char** argv) {
         //t[3] = std::thread(thread_function_search);
         //t[4] = std::thread(thread_function_integration);
         //t[5] = std::thread(thread_function_leavepost);
-        //t[6] = std::thread(thread_function_sleep); // parser_init_plugin崩溃
+        //t[6] = std::thread(thread_function_sleep);
         //t[7] = std::thread(thread_function_smoke);
         //t[8] = std::thread(thread_function_playphone);
         //t[9] = std::thread(thread_function_onphone);
+        //t[10] = std::thread(thread_function_workcloth);
 
         //t[0].join();
         //t[1].join();
@@ -993,6 +1014,7 @@ int main(int argc, char** argv) {
         //t[7].join();
         //t[8].join();
         //t[9].join();
+        //t[10].join();
 
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();

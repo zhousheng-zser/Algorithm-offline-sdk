@@ -1,0 +1,43 @@
+#pragma once
+
+#include <cstdint>
+
+#if GX_IS_GXOFFLINERECOGNITION_IMPL
+#include <g6/json_extensions.hpp>
+#endif
+typedef unsigned char uchar;
+
+namespace glasssix {
+#include "detail/reflection_directive_compat_start.frag.hpp"
+    // 睡岗信息
+    struct workcloth_info {
+        struct boxes {
+            struct rgb {
+                GX_BEGIN_FIELDS(rgb);
+                GX_FIELD(std::int32_t, b); // 蓝
+                GX_FIELD(std::int32_t, g); // 绿
+                GX_FIELD(std::int32_t, r); // 红
+                GX_END_FIELDS;
+                GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            };
+            GX_BEGIN_FIELDS(boxes);
+            GX_FIELD(float, score);
+            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
+            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
+            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
+            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_FIELD(rgb, up_rgb); // 躯干RGB三通道平均值
+            GX_FIELD(rgb, lw_rgb); // 下肢RGB三通道平均值
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
+        GX_BEGIN_FIELDS(workcloth_info);
+
+        GX_FIELD(abi::vector<boxes>, workcloth_list); //   穿工服的
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+#include "detail/reflection_directive_compat_end.frag.hpp"
+} // namespace glasssix
