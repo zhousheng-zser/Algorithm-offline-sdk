@@ -972,27 +972,27 @@ int main(int argc, char** argv) {
 
         // 多线程测性能测试
         std::thread t[30];
-        t[0] = std::thread(thread_function_helmet);
-        t[1] = std::thread(thread_function_flame);
-        t[2] = std::thread(thread_function_refvest);
-        // t[3]       = std::thread(thread_function_search);
-        // t[4] = std::thread(thread_function_integration);
-        t[5] = std::thread(thread_function_leavepost);
-        // t[6] = std::thread(thread_function_sleep); // parser_init_plugin崩溃
-        t[7] = std::thread(thread_function_smoke);
-        t[8] = std::thread(thread_function_playphone);
-        t[9] = std::thread(thread_function_onphone);
+        //t[0] = std::thread(thread_function_helmet);
+        //t[1] = std::thread(thread_function_flame);
+        //t[2] = std::thread(thread_function_refvest);
+        //t[3] = std::thread(thread_function_search);
+        //t[4] = std::thread(thread_function_integration);
+        //t[5] = std::thread(thread_function_leavepost);
+        //t[6] = std::thread(thread_function_sleep); // parser_init_plugin崩溃
+        //t[7] = std::thread(thread_function_smoke);
+        //t[8] = std::thread(thread_function_playphone);
+        //t[9] = std::thread(thread_function_onphone);
 
-        t[0].join();
-        t[1].join();
-        t[2].join();
-        // t[3].join();
-        // t[4].join();
-        t[5].join();
-        // t[6].join();
-        t[7].join();
-        t[8].join();
-        t[9].join();
+        //t[0].join();
+        //t[1].join();
+        //t[2].join();
+        //t[3].join();
+        //t[4].join();
+        //t[5].join();
+        //t[6].join();
+        //t[7].join();
+        //t[8].join();
+        //t[9].join();
 
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();
