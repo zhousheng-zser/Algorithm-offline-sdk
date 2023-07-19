@@ -14,6 +14,7 @@
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
+#include "../src/nessus/protocols/pedestrian_labor.hpp"
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
@@ -77,7 +78,8 @@ namespace glasssix {
             Function["leavepost"] = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"] = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]   = &algo_ptr::set_protocols_handl_onphone;
-            Function["workcloth"]   = &algo_ptr::set_protocols_handl_workcloth;
+            Function["workcloth"] = &algo_ptr::set_protocols_handl_workcloth;
+            Function["pedestrian_labor"] = &algo_ptr::set_protocols_handl_pedestrian_labor;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -148,6 +150,11 @@ namespace glasssix {
             workcloth_handle = protocol_ptr.make_instance<workcloth>(
                 workcloth_new_param{_config->_workcloth_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pedestrian_labor() {
+            _config->set_pedestrian_labor(_config->_path);
+            pedestrian_labor_handle = protocol_ptr.make_instance<pedestrian_labor>(
+                pedestrian_labor_new_param{_config->_pedestrian_labor_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         damocles damocles_handle;
@@ -163,6 +170,7 @@ namespace glasssix {
         playphone playphone_handle;
         onphone onphone_handle;
         workcloth workcloth_handle;
+        pedestrian_labor pedestrian_labor_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;

@@ -9,7 +9,7 @@ typedef unsigned char uchar;
 
 namespace glasssix {
 #include "detail/reflection_directive_compat_start.frag.hpp"
-    // 睡岗信息
+    // 工服信息
     struct workcloth_info {
         struct boxes {
             struct rgb {
@@ -21,7 +21,7 @@ namespace glasssix {
                 GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
             };
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score);
+            GX_FIELD(float, score); // 置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x

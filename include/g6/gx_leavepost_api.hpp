@@ -11,9 +11,9 @@ namespace glasssix {
         ~gx_leavepost_api();
         gx_leavepost_api(gx_leavepost_api&&) noexcept;
         gx_leavepost_api& operator=(gx_leavepost_api&&) noexcept;
-        
-        //  Àë¸Ú¼ì²â
-       leavepost_info safe_production_leavepost(gx_img_api& mat);
+
+        //  °²È«Éú²ú Àë¸Ú¼ì²â
+        leavepost_info safe_production_leavepost(gx_img_api& mat);
 
     private:
         class impl;

@@ -12,7 +12,7 @@ namespace glasssix {
         gx_playphone_api(gx_playphone_api&&) noexcept;
         gx_playphone_api& operator=(gx_playphone_api&&) noexcept;
 
-        //  睡岗检测
+        //  安全生产 玩手机检测
         playphone_info safe_production_playphone(gx_img_api& mat);
 
     private:

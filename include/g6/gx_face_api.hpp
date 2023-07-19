@@ -51,6 +51,7 @@ namespace glasssix {
         // ¶àÈËÁ³ËÑË÷
         abi::vector<faces_search_one_info> detect_many_faces_integration(
             gx_img_api& mat, bool is_living, float min_similarity);
+
     private:
         class impl;
         std::unique_ptr<impl> impl_;

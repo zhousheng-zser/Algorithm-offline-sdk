@@ -13,7 +13,7 @@ namespace glasssix {
     struct helmet_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score);
+            GX_FIELD(float, score); // 置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x

@@ -18,6 +18,7 @@
 #include <gx_sleep_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_workcloth_api.hpp>
+#include <gx_pedestrian_labor_api.hpp>
 // #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
 using namespace glasssix;
@@ -950,32 +951,30 @@ namespace glasssix {
         printf("workcloth time = %d microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测劳保检测
+    void thread_function_pedestrian_labor() {
+        gx_pedestrian_labor_api* api_temp = new gx_pedestrian_labor_api();
+        int T                      = 1000;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/pedestrian_labor.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pedestrian_labor(img);
+                printf("pedestrian_labor_list = %d\n", val.pedestrian_labor_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("pedestrian_labor time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
 
 } // namespace glasssix
 
 
 int main(int argc, char** argv) {
-    // C接口测试
-    /*
-    try {
-        char data[] = "[{\"key\":\"action_live_0\",\"imgs\":\"D:/test/test/img/"
-                      "action_live_0.jpg\"},{\"key\":\"action_live_1\",\"imgs\":\"/root/test/img/"
-                      "action_live_1.jpg\"},{\"key\":\"action_live_2\",\"imgs\":\"/root/test/img/"
-                      "action_live_2.jpg\"},{\"key\":\"action_live_3\",\"imgs\":\"/root/test/img/"
-                      "action_live_3.jpg\"},{\"key\":\"action_live_4\",\"imgs\":\"/root/test/img/action_live_4.jpg\"}]";
-        char keys[] = "[\"action_live_0\",\"action_live_1\",\"action_live_2\",\"action_live_3\",\"action_live_4\"]";
-        char img[]  = "D:/test/img/action_live_5.jpg";
-
-        printf_demo('c', img);
-        gx_user_load();
-        printf("asdsa4445454sad"<< "----\n";
-        double as = gx_feature_comparison("/root/img/1027/3.png", "/root/img/1027/5.png");
-        //char* ss = gx_detect_integration(img, 10, 0.2);
-        printf("%.5f\n", as);
-    } catch (const std::exception& ex) {
-        printf(ex.what() << "----\n";
-    }*/
-
     /* C++ 接口测试*/
     try {
         printf("hello world\n");
@@ -1002,7 +1001,8 @@ int main(int argc, char** argv) {
         //t[7] = std::thread(thread_function_smoke);
         //t[8] = std::thread(thread_function_playphone);
         //t[9] = std::thread(thread_function_onphone);
-        //t[10] = std::thread(thread_function_workcloth);
+        t[10] = std::thread(thread_function_workcloth);
+        //t[10] = std::thread(thread_function_pedestrian_labor);
 
         //t[0].join();
         //t[1].join();
@@ -1014,7 +1014,8 @@ int main(int argc, char** argv) {
         //t[7].join();
         //t[8].join();
         //t[9].join();
-        //t[10].join();
+        t[10].join();
+        //t[11].join();
 
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();

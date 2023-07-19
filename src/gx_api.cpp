@@ -172,7 +172,8 @@ namespace glasssix {
             name_config["leavepost.json"]           = _config->_leavepost_config;
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
-            name_config["workcloth.json"]             = _config->_workcloth_config;
+            name_config["workcloth.json"]           = _config->_workcloth_config;
+            name_config["pedestrian_labor.json"]    = _config->_pedestrian_labor_config;
             return name_config;
         }
 
@@ -246,6 +247,9 @@ namespace glasssix {
                 } else if (name == "workcloth.json" && _config->workcloth_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_workcloth_config);
+                } else if (name == "pedestrian_labor.json" && _config->pedestrian_labor_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pedestrian_labor_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例
                 }

@@ -24,7 +24,7 @@ namespace glasssix {
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
         GX_BEGIN_FIELDS(refvest_info);
-        GX_FIELD(abi::vector<boxes>, without_refvest_list); //没穿反光衣
+        GX_FIELD(abi::vector<boxes>, without_refvest_list); // 没穿反光衣
         GX_FIELD(abi::vector<boxes>, with_refvest_list); // 穿了反光衣
         GX_END_FIELDS;
 

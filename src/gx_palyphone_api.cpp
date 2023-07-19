@@ -48,7 +48,7 @@ namespace glasssix {
         }
     };
 
-    //  睡岗检测
+    //  玩手机检测
     playphone_info gx_playphone_api::safe_production_playphone(gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();

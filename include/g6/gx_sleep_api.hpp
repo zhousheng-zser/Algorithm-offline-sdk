@@ -11,9 +11,9 @@ namespace glasssix {
         ~gx_sleep_api();
         gx_sleep_api(gx_sleep_api&&) noexcept;
         gx_sleep_api& operator=(gx_sleep_api&&) noexcept;
-        
-        //  Ë¯¸Ú¼ì²â
-       sleep_info safe_production_sleep(gx_img_api& mat);
+
+        //  °²È«Éú²ú Ë¯¸Ú¼ì²â
+        sleep_info safe_production_sleep(gx_img_api& mat);
 
     private:
         class impl;

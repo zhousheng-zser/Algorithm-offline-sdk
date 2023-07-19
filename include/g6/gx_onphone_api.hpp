@@ -12,7 +12,7 @@ namespace glasssix {
         gx_onphone_api(gx_onphone_api&&) noexcept;
         gx_onphone_api& operator=(gx_onphone_api&&) noexcept;
 
-        //  睡岗检测
+        //  安全生产 打电话检测
         onphone_info safe_production_onphone(gx_img_api& mat);
 
     private:
