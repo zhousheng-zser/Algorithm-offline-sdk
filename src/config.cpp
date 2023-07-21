@@ -20,10 +20,14 @@ namespace glasssix {
         return temp;
     }
     void config::set_configure_directory(const abi::string& path) {
-        glasssix::json temp;
-        temp = read_json_file(path + "/configure_directory.json");
-        temp.get_to(_configure_directory);
-        configure_directory_is_load = true;
+        try {
+            glasssix::json temp;
+            temp = read_json_file(path + "/configure_directory.json");
+            temp.get_to(_configure_directory);
+            configure_directory_is_load = true;
+        } catch (...) {
+            throw source_code_aware_runtime_error(U8("Error: path = ")+path+U8("/configure_directory.json"));
+        }
     }
     void config::set_detect(const abi::string& path) {
         glasssix::json temp;

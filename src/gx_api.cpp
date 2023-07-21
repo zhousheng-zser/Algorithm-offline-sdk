@@ -99,7 +99,7 @@ namespace glasssix {
             }
             return "";
         }
-
+ 
         cv::Mat img;
         size_t data_len;
         abi::string type;
@@ -113,19 +113,19 @@ namespace glasssix {
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;
     gx_img_api& gx_img_api::operator=(gx_img_api&&) noexcept = default;
-    int gx_img_api::get_rows() {
+    int gx_img_api::get_rows() const {
         return impl_->img.rows;
     }
-    int gx_img_api::get_cols() {
+    int gx_img_api::get_cols() const {
         return impl_->img.cols;
     }
-    uchar* gx_img_api::get_data() {
+    const uchar* gx_img_api::get_data() const {
         return impl_->img.data;
     }
-    size_t gx_img_api::get_data_len() {
+    size_t gx_img_api::get_data_len() const {
         return impl_->data_len;
     }
-    abi::string gx_img_api::get_type() {
+    abi::string gx_img_api::get_type() const {
         return impl_->type;
     }
     bool gx_img_api::rotate(int deg) {
@@ -141,7 +141,7 @@ namespace glasssix {
         impl_->data_len = 1llu * impl_->img.channels() * impl_->img.cols * impl_->img.rows;
         return true;
     }
-    abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) {
+    abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) const {
         cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2));
         std::vector<uchar> buffer(1024 * 1024);
         cv::imencode(".jpg", cropped_face, buffer);

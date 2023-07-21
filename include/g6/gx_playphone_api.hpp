@@ -13,7 +13,7 @@ namespace glasssix {
         gx_playphone_api& operator=(gx_playphone_api&&) noexcept;
 
         //  安全生产 玩手机检测
-        playphone_info safe_production_playphone(gx_img_api& mat);
+        playphone_info safe_production_playphone(const gx_img_api& mat);
 
     private:
         class impl;

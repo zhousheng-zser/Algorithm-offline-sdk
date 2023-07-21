@@ -50,7 +50,7 @@ namespace glasssix {
     };
 
     //  工服检测
-    pedestrian_labor_info gx_pedestrian_labor_api::safe_production_pedestrian_labor(gx_img_api& mat) {
+    pedestrian_labor_info gx_pedestrian_labor_api::safe_production_pedestrian_labor(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -58,7 +58,7 @@ namespace glasssix {
             }
             auto ptr = all_thread_algo_ptr[id_];
             pedestrian_labor_info ans;
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<pedestrian_labor::detect>(ptr->pedestrian_labor_handle,
                 pedestrian_labor_detect_param{.instance_guid = "",
                     .format                         = _config->_pedestrian_labor_config.format,

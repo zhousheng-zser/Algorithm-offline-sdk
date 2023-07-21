@@ -188,7 +188,7 @@
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20230712_beta",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20230720_beta",
                 "GX_GTEST_ROOT": "/root/.vs/googletest/out/install/rk3588",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
@@ -243,13 +243,13 @@
             "name": "rk3588",
             "configurePreset": "rk3588",
             "configuration": "Release",
-            "jobs": 3
+            "jobs": 2
         },
         {
             "name": "rk3588-debug",
             "configurePreset": "rk3588-debug",
             "configuration": "Debug",
-            "jobs": 3
+            "jobs": 2
         }
     ]
 }

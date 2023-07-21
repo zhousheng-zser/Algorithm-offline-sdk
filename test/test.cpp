@@ -567,7 +567,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#####\n";
             try {
-                gx_img_api img(img_list[i], 1 << 30);
+                const gx_img_api img(img_list[i], 1 << 30);
                 auto val = api_temp->safe_production_flame(img);
                 safe_file << "fire_list = " << val.fire_list.size() << "\n";
                 for (int j = 0; j < val.fire_list.size(); j++)
@@ -594,7 +594,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#####\n";
             try {
-                gx_img_api img(img_list[i], 1 << 30);
+                const gx_img_api img(img_list[i], 1 << 30);
                 auto val = api_temp->safe_production_refvest(img);
                 safe_file << "without_refvest_list = " << val.without_refvest_list.size() << "\n";
                 for (int j = 0; j < val.without_refvest_list.size(); j++)
@@ -623,7 +623,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#####\n";
             try {
-                gx_img_api img(img_list[i], 1 << 30);
+                const gx_img_api img(img_list[i], 1 << 30);
                 auto val = api_temp->safe_production_helmet(img);
                 safe_file << "with_helmet_list = " << val.with_helmet_list.size() << "\n";
                 for (int j = 0; j < val.with_helmet_list.size(); j++)
@@ -650,7 +650,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#####\n";
             try {
-                gx_img_api img(img_list[i], 1 << 30);
+                const gx_img_api img(img_list[i], 1 << 30);
                 auto val = api_temp->safe_production_sleep(img);
                 safe_file << "desk_list = " << val.desk_list.size() << "\n";
                 for (int j = 0; j < val.desk_list.size(); j++)
@@ -687,7 +687,7 @@ namespace glasssix {
         for (int i = 0; i < img_list.size(); ++i) {
             safe_file << img_list[i] << "#####\n";
             try {
-                gx_img_api img(img_list[i], 1 << 30);
+                const gx_img_api img(img_list[i], 1 << 30);
                 auto val = api_temp->safe_production_leavepost(img);
 
                 safe_file << "hat_list = " << val.hat_list.size() << "\n";
@@ -709,7 +709,7 @@ namespace glasssix {
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/helmet.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/helmet.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_helmet(img);
                 printf("with_helmet_list = %d without_helmet_list = %d\n", val.with_helmet_list.size(),
                     val.without_helmet_list.size());
@@ -730,7 +730,7 @@ namespace glasssix {
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/flame.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/flame.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_flame(img);
                 printf("fire_list = %d smoke_list = %d\n", val.fire_list.size(), val.smoke_list.size());
 
@@ -750,7 +750,7 @@ namespace glasssix {
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/refvest.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/refvest.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_refvest(img);
                 printf("without_refvest_list = %d with_refvest_list = %d\n", val.without_refvest_list.size(),
                     val.with_refvest_list.size());
@@ -772,7 +772,7 @@ namespace glasssix {
         auto start = std::chrono::high_resolution_clock::now();
         while (T--) {
             try {
-                gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
                 auto val = api_temp->user_search(img, 1, 0.5);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -792,7 +792,7 @@ namespace glasssix {
         while (T--) {
             try {
                 // gx_img_api img("/root/img/bbb.jpg", static_cast<int>(1e9));
-                gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
                 auto val = api_temp->detect_integration(img, 1, 0.5);
 
             } catch (const std::exception& ex) {
@@ -838,7 +838,7 @@ namespace glasssix {
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/sleep.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/sleep.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_sleep(img);
                 printf("desk_list = %d lying_list = %d standing_list = %d work_list = %d\n", val.desk_list.size(),
                     val.lying_list.size(), val.standing_list.size(), val.work_list.size());
@@ -859,7 +859,7 @@ namespace glasssix {
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/smoke.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/smoke.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smoke(img);
                 printf("norm_list = %d smoke_list = %d\n", val.norm_list.size(), val.smoke_list.size());
 
@@ -879,7 +879,7 @@ namespace glasssix {
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/leavepost.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/leavepost.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_leavepost(img);
                 printf("hat_list = %d\n", val.hat_list.size());
 
@@ -899,7 +899,7 @@ namespace glasssix {
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 printf("phone_list = %d no_phone_list= %d\n", val.phone_list.size(), val.no_phone_list.size());
 
@@ -919,7 +919,7 @@ namespace glasssix {
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/onphone.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/onphone.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_onphone(img);
                 printf("norm_list = %d onphone_list = %d\n", val.norm_list.size(), val.onphone_list.size());
 
@@ -939,7 +939,7 @@ namespace glasssix {
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/workcloth.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/workcloth.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_workcloth(img);
                 printf("workcloth_list = %d\n", val.workcloth_list.size());
             } catch (const std::exception& ex) {
@@ -958,7 +958,7 @@ namespace glasssix {
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/pedestrian_labor.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/pedestrian_labor.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pedestrian_labor(img);
                 printf("pedestrian_labor_list = %d\n", val.pedestrian_labor_list.size());
             } catch (const std::exception& ex) {
@@ -995,26 +995,26 @@ int main(int argc, char** argv) {
         //t[1] = std::thread(thread_function_flame);
         //t[2] = std::thread(thread_function_refvest);
         //t[3] = std::thread(thread_function_search);
-        //t[4] = std::thread(thread_function_integration);
+        t[4] = std::thread(thread_function_integration);
         //t[5] = std::thread(thread_function_leavepost);
         //t[6] = std::thread(thread_function_sleep);
         //t[7] = std::thread(thread_function_smoke);
         //t[8] = std::thread(thread_function_playphone);
         //t[9] = std::thread(thread_function_onphone);
-        t[10] = std::thread(thread_function_workcloth);
-        //t[10] = std::thread(thread_function_pedestrian_labor);
+        //t[10] = std::thread(thread_function_workcloth);
+        //t[11] = std::thread(thread_function_pedestrian_labor);
 
         //t[0].join();
         //t[1].join();
         //t[2].join();
         //t[3].join();
-        //t[4].join();
+        t[4].join();
         //t[5].join();
         //t[6].join();
         //t[7].join();
         //t[8].join();
         //t[9].join();
-        t[10].join();
+        //t[10].join();
         //t[11].join();
 
         // auto start = std::chrono::high_resolution_clock::now();

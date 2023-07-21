@@ -13,7 +13,7 @@ namespace glasssix {
         gx_smoke_api& operator=(gx_smoke_api&&) noexcept;
 
         //  安全生产 抽烟检测
-        smoke_info safe_production_smoke(gx_img_api& mat);
+        smoke_info safe_production_smoke(const gx_img_api& mat);
 
     private:
         class impl;

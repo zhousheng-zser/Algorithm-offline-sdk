@@ -49,7 +49,7 @@ namespace glasssix {
     };
 
     //  抽烟检测
-    smoke_info gx_smoke_api::safe_production_smoke(gx_img_api& mat) {
+    smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -57,7 +57,7 @@ namespace glasssix {
             }
             auto ptr = all_thread_algo_ptr[id_];
             smoke_info ans;
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<smoke::detect>(ptr->smoke_handle,
                 smoke_detect_param{.instance_guid = "",
                     .format                       = _config->_smoke_config.format,

@@ -104,7 +104,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_FACE_V1.0.0";
+        std::string empower_algorithm_id = "RK3588_C++_FACE_V1.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -118,7 +118,7 @@ namespace glasssix {
     };
 
     // 人脸检测
-    abi::vector<face_info> gx_face_api::detect(gx_img_api& mat) {
+    abi::vector<face_info> gx_face_api::detect(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -126,7 +126,7 @@ namespace glasssix {
             }
             auto ptr = all_thread_algo_ptr[id_];
             abi::vector<face_info> ans;
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<longinus::detect>(ptr->longinus_handle,
                 longinus_detect_param{.instance_guid = "",
                     .format                          = _config->_detect_config.format,
@@ -143,7 +143,7 @@ namespace glasssix {
     }
 
     // 人脸追踪
-    abi::vector<face_trace_info> gx_face_api::track(gx_img_api& mat) {
+    abi::vector<face_trace_info> gx_face_api::track(const gx_img_api& mat) {
         abi::vector<face_trace_info> ans;
         if (impl_->cache.index % (_config->_track_config.detect_intv_before_track) == 0) {
             abi::vector<face_info> faces = detect(mat);
@@ -164,7 +164,7 @@ namespace glasssix {
             std::unordered_map<int, face_info> temp_faces;
             std::unordered_map<int, abi::string> temp_faces_id;
             for (it = impl_->cache.track_history.begin(); it != impl_->cache.track_history.end(); it++) {
-                std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<longinus::trace>(ptr->longinus_handle,
                     longinus_trace_param{
                         .instance_guid = "",
@@ -202,7 +202,7 @@ namespace glasssix {
     }
 
     // 人脸质量(模糊度)检测
-    faces_blur gx_face_api::face_blur(gx_img_api& mat) {
+    faces_blur gx_face_api::face_blur(const gx_img_api& mat) {
         faces_blur ans;
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
@@ -213,7 +213,7 @@ namespace glasssix {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result                   = ptr->protocol_ptr.invoke<romancia::blur_detect>(ptr->romancia_handle,
                 romancia_blur_detect_param{.instance_guid = "",
                                       .format                               = _config->_blur_config.format,
@@ -229,7 +229,7 @@ namespace glasssix {
     }
 
     // 配合活体检测
-    face_info gx_face_api::face_action_live(action_live_type action_type, bool& action_result, gx_img_api& mat) {
+    face_info gx_face_api::face_action_live(action_live_type action_type, bool& action_result, const gx_img_api& mat) {
         face_info ans;
         action_result                = 0;
         abi::vector<face_info> faces = detect(mat);
@@ -242,7 +242,7 @@ namespace glasssix {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result   = ptr->protocol_ptr.invoke<damocles::presentation_attack_detect>(ptr->damocles_handle,
                 damocles_presentation_attack_detect_param{.instance_guid = "",
                       .action_cmd                                          = action_type,
@@ -258,7 +258,7 @@ namespace glasssix {
     }
 
     // 静默活体检测
-    faces_spoofing gx_face_api::face_spoofing_live(gx_img_api& mat) {
+    faces_spoofing gx_face_api::face_spoofing_live(const gx_img_api& mat) {
         faces_spoofing ans;
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
@@ -269,7 +269,7 @@ namespace glasssix {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result                   = ptr->protocol_ptr.invoke<damocles::spoofing_detect>(ptr->damocles_handle,
                 damocles_spoofing_detect_param{.instance_guid = "",
                                       .format                                   = _config->_action_live_config.format,
@@ -286,7 +286,7 @@ namespace glasssix {
     }
 
     // 特征提取融合
-    faces_feature gx_face_api::face_feature(gx_img_api& mat, bool is_clip) {
+    faces_feature gx_face_api::face_feature(const gx_img_api& mat, bool is_clip) {
         faces_feature ans;
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
@@ -298,7 +298,7 @@ namespace glasssix {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto romancia_result = ptr->protocol_ptr.invoke<romancia::alignFace>(ptr->romancia_handle,
                 romancia_align_face_param{.instance_guid = "",
                     .format                              = _config->_feature_config.format,
@@ -348,7 +348,7 @@ namespace glasssix {
     }
 
     // 特征值库搜索
-    faces_search_info gx_face_api::user_search(gx_img_api& mat, int top, float min_similarity) {
+    faces_search_info gx_face_api::user_search(const gx_img_api& mat, int top, float min_similarity) {
         faces_search_info ans;
         if (top <= 0)
             throw source_code_aware_runtime_error(U8("Error: Invalid parameter: top <= 0."));
@@ -396,7 +396,7 @@ namespace glasssix {
     }
 
     // 特征值库批量删除
-    abi::vector<face_user_result> gx_face_api::user_remove_records(abi::vector<abi::string>& keys) {
+    abi::vector<face_user_result> gx_face_api::user_remove_records(const abi::vector<abi::string>& keys) {
         auto result_pool = pool_irisviel.enqueue([&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
@@ -419,7 +419,7 @@ namespace glasssix {
 
     // 特征值库批量添加
     abi::vector<face_user_result> gx_face_api::user_add_records(
-        abi::vector<abi::string>& keys, abi::vector<gx_img_api>& mat, bool is_clip, bool is_faceinfo) {
+        const abi::vector<abi::string>& keys, const abi::vector<gx_img_api>& mat, bool is_clip, bool is_faceinfo) {
         abi::vector<face_user_result> ans(mat.size());
         abi::vector<database_record> faces_A_add;
         abi::vector<database_record> faces_A_update;
@@ -545,7 +545,7 @@ namespace glasssix {
     }
 
     // 特征值库键值查询
-    bool gx_face_api::user_contains_key(abi::string& key) {
+    bool gx_face_api::user_contains_key(const abi::string& key) {
         auto result_pool = pool_irisviel.enqueue([&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
@@ -575,7 +575,8 @@ namespace glasssix {
     }
 
     // 人脸识别流程融合
-    faces_integration_search_info gx_face_api::detect_integration(gx_img_api& mat, int top, float min_similarity) {
+    faces_integration_search_info gx_face_api::detect_integration(
+        const gx_img_api& mat, int top, float min_similarity) {
         faces_integration_search_info ans;
         faces_spoofing faces = face_spoofing_live(mat);
         if (faces.spoofing_result.size() == 0) {
@@ -592,7 +593,7 @@ namespace glasssix {
 
     // 多人脸搜索
     abi::vector<faces_search_one_info> gx_face_api::detect_many_faces_integration(
-        gx_img_api& mat, bool is_living, float min_similarity) {
+        const gx_img_api& mat, bool is_living, float min_similarity) {
         abi::vector<faces_search_one_info> ans;
         abi::vector<face_info> faces_temp;
         if (is_living) {
@@ -627,7 +628,7 @@ namespace glasssix {
             auto ptr = all_thread_algo_ptr[id_];
 
             // 人脸对齐
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto romancia_result = ptr->protocol_ptr.invoke<romancia::alignFace>(ptr->romancia_handle,
                 romancia_align_face_param{.instance_guid = "",
                     .format                              = _config->_feature_config.format,
@@ -674,7 +675,7 @@ namespace glasssix {
     }
 
     // 1:1特征值对比接口
-    double gx_face_api::feature_comparison(gx_img_api& mat_A, gx_img_api& mat_B) {
+    double gx_face_api::feature_comparison(const gx_img_api& mat_A, const gx_img_api& mat_B) {
         double ans                       = 0;
         abi::vector<face_info> is_mask_A = detect(mat_A);
         abi::vector<face_info> is_mask_B = detect(mat_B);

@@ -1,4 +1,4 @@
-﻿set(target_version 1.0.3)
+﻿set(target_version 1.0.4)
 set(target_name gx-offline-recognition)
 set(package_name GxOfflineRecognition)
 

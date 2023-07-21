@@ -13,7 +13,7 @@ namespace glasssix {
         gx_pedestrian_labor_api& operator=(gx_pedestrian_labor_api&&) noexcept;
 
         //  安全生产 劳保检测
-        pedestrian_labor_info safe_production_pedestrian_labor(gx_img_api& mat);
+        pedestrian_labor_info safe_production_pedestrian_labor(const gx_img_api& mat);
 
     private:
         class impl;

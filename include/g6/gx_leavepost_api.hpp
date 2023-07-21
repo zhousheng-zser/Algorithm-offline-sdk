@@ -13,7 +13,7 @@ namespace glasssix {
         gx_leavepost_api& operator=(gx_leavepost_api&&) noexcept;
 
         //  安全生产 离岗检测
-        leavepost_info safe_production_leavepost(gx_img_api& mat);
+        leavepost_info safe_production_leavepost(const gx_img_api& mat);
 
     private:
         class impl;

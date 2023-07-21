@@ -12,7 +12,7 @@ namespace glasssix {
         gx_helmet_api(gx_helmet_api&&) noexcept;
         gx_helmet_api& operator=(gx_helmet_api&&) noexcept;
         //  安全生产 安全帽检测
-        helmet_info safe_production_helmet(gx_img_api& mat);
+        helmet_info safe_production_helmet(const gx_img_api& mat);
 
     private:
         class impl;
