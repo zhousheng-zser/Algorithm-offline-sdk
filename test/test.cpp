@@ -13,14 +13,17 @@
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
 #include <gx_onphone_api.hpp>
+#include <gx_pedestrian_api.hpp>
+#include <gx_pedestrian_labor_api.hpp>
 #include <gx_playphone_api.hpp>
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_workcloth_api.hpp>
-#include <gx_pedestrian_labor_api.hpp>
 // #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
+
+#include <opencv2/opencv.hpp>
 using namespace glasssix;
 
 // 用于windows 播放显示
@@ -935,13 +938,13 @@ namespace glasssix {
     // 多线程测工服检测
     void thread_function_workcloth() {
         gx_workcloth_api* api_temp = new gx_workcloth_api();
-        int T                    = 1000;
-        auto start               = std::chrono::high_resolution_clock::now();
+        int T                      = 1000;
+        auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/workcloth.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_workcloth(img);
-                printf("workcloth_list = %d\n", val.workcloth_list.size());
+                printf("workcloth_list = %d\n", val.cloth_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -954,8 +957,8 @@ namespace glasssix {
     // 多线程测劳保检测
     void thread_function_pedestrian_labor() {
         gx_pedestrian_labor_api* api_temp = new gx_pedestrian_labor_api();
-        int T                      = 1000;
-        auto start                 = std::chrono::high_resolution_clock::now();
+        int T                             = 1000;
+        auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/pedestrian_labor.jpg", static_cast<int>(1e9));
@@ -969,6 +972,556 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("pedestrian_labor time = %d microsecond\n", duration.count());
         delete api_temp;
+    }
+    // 多线程测行人检测
+    void thread_function_pedestrian() {
+        gx_pedestrian_api* api_temp = new gx_pedestrian_api();
+        int T                       = 1000;
+        auto start                  = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/pedestrian.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pedestrian(img);
+                printf("person_list = %d\n", val.person_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("pedestrian time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+} // namespace glasssix
+
+// 处理视频的
+namespace glasssix {
+    const cv::Scalar RED   = CV_RGB(250, 0, 0); // 红
+    const cv::Scalar GREEN = CV_RGB(0, 250, 0); // 绿
+    const cv::Scalar WHITE = CV_RGB(255, 255, 255); // 白
+
+    void todo_video() {
+        // std::thread tt[30];
+        //  int cnt = 0;
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_1.mp4", ".avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_2.mp4", ".avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_1.mp4", ".avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_2.mp4", ".avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_3.mp4", ".avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_4.mp4", ".avi");
+        //  tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_helmet.avi");
+        //  tt[cnt++] = std::thread(workcloth_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_workcloth.avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_smoke.avi");
+        //  tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/zhenshai.mp4", "_helmet.avi");
+        //  tt[cnt++] = std::thread(workcloth_video, "/root/img/video/xiangmu/zhenshai.mp4", "_workcloth.avi");
+        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/xiangmu/zhenshai.mp4", "_smoke.avi");
+        //  for (int i = 0; i < cnt; i++)
+        //      tt[i].join();
+        //  printf("smoke OK ------------------\n ");
+
+        // cnt       = 0;
+        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_3.mp4", ".avi");
+        // for (int i = 0; i < cnt; i++)
+        //     tt[i].join();
+        // printf("sleep OK ------------------\n ");
+        //
+        // cnt       = 0;
+        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_3.mp4", ".avi");
+        // for (int i = 0; i < cnt; i++)
+        //     tt[i].join();
+        // printf("playphone OK ------------------\n ");
+        //
+        // cnt       = 0;
+        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_3.mp4", ".avi");
+        // for (int i = 0; i < cnt; i++)
+        //     tt[i].join();
+        // printf("leavepost OK ------------------\n ");
+
+        // cnt       = 0;
+        // tt[cnt++] = std::thread(onphone_video, "/root/img/video/onphone/onphone_1.mp4", ".avi");
+        // for (int i = 0; i < cnt; i++)
+        //     tt[i].join();
+        // printf("onphone OK ------------------\n ");
+    }
+
+    void flame_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_flame_api* api_temp = new gx_flame_api();
+        int cnt                = 0;
+        int sum                = capture.get(7);
+        while (1) {
+            printf("flame %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_flame(img_buff);
+
+            for (int j = 0; j < val.fire_list.size(); j++) {
+                int x1      = val.fire_list[j].x1;
+                int x2      = val.fire_list[j].x2;
+                int y1      = val.fire_list[j].y1;
+                int y2      = val.fire_list[j].y2;
+                float score = val.fire_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "fire_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.smoke_list.size(); j++) {
+                int x1      = val.smoke_list[j].x1;
+                int x2      = val.smoke_list[j].x2;
+                int y1      = val.smoke_list[j].y1;
+                int y2      = val.smoke_list[j].y2;
+                float score = val.smoke_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "smoke_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void helmet_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_helmet_api* api_temp = new gx_helmet_api();
+        int cnt                 = 0;
+        int sum                 = capture.get(7);
+        while (1) {
+            printf("helmet %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_helmet(img_buff);
+
+            for (int j = 0; j < val.with_helmet_list.size(); j++) {
+                int x1      = val.with_helmet_list[j].x1;
+                int x2      = val.with_helmet_list[j].x2;
+                int y1      = val.with_helmet_list[j].y1;
+                int y2      = val.with_helmet_list[j].y2;
+                float score = val.with_helmet_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "with_helmet_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.without_helmet_list.size(); j++) {
+                int x1      = val.without_helmet_list[j].x1;
+                int x2      = val.without_helmet_list[j].x2;
+                int y1      = val.without_helmet_list[j].y1;
+                int y2      = val.without_helmet_list[j].y2;
+                float score = val.without_helmet_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "without_helmet_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void refvest_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_refvest_api* api_temp = new gx_refvest_api();
+        int cnt                  = 0;
+        int sum                  = capture.get(7);
+        while (1) {
+            printf("refvest %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_refvest(img_buff);
+
+            for (int j = 0; j < val.with_refvest_list.size(); j++) {
+                int x1      = val.with_refvest_list[j].x1;
+                int x2      = val.with_refvest_list[j].x2;
+                int y1      = val.with_refvest_list[j].y1;
+                int y2      = val.with_refvest_list[j].y2;
+                float score = val.with_refvest_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "with_refvest_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.without_refvest_list.size(); j++) {
+                int x1      = val.without_refvest_list[j].x1;
+                int x2      = val.without_refvest_list[j].x2;
+                int y1      = val.without_refvest_list[j].y1;
+                int y2      = val.without_refvest_list[j].y2;
+                float score = val.without_refvest_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "without_refvest_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void sleep_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_sleep_api* api_temp = new gx_sleep_api();
+        int cnt                = 0;
+        int sum                = capture.get(7);
+        while (1) {
+            printf("sleep %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_sleep(img_buff);
+
+            for (int j = 0; j < val.desk_list.size(); j++) {
+                int x1      = val.desk_list[j].x1;
+                int x2      = val.desk_list[j].x2;
+                int y1      = val.desk_list[j].y1;
+                int y2      = val.desk_list[j].y2;
+                float score = val.desk_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "desk_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.lying_list.size(); j++) {
+                int x1      = val.lying_list[j].x1;
+                int x2      = val.lying_list[j].x2;
+                int y1      = val.lying_list[j].y1;
+                int y2      = val.lying_list[j].y2;
+                float score = val.lying_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "lying_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.standing_list.size(); j++) {
+                int x1      = val.standing_list[j].x1;
+                int x2      = val.standing_list[j].x2;
+                int y1      = val.standing_list[j].y1;
+                int y2      = val.standing_list[j].y2;
+                float score = val.standing_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "standing_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.work_list.size(); j++) {
+                int x1      = val.work_list[j].x1;
+                int x2      = val.work_list[j].x2;
+                int y1      = val.work_list[j].y1;
+                int y2      = val.work_list[j].y2;
+                float score = val.work_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "work_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void leavepost_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_leavepost_api* api_temp = new gx_leavepost_api();
+        int cnt                    = 0;
+        int sum                    = capture.get(7);
+        while (1) {
+            printf("leavepost %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_leavepost(img_buff);
+
+            for (int j = 0; j < val.hat_list.size(); j++) {
+                int x1      = val.hat_list[j].x1;
+                int x2      = val.hat_list[j].x2;
+                int y1      = val.hat_list[j].y1;
+                int y2      = val.hat_list[j].y2;
+                float score = val.hat_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "hat_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void smoke_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_smoke_api* api_temp = new gx_smoke_api();
+        int cnt                = 0;
+        int sum                = capture.get(7);
+        while (1) {
+            printf("smoke %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_smoke(img_buff);
+
+            for (int j = 0; j < val.smoke_list.size(); j++) {
+                int x1      = val.smoke_list[j].x1;
+                int x2      = val.smoke_list[j].x2;
+                int y1      = val.smoke_list[j].y1;
+                int y2      = val.smoke_list[j].y2;
+                float score = val.smoke_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "smoke_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.norm_list.size(); j++) {
+                int x1      = val.norm_list[j].x1;
+                int x2      = val.norm_list[j].x2;
+                int y1      = val.norm_list[j].y1;
+                int y2      = val.norm_list[j].y2;
+                float score = val.norm_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "norm_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void workcloth_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_workcloth_api* api_temp = new gx_workcloth_api();
+        int cnt                    = 0;
+        int sum                    = capture.get(7);
+        while (1) {
+            printf("workcloth %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_workcloth(img_buff);
+
+            for (int j = 0; j < val.cloth_list.size(); j++) {
+                int x1      = val.cloth_list[j].x1;
+                int x2      = val.cloth_list[j].x2;
+                int y1      = val.cloth_list[j].y1;
+                int y2      = val.cloth_list[j].y2;
+                float score = val.cloth_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text =
+                    "hat_score=" + std::to_string(score) + "up_rgb: " + std::to_string(val.cloth_list[j].up_rgb.r) + ","
+                    + std::to_string(val.cloth_list[j].up_rgb.g) + "," + std::to_string(val.cloth_list[j].up_rgb.b)
+                    + " lw_rgb: " + std::to_string(val.cloth_list[j].lw_rgb.r) + ","
+                    + std::to_string(val.cloth_list[j].lw_rgb.g) + "," + std::to_string(val.cloth_list[j].lw_rgb.b);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void playphone_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_playphone_api* api_temp = new gx_playphone_api();
+        int cnt                    = 0;
+        int sum                    = capture.get(7);
+        while (1) {
+            printf("playphone %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_playphone(img_buff);
+
+            for (int j = 0; j < val.phone_list.size(); j++) {
+                int x1      = val.phone_list[j].x1;
+                int x2      = val.phone_list[j].x2;
+                int y1      = val.phone_list[j].y1;
+                int y2      = val.phone_list[j].y2;
+                float score = val.phone_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "phone_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.no_phone_list.size(); j++) {
+                int x1      = val.no_phone_list[j].x1;
+                int x2      = val.no_phone_list[j].x2;
+                int y1      = val.no_phone_list[j].y1;
+                int y2      = val.no_phone_list[j].y2;
+                float score = val.no_phone_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "nophone_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+    void onphone_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_onphone_api* api_temp = new gx_onphone_api();
+        int cnt                  = 0;
+        int sum                  = capture.get(7);
+        while (1) {
+            printf("onphone %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_onphone(img_buff);
+
+            for (int j = 0; j < val.onphone_list.size(); j++) {
+                int x1      = val.onphone_list[j].x1;
+                int x2      = val.onphone_list[j].x2;
+                int y1      = val.onphone_list[j].y1;
+                int y2      = val.onphone_list[j].y2;
+                float score = val.onphone_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                std::string text = "onphone_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+            for (int j = 0; j < val.norm_list.size(); j++) {
+                int x1      = val.norm_list[j].x1;
+                int x2      = val.norm_list[j].x2;
+                int y1      = val.norm_list[j].y1;
+                int y2      = val.norm_list[j].y2;
+                float score = val.norm_list[j].score;
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text = "norm_score=" + std::to_string(score);
+                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
     }
 
 } // namespace glasssix
@@ -988,35 +1541,36 @@ int main(int argc, char** argv) {
         // 人脸入库
         // test_add_face_all();
 
+        // todo_video();
 
         // 多线程测性能测试
         std::thread t[30];
-        //t[0] = std::thread(thread_function_helmet);
-        //t[1] = std::thread(thread_function_flame);
-        //t[2] = std::thread(thread_function_refvest);
-        //t[3] = std::thread(thread_function_search);
-        t[4] = std::thread(thread_function_integration);
-        //t[5] = std::thread(thread_function_leavepost);
-        //t[6] = std::thread(thread_function_sleep);
-        //t[7] = std::thread(thread_function_smoke);
-        //t[8] = std::thread(thread_function_playphone);
-        //t[9] = std::thread(thread_function_onphone);
-        //t[10] = std::thread(thread_function_workcloth);
-        //t[11] = std::thread(thread_function_pedestrian_labor);
-
-        //t[0].join();
-        //t[1].join();
-        //t[2].join();
-        //t[3].join();
+        t[0]  = std::thread(thread_function_helmet);
+        t[1]  = std::thread(thread_function_flame);
+        t[2]  = std::thread(thread_function_refvest);
+        t[3]  = std::thread(thread_function_search);
+        t[4]  = std::thread(thread_function_integration);
+        t[5]  = std::thread(thread_function_leavepost);
+        t[6]  = std::thread(thread_function_sleep);
+        t[7]  = std::thread(thread_function_smoke);
+        t[8]  = std::thread(thread_function_playphone);
+        t[9]  = std::thread(thread_function_onphone);
+        t[10] = std::thread(thread_function_workcloth);
+        // t[11] = std::thread(thread_function_pedestrian_labor);
+        t[12] = std::thread(thread_function_pedestrian);
+        t[0].join();
+        t[1].join();
+        t[2].join();
+        t[3].join();
         t[4].join();
-        //t[5].join();
-        //t[6].join();
-        //t[7].join();
-        //t[8].join();
-        //t[9].join();
-        //t[10].join();
-        //t[11].join();
-
+        t[5].join();
+        t[6].join();
+        t[7].join();
+        t[8].join();
+        t[9].join();
+        t[10].join();
+        // t[11].join();
+        t[12].join();
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();
         // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

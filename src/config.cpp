@@ -125,4 +125,10 @@ namespace glasssix {
         temp.get_to(_pedestrian_labor_config);
         pedestrian_labor_is_load = true;
     }
+    void config::set_pedestrian(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pedestrian.json");
+        temp.get_to(_pedestrian_config);
+        pedestrian_is_load = true;
+    }
 } // namespace glasssix

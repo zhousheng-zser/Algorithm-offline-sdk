@@ -1,4 +1,13 @@
-﻿set(target_version 1.0.4)
+﻿if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
+	set(target_version 1.0.0)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
+	set(target_version 1.0.5)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566" )
+	set(target_version 1.0.0)
+else()
+	set(target_version 1.0.0)
+endif()
+
 set(target_name gx-offline-recognition)
 set(package_name GxOfflineRecognition)
 
@@ -76,7 +85,6 @@ target_link_libraries(
 	${target_name}
 	PRIVATE
 	dl
-	rknn_api
 )
 endif()
 

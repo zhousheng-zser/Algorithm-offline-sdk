@@ -1,15 +1,15 @@
-﻿#include "gx_pedestrian_labor_api.hpp"
+﻿#include "gx_pedestrian_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_pedestrian_labor_api::gx_pedestrian_labor_api() : impl_{std::make_unique<impl>()} {}
-    gx_pedestrian_labor_api::gx_pedestrian_labor_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_pedestrian_labor_api::~gx_pedestrian_labor_api() {}
-    gx_pedestrian_labor_api::gx_pedestrian_labor_api(gx_pedestrian_labor_api&&) noexcept            = default;
-    gx_pedestrian_labor_api& gx_pedestrian_labor_api::operator=(gx_pedestrian_labor_api&&) noexcept = default;
-    class gx_pedestrian_labor_api::impl {
+    gx_pedestrian_api::gx_pedestrian_api() : impl_{std::make_unique<impl>()} {}
+    gx_pedestrian_api::gx_pedestrian_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pedestrian_api::~gx_pedestrian_api() {}
+    gx_pedestrian_api::gx_pedestrian_api(gx_pedestrian_api&&) noexcept            = default;
+    gx_pedestrian_api& gx_pedestrian_api::operator=(gx_pedestrian_api&&) noexcept = default;
+    class gx_pedestrian_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_PEDESTRIAN_LABOR_V1.0.0";
+        std::string empower_algorithm_id = "RK3588_C++_PEDESTRIAN_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -49,27 +49,27 @@ namespace glasssix {
         }
     };
 
-    //  劳保用品检测
-    pedestrian_labor_info gx_pedestrian_labor_api::safe_production_pedestrian_labor(const gx_img_api& mat) {
+    //  行人检测
+    pedestrian_info gx_pedestrian_api::safe_production_pedestrian(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            pedestrian_labor_info ans;
+            pedestrian_info ans;
             std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<pedestrian_labor::detect>(ptr->pedestrian_labor_handle,
-                pedestrian_labor_detect_param{.instance_guid = "",
-                    .format                         = _config->_pedestrian_labor_config.format,
+            auto result = ptr->protocol_ptr.invoke<pedestrian::detect>(ptr->pedestrian_handle,
+                pedestrian_detect_param{.instance_guid = "",
+                    .format                         = _config->_pedestrian_config.format,
                     .height                         = mat.get_rows(),
                     .width                          = mat.get_cols(),
                     .roi_x                          = 0,
                     .roi_y                          = 0,
                     .roi_width                      = mat.get_cols(),
                     .roi_height                     = mat.get_rows(),
-                    .params = pedestrian_labor_detect_param::confidence_params{.conf_thres = _config->_pedestrian_labor_config.conf_thres,
-                        .nms_thres = _config->_pedestrian_labor_config.nms_thres}},
+                    .params = pedestrian_detect_param::confidence_params{.conf_thres = _config->_pedestrian_config.conf_thres,
+                        .nms_thres = _config->_pedestrian_config.nms_thres}},
                 str);
 
             ans = std::move(result.detect_info);

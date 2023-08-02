@@ -165,6 +165,16 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    struct pedestrian_config {
+        GX_BEGIN_FIELDS(pedestrian_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     class config {
     public:
         config();
@@ -188,6 +198,7 @@ namespace glasssix {
         onphone_config _onphone_config;
         workcloth_config _workcloth_config;
         pedestrian_labor_config _pedestrian_labor_config;
+        pedestrian_config _pedestrian_config;
         void set_configure_directory(const abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
@@ -205,6 +216,7 @@ namespace glasssix {
         void set_onphone(const abi::string& path);
         void set_workcloth(const abi::string& path);
         void set_pedestrian_labor(const abi::string& path);
+        void set_pedestrian(const abi::string& path);
 
         bool configure_directory_is_load = false;
         bool detect_is_load              = false;
@@ -223,6 +235,7 @@ namespace glasssix {
         bool onphone_is_load             = false;
         bool workcloth_is_load           = false;
         bool pedestrian_labor_is_load    = false;
+        bool pedestrian_is_load          = false;
 
     private:
         glasssix::json read_json_file(const abi::string& path);

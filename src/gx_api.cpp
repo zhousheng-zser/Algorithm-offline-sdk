@@ -142,7 +142,7 @@ namespace glasssix {
         return true;
     }
     abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) const {
-        cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2));
+        cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2)).clone();
         std::vector<uchar> buffer(1024 * 1024);
         cv::imencode(".jpg", cropped_face, buffer);
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
@@ -174,6 +174,7 @@ namespace glasssix {
             name_config["onphone.json"]             = _config->_onphone_config;
             name_config["workcloth.json"]           = _config->_workcloth_config;
             name_config["pedestrian_labor.json"]    = _config->_pedestrian_labor_config;
+            name_config["pedestrian.json"]    = _config->_pedestrian_config;
             return name_config;
         }
 
@@ -250,6 +251,9 @@ namespace glasssix {
                 } else if (name == "pedestrian_labor.json" && _config->pedestrian_labor_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pedestrian_labor_config);
+                } else if (name == "pedestrian.json" && _config->pedestrian_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pedestrian_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例
                 }

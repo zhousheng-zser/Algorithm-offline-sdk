@@ -138,8 +138,10 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
-            return parse_raw_result(parser_parse(
-                instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0));
+            char* ss      = parser_parse(
+                instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
+            // printf("%s\n%s\n", full_name.data(), ss);
+            return parse_raw_result(ss);
         }
 
         protocol_object make_protocol_object(std::string_view family, std::string_view instance_uuid) const {
