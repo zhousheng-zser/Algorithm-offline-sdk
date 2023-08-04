@@ -48,7 +48,7 @@ namespace glasssix {
             return ans;
         }
     };
-
+    
 
     //  安全生产 安全帽检测
     helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {

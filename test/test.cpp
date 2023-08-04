@@ -6,7 +6,6 @@
 #include <optional>
 #include <thread>
 
-// #include <gtest/gtest.h>
 #include <gx_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_flame_api.hpp>
@@ -347,53 +346,6 @@ namespace glasssix::display_test {
 namespace glasssix {
 
     // gx_face_api* api = new gx_face_api();
-    ////人脸检测
-    //   TEST(Api, Detect) {
-    //       gx_img_api img("/root/img/20221209.jpg", IMG_2K);
-    //       abi::vector<face_info> faces;
-    //       faces          = api->detect(img);
-    //       face_info info = faces[0];
-    //       EXPECT_GE(info.confidence, 0);
-    //       EXPECT_LE(info.confidence, 1);
-    //       EXPECT_GT(info.width, 0);
-    //       EXPECT_GT(info.height, 0);
-    //       EXPECT_EQ(info.landmark.size(), 5);
-    //       EXPECT_TRUE(info.attributes.has_value());
-    //       EXPECT_EQ(info.attributes->glass_index, 0);
-    //       EXPECT_EQ(info.attributes->mask_index, 0);
-    //       EXPECT_GT(info.attributes->yaw, -90.0);
-    //       EXPECT_LT(info.attributes->yaw, 90.0);
-    //       EXPECT_GT(info.attributes->pitch, -90.0);
-    //       EXPECT_LT(info.attributes->pitch, 90.0);
-    //       EXPECT_GT(info.attributes->roll, -90.0);
-    //       EXPECT_LT(info.attributes->roll, 90.0);
-    //   }
-
-    //   // 人脸追踪
-    //    TEST(Api, Track) {
-    //        gx_img_api img("/root/img/000011.jpg", IMG_2K);
-    //        abi::vector<face_trace_info> faces;
-    //        faces = api->track(img);
-    //        EXPECT_GT(faces.size(), 0);
-    //        for (int i = 0; i < faces.size(); i++) {
-    //            EXPECT_TRUE(faces[i].trace_success);
-    //            std::optional<face_info> info = faces[i].facerectwithfaceinfo;
-    //            EXPECT_TRUE(info.has_value());
-    //            EXPECT_GE(info->confidence, 0);
-    //            EXPECT_LE(info->confidence, 1);
-    //            EXPECT_GT(info->width, 0);
-    //            EXPECT_GT(info->height, 0);
-    //            EXPECT_EQ(info->landmark.size(), 5);
-    //            EXPECT_EQ(info->attributes->glass_index, 0);
-    //            EXPECT_EQ(info->attributes->mask_index, 0);
-    //            EXPECT_GT(info->attributes->yaw, -90.0);
-    //            EXPECT_LT(info->attributes->yaw, 90.0);
-    //            EXPECT_GT(info->attributes->pitch, -90.0);
-    //            EXPECT_LT(info->attributes->pitch, 90.0);
-    //            EXPECT_GT(info->attributes->roll, -90.0);
-    //            EXPECT_LT(info->attributes->roll, 90.0);
-    //        }
-    //    }
 
     //   // 人脸质量检测
     //   TEST(Api, Face_blur) {
@@ -445,42 +397,6 @@ namespace glasssix {
     //        EXPECT_FALSE(action_result);
     //        printf("ans = %d\n", action_result);
     //    }
-
-    //   // 静默活体检测
-    //   TEST(Api, Face_spoofing_live) {
-    //       abi::vector<gx_img_api> img;
-    //        img.emplace_back(gx_img_api("/root/img/33333.jpg", IMG_2K));
-    //       img.emplace_back(gx_img_api("/root/img/action_live_0.jpg", IMG_2K));
-    //        img.emplace_back(gx_img_api("/root/img/spoofing_2.jpg", IMG_2K));
-    //       faces_spoofing faces;
-    //       faces = api->face_spoofing_live(img[0]);
-    //       for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-    //           //   EXPECT_GE(faces.spoofing_result[i].prob[2], 0.5);  //现在画像算活体
-    //       }
-    //       faces = api->face_spoofing_live(img[1]);
-    //       for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-    //           EXPECT_GE(faces.spoofing_result[i].prob[1], 0.5);
-    //       }
-    //       faces = api->face_spoofing_live(img[2]);
-    //       for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-    //           EXPECT_GE(faces.spoofing_result[i].prob[0], 0.5);
-    //       }
-    //   }
-
-    //   // 特征值提取
-    //   TEST(Api, Face_feature) {
-    //       gx_img_api img("/root/img/20221209.jpg", IMG_2K);
-    //       faces_feature faces;
-    //       faces = api->face_feature(img, false);
-    //       EXPECT_EQ(faces.facerectwithfaceinfo_list.size(), faces.features.size());
-    //       for (int i = 0; i < faces.facerectwithfaceinfo_list.size(); ++i) {
-    //           EXPECT_EQ(faces.features[i].feature.size(), 256);
-    //           for (int j = 0; j < faces.features[i].feature.size(); j++) {
-    //               EXPECT_GT(faces.features[i].feature[j], -1.0);
-    //               EXPECT_LT(faces.features[i].feature[j], 1.0);
-    //           }
-    //       }
-    //   }
 
     //   // 1:1 人脸对比
     //   TEST(Api, gx_feature_comparison) {
@@ -1001,56 +917,6 @@ namespace glasssix {
     const cv::Scalar GREEN = CV_RGB(0, 250, 0); // 绿
     const cv::Scalar WHITE = CV_RGB(255, 255, 255); // 白
 
-    void todo_video() {
-        // std::thread tt[30];
-        //  int cnt = 0;
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_1.mp4", ".avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_2.mp4", ".avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_1.mp4", ".avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_2.mp4", ".avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_3.mp4", ".avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_4.mp4", ".avi");
-        //  tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_helmet.avi");
-        //  tt[cnt++] = std::thread(workcloth_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_workcloth.avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_smoke.avi");
-        //  tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/zhenshai.mp4", "_helmet.avi");
-        //  tt[cnt++] = std::thread(workcloth_video, "/root/img/video/xiangmu/zhenshai.mp4", "_workcloth.avi");
-        //  tt[cnt++] = std::thread(smoke_video, "/root/img/video/xiangmu/zhenshai.mp4", "_smoke.avi");
-        //  for (int i = 0; i < cnt; i++)
-        //      tt[i].join();
-        //  printf("smoke OK ------------------\n ");
-
-        // cnt       = 0;
-        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_1.mp4", ".avi");
-        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_2.mp4", ".avi");
-        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_3.mp4", ".avi");
-        // for (int i = 0; i < cnt; i++)
-        //     tt[i].join();
-        // printf("sleep OK ------------------\n ");
-        //
-        // cnt       = 0;
-        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_1.mp4", ".avi");
-        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_2.mp4", ".avi");
-        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_3.mp4", ".avi");
-        // for (int i = 0; i < cnt; i++)
-        //     tt[i].join();
-        // printf("playphone OK ------------------\n ");
-        //
-        // cnt       = 0;
-        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_1.mp4", ".avi");
-        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_2.mp4", ".avi");
-        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_3.mp4", ".avi");
-        // for (int i = 0; i < cnt; i++)
-        //     tt[i].join();
-        // printf("leavepost OK ------------------\n ");
-
-        // cnt       = 0;
-        // tt[cnt++] = std::thread(onphone_video, "/root/img/video/onphone/onphone_1.mp4", ".avi");
-        // for (int i = 0; i < cnt; i++)
-        //     tt[i].join();
-        // printf("onphone OK ------------------\n ");
-    }
-
     void flame_video(const std::string& name, const std::string& add) {
         cv::VideoCapture capture;
         capture.open(name);
@@ -1084,8 +950,11 @@ namespace glasssix {
                 int y2      = val.fire_list[j].y2;
                 float score = val.fire_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "fire_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "fire:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.smoke_list.size(); j++) {
                 int x1      = val.smoke_list[j].x1;
@@ -1094,8 +963,11 @@ namespace glasssix {
                 int y2      = val.smoke_list[j].y2;
                 float score = val.smoke_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "smoke_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "smoke:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1136,8 +1008,11 @@ namespace glasssix {
                 int y2      = val.with_helmet_list[j].y2;
                 float score = val.with_helmet_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "with_helmet_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "with_helmet:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.without_helmet_list.size(); j++) {
                 int x1      = val.without_helmet_list[j].x1;
@@ -1146,8 +1021,11 @@ namespace glasssix {
                 int y2      = val.without_helmet_list[j].y2;
                 float score = val.without_helmet_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "without_helmet_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "without_helmet:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1188,8 +1066,11 @@ namespace glasssix {
                 int y2      = val.with_refvest_list[j].y2;
                 float score = val.with_refvest_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "with_refvest_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "with_refvest:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.without_refvest_list.size(); j++) {
                 int x1      = val.without_refvest_list[j].x1;
@@ -1198,8 +1079,11 @@ namespace glasssix {
                 int y2      = val.without_refvest_list[j].y2;
                 float score = val.without_refvest_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "without_refvest_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "without_refvest:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1240,8 +1124,11 @@ namespace glasssix {
                 int y2      = val.desk_list[j].y2;
                 float score = val.desk_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "desk_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "desk:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.lying_list.size(); j++) {
                 int x1      = val.lying_list[j].x1;
@@ -1250,8 +1137,11 @@ namespace glasssix {
                 int y2      = val.lying_list[j].y2;
                 float score = val.lying_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "lying_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "lying:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.standing_list.size(); j++) {
                 int x1      = val.standing_list[j].x1;
@@ -1260,8 +1150,11 @@ namespace glasssix {
                 int y2      = val.standing_list[j].y2;
                 float score = val.standing_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "standing_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "standing:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.work_list.size(); j++) {
                 int x1      = val.work_list[j].x1;
@@ -1270,8 +1163,11 @@ namespace glasssix {
                 int y2      = val.work_list[j].y2;
                 float score = val.work_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "work_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "work:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1312,8 +1208,11 @@ namespace glasssix {
                 int y2      = val.hat_list[j].y2;
                 float score = val.hat_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "hat_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "hat:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1354,8 +1253,11 @@ namespace glasssix {
                 int y2      = val.smoke_list[j].y2;
                 float score = val.smoke_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "smoke_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "smoke:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.norm_list.size(); j++) {
                 int x1      = val.norm_list[j].x1;
@@ -1364,8 +1266,11 @@ namespace glasssix {
                 int y2      = val.norm_list[j].y2;
                 float score = val.norm_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "norm_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "norm:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1407,11 +1312,14 @@ namespace glasssix {
                 float score = val.cloth_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
                 std::string text =
-                    "hat_score=" + std::to_string(score) + "up_rgb: " + std::to_string(val.cloth_list[j].up_rgb.r) + ","
+                    "cloth:" + std::to_string(score) + "up_rgb:" + std::to_string(val.cloth_list[j].up_rgb.r) + ","
                     + std::to_string(val.cloth_list[j].up_rgb.g) + "," + std::to_string(val.cloth_list[j].up_rgb.b)
-                    + " lw_rgb: " + std::to_string(val.cloth_list[j].lw_rgb.r) + ","
+                    + " lw_rgb:" + std::to_string(val.cloth_list[j].lw_rgb.r) + ","
                     + std::to_string(val.cloth_list[j].lw_rgb.g) + "," + std::to_string(val.cloth_list[j].lw_rgb.b);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1452,8 +1360,11 @@ namespace glasssix {
                 int y2      = val.phone_list[j].y2;
                 float score = val.phone_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "phone_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "phone:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.no_phone_list.size(); j++) {
                 int x1      = val.no_phone_list[j].x1;
@@ -1462,8 +1373,11 @@ namespace glasssix {
                 int y2      = val.no_phone_list[j].y2;
                 float score = val.no_phone_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "nophone_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "nophone:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
@@ -1504,8 +1418,11 @@ namespace glasssix {
                 int y2      = val.onphone_list[j].y2;
                 float score = val.onphone_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text = "onphone_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "onphone:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             for (int j = 0; j < val.norm_list.size(); j++) {
                 int x1      = val.norm_list[j].x1;
@@ -1514,14 +1431,105 @@ namespace glasssix {
                 int y2      = val.norm_list[j].y2;
                 float score = val.norm_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text = "norm_score=" + std::to_string(score);
-                putText(img, text, cv::Point(x1 + 5, y1 + 20), cv::FONT_HERSHEY_SIMPLEX, 1.5, WHITE, 2);
+                std::string text  = "norm:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
 
             writer.write(img);
         }
         capture.release();
         writer.release();
+    }
+    void pedestrian_video(const std::string& name, const std::string& add) {
+        cv::VideoCapture capture;
+        capture.open(name);
+
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
+        cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
+
+        gx_pedestrian_api* api_temp = new gx_pedestrian_api();
+        int cnt                     = 0;
+        int sum                     = capture.get(7);
+        while (1) {
+            printf("pedestrian %d / %d \n", cnt++, sum);
+            cv::Mat img;
+            capture >> img;
+            if (img.empty())
+                break;
+            std::vector<uchar> buffer(IMG_Full_Aperture_4K);
+            cv::imencode(".jpg", img, buffer);
+            gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
+            auto val = api_temp->safe_production_pedestrian(img_buff);
+
+            for (int j = 0; j < val.person_list.size(); j++) {
+                int x1      = val.person_list[j].x1;
+                int x2      = val.person_list[j].x2;
+                int y1      = val.person_list[j].y1;
+                int y2      = val.person_list[j].y2;
+                float score = val.person_list[j].score;
+
+                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
+                std::string text  = "person:" + std::to_string(score);
+                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
+                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+            }
+
+            writer.write(img);
+        }
+        capture.release();
+        writer.release();
+    }
+
+    void video_wait(std::thread tt[], int& cnt) {
+        for (int i = 0; i < cnt; i++)
+            tt[i].join();
+        cnt = 0;
+        printf(" OK ------------------\n ");
+    }
+    void todo_video() {
+        std::thread tt[30];
+        int cnt   = 0;
+        tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/test_yeyazhan.mp4", "_helmet.avi");
+        // tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_helmet.avi");
+        // tt[cnt++] = std::thread(workcloth_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_workcloth.avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/xiangmu/yeyazhan.mp4", "_smoke.avi");
+        // video_wait(tt, cnt);
+        // tt[cnt++] = std::thread(helmet_video, "/root/img/video/xiangmu/zhenshai.mp4", "_helmet.avi");
+        // tt[cnt++] = std::thread(workcloth_video, "/root/img/video/xiangmu/zhenshai.mp4", "_workcloth.avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/xiangmu/zhenshai.mp4", "_smoke.avi");
+        // video_wait(tt, cnt);
+        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(sleep_video, "/root/img/video/sleep/sleep_3.mp4", ".avi");
+        // video_wait(tt, cnt);
+        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(playphone_video, "/root/img/video/playphone/playphone_3.mp4", ".avi");
+        // video_wait(tt, cnt);
+        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(leavepost_video, "/root/img/video/leavepost/leavepost_3.mp4", ".avi");
+        // video_wait(tt, cnt);
+        // tt[cnt++] = std::thread(pedestrian_video, "/root/img/video/pedestrian/pedestrian_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(pedestrian_video, "/root/img/video/pedestrian/pedestrian_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(onphone_video, "/root/img/video/onphone/onphone_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_1.mp4", ".avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_2.mp4", ".avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_3.mp4", ".avi");
+        // tt[cnt++] = std::thread(smoke_video, "/root/img/video/smoke/smoke_fu_4.mp4", ".avi");
+        video_wait(tt, cnt);
     }
 
 } // namespace glasssix
@@ -1545,32 +1553,32 @@ int main(int argc, char** argv) {
 
         // 多线程测性能测试
         std::thread t[30];
-        t[0]  = std::thread(thread_function_helmet);
-        t[1]  = std::thread(thread_function_flame);
-        t[2]  = std::thread(thread_function_refvest);
-        t[3]  = std::thread(thread_function_search);
-        t[4]  = std::thread(thread_function_integration);
-        t[5]  = std::thread(thread_function_leavepost);
-        t[6]  = std::thread(thread_function_sleep);
-        t[7]  = std::thread(thread_function_smoke);
-        t[8]  = std::thread(thread_function_playphone);
-        t[9]  = std::thread(thread_function_onphone);
-        t[10] = std::thread(thread_function_workcloth);
-        // t[11] = std::thread(thread_function_pedestrian_labor);
-        t[12] = std::thread(thread_function_pedestrian);
-        t[0].join();
-        t[1].join();
-        t[2].join();
-        t[3].join();
-        t[4].join();
-        t[5].join();
-        t[6].join();
-        t[7].join();
-        t[8].join();
-        t[9].join();
-        t[10].join();
-        // t[11].join();
-        t[12].join();
+        //t[0]  = std::thread(thread_function_helmet);
+        //t[1]  = std::thread(thread_function_flame);
+        //t[2]  = std::thread(thread_function_refvest);
+        //t[3]  = std::thread(thread_function_search);
+        //t[4]  = std::thread(thread_function_integration);
+        //t[5]  = std::thread(thread_function_leavepost);
+        //t[6]  = std::thread(thread_function_sleep);
+        //t[7]  = std::thread(thread_function_smoke);
+        //t[8]  = std::thread(thread_function_playphone);
+        //t[9]  = std::thread(thread_function_onphone);
+        //t[10] = std::thread(thread_function_workcloth);
+        //t[11] = std::thread(thread_function_pedestrian_labor);
+        //t[12] = std::thread(thread_function_pedestrian);
+        //t[0].join();
+        //t[1].join();
+        //t[2].join();
+        //t[3].join();
+        //t[4].join();
+        //t[5].join();
+        //t[6].join();
+        //t[7].join();
+        //t[8].join();
+        //t[9].join();
+        //t[10].join();
+        //t[11].join();
+        //t[12].join();
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();
         // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -1590,13 +1598,6 @@ int main(int argc, char** argv) {
          display_test::test_detect_integration(api);
          display_test::test_add_folder_all(_Api);
         */
-
-        // 单元测试
-
-        //::testing::InitGoogleTest(&argc, argv);
-        // int ans = RUN_ALL_TESTS();
-        // printf( "RUN_ALL_TESTS = %d \n",ans);
-        //  delete api;
 
     } catch (const std::exception& ex) {
         printf("%s\n", ex.what());

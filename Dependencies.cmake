@@ -17,12 +17,6 @@ find_package(Threads REQUIRED)
 if(WIN32)
     find_package(OpenCV REQUIRED HINTS ${GX_OPENCV_ROOT} NO_DEFAULT_PATH)
     find_package(
-    GTest
-    REQUIRED
-    HINTS ${GX_GTEST_ROOT}/lib/cmake
-    NO_DEFAULT_PATH
-    )
-    find_package(
     GXMiscellaneous
     REQUIRED
     HINTS ${GX_MISCELLANEOUS_ROOT}
@@ -52,12 +46,6 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     HINTS ${GX_MISCELLANEOUS_ROOT}
     NO_DEFAULT_PATH
     )
-    find_package(
-    GTest
-    REQUIRED
-    HINTS ${GX_GTEST_ROOT}/lib64/cmake
-    NO_DEFAULT_PATH
-    )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib64)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
     set(OpenCV_LIBS opencv_calib3d opencv_core opencv_dnn opencv_features2d opencv_flann opencv_highgui opencv_imgproc opencv_imgcodecs opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_videoio opencv_video opencv_videostab)
@@ -69,11 +57,12 @@ elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME S
     HINTS ${GX_MISCELLANEOUS_ROOT}
     NO_DEFAULT_PATH
     )
-    gx_find_package_no_root_path(
-    GTest
+    find_package(
+    LicenseClient
     REQUIRED
-    HINTS ${GX_GTEST_ROOT}/lib/cmake
     NO_DEFAULT_PATH
+    HINTS
+    ${GX_LICENSECLIENT_ROOT}
     )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/sdk/native/libs/arm64-v8a)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/sdk/native/jni/include)
@@ -93,12 +82,6 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     HINTS
     ${GX_LICENSECLIENT_ROOT}
     )
-    #find_package(
-    #GTest
-    #REQUIRED
-    #HINTS ${GX_GTEST_ROOT}/lib/cmake
-    #NO_DEFAULT_PATH
-    #)
 
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)

@@ -37,12 +37,6 @@ target_link_libraries(
 	gx-offline-recognition
 )
 
-#if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")
-#    target_include_directories(${target_name} PRIVATE ${GX_GTEST_ROOT}/include )
-#    target_link_libraries(${target_name} PRIVATE ${GX_GTEST_ROOT}/lib/libgtest.a)
-#else()
-#    target_link_libraries(${target_name} PRIVATE GTest::gtest)
-#endif()
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../config  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)
