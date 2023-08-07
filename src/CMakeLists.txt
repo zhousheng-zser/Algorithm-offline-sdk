@@ -1,7 +1,7 @@
 ﻿if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
 	set(target_version 1.0.0)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
-	set(target_version 1.0.5)
+	set(target_version 1.0.6)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566" )
 	set(target_version 1.0.0)
 else()
@@ -54,8 +54,7 @@ target_include_directories(
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${OpenCV_INCLUDE_DIRS}
 		${GX_CV_SDK_INCLUDE}
-		#"/root/install/nessus/include"
-		#"/root/install/nessus/include/Primitives"
+		#"/home/zser/install/LicenseClient-rk3566/include"
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_GXOFFLINERECOGNITION_IMPL=1)

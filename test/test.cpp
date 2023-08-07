@@ -1564,7 +1564,7 @@ int main(int argc, char** argv) {
         //t[8]  = std::thread(thread_function_playphone);
         //t[9]  = std::thread(thread_function_onphone);
         //t[10] = std::thread(thread_function_workcloth);
-        //t[11] = std::thread(thread_function_pedestrian_labor);
+        //t[11] = std::thread(thread_function_pedestrian_labor);////////////////////
         //t[12] = std::thread(thread_function_pedestrian);
         //t[0].join();
         //t[1].join();
