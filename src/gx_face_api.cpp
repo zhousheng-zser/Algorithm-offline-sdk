@@ -1,7 +1,6 @@
 ﻿#include "gx_face_api.hpp"
 
 #include "distance/distance.hpp"
-#include "glass6/secret_key_empower.hpp"
 #include "sdk_share.hpp"
 
 #include <cmath>

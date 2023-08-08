@@ -18,7 +18,7 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
-            GX_FIELD(abi::vector<bool>, category); // 0.戴劳保手套 1.戴劳保口罩 2.戴劳保护目镜
+            GX_FIELD(abi::vector<std::int32_t>, category); // 0.戴劳保手套 1.戴劳保口罩 2.戴劳保护目镜
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
