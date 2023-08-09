@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_WORKCLOTH_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WORKCLOTH_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -61,15 +61,16 @@ namespace glasssix {
             std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<workcloth::detect>(ptr->workcloth_handle,
                 workcloth_detect_param{.instance_guid = "",
-                    .format                         = _config->_workcloth_config.format,
-                    .height                         = mat.get_rows(),
-                    .width                          = mat.get_cols(),
-                    .roi_x                          = 0,
-                    .roi_y                          = 0,
-                    .roi_width                      = mat.get_cols(),
-                    .roi_height                     = mat.get_rows(),
-                    .params = workcloth_detect_param::confidence_params{.conf_thres = _config->_workcloth_config.conf_thres,
-                        .nms_thres = _config->_workcloth_config.nms_thres}},
+                    .format                           = _config->_workcloth_config.format,
+                    .height                           = mat.get_rows(),
+                    .width                            = mat.get_cols(),
+                    .roi_x                            = 0,
+                    .roi_y                            = 0,
+                    .roi_width                        = mat.get_cols(),
+                    .roi_height                       = mat.get_rows(),
+                    .params =
+                        workcloth_detect_param::confidence_params{.conf_thres = _config->_workcloth_config.conf_thres,
+                            .nms_thres                                        = _config->_workcloth_config.nms_thres}},
                 str);
 
             ans = std::move(result.detect_info);

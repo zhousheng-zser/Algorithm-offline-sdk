@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_HELMET_V1.1.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V1.2.0 ";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -48,7 +48,7 @@ namespace glasssix {
             return ans;
         }
     };
-    
+
 
     //  安全生产 安全帽检测
     helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {

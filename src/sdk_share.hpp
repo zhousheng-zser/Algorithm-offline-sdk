@@ -7,6 +7,8 @@
 #include "../src/nessus/protocols/leavepost.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
+#include "../src/nessus/protocols/pedestrian.hpp"
+#include "../src/nessus/protocols/pedestrian_labor.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
@@ -14,8 +16,6 @@
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
-#include "../src/nessus/protocols/pedestrian_labor.hpp"
-#include "../src/nessus/protocols/pedestrian.hpp"
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
@@ -26,6 +26,30 @@
 #include <g6/char8_t_remediation.hpp>
 #include <g6/crypto/symmetric_cipher_provider.hpp>
 namespace glasssix {
+    namespace {
+#if (GX_PLATFORM_NAME == 0)
+        std::string share_platform_name = "WINDOWS";
+#elif (GX_PLATFORM_NAME == 1)
+        std::string share_platform_name = "RK3588";
+#elif (GX_PLATFORM_NAME == 2)
+        std::string share_platform_name = "RK3399";
+#elif (GX_PLATFORM_NAME == 3)
+        std::string share_platform_name = "RK3566";
+#elif (GX_PLATFORM_NAME == 4)
+        std::string share_platform_name = "RV1109";
+#elif (GX_PLATFORM_NAME == 5)
+        std::string share_platform_name = "CENTOS";
+#endif
+
+#if (EMPOWER_LANGUAGE == 0)
+        std::string share_empower_language = "C++";
+#elif (EMPOWER_LANGUAGE == 1)
+        std::string share_empower_language = "JAVA";
+#endif
+
+
+        // GX_PLATFORM_NAME
+    } // namespace
     extern config* _config;
     class algo_irisviel_ptr {
     public:
@@ -67,21 +91,21 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
-            Function["flame"]     = &algo_ptr::set_protocols_handl_flame;
-            Function["refvest"]   = &algo_ptr::set_protocols_handl_refvest;
-            Function["helmet"]    = &algo_ptr::set_protocols_handl_helmet;
-            Function["selene"]    = &algo_ptr::set_protocols_handl_selene;
-            Function["longinus"]  = &algo_ptr::set_protocols_handl_longinus;
-            Function["romancia"]  = &algo_ptr::set_protocols_handl_romancia;
-            Function["damocles"]  = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]     = &algo_ptr::set_protocols_handl_sleep;
-            Function["smoke"]     = &algo_ptr::set_protocols_handl_smoke;
-            Function["leavepost"] = &algo_ptr::set_protocols_handl_leavepost;
-            Function["playphone"] = &algo_ptr::set_protocols_handl_playphone;
-            Function["onphone"]   = &algo_ptr::set_protocols_handl_onphone;
-            Function["workcloth"] = &algo_ptr::set_protocols_handl_workcloth;
+            Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
+            Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
+            Function["helmet"]           = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]           = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"]         = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"]         = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
+            Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
+            Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
+            Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
+            Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
+            Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian_labor"] = &algo_ptr::set_protocols_handl_pedestrian_labor;
-            Function["pedestrian"] = &algo_ptr::set_protocols_handl_pedestrian;
+            Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -154,8 +178,8 @@ namespace glasssix {
         }
         void set_protocols_handl_pedestrian_labor() {
             _config->set_pedestrian_labor(_config->_path);
-            pedestrian_labor_handle = protocol_ptr.make_instance<pedestrian_labor>(
-                pedestrian_labor_new_param{_config->_pedestrian_labor_config.device, _config->_configure_directory.models_directory});
+            pedestrian_labor_handle = protocol_ptr.make_instance<pedestrian_labor>(pedestrian_labor_new_param{
+                _config->_pedestrian_labor_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pedestrian() {
             _config->set_pedestrian(_config->_path);
