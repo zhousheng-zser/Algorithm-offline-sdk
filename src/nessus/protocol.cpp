@@ -138,9 +138,11 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
+            //printf("%s\n", full_name.data());
+            //printf("%s\n", param.dump().c_str());
             char* ss      = parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
-            // printf("%s\n%s\n", full_name.data(), ss);
+            // printf("%s\n", ss);
             return parse_raw_result(ss);
         }
 

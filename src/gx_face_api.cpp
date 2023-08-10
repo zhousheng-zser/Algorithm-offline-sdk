@@ -288,7 +288,7 @@ namespace glasssix {
     faces_feature gx_face_api::face_feature(const gx_img_api& mat, bool is_clip) {
         faces_feature ans;
         abi::vector<face_info> faces = detect(mat);
-        if (faces.size() == 0)
+        if (faces.size() == 0 || faces[0].height * faces[0].width < 16384) // 像素小于128*128的人脸 不做特征提取
             return ans;
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
         auto result_pool = pool->enqueue([&] {
@@ -601,6 +601,11 @@ namespace glasssix {
                 return ans;
             faces_temp = spoofing.facerectwithfaceinfo_list;
             for (int i = 0; i < spoofing.spoofing_result.size(); ++i) {
+                if (faces_temp[i].height * faces_temp[i].width < 16384) // 不处理小于128*128的人脸
+                {
+                    faces_temp.erase(faces_temp.begin() + i, faces_temp.end());
+                    break;
+                }
                 faces_search_one_info temp;
                 temp.prob                 = spoofing.spoofing_result[i].prob[1];
                 temp.facerectwithfaceinfo = faces_temp[i];
@@ -612,6 +617,11 @@ namespace glasssix {
             if (faces_temp.size() == 0)
                 return ans;
             for (int i = 0; i < faces_temp.size(); ++i) {
+                if (faces_temp[i].height * faces_temp[i].width < 16384) // 不处理小于128*128的人脸
+                {
+                    faces_temp.erase(faces_temp.begin() + i, faces_temp.end());
+                    break;
+                }
                 faces_search_one_info temp;
                 temp.prob                 = std::nullopt;
                 temp.facerectwithfaceinfo = faces_temp[i];
