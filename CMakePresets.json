@@ -38,7 +38,7 @@
                 "GX_NDK_ROOT": "/home/zser/android-ndk-r25c",
                 "GX_OPENCV_ROOT": "/home/zser/Code/OpenCV-android-sdk",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-android",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230807_beta",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230815_beta",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rk3566"
 
             }
@@ -156,7 +156,7 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1109Toolchain.cmake",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230807_beta",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230815_beta",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1109",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1109",
                 "GX_TOOLHAIN_TARGET_NAME": "RV1109",
@@ -185,7 +185,7 @@
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20230809_beta",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20230816_beta",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",
