@@ -76,6 +76,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct smog_config {
+        GX_BEGIN_FIELDS(smog_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct helmet_config {
         GX_BEGIN_FIELDS(helmet_config);
         GX_FIELD(int, device);
@@ -189,6 +198,7 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         flame_config _flame_config;
+        smog_config _smog_config;
         helmet_config _helmet_config;
         refvest_config _refvest_config;
         sleep_config _sleep_config;
@@ -207,6 +217,7 @@ namespace glasssix {
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
         void set_flame(const abi::string& path);
+        void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
         void set_refvest(const abi::string& path);
         void set_sleep(const abi::string& path);
@@ -226,6 +237,7 @@ namespace glasssix {
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
         bool flame_is_load               = false;
+        bool smog_is_load                = false;
         bool helmet_is_load              = false;
         bool refvest_is_load             = false;
         bool sleep_is_load               = false;

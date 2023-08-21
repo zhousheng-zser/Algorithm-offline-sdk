@@ -9,6 +9,7 @@
 #include <gx_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_flame_api.hpp>
+#include <gx_smog_api.hpp>
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
 #include <gx_onphone_api.hpp>
@@ -493,11 +494,6 @@ namespace glasssix {
                     safe_file << "score = " << val.fire_list[j].score << " x1 = " << val.fire_list[j].x1
                               << " y1 = " << val.fire_list[j].y1 << " x2 = " << val.fire_list[j].x2
                               << " y2 = " << val.fire_list[j].y2 << "\n";
-                safe_file << "smoke_list = " << val.smoke_list.size() << "\n";
-                for (int j = 0; j < val.smoke_list.size(); j++)
-                    safe_file << "score = " << val.smoke_list[j].score << " x1 = " << val.smoke_list[j].x1
-                              << " y1 = " << val.smoke_list[j].y1 << " x2 = " << val.smoke_list[j].x2
-                              << " y2 = " << val.smoke_list[j].y2 << "\n";
             } catch (const std::exception& ex) {
                 safe_file << ex.what();
             }
@@ -546,12 +542,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_helmet(img);
                 safe_file << "with_helmet_list = " << val.with_helmet_list.size() << "\n";
                 for (int j = 0; j < val.with_helmet_list.size(); j++)
-                    safe_file << "score = " << val.with_helmet_list[j].score << " x1 = " << val.with_helmet_list[j].x1
-                              << " y1 = " << val.with_helmet_list[j].y1 << " x2 = " << val.with_helmet_list[j].x2
-                              << " y2 = " << val.with_helmet_list[j].y2 << "\n";
-                safe_file << "with_helmet_list = " << val.with_helmet_list.size() << "\n";
-                for (int j = 0; j < val.with_helmet_list.size(); j++)
-                    safe_file << "score = " << val.with_helmet_list[j].score << " x1 = " << val.with_helmet_list[j].x1
+                    safe_file << " x1 = " << val.with_helmet_list[j].x1
                               << " y1 = " << val.with_helmet_list[j].y1 << " x2 = " << val.with_helmet_list[j].x2
                               << " y2 = " << val.with_helmet_list[j].y2 << "\n";
             } catch (const std::exception& ex) {
@@ -630,8 +621,8 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/helmet.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_helmet(img);
-                printf("with_helmet_list = %d without_helmet_list = %d\n", val.with_helmet_list.size(),
-                    val.without_helmet_list.size());
+                printf("with_helmet_list = %d with_hat_list = %d head_list = %d\n", val.with_helmet_list.size(),
+                    val.with_hat_list.size(), val.head_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -651,7 +642,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/flame.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_flame(img);
-                printf("fire_list = %d smoke_list = %d\n", val.fire_list.size(), val.smoke_list.size());
+                printf("fire_list = %d\n", val.fire_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -660,6 +651,27 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("flame time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // 多线程测烟雾
+    void thread_function_smog() {
+        gx_smog_api* api_temp = new gx_smog_api();
+        int T                  = 1000;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/smog.png", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_smog(img);
+                printf("smog_list = %d\n", val.smog_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("smog time = %d microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测反光衣
@@ -1603,6 +1615,7 @@ int main(int argc, char** argv) {
         //t[11] = std::thread(thread_function_pedestrian_labor);////////////////////
         t[12] = std::thread(thread_function_pedestrian);
         t[13] = std::thread(thread_function_Action_live_Blur);
+        t[14]  = std::thread(thread_function_smog);
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1617,11 +1630,10 @@ int main(int argc, char** argv) {
         //t[11].join();
         t[12].join();
         t[13].join();
+        t[14].join();
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();
         // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        // printf("refvest*1_helmet*2_flame*2_search_integration time = " << duration.count() << " microsecond" <<
-        // std::endl;
 
         // 用于windows播放视频或图片的
         /*

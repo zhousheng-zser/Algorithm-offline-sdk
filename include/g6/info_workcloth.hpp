@@ -12,22 +12,15 @@ namespace glasssix {
     // 工服信息
     struct workcloth_info {
         struct boxes {
-            struct rgb {
-                GX_BEGIN_FIELDS(rgb);
-                GX_FIELD(std::int32_t, b); // 蓝
-                GX_FIELD(std::int32_t, g); // 绿
-                GX_FIELD(std::int32_t, r); // 红
-                GX_END_FIELDS;
-                GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-            };
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score); // 置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
-            GX_FIELD(rgb, up_rgb); // 躯干RGB三通道平均值
-            GX_FIELD(rgb, lw_rgb); // 下肢RGB三通道平均值
+            GX_FIELD(std::int32_t, is_sleeve); // 1 长袖 0短袖
+            GX_FIELD(float, color_conf); // 颜色纯度分数
+            /* 0:black,1:grey,2:white,3:red,4:orange,5:yellow,6:green,7:cyan,8:blue,9:purple */
+            GX_FIELD(std::int32_t, color_type); //颜色类型
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

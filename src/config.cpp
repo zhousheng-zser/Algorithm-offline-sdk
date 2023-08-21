@@ -71,6 +71,12 @@ namespace glasssix {
         temp.get_to(_flame_config);
         flame_is_load = true;
     }
+    void config::set_smog(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/smog.json");
+        temp.get_to(_smog_config);
+        smog_is_load = true;
+    }
     void config::set_helmet(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/helmet.json");

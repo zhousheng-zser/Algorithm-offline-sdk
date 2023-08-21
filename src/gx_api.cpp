@@ -99,7 +99,7 @@ namespace glasssix {
             }
             return "";
         }
- 
+
         cv::Mat img;
         size_t data_len;
         abi::string type;
@@ -164,6 +164,7 @@ namespace glasssix {
             name_config["face_user.json"]           = _config->_face_user_config;
             name_config["feature.json"]             = _config->_feature_config;
             name_config["flame.json"]               = _config->_flame_config;
+            name_config["smog.json"]                = _config->_flame_config;
             name_config["helmet.json"]              = _config->_helmet_config;
             name_config["refvest.json"]             = _config->_refvest_config;
             name_config["track.json"]               = _config->_track_config;
@@ -174,7 +175,7 @@ namespace glasssix {
             name_config["onphone.json"]             = _config->_onphone_config;
             name_config["workcloth.json"]           = _config->_workcloth_config;
             name_config["pedestrian_labor.json"]    = _config->_pedestrian_labor_config;
-            name_config["pedestrian.json"]    = _config->_pedestrian_config;
+            name_config["pedestrian.json"]          = _config->_pedestrian_config;
             return name_config;
         }
 
@@ -224,6 +225,9 @@ namespace glasssix {
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);
+                } else if (name == "smog.json" && _config->smog_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_smog_config);
                 } else if (name == "helmet.json" && _config->helmet_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_helmet_config);
@@ -258,7 +262,7 @@ namespace glasssix {
                     return -1; // 文件对应的算法未构建实例
                 }
             } catch (const std::exception& ex) {
-                std::cout << ex.what() << "\n";
+                printf("ERROR: %s\n", ex.what());
                 return -3; // 写文件失败 或者 类型错误
             }
             return 0;

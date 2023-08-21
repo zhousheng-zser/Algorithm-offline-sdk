@@ -9,8 +9,8 @@ typedef unsigned char uchar;
 
 namespace glasssix {
 #include "detail/reflection_directive_compat_start.frag.hpp"
-    // 火焰信息
-    struct flame_info {
+    // 烟雾信息
+    struct smog_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
             GX_FIELD(float, score); // 置信度
@@ -22,9 +22,9 @@ namespace glasssix {
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
-        GX_BEGIN_FIELDS(flame_info);
+        GX_BEGIN_FIELDS(smog_info);
 
-        GX_FIELD(abi::vector<boxes>, fire_list); // 火
+        GX_FIELD(abi::vector<boxes>, smog_list); // 烟
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

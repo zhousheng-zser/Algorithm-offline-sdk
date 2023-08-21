@@ -12,7 +12,7 @@ namespace glasssix {
         gx_flame_api(gx_flame_api&&) noexcept;
         gx_flame_api& operator=(gx_flame_api&&) noexcept;
 
-        //  安全生产 烟雾火焰检测
+        //  安全生产 火焰检测
         flame_info safe_production_flame(const gx_img_api& mat);
 
     private:
