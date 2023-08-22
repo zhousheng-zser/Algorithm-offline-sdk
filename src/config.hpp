@@ -76,6 +76,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct smog_config {
+        GX_BEGIN_FIELDS(smog_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct helmet_config {
         GX_BEGIN_FIELDS(helmet_config);
         GX_FIELD(int, device);
@@ -125,6 +134,56 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    struct playphone_config {
+        GX_BEGIN_FIELDS(playphone_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct onphone_config {
+        GX_BEGIN_FIELDS(onphone_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct workcloth_config {
+        GX_BEGIN_FIELDS(workcloth_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct pedestrian_labor_config {
+        GX_BEGIN_FIELDS(pedestrian_labor_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct pedestrian_config {
+        GX_BEGIN_FIELDS(pedestrian_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     class config {
     public:
         config();
@@ -139,11 +198,17 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         flame_config _flame_config;
+        smog_config _smog_config;
         helmet_config _helmet_config;
         refvest_config _refvest_config;
         sleep_config _sleep_config;
-        sleep_config _smoke_config;
+        smoke_config _smoke_config;
         leavepost_config _leavepost_config;
+        playphone_config _playphone_config;
+        onphone_config _onphone_config;
+        workcloth_config _workcloth_config;
+        pedestrian_labor_config _pedestrian_labor_config;
+        pedestrian_config _pedestrian_config;
         void set_configure_directory(const abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
@@ -152,11 +217,17 @@ namespace glasssix {
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
         void set_flame(const abi::string& path);
+        void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
         void set_refvest(const abi::string& path);
         void set_sleep(const abi::string& path);
         void set_smoke(const abi::string& path);
         void set_leavepost(const abi::string& path);
+        void set_playphone(const abi::string& path);
+        void set_onphone(const abi::string& path);
+        void set_workcloth(const abi::string& path);
+        void set_pedestrian_labor(const abi::string& path);
+        void set_pedestrian(const abi::string& path);
 
         bool configure_directory_is_load = false;
         bool detect_is_load              = false;
@@ -166,11 +237,17 @@ namespace glasssix {
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
         bool flame_is_load               = false;
+        bool smog_is_load                = false;
         bool helmet_is_load              = false;
         bool refvest_is_load             = false;
         bool sleep_is_load               = false;
         bool smoke_is_load               = false;
         bool leavepost_is_load           = false;
+        bool playphone_is_load           = false;
+        bool onphone_is_load             = false;
+        bool workcloth_is_load           = false;
+        bool pedestrian_labor_is_load    = false;
+        bool pedestrian_is_load          = false;
 
     private:
         glasssix::json read_json_file(const abi::string& path);

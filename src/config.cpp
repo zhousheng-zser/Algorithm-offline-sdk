@@ -20,10 +20,14 @@ namespace glasssix {
         return temp;
     }
     void config::set_configure_directory(const abi::string& path) {
-        glasssix::json temp;
-        temp = read_json_file(path + "/configure_directory.json");
-        temp.get_to(_configure_directory);
-        configure_directory_is_load = true;
+        try {
+            glasssix::json temp;
+            temp = read_json_file(path + "/configure_directory.json");
+            temp.get_to(_configure_directory);
+            configure_directory_is_load = true;
+        } catch (...) {
+            throw source_code_aware_runtime_error(U8("Error: path = ")+path+U8("/configure_directory.json"));
+        }
     }
     void config::set_detect(const abi::string& path) {
         glasssix::json temp;
@@ -67,6 +71,12 @@ namespace glasssix {
         temp.get_to(_flame_config);
         flame_is_load = true;
     }
+    void config::set_smog(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/smog.json");
+        temp.get_to(_smog_config);
+        smog_is_load = true;
+    }
     void config::set_helmet(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/helmet.json");
@@ -96,5 +106,35 @@ namespace glasssix {
         temp = read_json_file(path + "/leavepost.json");
         temp.get_to(_leavepost_config);
         leavepost_is_load = true;
+    }
+    void config::set_onphone(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/onphone.json");
+        temp.get_to(_onphone_config);
+        onphone_is_load = true;
+    }
+    void config::set_playphone(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/playphone.json");
+        temp.get_to(_playphone_config);
+        playphone_is_load = true;
+    }
+    void config::set_workcloth(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/workcloth.json");
+        temp.get_to(_workcloth_config);
+        workcloth_is_load = true;
+    }
+    void config::set_pedestrian_labor(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pedestrian_labor.json");
+        temp.get_to(_pedestrian_labor_config);
+        pedestrian_labor_is_load = true;
+    }
+    void config::set_pedestrian(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pedestrian.json");
+        temp.get_to(_pedestrian_config);
+        pedestrian_is_load = true;
     }
 } // namespace glasssix

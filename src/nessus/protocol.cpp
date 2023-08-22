@@ -33,7 +33,7 @@ namespace glasssix {
             GX_FIELD(std::string, nessus_version);
             GX_END_FIELDS;
 
-            GX_JSON_SERIALIZABLE_DEFAULT;
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
 
         struct parser_new_result {
@@ -97,9 +97,9 @@ namespace glasssix {
 
         void init(std::string_view config_file_path) const {
             throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
-                parser_init_plugin(instance_.get(), config_file_path.data(), U8(""));
-                //auto result = parse_raw_result<parser_init_plugin_result>();
-                //check_result(result);
+                auto result = parse_raw_result<parser_init_plugin_result>(
+                    parser_init_plugin(instance_.get(), config_file_path.data(), U8("")));
+                check_result(result);
             });
         }
 
@@ -138,8 +138,12 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
-            return parse_raw_result(parser_parse(
-                instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0));
+            //printf("%s\n", full_name.data());
+            //printf("%s\n", param.dump().c_str());
+            char* ss      = parser_parse(
+                instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
+            // printf("%s\n", ss);
+            return parse_raw_result(ss);
         }
 
         protocol_object make_protocol_object(std::string_view family, std::string_view instance_uuid) const {

@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_FLAME_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_FLAME_V2.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -49,8 +49,8 @@ namespace glasssix {
         }
     };
 
-    //  安全生产 烟雾火焰检测
-    flame_info gx_flame_api::safe_production_flame(gx_img_api& mat) {
+    //  安全生产 火焰检测
+    flame_info gx_flame_api::safe_production_flame(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -58,7 +58,7 @@ namespace glasssix {
             }
             auto ptr = all_thread_algo_ptr[id_];
             flame_info ans;
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<flame::detect>(ptr->flame_handle,
                 flame_detect_param{.instance_guid = "",
                     .format                       = _config->_flame_config.format,

@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_SLEEP_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_SLEEP_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -50,7 +50,7 @@ namespace glasssix {
     };
 
     //  睡岗检测
-    sleep_info gx_sleep_api::safe_production_sleep(gx_img_api& mat) {
+    sleep_info gx_sleep_api::safe_production_sleep(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -58,7 +58,7 @@ namespace glasssix {
             }
             auto ptr = all_thread_algo_ptr[id_];
             sleep_info ans;
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<sleep::detect>(ptr->sleep_handle,
                 sleep_detect_param{.instance_guid = "",
                     .format                       = _config->_sleep_config.format,

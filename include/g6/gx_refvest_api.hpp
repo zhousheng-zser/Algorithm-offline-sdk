@@ -13,7 +13,7 @@ namespace glasssix {
         gx_refvest_api& operator=(gx_refvest_api&&) noexcept;
 
         //  安全生产 反光衣检测
-        refvest_info safe_production_refvest(gx_img_api& mat);
+        refvest_info safe_production_refvest(const gx_img_api& mat);
 
     private:
         class impl;

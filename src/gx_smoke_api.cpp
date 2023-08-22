@@ -1,4 +1,5 @@
 ﻿#include "gx_smoke_api.hpp"
+
 #include "sdk_share.hpp"
 
 namespace glasssix {
@@ -6,7 +7,7 @@ namespace glasssix {
     gx_smoke_api::gx_smoke_api() : impl_{std::make_unique<impl>()} {}
     gx_smoke_api::gx_smoke_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_smoke_api::~gx_smoke_api() {}
-    gx_smoke_api::gx_smoke_api(gx_smoke_api&&) noexcept      = default;
+    gx_smoke_api::gx_smoke_api(gx_smoke_api&&) noexcept            = default;
     gx_smoke_api& gx_smoke_api::operator=(gx_smoke_api&&) noexcept = default;
     class gx_smoke_api::impl {
     public:
@@ -35,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = "RK3588_C++_SMOKE_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_SMOKE_V2.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -48,8 +49,8 @@ namespace glasssix {
         }
     };
 
-    //  睡岗检测
-    smoke_info gx_smoke_api::safe_production_smoke(gx_img_api& mat) {
+    //  抽烟检测
+    smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -57,7 +58,7 @@ namespace glasssix {
             }
             auto ptr = all_thread_algo_ptr[id_];
             smoke_info ans;
-            std::span<char> str{reinterpret_cast<char*>(mat.get_data()), mat.get_data_len()};
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<smoke::detect>(ptr->smoke_handle,
                 smoke_detect_param{.instance_guid = "",
                     .format                       = _config->_smoke_config.format,

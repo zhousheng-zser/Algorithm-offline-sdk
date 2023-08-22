@@ -29,13 +29,13 @@ namespace glasssix {
         ~gx_img_api();
         gx_img_api(gx_img_api&&) noexcept;
         gx_img_api& operator=(gx_img_api&&) noexcept;
-        int get_rows(); // 获取图片高
-        int get_cols(); // 获取图片
-        uchar* get_data(); // 获取图片data
-        size_t get_data_len(); // 获取data长度
-        abi::string get_type(); // 获取图片类型
+        int get_rows() const; // 获取图片高
+        int get_cols() const; // 获取图片
+        const uchar* get_data() const; // 获取图片data
+        size_t get_data_len() const; // 获取data长度
+        abi::string get_type() const; // 获取图片类型
         bool rotate(int deg); // 旋转图片
-        abi::vector<uchar> cropped(int x1, int x2, int y1, int y2); // 裁剪人脸
+        abi::vector<uchar> cropped(int x1, int x2, int y1, int y2) const; // 裁剪人脸
 
     private:
         class impl;

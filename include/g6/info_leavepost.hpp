@@ -9,7 +9,7 @@ typedef unsigned char uchar;
 
 namespace glasssix {
 #include "detail/reflection_directive_compat_start.frag.hpp"
-    // 睡岗信息
+    // 离岗信息
     struct leavepost_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);

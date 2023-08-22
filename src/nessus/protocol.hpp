@@ -19,7 +19,7 @@ namespace glasssix {
         template <typename T>
         struct protocol_family {
             inline static constexpr auto value =
-                convert_naming_convention_v<meta::name_of_v<T>, naming_convention::pascal_> + meta_string{U8('.')};
+                convert_naming_convention_v<meta::name_of_v<T>, naming_convention::lower_case_with_underscores> + meta_string{U8('.')};
         };
 
         std::string make_procotol_full_name(std::string_view family, std::string_view name);

@@ -13,7 +13,7 @@ namespace glasssix {
     struct flame_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score);
+            GX_FIELD(float, score); // 置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
@@ -24,8 +24,7 @@ namespace glasssix {
         };
         GX_BEGIN_FIELDS(flame_info);
 
-        GX_FIELD(abi::vector<boxes>, fire_list);  //火
-        GX_FIELD(abi::vector<boxes>, smoke_list); //烟
+        GX_FIELD(abi::vector<boxes>, fire_list); // 火
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

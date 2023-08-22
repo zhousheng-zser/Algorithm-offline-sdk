@@ -1,8 +1,37 @@
-﻿set(target_version 1.0.3)
-set(target_name gx-offline-recognition)
+﻿set(target_name gx-offline-recognition)
 set(package_name GxOfflineRecognition)
 
 add_library(${target_name} SHARED)
+
+#EMPOWER_LANGUAGE 0:C++ 1:JAVA
+#GX_PLATFORM_NAME 0:WINDOWS 1:RK3588 2:RK3399 3:RK3566 4:RV1109 5:CENTOS 6:OTHER
+
+if(WIN32)
+	set(target_version 1.0.0)
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=0)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
+	set(target_version 1.0.7)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
+	set(target_version 1.0.0)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=3)
+	set(target_version 1.0.0)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=4)
+	set(target_version 1.0.0)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=5)
+	set(target_version 1.0.0)
+endif()
+message("EMPOWER_LANGUAGE  = ${GX_TOOLHAIN_TARGET_NAME}" )
 
 file(
 	GLOB private_sources
@@ -45,8 +74,6 @@ target_include_directories(
 		${CMAKE_CURRENT_SOURCE_DIR}
 		${OpenCV_INCLUDE_DIRS}
 		${GX_CV_SDK_INCLUDE}
-		#"/root/install/nessus/include"
-		#"/root/install/nessus/include/Primitives"
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_GXOFFLINERECOGNITION_IMPL=1)
@@ -63,7 +90,7 @@ target_link_libraries(
 	LicenseClient::license_client
 )
 
-if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")  ) # 后续3566将配置进rknn  or (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566") 
+if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")
 target_link_libraries(
 	${target_name}
 	PRIVATE
@@ -76,7 +103,6 @@ target_link_libraries(
 	${target_name}
 	PRIVATE
 	dl
-	rknn_api
 )
 endif()
 

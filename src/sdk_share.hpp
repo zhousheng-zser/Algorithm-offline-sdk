@@ -6,11 +6,17 @@
 #include "../src/nessus/protocols/irisviel.hpp"
 #include "../src/nessus/protocols/leavepost.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
+#include "../src/nessus/protocols/onphone.hpp"
+#include "../src/nessus/protocols/pedestrian.hpp"
+#include "../src/nessus/protocols/pedestrian_labor.hpp"
+#include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/sleep.hpp"
+#include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
+#include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
@@ -21,6 +27,30 @@
 #include <g6/char8_t_remediation.hpp>
 #include <g6/crypto/symmetric_cipher_provider.hpp>
 namespace glasssix {
+    namespace {
+#if (GX_PLATFORM_NAME == 0)
+        std::string share_platform_name = "WINDOWS";
+#elif (GX_PLATFORM_NAME == 1)
+        std::string share_platform_name    = "RK3588";
+#elif (GX_PLATFORM_NAME == 2)
+        std::string share_platform_name = "RK3399";
+#elif (GX_PLATFORM_NAME == 3)
+        std::string share_platform_name = "RK3566";
+#elif (GX_PLATFORM_NAME == 4)
+        std::string share_platform_name = "RV1109";
+#elif (GX_PLATFORM_NAME == 5)
+        std::string share_platform_name = "CENTOS";
+#endif
+
+#if (EMPOWER_LANGUAGE == 0)
+        std::string share_empower_language = "C++";
+#elif (EMPOWER_LANGUAGE == 1)
+        std::string share_empower_language = "JAVA";
+#endif
+
+
+        // GX_PLATFORM_NAME
+    } // namespace
     extern config* _config;
     class algo_irisviel_ptr {
     public:
@@ -62,21 +92,32 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
-            Function["flame"]     = &algo_ptr::set_protocols_handl_flame;
-            Function["refvest"]   = &algo_ptr::set_protocols_handl_refvest;
-            Function["helmet"]    = &algo_ptr::set_protocols_handl_helmet;
-            Function["selene"]    = &algo_ptr::set_protocols_handl_selene;
-            Function["longinus"]  = &algo_ptr::set_protocols_handl_longinus;
-            Function["romancia"]  = &algo_ptr::set_protocols_handl_romancia;
-            Function["damocles"]  = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]     = &algo_ptr::set_protocols_handl_sleep;
-            Function["smoke"]     = &algo_ptr::set_protocols_handl_smoke;
-            Function["leavepost"] = &algo_ptr::set_protocols_handl_leavepost;
+            Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
+            Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
+            Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
+            Function["helmet"]           = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]           = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"]         = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"]         = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
+            Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
+            Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
+            Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
+            Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
+            Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
+            Function["pedestrian_labor"] = &algo_ptr::set_protocols_handl_pedestrian_labor;
+            Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_smog() {
+            _config->set_smog(_config->_path);
+            smog_handle = protocol_ptr.make_instance<smog>(
+                smog_new_param{_config->_smog_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_refvest() {
             _config->set_refvest(_config->_path);
@@ -127,6 +168,31 @@ namespace glasssix {
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
                 leavepost_new_param{_config->_leavepost_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_onphone() {
+            _config->set_onphone(_config->_path);
+            onphone_handle = protocol_ptr.make_instance<onphone>(
+                onphone_new_param{_config->_onphone_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_playphone() {
+            _config->set_playphone(_config->_path);
+            playphone_handle = protocol_ptr.make_instance<playphone>(
+                playphone_new_param{_config->_playphone_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_workcloth() {
+            _config->set_workcloth(_config->_path);
+            workcloth_handle = protocol_ptr.make_instance<workcloth>(
+                workcloth_new_param{_config->_workcloth_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pedestrian_labor() {
+            _config->set_pedestrian_labor(_config->_path);
+            pedestrian_labor_handle = protocol_ptr.make_instance<pedestrian_labor>(pedestrian_labor_new_param{
+                _config->_pedestrian_labor_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pedestrian() {
+            _config->set_pedestrian(_config->_path);
+            pedestrian_handle = protocol_ptr.make_instance<pedestrian>(pedestrian_new_param{
+                _config->_pedestrian_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         damocles damocles_handle;
@@ -135,10 +201,16 @@ namespace glasssix {
         selene selene_handle;
         refvest refvest_handle;
         flame flame_handle;
+        smog smog_handle;
         helmet helmet_handle;
         sleep sleep_handle;
         smoke smoke_handle;
         leavepost leavepost_handle;
+        playphone playphone_handle;
+        onphone onphone_handle;
+        workcloth workcloth_handle;
+        pedestrian_labor pedestrian_labor_handle;
+        pedestrian pedestrian_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;

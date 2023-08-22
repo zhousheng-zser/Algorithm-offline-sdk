@@ -113,19 +113,19 @@ namespace glasssix {
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;
     gx_img_api& gx_img_api::operator=(gx_img_api&&) noexcept = default;
-    int gx_img_api::get_rows() {
+    int gx_img_api::get_rows() const {
         return impl_->img.rows;
     }
-    int gx_img_api::get_cols() {
+    int gx_img_api::get_cols() const {
         return impl_->img.cols;
     }
-    uchar* gx_img_api::get_data() {
+    const uchar* gx_img_api::get_data() const {
         return impl_->img.data;
     }
-    size_t gx_img_api::get_data_len() {
+    size_t gx_img_api::get_data_len() const {
         return impl_->data_len;
     }
-    abi::string gx_img_api::get_type() {
+    abi::string gx_img_api::get_type() const {
         return impl_->type;
     }
     bool gx_img_api::rotate(int deg) {
@@ -141,8 +141,8 @@ namespace glasssix {
         impl_->data_len = 1llu * impl_->img.channels() * impl_->img.cols * impl_->img.rows;
         return true;
     }
-    abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) {
-        cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2));
+    abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) const {
+        cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2)).clone();
         std::vector<uchar> buffer(1024 * 1024);
         cv::imencode(".jpg", cropped_face, buffer);
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
@@ -164,12 +164,18 @@ namespace glasssix {
             name_config["face_user.json"]           = _config->_face_user_config;
             name_config["feature.json"]             = _config->_feature_config;
             name_config["flame.json"]               = _config->_flame_config;
+            name_config["smog.json"]                = _config->_flame_config;
             name_config["helmet.json"]              = _config->_helmet_config;
             name_config["refvest.json"]             = _config->_refvest_config;
             name_config["track.json"]               = _config->_track_config;
             name_config["sleep.json"]               = _config->_sleep_config;
             name_config["smoke.json"]               = _config->_smoke_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
+            name_config["playphone.json"]           = _config->_playphone_config;
+            name_config["onphone.json"]             = _config->_onphone_config;
+            name_config["workcloth.json"]           = _config->_workcloth_config;
+            name_config["pedestrian_labor.json"]    = _config->_pedestrian_labor_config;
+            name_config["pedestrian.json"]          = _config->_pedestrian_config;
             return name_config;
         }
 
@@ -219,6 +225,9 @@ namespace glasssix {
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);
+                } else if (name == "smog.json" && _config->smog_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_smog_config);
                 } else if (name == "helmet.json" && _config->helmet_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_helmet_config);
@@ -228,17 +237,32 @@ namespace glasssix {
                 } else if (name == "sleep.json" && _config->sleep_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_sleep_config);
-                } else if (name == "smoke.json" && _config->sleep_is_load) {
+                } else if (name == "smoke.json" && _config->smoke_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_smoke_config);
                 } else if (name == "leavepost.json" && _config->leavepost_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_leavepost_config);
+                } else if (name == "playphone.json" && _config->playphone_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_playphone_config);
+                } else if (name == "onphone.json" && _config->onphone_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_onphone_config);
+                } else if (name == "workcloth.json" && _config->workcloth_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_workcloth_config);
+                } else if (name == "pedestrian_labor.json" && _config->pedestrian_labor_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pedestrian_labor_config);
+                } else if (name == "pedestrian.json" && _config->pedestrian_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pedestrian_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例
                 }
             } catch (const std::exception& ex) {
-                std::cout << ex.what() << "\n";
+                printf("ERROR: %s\n", ex.what());
                 return -3; // 写文件失败 或者 类型错误
             }
             return 0;
