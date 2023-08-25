@@ -170,6 +170,7 @@ namespace glasssix {
             name_config["track.json"]               = _config->_track_config;
             name_config["sleep.json"]               = _config->_sleep_config;
             name_config["smoke.json"]               = _config->_smoke_config;
+            name_config["tumble.json"]              = _config->_tumble_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
@@ -240,6 +241,9 @@ namespace glasssix {
                 } else if (name == "smoke.json" && _config->smoke_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_smoke_config);
+                } else if (name == "tumble.json" && _config->tumble_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_tumble_config);
                 } else if (name == "leavepost.json" && _config->leavepost_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_leavepost_config);

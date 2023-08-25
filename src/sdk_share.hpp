@@ -16,6 +16,7 @@
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
+#include "../src/nessus/protocols/tumble.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
@@ -102,6 +103,7 @@ namespace glasssix {
             Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
             Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
+            Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
             Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
@@ -163,6 +165,11 @@ namespace glasssix {
             smoke_handle = protocol_ptr.make_instance<smoke>(
                 smoke_new_param{_config->_smoke_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_tumble() {
+            _config->set_tumble(_config->_path);
+            tumble_handle = protocol_ptr.make_instance<tumble>(
+                tumble_new_param{_config->_tumble_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_leavepost() {
             _config->set_leavepost(_config->_path);
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
@@ -205,6 +212,7 @@ namespace glasssix {
         helmet helmet_handle;
         sleep sleep_handle;
         smoke smoke_handle;
+        tumble tumble_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;

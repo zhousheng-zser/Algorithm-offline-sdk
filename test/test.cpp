@@ -19,6 +19,7 @@
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smoke_api.hpp>
+#include <gx_tumble_api.hpp>
 #include <gx_workcloth_api.hpp>
 // #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
@@ -713,6 +714,25 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("smoke time = %d microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // 多线程测跌倒
+    void thread_function_tumble() {
+        gx_tumble_api* api_temp = new gx_tumble_api();
+        int T                  = 1000;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/tumble.png", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_tumble(img);
+                printf("stand_list = %d tumble_list = %d\n", val.stand_list.size(), val.tumble_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("tumble time = %d microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测离岗
@@ -1565,6 +1585,7 @@ int main(int argc, char** argv) {
         t[12] = std::thread(thread_function_pedestrian);
         t[13] = std::thread(thread_function_Action_live_Blur);
         t[14]  = std::thread(thread_function_smog);
+        t[15]  = std::thread(thread_function_tumble);
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1580,6 +1601,7 @@ int main(int argc, char** argv) {
         t[12].join();
         t[13].join();
         t[14].join();
+        t[15].join();
         // auto start = std::chrono::high_resolution_clock::now();
         // auto end      = std::chrono::high_resolution_clock::now();
         // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
