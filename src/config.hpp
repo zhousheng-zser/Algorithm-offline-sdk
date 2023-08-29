@@ -67,6 +67,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct climb_config {
+        GX_BEGIN_FIELDS(climb_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct flame_config {
         GX_BEGIN_FIELDS(flame_config);
         GX_FIELD(int, device);
@@ -207,6 +216,7 @@ namespace glasssix {
         action_live_config _action_live_config;
         feature_config _feature_config;
         face_user_config _face_user_config;
+        climb_config _climb_config;
         flame_config _flame_config;
         smog_config _smog_config;
         helmet_config _helmet_config;
@@ -227,6 +237,7 @@ namespace glasssix {
         void set_action_live(const abi::string& path);
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
+        void set_climb(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
@@ -248,6 +259,7 @@ namespace glasssix {
         bool action_live_is_load         = false;
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
+        bool climb_is_load               = false;
         bool flame_is_load               = false;
         bool smog_is_load                = false;
         bool helmet_is_load              = false;

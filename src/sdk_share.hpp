@@ -1,5 +1,6 @@
 #pragma once
 #include "../src/nessus/protocol.hpp"
+#include "../src/nessus/protocols/climb.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
@@ -93,6 +94,7 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
+            Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
@@ -110,6 +112,11 @@ namespace glasssix {
             Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian_labor"] = &algo_ptr::set_protocols_handl_pedestrian_labor;
             Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
+        }
+        void set_protocols_handl_climb() {
+            _config->set_climb(_config->_path);
+            climb_handle = protocol_ptr.make_instance<climb>(
+                climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -207,6 +214,7 @@ namespace glasssix {
         romancia romancia_handle;
         selene selene_handle;
         refvest refvest_handle;
+        climb climb_handle;
         flame flame_handle;
         smog smog_handle;
         helmet helmet_handle;

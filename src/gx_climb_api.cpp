@@ -1,15 +1,15 @@
-﻿#include "gx_workcloth_api.hpp"
+﻿#include "gx_climb_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_workcloth_api::gx_workcloth_api() : impl_{std::make_unique<impl>()} {}
-    gx_workcloth_api::gx_workcloth_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_workcloth_api::~gx_workcloth_api() {}
-    gx_workcloth_api::gx_workcloth_api(gx_workcloth_api&&) noexcept            = default;
-    gx_workcloth_api& gx_workcloth_api::operator=(gx_workcloth_api&&) noexcept = default;
-    class gx_workcloth_api::impl {
+    gx_climb_api::gx_climb_api() : impl_{std::make_unique<impl>()} {}
+    gx_climb_api::gx_climb_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_climb_api::~gx_climb_api() {}
+    gx_climb_api::gx_climb_api(gx_climb_api&&) noexcept            = default;
+    gx_climb_api& gx_climb_api::operator=(gx_climb_api&&) noexcept = default;
+    class gx_climb_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WORKCLOTH_V2.2.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -49,28 +49,31 @@ namespace glasssix {
         }
     };
 
-    //  工服检测
-    workcloth_info gx_workcloth_api::safe_production_workcloth(const gx_img_api& mat) {
+    //  安全生产 攀爬检测
+    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const climb_line& line) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            workcloth_info ans;
+            climb_info ans;
             std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<workcloth::detect>(ptr->workcloth_handle,
-                workcloth_detect_param{.instance_guid = "",
-                    .format                           = _config->_workcloth_config.format,
-                    .height                           = mat.get_rows(),
-                    .width                            = mat.get_cols(),
-                    .roi_x                            = 0,
-                    .roi_y                            = 0,
-                    .roi_width                        = mat.get_cols(),
-                    .roi_height                       = mat.get_rows(),
-                    .params =
-                        workcloth_detect_param::confidence_params{.conf_thres = _config->_workcloth_config.conf_thres,
-                            .nms_thres                                        = _config->_workcloth_config.nms_thres}},
+            auto result = ptr->protocol_ptr.invoke<climb::detect>(ptr->climb_handle,
+                climb_detect_param{.instance_guid = "",
+                    .format                       = _config->_climb_config.format,
+                    .height                       = mat.get_rows(),
+                    .width                        = mat.get_cols(),
+                    .roi_x                        = 0,
+                    .roi_y                        = 0,
+                    .roi_width                    = mat.get_cols(),
+                    .roi_height                   = mat.get_rows(),
+                    .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
+                        .nms_thres                                              = _config->_climb_config.nms_thres,
+                        .x1                                                     = line.x1,
+                        .y1                                                     = line.y1,
+                        .x2                                                     = line.x2,
+                        .y2                                                     = line.y2}},
                 str);
 
             ans = std::move(result.detect_info);

@@ -65,6 +65,12 @@ namespace glasssix {
         temp.get_to(_face_user_config);
         face_user_is_load = true;
     }
+    void config::set_climb(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/climb.json");
+        temp.get_to(_climb_config);
+        climb_is_load = true;
+    }
     void config::set_flame(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/flame.json");
