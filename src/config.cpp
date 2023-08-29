@@ -26,7 +26,7 @@ namespace glasssix {
             temp.get_to(_configure_directory);
             configure_directory_is_load = true;
         } catch (...) {
-            throw source_code_aware_runtime_error(U8("Error: path = ")+path+U8("/configure_directory.json"));
+            throw source_code_aware_runtime_error(U8("Error: path = ") + path + U8("/configure_directory.json"));
         }
     }
     void config::set_detect(const abi::string& path) {
@@ -65,6 +65,12 @@ namespace glasssix {
         temp.get_to(_face_user_config);
         face_user_is_load = true;
     }
+    void config::set_climb(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/climb.json");
+        temp.get_to(_climb_config);
+        climb_is_load = true;
+    }
     void config::set_flame(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/flame.json");
@@ -100,6 +106,12 @@ namespace glasssix {
         temp = read_json_file(path + "/smoke.json");
         temp.get_to(_smoke_config);
         smoke_is_load = true;
+    }
+    void config::set_tumble(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/tumble.json");
+        temp.get_to(_tumble_config);
+        tumble_is_load = true;
     }
     void config::set_leavepost(const abi::string& path) {
         glasssix::json temp;

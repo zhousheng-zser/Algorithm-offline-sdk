@@ -1,5 +1,6 @@
 #pragma once
 #include "../src/nessus/protocol.hpp"
+#include "../src/nessus/protocols/climb.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
@@ -16,6 +17,7 @@
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
+#include "../src/nessus/protocols/tumble.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
@@ -92,6 +94,7 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
+            Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
@@ -102,12 +105,18 @@ namespace glasssix {
             Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
             Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
+            Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
             Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
             Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian_labor"] = &algo_ptr::set_protocols_handl_pedestrian_labor;
             Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
+        }
+        void set_protocols_handl_climb() {
+            _config->set_climb(_config->_path);
+            climb_handle = protocol_ptr.make_instance<climb>(
+                climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -163,6 +172,11 @@ namespace glasssix {
             smoke_handle = protocol_ptr.make_instance<smoke>(
                 smoke_new_param{_config->_smoke_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_tumble() {
+            _config->set_tumble(_config->_path);
+            tumble_handle = protocol_ptr.make_instance<tumble>(
+                tumble_new_param{_config->_tumble_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_leavepost() {
             _config->set_leavepost(_config->_path);
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
@@ -200,11 +214,13 @@ namespace glasssix {
         romancia romancia_handle;
         selene selene_handle;
         refvest refvest_handle;
+        climb climb_handle;
         flame flame_handle;
         smog smog_handle;
         helmet helmet_handle;
         sleep sleep_handle;
         smoke smoke_handle;
+        tumble tumble_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;

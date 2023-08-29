@@ -9,8 +9,8 @@ typedef unsigned char uchar;
 
 namespace glasssix {
 #include "detail/reflection_directive_compat_start.frag.hpp"
-    // 安全帽信息
-    struct helmet_info {
+    // 攀爬信息
+    struct climb_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
             GX_FIELD(float, score); // 置信度
@@ -22,15 +22,22 @@ namespace glasssix {
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
-        GX_BEGIN_FIELDS(helmet_info);
+        GX_BEGIN_FIELDS(climb_info);
 
-        GX_FIELD(abi::vector<boxes>, with_helmet_list); // 带安全帽
-        GX_FIELD(abi::vector<boxes>, with_hat_list); // 带了帽子,但不是安全帽 
-        GX_FIELD(abi::vector<boxes>, head_list); // 检测出人头, 没有帽子
+        GX_FIELD(abi::vector<boxes>, climb_list); // 攀爬的人
+        GX_FIELD(abi::vector<boxes>, normal_list); // 没攀爬的人
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 #include "detail/reflection_directive_compat_end.frag.hpp"
 
+    // 攀爬线   由两个不同的点确定一条直线  
+    struct climb_line {  
+        int x1; // 第一个点坐标x
+        int y1; // 第一个点坐标y
+        int x2; // 第二个点坐标x
+        int y2; // 第二个点坐标y
+    };
+    
 } // namespace glasssix

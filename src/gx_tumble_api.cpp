@@ -1,15 +1,15 @@
-﻿#include "gx_helmet_api.hpp"
+﻿#include "gx_tumble_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_helmet_api::gx_helmet_api() : impl_{std::make_unique<impl>()} {}
-    gx_helmet_api::gx_helmet_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_helmet_api::~gx_helmet_api() {}
-    gx_helmet_api::gx_helmet_api(gx_helmet_api&&) noexcept            = default;
-    gx_helmet_api& gx_helmet_api::operator=(gx_helmet_api&&) noexcept = default;
-    class gx_helmet_api::impl {
+    gx_tumble_api::gx_tumble_api() : impl_{std::make_unique<impl>()} {}
+    gx_tumble_api::gx_tumble_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_tumble_api::~gx_tumble_api() {}
+    gx_tumble_api::gx_tumble_api(gx_tumble_api&&) noexcept            = default;
+    gx_tumble_api& gx_tumble_api::operator=(gx_tumble_api&&) noexcept = default;
+    class gx_tumble_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.0.1";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_TUMBLE_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -49,30 +49,30 @@ namespace glasssix {
         }
     };
 
-
-    //  安全生产 安全帽检测
-    helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {
+    //  跌倒检测
+    tumble_info gx_tumble_api::safe_production_tumble(const gx_img_api& mat) {
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
-            helmet_info ans;
+            tumble_info ans;
             std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<helmet::detect>(ptr->helmet_handle,
-                helmet_detect_param{.instance_guid = "",
-                    .format                        = _config->_helmet_config.format,
+            auto result = ptr->protocol_ptr.invoke<tumble::detect>(ptr->tumble_handle,
+                tumble_detect_param{.instance_guid = "",
+                    .format                        = _config->_tumble_config.format,
                     .height                        = mat.get_rows(),
                     .width                         = mat.get_cols(),
                     .roi_x                         = 0,
                     .roi_y                         = 0,
                     .roi_width                     = mat.get_cols(),
                     .roi_height                    = mat.get_rows(),
-                    .params = helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
-                        .nms_thres                                               = _config->_helmet_config.nms_thres}},
+                    .params = tumble_detect_param::confidence_params{.conf_thres = _config->_tumble_config.conf_thres,
+                        .nms_thres                                               = _config->_tumble_config.nms_thres}},
                 str);
-            ans         = std::move(result.detect_info);
+
+            ans = std::move(result.detect_info);
             return ans;
         });
         return result_pool.get();
