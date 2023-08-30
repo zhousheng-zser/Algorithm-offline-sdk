@@ -18,9 +18,9 @@ namespace glasssix {
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
             GX_FIELD(std::int32_t, is_sleeve); // 1 长袖 0短袖
-            GX_FIELD(float, color_conf); // 排除黑白灰后最大颜色在检索区域的占比
-            /* 3:red,4:orange,5:yellow,6:green,7:cyan,8:blue,9:purple */
-            GX_FIELD(std::int32_t, color_type); // 颜色类型
+            // 十种颜色在检索区域的占比  
+            // 0:黑色，1:灰色，2:白色，3:红色，4:橙色，5:黄色，6:绿色，7:青色，8:蓝色，9:紫色 
+            GX_FIELD(abi::vector<float>, color_ratios); 
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
