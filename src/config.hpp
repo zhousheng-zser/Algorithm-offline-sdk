@@ -180,6 +180,7 @@ namespace glasssix {
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
+        GX_FIELD(int, strategy);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

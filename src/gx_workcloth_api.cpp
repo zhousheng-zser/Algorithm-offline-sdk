@@ -68,6 +68,7 @@ namespace glasssix {
                     .roi_y                            = 0,
                     .roi_width                        = mat.get_cols(),
                     .roi_height                       = mat.get_rows(),
+                    .strategy                         = _config->_workcloth_config.strategy,
                     .params =
                         workcloth_detect_param::confidence_params{.conf_thres = _config->_workcloth_config.conf_thres,
                             .nms_thres                                        = _config->_workcloth_config.nms_thres}},
