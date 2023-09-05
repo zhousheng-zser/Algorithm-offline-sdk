@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.0.1";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.0.2";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -70,7 +70,8 @@ namespace glasssix {
                     .roi_width                     = mat.get_cols(),
                     .roi_height                    = mat.get_rows(),
                     .params = helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
-                        .nms_thres                                               = _config->_helmet_config.nms_thres}},
+                        .nms_thres                                               = _config->_helmet_config.nms_thres,
+                        .min_size                                                = _config->_helmet_config.min_size }},
                 str);
             ans         = std::move(result.detect_info);
             return ans;
