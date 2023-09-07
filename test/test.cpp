@@ -7,8 +7,8 @@
 #include <thread>
 
 #include <gx_api.hpp>
-#include <gx_climb_api.hpp>
 #include <gx_face_api.hpp>
+#include <gx_climb_api.hpp>
 #include <gx_flame_api.hpp>
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
@@ -512,7 +512,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("helmet time = %d microsecond\n", duration.count());
+        printf("helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测火焰
@@ -532,7 +532,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("flame time = %d microsecond\n", duration.count());
+        printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 
@@ -552,7 +552,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("smog time = %d microsecond\n", duration.count());
+        printf("smog time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测反光衣
@@ -572,7 +572,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("refvest time = %d microsecond\n", duration.count());
+        printf("refvest time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测搜索
@@ -592,7 +592,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("search time = %d microsecond\n", duration.count());
+        printf("search time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测融合搜索
@@ -613,7 +613,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("integration time = %d microsecond\n", duration.count());
+        printf("integration time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测 配合活体 与 质量检测
@@ -647,7 +647,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("pedestrian time = %d microsecond\n", duration.count());
+        printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 人脸入库
@@ -694,7 +694,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("sleep time = %d microsecond\n", duration.count());
+        printf("sleep time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测抽烟
@@ -713,7 +713,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("smoke time = %d microsecond\n", duration.count());
+        printf("smoke time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测跌倒
@@ -732,7 +732,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("tumble time = %d microsecond\n", duration.count());
+        printf("tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测离岗
@@ -751,7 +751,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("leavepost time = %d microsecond\n", duration.count());
+        printf("leavepost time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测玩手机
@@ -770,7 +770,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("playphone time = %d microsecond\n", duration.count());
+        printf("playphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测打电话
@@ -789,7 +789,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("onphone time = %d microsecond\n", duration.count());
+        printf("onphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测工服检测
@@ -808,7 +808,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("workcloth time = %d microsecond\n", duration.count());
+        printf("workcloth time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测劳保检测
@@ -827,7 +827,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("pedestrian_labor time = %d microsecond\n", duration.count());
+        printf("pedestrian_labor time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测行人检测
@@ -846,7 +846,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("pedestrian time = %d microsecond\n", duration.count());
+        printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 
@@ -867,7 +867,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("climb time = %d microsecond\n", duration.count());
+        printf("climb time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 
@@ -1503,7 +1503,7 @@ namespace glasssix {
 //     }
 //     auto end      = std::chrono::high_resolution_clock::now();
 //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//     printf("search time = %d microsecond\n", duration.count());
+//     printf("search time = %lld microsecond\n", duration.count());
 //     delete api_temp;
 // }
 //// 多线程测融合搜索
@@ -1511,7 +1511,7 @@ namespace glasssix {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
 //     api_temp->user_load();
 //     auto start = std::chrono::high_resolution_clock::now();
-//     int T      = 500;
+//     int T      = 100;
 //     while (T--) {
 //         try {
 //             // gx_img_api img("/root/img/bbb.jpg", static_cast<int>(1e9));
@@ -1525,7 +1525,7 @@ namespace glasssix {
 //     }
 //     auto end      = std::chrono::high_resolution_clock::now();
 //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//     printf("integration time = %d microsecond\n", duration.count());
+//     printf("integration time = %lld microsecond\n", duration.count());
 //     delete api_temp;
 // }
 //// 多线程测 配合活体 与 质量检测
@@ -1558,7 +1558,7 @@ namespace glasssix {
 //     }
 //     auto end      = std::chrono::high_resolution_clock::now();
 //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//     printf("pedestrian time = %d microsecond\n", duration.count());
+//     printf("pedestrian time = %lld microsecond\n", duration.count());
 //     delete api_temp;
 // }
 
