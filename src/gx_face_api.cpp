@@ -656,7 +656,6 @@ namespace glasssix {
                     .aligned_images                 = romancia_result.aligned_images,
                     .format                         = romancia_result.format},
                 std::span<char>{arr});
-            selene_result.features;
 
             auto result_pool_irisviel = pool_irisviel.enqueue([&] {
                 if (thread_algo_irisviel_ptr == nullptr) {
