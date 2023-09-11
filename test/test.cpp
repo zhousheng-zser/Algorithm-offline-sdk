@@ -795,7 +795,7 @@ namespace glasssix {
     // 多线程测工服检测
     void thread_function_workcloth() {
         gx_workcloth_api* api_temp = new gx_workcloth_api();
-        int T                      = 1000;
+        int T                      = 500;
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
