@@ -1,6 +1,6 @@
 {
     "license_directory": "/opt/glasssix/edgebox/cpp/ai-sdk/configure_file/empower_file.txt",
-    "models_directory": "/root/Glasssix_CV_SDK_20230905_beta/models/rk3588",
-    "directory": "/root/Glasssix_CV_SDK_20230905_beta/configure_file/plugin_configure.json",
+    "models_directory": "/root/Glasssix_CV_SDK_20230915_beta/models/rk3588",
+    "directory": "/root/Glasssix_CV_SDK_20230915_beta/configure_file/plugin_configure.json",
     "thread_pool_num": 3
 }
