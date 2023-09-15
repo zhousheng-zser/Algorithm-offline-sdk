@@ -103,7 +103,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_FACE_V1.1.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_FACE_V1.2.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -656,7 +656,6 @@ namespace glasssix {
                     .aligned_images                 = romancia_result.aligned_images,
                     .format                         = romancia_result.format},
                 std::span<char>{arr});
-            selene_result.features;
 
             auto result_pool_irisviel = pool_irisviel.enqueue([&] {
                 if (thread_algo_irisviel_ptr == nullptr) {
