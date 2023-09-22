@@ -7,8 +7,8 @@
 #include <thread>
 
 #include <gx_api.hpp>
-#include <gx_face_api.hpp>
 #include <gx_climb_api.hpp>
+#include <gx_face_api.hpp>
 #include <gx_flame_api.hpp>
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
@@ -25,7 +25,7 @@
 // #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
 
-// #include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 using namespace glasssix;
 
 // 用于windows 播放显示
@@ -345,9 +345,9 @@ namespace glasssix::display_test {
 } // namespace glasssix::display_test
 */
 
+
 // 帮测试写的测试工具
 namespace glasssix {
-
 
     std::vector<abi::string> find_file(std::filesystem::path folder_path) {
         std::vector<abi::string> ans_list;
@@ -494,6 +494,114 @@ namespace glasssix {
         }
     }
 
+    // 人脸入库
+    void test_add_face_all() {
+        gx_face_api* _api = new gx_face_api();
+        _api->user_load();
+        //_api->user_remove_all();
+        printf(" const = %d \n", _api->user_record_count());
+        auto start = std::chrono::high_resolution_clock::now();
+        std::ifstream path_file("/root/cc_test_origin/1.txt", std::ios::in);
+        std::ofstream log_file("/root/face_group.log", std::ios::out | std::ios::trunc);
+        abi::string path, key;
+        while (1) {
+            abi::vector<abi::string> keys;
+            abi::vector<gx_img_api> mat;
+            int T = 1000;
+            while ((path_file >> path >> key) && (T--)) {
+                try {
+                    mat.emplace_back(gx_img_api{"/root/cc_test_origin/" + path, static_cast<int>(1e9)});
+                    keys.emplace_back(key);
+                } catch (const std::exception& ex) {
+                    printf("error = %s\n", ex.what());
+                }
+            }
+            if (mat.size() == 0) {
+                break;
+            } else {
+                auto val = _api->user_add_records(keys, mat, false, false);
+                // abi::vector<face_user_result>
+                for (auto& x : val) {
+                    log_file << x.key << " " << (x.success == 0 ? "OK\n" : "FAIL\n");
+                }
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        log_file << "time = " << duration.count() << " microsecond\n";
+    }
+    // 人脸1:1
+    void test_face_compare() {
+        gx_face_api* _api = new gx_face_api();
+        auto start        = std::chrono::high_resolution_clock::now();
+        std::fstream path_file("/root/cc_test_origin/3.txt", std::ios::in);
+        std::ofstream log_file("/root/face_compare.log", std::ios::out | std::ios::trunc);
+        abi::string path1, path2;
+        while (path_file >> path1 >> path2) {
+            log_file << path1 << "  " << path2 << " ";
+
+            gx_img_api img1("/root/cc_test_origin/" + path1, 1e9);
+            gx_img_api img2("/root/cc_test_origin/" + path2, 1e9);
+            log_file << _api->feature_comparison(img1, img2) << "\n";
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        log_file << "time = " << duration.count() << " microsecond\n";
+    }
+    // 人脸活体
+    void test_face_liveness() {
+        gx_face_api* _api = new gx_face_api();
+        auto start        = std::chrono::high_resolution_clock::now();
+        std::fstream path_file("/root/cc_test_origin/2.txt", std::ios::in);
+        std::ofstream log_file("/root/liveness_true.log", std::ios::out | std::ios::trunc);
+        abi::string path, key;
+        while (path_file >> path >> key) {
+            log_file << "/root/cc_test_origin/" << path << "  ";
+            gx_img_api img("/root/cc_test_origin/" + path, IMG_2K);
+            auto val = _api->face_spoofing_live(img);
+            log_file << (val.spoofing_result.size() > 0 ? val.spoofing_result[0].prob[1] : 0.0) << "\n";
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        log_file << "time = " << duration.count() << " microsecond\n";
+        delete _api;
+    }
+    // 人脸搜索
+    void test_face_search() {
+        gx_face_api* _api = new gx_face_api();
+        auto start        = std::chrono::high_resolution_clock::now();
+        std::ofstream log_file("/root/face_search.log", std::ios::out | std::ios::trunc);
+        std::fstream path_file("/root/cc_test_origin/2.txt", std::ios::in);
+        abi::string path, key;
+        int cnt(0), sum(0);
+        _api->user_load();
+        while (path_file >> path >> key) {
+            log_file << "/root/cc_test_origin/" << path << "  ";
+            gx_img_api img("/root/cc_test_origin/" + path, IMG_2K);
+            if (_api->user_contains_key(key)) {
+                auto val = _api->user_search(img, 1, 0.1);
+                if (val.result.size()) {
+                    log_file << val.result[0].data.key << " " << val.result[0].similarity << "\n";
+                    cnt += (val.result[0].data.key == key ? 1 : 0);
+                } else
+                    log_file << "Search Fail\n";
+                sum++;
+            } else
+                log_file << "Search Fail\n";
+        }
+
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        log_file << "time = " << duration.count() << " microsecond\n";
+        log_file << "cnt = " << cnt << " sum = " << sum << "\n";
+        delete _api;
+    }
+
+} // namespace glasssix
+
+
+// 调试代码
+namespace glasssix {
     // 多线程测安全帽
     void thread_function_helmet() {
         gx_helmet_api* api_temp = new gx_helmet_api();
@@ -535,7 +643,6 @@ namespace glasssix {
         printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-
     // 多线程测烟雾
     void thread_function_smog() {
         gx_smog_api* api_temp = new gx_smog_api();
@@ -649,33 +756,6 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
-    }
-    // 人脸入库
-    void test_add_face_all() {
-        gx_face_api* _api = new gx_face_api();
-        _api->user_load();
-        printf(" const = %d \n", _api->user_record_count());
-        std::ifstream path_file("/home/paths.txt", std::ios::in);
-        abi::string path, key;
-        while (1) {
-            abi::vector<abi::string> keys;
-            abi::vector<gx_img_api> mat;
-            int T = 1000;
-            while ((path_file >> path >> key) && (T--)) {
-                try {
-                    mat.emplace_back(gx_img_api{"/home/" + path, static_cast<int>(1e9)});
-                    keys.emplace_back(key);
-                } catch (const std::exception& ex) {
-                    printf("error = %s\n", ex.what());
-                }
-            }
-            if (mat.size() == 0) {
-                break;
-            } else {
-                auto val = _api->user_add_records(keys, mat, false, false);
-                printf("T = %d \n", T);
-            }
-        }
     }
     // 多线程测睡岗
     void thread_function_sleep() {
@@ -849,7 +929,6 @@ namespace glasssix {
         printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-
     // 多线程测攀爬
     void thread_function_climb() {
         gx_climb_api* api_temp = new gx_climb_api();
@@ -1485,7 +1564,7 @@ namespace glasssix {
 // } // namespace glasssix
 //
 
-
+////3566
 //// 多线程测搜索
 // void thread_function_search() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
@@ -1572,13 +1651,14 @@ int main(int argc, char** argv) {
         // safe_test3();
         // safe_test4();
         // safe_test5();
-
-        // 人脸入库
         // test_add_face_all();
+        // test_face_search();
+        // test_face_compare();
+        // test_face_liveness();
 
         // todo_video();
 
-        // 多线程测性能测试
+        /* 多线程测性能测试 */
         std::thread t[30];
         t[0]  = std::thread(thread_function_helmet);
         t[1]  = std::thread(thread_function_flame);
@@ -1614,9 +1694,9 @@ int main(int argc, char** argv) {
         t[14].join();
         t[15].join();
         t[16].join();
-        // auto start = std::chrono::high_resolution_clock::now();
-        // auto end      = std::chrono::high_resolution_clock::now();
-        // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        //  auto start = std::chrono::high_resolution_clock::now();
+        //  auto end      = std::chrono::high_resolution_clock::now();
+        //  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
         // 用于windows播放视频或图片的
         /*

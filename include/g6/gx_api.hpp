@@ -19,27 +19,29 @@ namespace glasssix {
     // 图片旋转角度枚举
     enum image_rotation_type { DEG90 = 0, DEG180 = 1, DEG270 = 2 };
 
-    class GX_API(GXOFFLINERECOGNITION) gx_img_api {
+    class gx_img_api {
     public:
-        gx_img_api(abi::string path, int limit);
+        GX_API(GXOFFLINERECOGNITION) gx_img_api(abi::string path, int limit);
 #if __has_include(<span>)
-        gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit);
+        GX_API(GXOFFLINERECOGNITION) gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit);
 #endif
-        gx_img_api(std::vector<uchar>& buffer, int limit);
-        ~gx_img_api();
-        gx_img_api(gx_img_api&&) noexcept;
-        gx_img_api& operator=(gx_img_api&&) noexcept;
-        int get_rows() const; // 获取图片高
-        int get_cols() const; // 获取图片
-        const uchar* get_data() const; // 获取图片data
-        size_t get_data_len() const; // 获取data长度
-        abi::string get_type() const; // 获取图片类型
-        bool rotate(int deg); // 旋转图片
-        abi::vector<uchar> cropped(int x1, int x2, int y1, int y2) const; // 裁剪人脸
+        GX_API(GXOFFLINERECOGNITION) gx_img_api(std::vector<uchar>& buffer, int limit);
+        GX_API(GXOFFLINERECOGNITION) ~gx_img_api();
+        GX_API(GXOFFLINERECOGNITION) gx_img_api(const gx_img_api&);
+        GX_API(GXOFFLINERECOGNITION) gx_img_api(gx_img_api&&) noexcept;
+        GX_API(GXOFFLINERECOGNITION) gx_img_api& operator=(const gx_img_api&);
+        GX_API(GXOFFLINERECOGNITION) gx_img_api& operator=(gx_img_api&&) noexcept;
+        GX_API(GXOFFLINERECOGNITION) int get_rows() const; // 获取图片高
+        GX_API(GXOFFLINERECOGNITION) int get_cols() const; // 获取图片
+        GX_API(GXOFFLINERECOGNITION) const uchar* get_data() const; // 获取图片data
+        GX_API(GXOFFLINERECOGNITION) size_t get_data_len() const; // 获取data长度
+        GX_API(GXOFFLINERECOGNITION) abi::string get_type() const; // 获取图片类型
+        GX_API(GXOFFLINERECOGNITION) bool rotate(int deg); // 旋转图片
+        GX_API(GXOFFLINERECOGNITION) abi::vector<uchar> cropped(int x1, int x2, int y1, int y2) const; // 裁剪人脸
 
     private:
         class impl;
-        std::unique_ptr<impl> impl_;
+        std::shared_ptr<impl> impl_;
     };
 
     class GX_API(GXOFFLINERECOGNITION) gx_config_api {

@@ -23,7 +23,7 @@ target_include_directories(
         ${GX_PUBLIC_INCLUDE_DIR}/g6
         ${CMAKE_CURRENT_SOURCE_DIR}
 		${GX_CV_SDK_INCLUDE}
-		#${OpenCV_INCLUDE_DIRS}
+		${OpenCV_INCLUDE_DIRS}
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
@@ -32,7 +32,7 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     Threads::Threads
-	#${OpenCV_LIBS}
+	${OpenCV_LIBS}
     GXMiscellaneous::gx-miscellaneous
 	gx-offline-recognition
 )

@@ -104,14 +104,16 @@ namespace glasssix {
         size_t data_len;
         abi::string type;
     };
-    gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_unique<impl>(path, limit)} {}
+    gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_shared<impl>(path, limit)} {}
 #if __has_include(<span>)
-    gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_unique<impl>(buffer, limit)} {}
+    gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_shared<impl>(buffer, limit)} {}
 #endif
     gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit) // 对外接口是先宽再高
-        : impl_{std::make_unique<impl>(bgr_data, rows, cols, limit)} {} // opencv 构造是先高再宽
+        : impl_{std::make_shared<impl>(bgr_data, rows, cols, limit)} {} // opencv 构造是先高再宽
     gx_img_api::~gx_img_api() {}
+    gx_img_api::gx_img_api(const gx_img_api&)                = default;
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;
+    gx_img_api& gx_img_api::operator=(const gx_img_api&)     = default;
     gx_img_api& gx_img_api::operator=(gx_img_api&&) noexcept = default;
     int gx_img_api::get_rows() const {
         return impl_->img.rows;
