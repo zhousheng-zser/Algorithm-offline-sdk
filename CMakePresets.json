@@ -150,9 +150,9 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc",
-                "CMAKE_CXX_COMPILER": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-g++",
-                "GX_TOOLCHAIN_PREFIX": "/home/zser/gcc-arm-11.2-2022.02-x86_64-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-",
+                "CMAKE_C_COMPILER": "/home/zser/buildroot-2023.08/output/host/bin/arm-buildroot-linux-gnueabihf-gcc",
+                "CMAKE_CXX_COMPILER": "/home/zser/buildroot-2023.08/output/host/bin/arm-buildroot-linux-gnueabihf-g++",
+                "GX_TOOLCHAIN_PREFIX": "/home/zser/buildroot-2023.08/output/host/bin/arm-buildroot-linux-gnueabihf-",
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1109Toolchain.cmake",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0",

@@ -43,8 +43,13 @@ namespace glasssix {
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
 #if __has_include(<span>)
-        impl(std::span<const uchar> bgr_data, int rows, int cols, int limit) : img(rows, cols, CV_8UC3) {
-            std::memcpy(img.data, bgr_data.data(), bgr_data.size());
+        impl(std::span<const uchar> bgr_data, int rows, int cols, int limit ,bool ref ) {
+            if (!ref) {
+                img = cv::Mat(rows, cols, CV_8UC3);
+                std::memcpy(img.data, bgr_data.data(), bgr_data.size());
+            } else {
+                img = cv::Mat(rows, cols, CV_8UC3, const_cast<unsigned char*>(bgr_data.data()));
+            }
             if (img.empty()) {
                 throw source_code_aware_runtime_error(U8("Error: Could not load image"));
             }
@@ -105,11 +110,11 @@ namespace glasssix {
         abi::string type;
     };
     gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_shared<impl>(path, limit)} {}
-#if __has_include(<span>)
     gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_shared<impl>(buffer, limit)} {}
+#if __has_include(<span>)
+    gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref ) // 对外接口是先宽再高
+        : impl_{std::make_shared<impl>(bgr_data, rows, cols, limit, ref)} {} // opencv 构造是先高再宽
 #endif
-    gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit) // 对外接口是先宽再高
-        : impl_{std::make_shared<impl>(bgr_data, rows, cols, limit)} {} // opencv 构造是先高再宽
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(const gx_img_api&)                = default;
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;

@@ -37,6 +37,11 @@ target_link_libraries(
 	gx-offline-recognition
 )
 
+if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
+    target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
+    target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
+    target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
+endif()
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../config  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)

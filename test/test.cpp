@@ -1564,7 +1564,7 @@ namespace glasssix {
 // } // namespace glasssix
 //
 
-////3566
+//3566
 //// 多线程测搜索
 // void thread_function_search() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
