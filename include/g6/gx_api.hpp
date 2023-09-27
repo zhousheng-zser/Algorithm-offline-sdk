@@ -39,6 +39,7 @@ namespace glasssix {
         GX_API(GXOFFLINERECOGNITION) abi::string get_type() const; // 获取图片类型
         GX_API(GXOFFLINERECOGNITION) bool rotate(int deg); // 旋转图片
         GX_API(GXOFFLINERECOGNITION) abi::vector<uchar> cropped(int x1, int x2, int y1, int y2) const; // 裁剪人脸
+        GX_API(GXOFFLINERECOGNITION) bool write(const std::string &path) const; // 保存图片到本地
 
     private:
         class impl;

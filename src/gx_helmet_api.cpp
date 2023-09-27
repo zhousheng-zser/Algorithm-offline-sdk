@@ -52,6 +52,7 @@ namespace glasssix {
 
     //  安全生产 安全帽检测
     helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {
+        try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
@@ -69,14 +70,21 @@ namespace glasssix {
                         .roi_y                         = 0,
                         .roi_width                     = mat.get_cols(),
                         .roi_height                    = mat.get_rows(),
-                    .params = helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
-                        .nms_thres                                               = _config->_helmet_config.nms_thres,
-                        .min_size                                                = _config->_helmet_config.min_size }},
+                        .params =
+                            helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
+                                .nms_thres                                     = _config->_helmet_config.nms_thres,
+                                .min_size                                      = _config->_helmet_config.min_size}},
                     str);
                 ans         = std::move(result.detect_info);
                 return ans;
             });
             return result_pool.get();
+        } catch (const std::exception& ex) {
+            const auto timestamp       = date_time::now();
+            const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
+            bool flag = mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + "_dump.jpg");
+            throw source_code_aware_runtime_error{ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"} };
+        }
     }
 
 } // namespace glasssix

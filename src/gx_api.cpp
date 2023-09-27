@@ -155,6 +155,9 @@ namespace glasssix {
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
         return ans;
     }
+    bool  gx_img_api::write(const std::string& path) const {
+        return cv::imwrite(path, impl_->img);
+    }
 
 
     class gx_config_api::impl {
