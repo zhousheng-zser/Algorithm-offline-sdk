@@ -422,7 +422,7 @@ namespace glasssix {
         abi::vector<face_user_result> ans(mat.size());
         abi::vector<database_record> faces_A_add;
         abi::vector<database_record> faces_A_update;
-        if (keys.size() != mat.size())
+        if (keys.size() != mat.size()) 
             throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
         if (mat.size() > 1000)
             throw source_code_aware_runtime_error(U8("Error: mat.size > 1000"));
@@ -490,41 +490,42 @@ namespace glasssix {
     // 特征值库批量添加
     abi::vector<face_user_result> gx_face_api::user_add_records(
         abi::vector<abi::string>& keys, abi::vector<abi::vector<float>>& features) {
+        abi::vector<face_user_result> ans(features.size());
+        abi::vector<database_record> faces_A_add;
+        abi::vector<database_record> faces_A_update;
+        if (keys.size() != features.size())
+            throw source_code_aware_runtime_error(U8("Error: keys.size != features.size"));
+        if (features.size() > 1000)
+            throw source_code_aware_runtime_error(U8("Error: features.size > 1000"));
+        if (features.size() == 0)
+            throw source_code_aware_runtime_error(U8("Error: features.size == 0"));
+        for (int i = 0; i < features.size(); i++) {
+            ans[i].img_buffer.clear();
+            ans[i].facerectwithfaceinfo = std::nullopt;
+            if (keys[i] == "") {
+                ans[i].key     = "";
+                ans[i].success = -1;
+            } else if (features[i].size() != _config->_face_user_config.dimension) {
+                ans[i].key     = keys[i];
+                ans[i].success = -3;
+            } else if (user_contains_key(keys[i]) == false) {
+                ans[i].key     = keys[i];
+                ans[i].success = 1;
+                faces_A_add.emplace_back(database_record{.feature = features[i], .key = keys[i]});
+            } else {
+                ans[i].key     = keys[i];
+                ans[i].success = 2;
+                faces_A_update.emplace_back(database_record{.feature = features[i], .key = keys[i]});
+            }
+            // 批量入库就可以释放掉gx_img_api
+        }
+        std::array<char, 0> arr{};
+
         auto result_pool = pool_irisviel.enqueue([&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
             auto ptr = thread_algo_irisviel_ptr;
-            abi::vector<face_user_result> ans(features.size());
-            abi::vector<database_record> faces_A_add;
-            abi::vector<database_record> faces_A_update;
-            if (keys.size() != features.size())
-                throw source_code_aware_runtime_error(U8("Error: keys.size != features.size"));
-            if (features.size() > 1000)
-                throw source_code_aware_runtime_error(U8("Error: features.size > 1000"));
-            if (features.size() == 0)
-                throw source_code_aware_runtime_error(U8("Error: features.size == 0"));
-            for (int i = 0; i < features.size(); i++) {
-                ans[i].img_buffer.clear();
-                ans[i].facerectwithfaceinfo = std::nullopt;
-                if (keys[i] == "") {
-                    ans[i].key     = "";
-                    ans[i].success = -1;
-                } else if (features[i].size() != _config->_face_user_config.dimension) {
-                    ans[i].key     = keys[i];
-                    ans[i].success = -3;
-                } else if (user_contains_key(keys[i]) == false) {
-                    ans[i].key     = keys[i];
-                    ans[i].success = 1;
-                    faces_A_add.emplace_back(database_record{.feature = features[i], .key = keys[i]});
-                } else {
-                    ans[i].key     = keys[i];
-                    ans[i].success = 2;
-                    faces_A_update.emplace_back(database_record{.feature = features[i], .key = keys[i]});
-                }
-                // 批量入库就可以释放掉gx_img_api
-            }
-            std::array<char, 0> arr{};
             // 添加
             auto result_A = ptr->protocol_ptr.invoke<irisviel::add_records>(ptr->irisivel_handle,
                 irisviel_add_records_param{.instance_guid = "", .data = faces_A_add}, std::span<char>{arr});

@@ -144,6 +144,21 @@
             }
         },
         {
+            "name": "ubuntu",
+            "displayName": "Linux Release",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc-11",
+                "CMAKE_CXX_COMPILER": "g++-11",
+                "CMAKE_BUILD_TYPE": "Release",
+                "GX_TOOLHAIN_TARGET_NAME": "UBUNTU",
+                "GX_OPENCV_ROOT": "/home/glasssix/install/opencv-4.7.0",
+                "GX_CV_SDK_ROOT": "/home/glasssix/Glasssix_CV_SDK_20230927_beta",
+                "GX_MISCELLANEOUS_ROOT": "/home/glasssix/install/miscellaneous-ubuntu",
+                "GX_LICENSECLIENT_ROOT": "/home/glasssix/install/LicenseClient",
+                "GX_STATIC_RUNTIME": "OFF"
+            }
+        },
+        {
             "name": "rv1109",
             "displayName": "Linux Release",
             "generator": "Ninja",
