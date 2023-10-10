@@ -146,6 +146,7 @@
         {
             "name": "ubuntu",
             "displayName": "Linux Release",
+            "inherits": "linux-debug",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc-11",
                 "CMAKE_CXX_COMPILER": "g++-11",
@@ -200,7 +201,7 @@
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20230925_beta",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20231010_beta",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",
@@ -260,6 +261,12 @@
             "name": "rk3588-debug",
             "configurePreset": "rk3588-debug",
             "configuration": "Debug",
+            "jobs": 4
+        },
+        {
+            "name": "ubuntu",
+            "configurePreset": "ubuntu",
+            "configuration": "Release",
             "jobs": 4
         }
     ]
