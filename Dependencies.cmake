@@ -39,6 +39,23 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_LIBS opencv_world.so.407)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU" )
+    find_package(
+    GXMiscellaneous
+    REQUIRED
+    HINTS ${GX_MISCELLANEOUS_ROOT}
+    NO_DEFAULT_PATH
+    )
+    find_package(
+    LicenseClient
+    REQUIRED
+    NO_DEFAULT_PATH
+    HINTS
+    ${GX_LICENSECLIENT_ROOT}
+    )
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
+    set(OpenCV_LIBS ${OpenCV_LIB_DIR}/libopencv_world.so.407)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     find_package(
     GXMiscellaneous
@@ -96,6 +113,9 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")
     set(GX_CV_SDK_LIBS parser primitives)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     set(cvsdk_lib_relative_path "/lib/centos/x64/release")
+    set(GX_CV_SDK_LIBS parser primitives)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU" )
+    set(cvsdk_lib_relative_path "/lib/ubuntu/x64/release")
     set(GX_CV_SDK_LIBS parser primitives)
 elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" ))
     set(cvsdk_lib_relative_path "/lib/android/arm64-v8a/release")

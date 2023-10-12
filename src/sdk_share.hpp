@@ -22,6 +22,7 @@
 #include "config.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
+#include "data_time.hpp"
 
 #include <chrono>
 #include <mutex>
@@ -42,6 +43,8 @@ namespace glasssix {
         std::string share_platform_name = "RV1109";
 #elif (GX_PLATFORM_NAME == 5)
         std::string share_platform_name = "CENTOS";
+ #elif (GX_PLATFORM_NAME == 6)
+        std::string share_platform_name = "UBUNTU";
 #endif
 
 #if (EMPOWER_LANGUAGE == 0)

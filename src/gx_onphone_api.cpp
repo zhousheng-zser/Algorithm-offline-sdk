@@ -36,7 +36,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_ONPHONE_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_ONPHONE_V2.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -51,31 +51,40 @@ namespace glasssix {
 
     //  打电话检测
     onphone_info gx_onphone_api::safe_production_onphone(const gx_img_api& mat) {
-        auto result_pool = pool->enqueue([&] {
-            std::thread::id id_ = std::this_thread::get_id();
-            if (all_thread_algo_ptr[id_] == nullptr) {
-                all_thread_algo_ptr[id_] = new algo_ptr();
-            }
-            auto ptr = all_thread_algo_ptr[id_];
-            onphone_info ans;
-            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-            auto result = ptr->protocol_ptr.invoke<onphone::detect>(ptr->onphone_handle,
-                onphone_detect_param{.instance_guid = "",
-                    .format                         = _config->_onphone_config.format,
-                    .height                         = mat.get_rows(),
-                    .width                          = mat.get_cols(),
-                    .roi_x                          = 0,
-                    .roi_y                          = 0,
-                    .roi_width                      = mat.get_cols(),
-                    .roi_height                     = mat.get_rows(),
-                    .params = onphone_detect_param::confidence_params{.conf_thres = _config->_onphone_config.conf_thres,
-                        .nms_thres = _config->_onphone_config.nms_thres}},
-                str);
+        try {
+            auto result_pool = pool->enqueue([&] {
+                std::thread::id id_ = std::this_thread::get_id();
+                if (all_thread_algo_ptr[id_] == nullptr) {
+                    all_thread_algo_ptr[id_] = new algo_ptr();
+                }
+                auto ptr = all_thread_algo_ptr[id_];
+                onphone_info ans;
+                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+                auto result = ptr->protocol_ptr.invoke<onphone::detect>(ptr->onphone_handle,
+                    onphone_detect_param{.instance_guid = "",
+                        .format                         = _config->_onphone_config.format,
+                        .height                         = mat.get_rows(),
+                        .width                          = mat.get_cols(),
+                        .roi_x                          = 0,
+                        .roi_y                          = 0,
+                        .roi_width                      = mat.get_cols(),
+                        .roi_height                     = mat.get_rows(),
+                        .params =
+                            onphone_detect_param::confidence_params{.conf_thres = _config->_onphone_config.conf_thres,
+                                .nms_thres                                      = _config->_onphone_config.nms_thres}},
+                    str);
 
-            ans = std::move(result.detect_info);
-            return ans;
-        });
-        return result_pool.get();
+                ans = std::move(result.detect_info);
+                return ans;
+            });
+            return result_pool.get();
+        } catch (const std::exception& ex) {
+            const auto timestamp       = date_time::now();
+            const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
+            bool flag = mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + "_dump.jpg");
+            throw source_code_aware_runtime_error{
+                ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
+        }
     }
 
 } // namespace glasssix

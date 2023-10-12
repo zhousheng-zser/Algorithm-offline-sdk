@@ -23,7 +23,7 @@ target_include_directories(
         ${GX_PUBLIC_INCLUDE_DIR}/g6
         ${CMAKE_CURRENT_SOURCE_DIR}
 		${GX_CV_SDK_INCLUDE}
-		#${OpenCV_INCLUDE_DIRS}
+		${OpenCV_INCLUDE_DIRS}
 )
 
 target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
@@ -32,11 +32,16 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     Threads::Threads
-	#${OpenCV_LIBS}
+	${OpenCV_LIBS}
     GXMiscellaneous::gx-miscellaneous
 	gx-offline-recognition
 )
 
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU")  )
+    target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
+    target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
+    target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
+endif()
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config
 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/../config  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)

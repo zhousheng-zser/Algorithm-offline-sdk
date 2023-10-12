@@ -5,12 +5,18 @@ namespace glasssix {
         _path = "./config";
         set_configure_directory(_path);
         std::ifstream configure(_configure_directory.directory);
+        if (!configure.is_open())
+            throw source_code_aware_runtime_error(
+                U8("Error: _configure_directory = ") + _configure_directory.directory);
         protocols_list = nlohmann::json::parse(configure);
     }
     config::config(const abi::string& path) {
         _path = path;
         set_configure_directory(_path);
         std::ifstream configure(_configure_directory.directory);
+        if (!configure.is_open())
+            throw source_code_aware_runtime_error(
+                U8("Error: _configure_directory = ") + _configure_directory.directory);
         protocols_list = nlohmann::json::parse(configure);
     }
 
