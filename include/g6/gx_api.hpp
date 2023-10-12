@@ -33,7 +33,7 @@ namespace glasssix {
         GX_API(GXOFFLINERECOGNITION) gx_img_api& operator=(const gx_img_api&);
         GX_API(GXOFFLINERECOGNITION) gx_img_api& operator=(gx_img_api&&) noexcept;
         GX_API(GXOFFLINERECOGNITION) int get_rows() const; // 获取图片高
-        GX_API(GXOFFLINERECOGNITION) int get_cols() const; // 获取图片
+        GX_API(GXOFFLINERECOGNITION) int get_cols() const; // 获取图片宽
         GX_API(GXOFFLINERECOGNITION) const uchar* get_data() const; // 获取图片data
         GX_API(GXOFFLINERECOGNITION) size_t get_data_len() const; // 获取data长度
         GX_API(GXOFFLINERECOGNITION) abi::string get_type() const; // 获取图片类型

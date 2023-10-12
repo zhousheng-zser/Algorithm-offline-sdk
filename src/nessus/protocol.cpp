@@ -13,6 +13,7 @@
 
 #include <parser_c.hpp>
 // #include "include/parser.hpp"
+static std::mutex nessus_protocol_mtx;
 
 namespace glasssix {
     namespace {
@@ -96,11 +97,11 @@ namespace glasssix {
         impl() : instance_{parser_new_instance()} {}
 
         void init(std::string_view config_file_path) const {
-            throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
+                throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
                 auto result = parse_raw_result<parser_init_plugin_result>(
                     parser_init_plugin(instance_.get(), config_file_path.data(), U8("")));
-                check_result(result);
-            });
+                    check_result(result);
+                });
         }
 
         protocol_object make_instance(std::string_view family, const json& param) const {
@@ -162,8 +163,9 @@ namespace glasssix {
 
     nessus_protocol::~nessus_protocol() {}
 
-
     void nessus_protocol::init(std::string_view config_file_path) const {
+        std::lock_guard<std::mutex> lock(
+            nessus_protocol_mtx); // 使用 std::lock_guard 获取互斥锁，在作用域结束时自动释放锁
         impl_->init(config_file_path);
     }
 
