@@ -11,6 +11,7 @@ namespace glasssix {
         GX_FIELD(std::string, models_directory);
         GX_FIELD(std::string, directory);
         GX_FIELD(std::string, license_directory);
+        GX_FIELD(std::string, empower_serial_number);
         GX_FIELD(int, thread_pool_num);
         GX_FIELD(std::string, dump_img_directory);
         GX_END_FIELDS;
@@ -114,7 +115,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct sleep_config {
         GX_BEGIN_FIELDS(sleep_config);
         GX_FIELD(int, device);
@@ -124,7 +124,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct smoke_config {
         GX_BEGIN_FIELDS(smoke_config);
         GX_FIELD(int, device);
@@ -134,7 +133,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct tumble_config {
         GX_BEGIN_FIELDS(tumble_config);
         GX_FIELD(int, device);
@@ -144,7 +142,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct leavepost_config {
         GX_BEGIN_FIELDS(leavepost_config);
         GX_FIELD(int, device);
@@ -154,7 +151,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct playphone_config {
         GX_BEGIN_FIELDS(playphone_config);
         GX_FIELD(int, device);
@@ -164,7 +160,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct onphone_config {
         GX_BEGIN_FIELDS(onphone_config);
         GX_FIELD(int, device);
@@ -174,7 +169,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct workcloth_config {
         GX_BEGIN_FIELDS(workcloth_config);
         GX_FIELD(int, device);
@@ -184,7 +178,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct pedestrian_labor_config {
         GX_BEGIN_FIELDS(pedestrian_labor_config);
         GX_FIELD(int, device);
@@ -194,7 +187,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct pedestrian_config {
         GX_BEGIN_FIELDS(pedestrian_config);
         GX_FIELD(int, device);

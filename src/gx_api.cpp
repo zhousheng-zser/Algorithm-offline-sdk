@@ -277,7 +277,7 @@ namespace glasssix {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pedestrian_config);
                 } else {
-                    return -1; // 文件对应的算法未构建实例
+                    return -1; // 文件对应的算法未构建实例 _config指针为空
                 }
             } catch (const std::exception& ex) {
                 printf("ERROR: %s\n", ex.what());

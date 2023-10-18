@@ -5,7 +5,7 @@ namespace glasssix {
     std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     thread_pool* pool = nullptr;
 
-    void empower_Callback(void* context, std::string success, const char* message, std::int64_t remaining_seconds) {
+    void empower_Callback(void* context, std::string success, const char* message, std::int64_t remaining_seconds,std::string add_info) {
         int T             = 3;
         long long time_ll = std::stoll(get_time_code());
         while (T--) {
@@ -20,7 +20,7 @@ namespace glasssix {
             }
             time_ll--;
         }
-        throw source_code_aware_runtime_error("Error: empower Fail" + std::string{message});
+        throw source_code_aware_runtime_error("Error empower Fail:" + std::string{message} + " Info :" + add_info);
     }
 
     std::string empower_time_decode(std::string timestampStr, std::string encode_str) {

@@ -4,8 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <optional>
-#include <thread>
 #include <random>
+#include <thread>
 
 #include <gx_api.hpp>
 #include <gx_climb_api.hpp>
@@ -689,10 +689,12 @@ namespace glasssix {
         api_temp->user_load();
         int T      = 500;
         auto start = std::chrono::high_resolution_clock::now();
+        const gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
+        api_temp->user_add_records(abi::vector<abi::string>{"123"}, abi::vector<gx_img_api>{img}, false, false);
         while (T--) {
             try {
-                const gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
-                auto val = api_temp->user_search(img, 1, 0.5);
+                auto val =
+                    api_temp->user_search(gx_img_api{"/root/img/action_live_5.jpg", static_cast<int>(1e9)}, 1, 0.5);
                 printf("similarity =%.3f\n", val.result.size() > 0 ? val.result[0].similarity : 0.0);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -963,12 +965,12 @@ namespace glasssix {
         int y = std::max(0, std::min(ay2, by2) - std::max(ay1, by1));
         return x * y;
     }
-    std::string track_check(helmet_info::boxes &list) {
+    std::string track_check(helmet_info::boxes& list) {
         std::unordered_map<int, helmet_info::boxes>::iterator it;
         for (it = track_history.begin(); it != track_history.end(); it++) {
             if (1.0
-                    * ComputeArea(list.x1, list.y1, list.x2, list.y2, it->second.x1, it->second.y1,
-                        it->second.x2, it->second.y2)
+                    * ComputeArea(
+                        list.x1, list.y1, list.x2, list.y2, it->second.x1, it->second.y1, it->second.x2, it->second.y2)
                     / std::min((list.x2 - list.x1) * (list.y2 - list.y1),
                         (it->second.x2 - it->second.x1) * (it->second.y2 - it->second.y1))
                 >= 0.60) {
@@ -1001,9 +1003,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_flame_api* api_temp = new gx_flame_api();
@@ -1030,8 +1035,7 @@ namespace glasssix {
                  std::string text  = "fire:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1047,8 +1051,11 @@ namespace glasssix {
          std::cout << capture.get(7) << "--------\n";
 
          cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
-         int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_helmet_api* api_temp = new gx_helmet_api();
@@ -1068,20 +1075,20 @@ namespace glasssix {
              cv::imencode(".jpg", img, buffer);
              gx_img_api img_buff(buffer, IMG_Full_Aperture_4K);
              auto val = api_temp->safe_production_helmet(img_buff);
-             //std::vector<int> key_temp;
-             //std::vector<helmet_info::boxes> boxes_temp;
-             // for (int i = 0; i < val.head_list.size(); i++) {
-             //    if (!track_check(val.head_list[i])) {
-             //       int key = (val.head_list[i].x1 + val.head_list[i].x2 >> 1) * 10000
-             //               + (val.head_list[i].y1 + val.head_list[i].y2 >> 1);
-             //       key_temp.emplace_back(key);
-             //       boxes_temp.emplace_back(val.head_list[i]);
-             //    }
-             //}
-             // for (int i = 0; i < key_temp.size(); i++) {
-             //    track_history[key_temp[i] ] = val.head_list[i];
-             //    track_history_id[key_temp[i]] = get_random_string(5);
+            // std::vector<int> key_temp;
+            // std::vector<helmet_info::boxes> boxes_temp;
+            //  for (int i = 0; i < val.head_list.size(); i++) {
+            //     if (!track_check(val.head_list[i])) {
+            //        int key = (val.head_list[i].x1 + val.head_list[i].x2 >> 1) * 10000
+            //                + (val.head_list[i].y1 + val.head_list[i].y2 >> 1);
+            //        key_temp.emplace_back(key);
+            //        boxes_temp.emplace_back(val.head_list[i]);
+            //     }
              // }
+            //  for (int i = 0; i < key_temp.size(); i++) {
+            //     track_history[key_temp[i] ] = val.head_list[i];
+            //     track_history_id[key_temp[i]] = get_random_string(5);
+            //  }
              std::unordered_map<int, helmet_info::boxes> temp_faces;
              std::unordered_map<int, std::string> temp_faces_id;
              for (int j = 0; j < val.head_list.size(); j++) {
@@ -1091,7 +1098,7 @@ namespace glasssix {
                  int y2              = val.head_list[j].y2;
                  int key             = (x1 + x2 >> 1) * 10000 + (y1 + y2 >> 1);
                  std::string id_temp = track_check(val.head_list[j]);
-                 temp_faces[key] = val.head_list[j];
+                temp_faces[key]     = val.head_list[j];
                  if (id_temp == "") {
                     temp_faces_id[key] = get_random_string(5);
                  } else
@@ -1100,8 +1107,8 @@ namespace glasssix {
                  rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
                  std::string text  = temp_faces_id[key]; 
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
-                 cv::rectangle(img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height),
-                     GREEN, -1);
+                cv::rectangle(
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              track_history.clear();
@@ -1118,9 +1125,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_refvest_api* api_temp = new gx_refvest_api();
@@ -1147,8 +1157,7 @@ namespace glasssix {
                  std::string text  = "with_refvest:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.without_refvest_list.size(); j++) {
@@ -1161,8 +1170,7 @@ namespace glasssix {
                  std::string text  = "without_refvest:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1175,9 +1183,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_sleep_api* api_temp = new gx_sleep_api();
@@ -1204,8 +1215,7 @@ namespace glasssix {
                  std::string text  = "desk:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.lying_list.size(); j++) {
@@ -1218,8 +1228,7 @@ namespace glasssix {
                  std::string text  = "lying:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.standing_list.size(); j++) {
@@ -1232,8 +1241,7 @@ namespace glasssix {
                  std::string text  = "standing:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.work_list.size(); j++) {
@@ -1246,8 +1254,7 @@ namespace glasssix {
                  std::string text  = "work:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1260,9 +1267,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_leavepost_api* api_temp = new gx_leavepost_api();
@@ -1289,8 +1299,7 @@ namespace glasssix {
                  std::string text  = "hat:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1303,9 +1312,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_smoke_api* api_temp = new gx_smoke_api();
@@ -1332,8 +1344,7 @@ namespace glasssix {
                  std::string text  = "smoke:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.norm_list.size(); j++) {
@@ -1346,8 +1357,7 @@ namespace glasssix {
                  std::string text  = "norm:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1360,9 +1370,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_workcloth_api* api_temp = new gx_workcloth_api();
@@ -1389,9 +1402,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_playphone_api* api_temp = new gx_playphone_api();
@@ -1418,8 +1434,7 @@ namespace glasssix {
                  std::string text  = "phone:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.no_phone_list.size(); j++) {
@@ -1432,8 +1447,7 @@ namespace glasssix {
                  std::string text  = "nophone:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1446,9 +1460,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_onphone_api* api_temp = new gx_onphone_api();
@@ -1475,8 +1492,7 @@ namespace glasssix {
                  std::string text  = "onphone:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
              for (int j = 0; j < val.norm_list.size(); j++) {
@@ -1489,8 +1505,7 @@ namespace glasssix {
                  std::string text  = "norm:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1503,9 +1518,12 @@ namespace glasssix {
          cv::VideoCapture capture;
          capture.open(name);
 
-         cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH),
-         capture.get(cv::CAP_PROP_FRAME_HEIGHT)); int fps              = capture.get(cv::CAP_PROP_FPS); std::string
-         new_name = name; int len              = name.length(); new_name[len - 4]    = '_'; new_name += add;
+        cv::Size size        = cv::Size(capture.get(cv::CAP_PROP_FRAME_WIDTH), capture.get(cv::CAP_PROP_FRAME_HEIGHT));
+        int fps              = capture.get(cv::CAP_PROP_FPS);
+        std::string new_name = name;
+        int len              = name.length();
+        new_name[len - 4]    = '_';
+        new_name += add;
          cv::VideoWriter writer(new_name, cv::VideoWriter::fourcc('M', 'P', '4', '2'), fps, size, true);
 
          gx_pedestrian_api* api_temp = new gx_pedestrian_api();
@@ -1533,8 +1551,7 @@ namespace glasssix {
                  std::string text  = "person:" + std::to_string(score);
                  cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
                  cv::rectangle(
-                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN,
-                     -1);
+                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
                  putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
              }
 
@@ -1589,7 +1606,7 @@ namespace glasssix {
  } // namespace glasssix
 
 
-//3566
+// 3566
 //// 多线程测搜索
 // void thread_function_search() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
@@ -1719,7 +1736,7 @@ int main(int argc, char** argv) {
         t[14].join();
         t[15].join();
         t[16].join();
-        //  auto start = std::chrono::high_resolution_clock::now();
+        //  auto start    = std::chrono::high_resolution_clock::now();
         //  auto end      = std::chrono::high_resolution_clock::now();
         //  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
