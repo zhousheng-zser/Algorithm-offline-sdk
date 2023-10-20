@@ -174,6 +174,7 @@ namespace glasssix {
             name_config["face_user.json"]           = _config->_face_user_config;
             name_config["feature.json"]             = _config->_feature_config;
             name_config["climb.json"]               = _config->_climb_config;
+            name_config["crowd.json"]               = _config->_crowd_config;
             name_config["flame.json"]               = _config->_flame_config;
             name_config["smog.json"]                = _config->_smog_config;
             name_config["helmet.json"]              = _config->_helmet_config;
@@ -237,6 +238,9 @@ namespace glasssix {
                 } else if (name == "climb.json" && _config->climb_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_climb_config);
+                } else if (name == "crowd.json" && _config->crowd_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_crowd_config);
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);

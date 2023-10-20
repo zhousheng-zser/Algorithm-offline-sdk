@@ -9,6 +9,7 @@
 
 #include <gx_api.hpp>
 #include <gx_climb_api.hpp>
+#include <gx_crowd_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_flame_api.hpp>
 #include <gx_helmet_api.hpp>
@@ -952,7 +953,27 @@ namespace glasssix {
         printf("climb time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-
+    // 多线程测聚众
+    void thread_function_crowd() {
+        gx_crowd_api* api_temp = new gx_crowd_api();
+        int T                  = 100;
+        for (int i = 0; i < T; ++i) {
+        auto start             = std::chrono::high_resolution_clock::now();
+            try {
+                 const gx_img_api img("/root/img/count6.jpg", static_cast<int>(1e9));
+                //const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
+                auto val =
+                    api_temp->safe_production_crowd(img);
+                printf("head_list = %d\n", val.head_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("crowd time = %lld microsecond\n", duration.count());
+        }
+        delete api_temp;
+    }
 } // namespace glasssix
 
 // 处理视频的
@@ -1719,6 +1740,7 @@ int main(int argc, char** argv) {
         t[14] = std::thread(thread_function_smog);
         t[15] = std::thread(thread_function_tumble);
         t[16] = std::thread(thread_function_climb);
+        t[17] = std::thread(thread_function_crowd);
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1736,6 +1758,7 @@ int main(int argc, char** argv) {
         t[14].join();
         t[15].join();
         t[16].join();
+        t[17].join();
         //  auto start    = std::chrono::high_resolution_clock::now();
         //  auto end      = std::chrono::high_resolution_clock::now();
         //  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
