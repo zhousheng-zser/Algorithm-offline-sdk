@@ -22,6 +22,7 @@ namespace glasssix {
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
+        GX_FIELD(int, min_face);
         GX_FIELD(int, min_size);
         GX_FIELD(float, threshold);
         GX_FIELD(int, format);

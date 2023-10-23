@@ -1,5 +1,6 @@
 {
     "device": -1,
+    "min_face": 64,
     "min_size": 16,
     "threshold": 0.5,
     "format": 1,
