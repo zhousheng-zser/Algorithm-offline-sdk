@@ -1,15 +1,15 @@
-﻿#include "gx_climb_api.hpp"
+﻿#include "gx_crowd_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_climb_api::gx_climb_api() : impl_{std::make_unique<impl>()} {}
-    gx_climb_api::gx_climb_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_climb_api::~gx_climb_api() {}
-    gx_climb_api::gx_climb_api(gx_climb_api&&) noexcept            = default;
-    gx_climb_api& gx_climb_api::operator=(gx_climb_api&&) noexcept = default;
-    class gx_climb_api::impl {
+    gx_crowd_api::gx_crowd_api() : impl_{std::make_unique<impl>()} {}
+    gx_crowd_api::gx_crowd_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_crowd_api::~gx_crowd_api() {}
+    gx_crowd_api::gx_crowd_api(gx_crowd_api&&) noexcept            = default;
+    gx_crowd_api& gx_crowd_api::operator=(gx_crowd_api&&) noexcept = default;
+    class gx_crowd_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CROWD_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -50,8 +50,8 @@ namespace glasssix {
         }
     };
 
-    //  安全生产 攀爬检测
-    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const climb_line& line) {
+    //  安全生产 聚众检测
+    crowd_info gx_crowd_api::safe_production_crowd(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -59,23 +59,17 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                climb_info ans;
+                crowd_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-                auto result = ptr->protocol_ptr.invoke<climb::detect>(ptr->climb_handle,
-                    climb_detect_param{.instance_guid = "",
-                        .format                       = _config->_climb_config.format,
+                auto result = ptr->protocol_ptr.invoke<crowd::detect>(ptr->crowd_handle,
+                    crowd_detect_param{.instance_guid = "",
+                        .format                       = _config->_crowd_config.format,
                         .height                       = mat.get_rows(),
                         .width                        = mat.get_cols(),
                         .roi_x                        = 0,
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
-                        .roi_height                   = mat.get_rows(),
-                        .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
-                            .nms_thres                                              = _config->_climb_config.nms_thres,
-                            .x1                                                     = line.x1,
-                            .y1                                                     = line.y1,
-                            .x2                                                     = line.x2,
-                            .y2                                                     = line.y2}},
+                        .roi_height                   = mat.get_rows()},
                     str);
 
                 ans = std::move(result.detect_info);

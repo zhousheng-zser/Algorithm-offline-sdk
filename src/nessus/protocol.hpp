@@ -7,6 +7,7 @@
 #include <span>
 #include <string>
 #include <string_view>
+#include <mutex>
 
 #include <g6/char8_t_remediation.hpp>
 #include <g6/error_extensions.hpp>
@@ -56,10 +57,8 @@ namespace glasssix {
                     }
                 });
         }
-
     private:
         class impl;
-
         std::unique_ptr<impl> impl_;
     };
 } // namespace glasssix

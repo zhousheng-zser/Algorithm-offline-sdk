@@ -4,7 +4,7 @@ set(package_name GxOfflineRecognition)
 add_library(${target_name} SHARED)
 
 #EMPOWER_LANGUAGE 0:C++ 1:JAVA
-#GX_PLATFORM_NAME 0:WINDOWS 1:RK3588 2:RK3399 3:RK3566 4:RV1109 5:CENTOS 6:OTHER
+#GX_PLATFORM_NAME 0:WINDOWS 1:RK3588 2:RK3399 3:RK3566 4:RV1109 5:CENTOS 6:UBUNTU
 
 if(WIN32)
 	set(target_version 1.0.0)
@@ -13,7 +13,7 @@ if(WIN32)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
-	set(target_version 1.0.27)
+	set(target_version 1.0.30)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
@@ -25,7 +25,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566" )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=4)
-	set(target_version 1.0.1)
+	set(target_version 1.0.2)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=5)

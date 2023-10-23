@@ -77,6 +77,12 @@ namespace glasssix {
         temp.get_to(_climb_config);
         climb_is_load = true;
     }
+    void config::set_crowd(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/crowd.json");
+        temp.get_to(_crowd_config);
+        crowd_is_load = true;
+    }
     void config::set_flame(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/flame.json");

@@ -1,6 +1,7 @@
 #pragma once
 #include "../src/nessus/protocol.hpp"
 #include "../src/nessus/protocols/climb.hpp"
+#include "../src/nessus/protocols/crowd.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
@@ -20,9 +21,9 @@
 #include "../src/nessus/protocols/tumble.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
+#include "data_time.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
-#include "data_time.hpp"
 
 #include <chrono>
 #include <mutex>
@@ -43,7 +44,7 @@ namespace glasssix {
         std::string share_platform_name = "RV1109";
 #elif (GX_PLATFORM_NAME == 5)
         std::string share_platform_name = "CENTOS";
- #elif (GX_PLATFORM_NAME == 6)
+#elif (GX_PLATFORM_NAME == 6)
         std::string share_platform_name = "UBUNTU";
 #endif
 
@@ -98,6 +99,7 @@ namespace glasssix {
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
             Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
+            Function["crowd"]            = &algo_ptr::set_protocols_handl_crowd;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
@@ -120,6 +122,11 @@ namespace glasssix {
             _config->set_climb(_config->_path);
             climb_handle = protocol_ptr.make_instance<climb>(
                 climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_crowd() {
+            _config->set_crowd(_config->_path);
+            crowd_handle = protocol_ptr.make_instance<crowd>(
+                crowd_new_param{_config->_crowd_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -218,6 +225,7 @@ namespace glasssix {
         selene selene_handle;
         refvest refvest_handle;
         climb climb_handle;
+        crowd crowd_handle;
         flame flame_handle;
         smog smog_handle;
         helmet helmet_handle;
@@ -235,7 +243,7 @@ namespace glasssix {
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     extern thread_pool* pool;
     extern void empower_Callback(
-        void* context, std::string success, const char* message, std::int64_t remaining_seconds);
+        void* context, std::string success, const char* message, std::int64_t remaining_seconds, std::string add_info);
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);
     extern std::string get_time_code();
     extern std::string getSubstring(const std::string& str64, int pos_t);

@@ -14,8 +14,9 @@ namespace glasssix {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
-            empower.set_license(empower_key.c_str());
+            empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
+            empower.set_license(empower_key.c_str());
             empower.evaluate_license(empower_Callback, nullptr);
         }
         impl() {
@@ -43,7 +44,7 @@ namespace glasssix {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
                 key.close();
-                throw source_code_aware_runtime_error(U8("Error: license_directory :Failed to open file"));
+                return "";
             }
             std::string ans;
             key >> ans;

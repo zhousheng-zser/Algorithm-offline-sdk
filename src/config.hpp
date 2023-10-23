@@ -11,6 +11,7 @@ namespace glasssix {
         GX_FIELD(std::string, models_directory);
         GX_FIELD(std::string, directory);
         GX_FIELD(std::string, license_directory);
+        GX_FIELD(std::string, empower_serial_number);
         GX_FIELD(int, thread_pool_num);
         GX_FIELD(std::string, dump_img_directory);
         GX_END_FIELDS;
@@ -21,6 +22,7 @@ namespace glasssix {
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
+        GX_FIELD(int, min_face);
         GX_FIELD(int, min_size);
         GX_FIELD(float, threshold);
         GX_FIELD(int, format);
@@ -77,6 +79,13 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct crowd_config {
+        GX_BEGIN_FIELDS(crowd_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct flame_config {
         GX_BEGIN_FIELDS(flame_config);
         GX_FIELD(int, device);
@@ -114,7 +123,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct sleep_config {
         GX_BEGIN_FIELDS(sleep_config);
         GX_FIELD(int, device);
@@ -124,7 +132,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct smoke_config {
         GX_BEGIN_FIELDS(smoke_config);
         GX_FIELD(int, device);
@@ -134,7 +141,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct tumble_config {
         GX_BEGIN_FIELDS(tumble_config);
         GX_FIELD(int, device);
@@ -144,7 +150,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct leavepost_config {
         GX_BEGIN_FIELDS(leavepost_config);
         GX_FIELD(int, device);
@@ -154,7 +159,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct playphone_config {
         GX_BEGIN_FIELDS(playphone_config);
         GX_FIELD(int, device);
@@ -164,7 +168,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct onphone_config {
         GX_BEGIN_FIELDS(onphone_config);
         GX_FIELD(int, device);
@@ -174,7 +177,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct workcloth_config {
         GX_BEGIN_FIELDS(workcloth_config);
         GX_FIELD(int, device);
@@ -184,7 +186,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct pedestrian_labor_config {
         GX_BEGIN_FIELDS(pedestrian_labor_config);
         GX_FIELD(int, device);
@@ -194,7 +195,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-
     struct pedestrian_config {
         GX_BEGIN_FIELDS(pedestrian_config);
         GX_FIELD(int, device);
@@ -219,6 +219,7 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         climb_config _climb_config;
+        crowd_config _crowd_config;
         flame_config _flame_config;
         smog_config _smog_config;
         helmet_config _helmet_config;
@@ -240,6 +241,7 @@ namespace glasssix {
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
         void set_climb(const abi::string& path);
+        void set_crowd(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
@@ -262,6 +264,7 @@ namespace glasssix {
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
         bool climb_is_load               = false;
+        bool crowd_is_load               = false;
         bool flame_is_load               = false;
         bool smog_is_load                = false;
         bool helmet_is_load              = false;
