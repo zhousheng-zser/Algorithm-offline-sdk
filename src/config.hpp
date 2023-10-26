@@ -23,6 +23,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
         GX_FIELD(int, min_size);
+        GX_FIELD(int, min_face);
         GX_FIELD(float, threshold);
         GX_FIELD(int, format);
         GX_FIELD(bool, do_attributing);

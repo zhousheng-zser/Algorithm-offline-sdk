@@ -141,6 +141,14 @@ namespace glasssix {
                     .do_attributing                  = _config->_detect_config.do_attributing},
                 str);
             ans         = result.facerectwithfaceinfo_list;
+            for (int i = 0; i < ans.size(); ++i) {
+                if (ans[i].height * ans[i].width
+                    < _config->_detect_config.min_face * _config->_detect_config.min_face) // 不处理小于min_face * min_face的人脸
+                {
+                    ans.erase(ans.begin() + i, ans.end());
+                    break;
+                }
+            }
             return ans;
         });
         return result_pool.get();
@@ -293,7 +301,7 @@ namespace glasssix {
     faces_feature gx_face_api::face_feature(const gx_img_api& mat, bool is_clip) {
         faces_feature ans;
         abi::vector<face_info> faces = detect(mat);
-        if (faces.size() == 0 || faces[0].height * faces[0].width < 4096) // 像素小于64*64的人脸 不做特征提取
+        if (faces.size() == 0 )
             return ans;
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
         auto result_pool = pool->enqueue([&] {
@@ -607,11 +615,6 @@ namespace glasssix {
                 return ans;
             faces_temp = spoofing.facerectwithfaceinfo_list;
             for (int i = 0; i < spoofing.spoofing_result.size(); ++i) {
-                if (faces_temp[i].height * faces_temp[i].width < 4096) // 不处理小于64*64的人脸
-                {
-                    faces_temp.erase(faces_temp.begin() + i, faces_temp.end());
-                    break;
-                }
                 faces_search_one_info temp;
                 temp.prob                 = spoofing.spoofing_result[i].prob[1];
                 temp.facerectwithfaceinfo = faces_temp[i];
@@ -623,11 +626,6 @@ namespace glasssix {
             if (faces_temp.size() == 0)
                 return ans;
             for (int i = 0; i < faces_temp.size(); ++i) {
-                if (faces_temp[i].height * faces_temp[i].width < 4096) // 不处理小于64*64的人脸
-                {
-                    faces_temp.erase(faces_temp.begin() + i, faces_temp.end());
-                    break;
-                }
                 faces_search_one_info temp;
                 temp.prob                 = std::nullopt;
                 temp.facerectwithfaceinfo = faces_temp[i];

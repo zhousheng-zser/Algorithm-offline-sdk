@@ -1,6 +1,7 @@
 {
     "device": -1,
     "min_size": 16,
+    "min_face": 64,
     "threshold": 0.5,
     "format": 1,
     "do_attributing": true
