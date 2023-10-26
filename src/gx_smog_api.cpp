@@ -42,6 +42,10 @@ namespace glasssix {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
                 key.close();
+                if (!empower_warning_flag) {
+                    printf("Warning: license_directory :Failed to open file\n");
+                    empower_warning_flag = true;
+                }
                 return "";
             }
             std::string ans;

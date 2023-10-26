@@ -58,6 +58,7 @@ namespace glasssix {
         // GX_PLATFORM_NAME
     } // namespace
     extern config* _config;
+    extern bool empower_warning_flag;
     class algo_irisviel_ptr {
     public:
         algo_irisviel_ptr() {
@@ -243,7 +244,7 @@ namespace glasssix {
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     extern thread_pool* pool;
     extern void empower_Callback(
-        void* context, std::string success, const char* message, std::int64_t remaining_seconds, std::string add_info);
+        void* context, std::string success, const char* message, std::int64_t remaining_seconds);
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);
     extern std::string get_time_code();
     extern std::string getSubstring(const std::string& str64, int pos_t);
