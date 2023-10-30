@@ -190,6 +190,36 @@
             }
         },
         {
+            "name": "rv1106",
+            "displayName": "Linux Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "/home/zser/arm-glasssix-linux-uclibcgnueabihf_sdk-buildroot/bin/arm-glasssix-linux-uclibcgnueabihf-gcc",
+                "CMAKE_CXX_COMPILER": "/home/zser/arm-glasssix-linux-uclibcgnueabihf_sdk-buildroot/bin/arm-glasssix-linux-uclibcgnueabihf-g++",
+                "GX_TOOLCHAIN_PREFIX": "/home/zser/arm-glasssix-linux-uclibcgnueabihf_sdk-buildroot/bin/arm-glasssix-linux-uclibcgnueabihf-",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1106Toolchain.cmake",
+                "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0-rv1106",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20231026_beta",
+                "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1106",
+                "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1106",
+                "GX_TOOLHAIN_TARGET_NAME": "RV1106",
+                "GX_USE_PURE_C": "OFF"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
             "name": "rk3588",
             "displayName": "Linux Release",
             "generator": "Ninja",
@@ -200,8 +230,8 @@
                 "GX_WITH_TESTS": "OFF",
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
-                "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20231025_beta",
+                "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0-zyf",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20231027_beta",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",
@@ -248,8 +278,7 @@
                 }
             }
         }
-    ]
-    ,
+    ],
     "buildPresets": [
         {
             "name": "rk3588",

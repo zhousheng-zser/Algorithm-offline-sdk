@@ -46,7 +46,7 @@ namespace glasssix {
         impl(std::span<const uchar> bgr_data, int rows, int cols, int limit ,bool ref ) {
             if (!ref) {
                 img = cv::Mat(rows, cols, CV_8UC3);
-                std::memcpy(img.data, bgr_data.data(), bgr_data.size());
+              std::memcpy(img.data, bgr_data.data(), bgr_data.size());
             } else {
                 img = cv::Mat(rows, cols, CV_8UC3, const_cast<unsigned char*>(bgr_data.data()));
             }
@@ -183,6 +183,7 @@ namespace glasssix {
             name_config["sleep.json"]               = _config->_sleep_config;
             name_config["smoke.json"]               = _config->_smoke_config;
             name_config["tumble.json"]              = _config->_tumble_config;
+            name_config["wander.json"]              = _config->_wander_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
@@ -262,6 +263,9 @@ namespace glasssix {
                 } else if (name == "tumble.json" && _config->tumble_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_tumble_config);
+                } else if (name == "wander.json" && _config->wander_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_wander_config);
                 } else if (name == "leavepost.json" && _config->leavepost_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_leavepost_config);

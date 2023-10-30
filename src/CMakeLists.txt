@@ -34,6 +34,10 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=6)
 	set(target_version 1.0.0)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=7)
+	set(target_version 1.0.0)
 endif()
 message("EMPOWER_LANGUAGE  = ${GX_TOOLHAIN_TARGET_NAME}" )
 
@@ -102,7 +106,7 @@ target_link_libraries(
 )
 endif()
 
-if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
+if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )  )
 target_link_libraries(
 	${target_name}
 	PRIVATE

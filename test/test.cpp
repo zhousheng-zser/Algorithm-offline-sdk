@@ -23,6 +23,7 @@
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
+#include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
 // #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
@@ -817,6 +818,25 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("tumble time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // 多线程测徘徊
+    void thread_function_wander() {
+        gx_wander_api* api_temp = new gx_wander_api();
+        int T                   = 500;
+        auto start              = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/wander.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_wander(img,i ,1);
+                printf("wander_list = %d device =%d\n",  val.person_info.size(), 1);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("wander time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // 多线程测离岗
@@ -1795,6 +1815,7 @@ int main(int argc, char** argv) {
         t[15] = std::thread(thread_function_tumble);
         t[16] = std::thread(thread_function_climb);
         t[17] = std::thread(thread_function_crowd);
+        t[18] = std::thread(thread_function_wander);
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1813,6 +1834,7 @@ int main(int argc, char** argv) {
         t[15].join();
         t[16].join();
         t[17].join();
+        t[18].join();
         //  auto start    = std::chrono::high_resolution_clock::now();
         //  auto end      = std::chrono::high_resolution_clock::now();
         //  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

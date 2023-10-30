@@ -19,6 +19,7 @@
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
 #include "../src/nessus/protocols/tumble.hpp"
+#include "../src/nessus/protocols/wander.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
@@ -46,6 +47,8 @@ namespace glasssix {
         std::string share_platform_name = "CENTOS";
 #elif (GX_PLATFORM_NAME == 6)
         std::string share_platform_name = "UBUNTU";
+#elif (GX_PLATFORM_NAME == 7)
+        std::string share_platform_name = "RV1106";
 #endif
 
 #if (EMPOWER_LANGUAGE == 0)
@@ -112,6 +115,7 @@ namespace glasssix {
             Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
             Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
+            Function["wander"]           = &algo_ptr::set_protocols_handl_wander;
             Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
@@ -188,6 +192,11 @@ namespace glasssix {
             tumble_handle = protocol_ptr.make_instance<tumble>(
                 tumble_new_param{_config->_tumble_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_wander() {
+            _config->set_wander(_config->_path);
+            wander_handle = protocol_ptr.make_instance<wander>(
+                wander_new_param{_config->_wander_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_leavepost() {
             _config->set_leavepost(_config->_path);
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
@@ -233,6 +242,7 @@ namespace glasssix {
         sleep sleep_handle;
         smoke smoke_handle;
         tumble tumble_handle;
+        wander wander_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;

@@ -143,7 +143,8 @@ namespace glasssix {
             ans         = result.facerectwithfaceinfo_list;
             for (int i = 0; i < ans.size(); ++i) {
                 if (ans[i].height * ans[i].width
-                    < _config->_detect_config.min_face * _config->_detect_config.min_face) // 不处理小于min_face * min_face的人脸
+                    < _config->_detect_config.min_face
+                          * _config->_detect_config.min_face) // 不处理小于min_face * min_face的人脸
                 {
                     ans.erase(ans.begin() + i, ans.end());
                     break;
@@ -157,26 +158,46 @@ namespace glasssix {
     // 人脸追踪
     abi::vector<face_trace_info> gx_face_api::track(const gx_img_api& mat) {
         abi::vector<face_trace_info> ans;
-        if (impl_->cache.index % (_config->_track_config.detect_intv_before_track) == 0) {
-            abi::vector<face_info> faces = detect(mat);
-            for (int i = 0; i < faces.size(); i++) {
-                if (!impl_->track_check(faces[i])) {
-                    impl_->cache.track_history[faces[i].x * 10000 + faces[i].y]    = faces[i];
-                    impl_->cache.track_history_id[faces[i].x * 10000 + faces[i].y] = get_random_string(32);
-                }
-            }
-        }
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
             auto ptr = all_thread_algo_ptr[id_];
+            // 人脸检测-------
+            abi::vector<face_info> faces;
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+            auto result = ptr->protocol_ptr.invoke<longinus::detect>(ptr->longinus_handle,
+                longinus_detect_param{.instance_guid = "",
+                    .format                          = _config->_detect_config.format,
+                    .height                          = mat.get_rows(),
+                    .width                           = mat.get_cols(),
+                    .min_size                        = _config->_detect_config.min_size,
+                    .threshold                       = _config->_detect_config.threshold,
+                    .do_attributing                  = _config->_detect_config.do_attributing},
+                str);
+            faces       = result.facerectwithfaceinfo_list;
+            for (int i = 0; i < faces.size(); ++i) {
+                if (faces[i].height * faces[i].width
+                    < _config->_detect_config.min_face
+                          * _config->_detect_config.min_face) // 不处理小于min_face * min_face的人脸
+                {
+                    faces.erase(faces.begin() + i, faces.end());
+                    break;
+                }
+            }
+            // abi::vector<face_info> faces得到 人脸检测结果
+            for (int i = 0; i < faces.size(); i++) {
+                if (!impl_->track_check(faces[i])) {
+                    impl_->cache.track_history[faces[i].x * 10000 + faces[i].y]    = faces[i];
+                    impl_->cache.track_history_id[faces[i].x * 10000 + faces[i].y] = get_random_string(32);
+                }
+            }
+
             std::unordered_map<int, face_info>::iterator it;
             std::unordered_map<int, face_info> temp_faces;
             std::unordered_map<int, abi::string> temp_faces_id;
             for (it = impl_->cache.track_history.begin(); it != impl_->cache.track_history.end(); it++) {
-                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<longinus::trace>(ptr->longinus_handle,
                     longinus_trace_param{
                         .instance_guid = "",
@@ -301,7 +322,7 @@ namespace glasssix {
     faces_feature gx_face_api::face_feature(const gx_img_api& mat, bool is_clip) {
         faces_feature ans;
         abi::vector<face_info> faces = detect(mat);
-        if (faces.size() == 0 )
+        if (faces.size() == 0)
             return ans;
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
         auto result_pool = pool->enqueue([&] {
@@ -435,7 +456,7 @@ namespace glasssix {
         abi::vector<face_user_result> ans(mat.size());
         abi::vector<database_record> faces_A_add;
         abi::vector<database_record> faces_A_update;
-        if (keys.size() != mat.size()) 
+        if (keys.size() != mat.size())
             throw source_code_aware_runtime_error(U8("Error: keys.size != mat.size"));
         if (mat.size() > 1000)
             throw source_code_aware_runtime_error(U8("Error: mat.size > 1000"));

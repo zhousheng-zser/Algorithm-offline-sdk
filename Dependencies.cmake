@@ -39,6 +39,23 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_LIBS opencv_world.so.407)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )
+    find_package(
+    GXMiscellaneous
+    REQUIRED
+    HINTS ${GX_MISCELLANEOUS_ROOT}/lib/cmake
+    NO_DEFAULT_PATH
+    )
+    find_package(
+    LicenseClient
+    REQUIRED
+    NO_DEFAULT_PATH
+    HINTS
+    ${GX_LICENSECLIENT_ROOT}
+    )
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
+    set(OpenCV_LIBS opencv_world.so.407)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU" )
     find_package(
     GXMiscellaneous
@@ -110,6 +127,9 @@ if(WIN32)
     set(GX_CV_SDK_LIBS libparser)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")
     set(cvsdk_lib_relative_path "/lib/rv1109/arm-linux-gnueabihf/release")
+    set(GX_CV_SDK_LIBS parser primitives)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106")
+    set(cvsdk_lib_relative_path "/lib/rv1106/arm-linux-gnueabihf/release")
     set(GX_CV_SDK_LIBS parser primitives)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     set(cvsdk_lib_relative_path "/lib/centos/x64/release")
