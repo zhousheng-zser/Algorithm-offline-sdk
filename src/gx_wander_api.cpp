@@ -64,7 +64,7 @@ namespace glasssix {
     };
 
     //  徘徊检测
-    wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, int current_time, int device_id) {
+    wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id) {
         if (!impl_->camera_id) {
             impl_->camera_id = device_id;
         } else if (impl_->camera_id != device_id)
@@ -124,10 +124,10 @@ namespace glasssix {
         }
     }
 
-    bool gx_wander_api::wander_remove_library(int device_id) {
+    bool gx_wander_api::wander_remove_library() {
 
-        if (impl_->camera_id != device_id)
-            return false;
+        if (impl_->camera_id == 0)
+            return true;
 
         auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
@@ -137,11 +137,14 @@ namespace glasssix {
             auto ptr = all_thread_algo_ptr[id_];
             std::array<char, 0> arr{};
             auto result = ptr->protocol_ptr.invoke<wander::remove_library>(
-                ptr->wander_handle, wander_remove_library_param{.id = device_id}, std::span<char>{arr});
+                ptr->wander_handle, wander_remove_library_param{.id = impl_->camera_id}, std::span<char>{arr});
             if (result.delete_info == "ok")
                 return true;
             return false;
         });
+        impl_->wander_map.clear();
+        impl_->camera_id = 0;
+
         return result_pool.get();
     }
 

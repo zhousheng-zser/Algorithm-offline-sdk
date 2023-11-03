@@ -23,7 +23,7 @@ namespace glasssix {
 
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::int32_t, current_time);
+            GX_FIELD(std::int64_t, current_time);
             GX_FIELD(std::int32_t, feature_table_size);
             GX_FIELD(double, feature_match_threshold);
             GX_FIELD(double, person_conf);

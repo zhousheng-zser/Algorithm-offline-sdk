@@ -13,10 +13,10 @@ namespace glasssix {
         gx_wander_api& operator=(gx_wander_api&&) noexcept;
 
         //  安全生产 徘徊检测
-        wander_info safe_production_wander(
-            const gx_img_api& mat, int current_time, int device_id);
-
-        bool wander_remove_library(int device_id);
+        wander_info safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id);
+        
+        //  清除摄像头徘徊缓存
+        bool wander_remove_library();
 
     private:
         class impl;

@@ -17,7 +17,6 @@ namespace glasssix {
             GX_FIELD(std::int32_t, id); // 此人在特征库的id号
             GX_FIELD(std::int64_t, last_show_time); // 此人最后一次出现的时间
             GX_FIELD(std::int64_t, first_show_time); // 此人第一次出现的时间
-
             GX_FIELD(float, score); // 置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
@@ -31,7 +30,7 @@ namespace glasssix {
         };
         GX_BEGIN_FIELDS(wander_info);
 
-        GX_FIELD(abi::vector<boxes>, person_info); // --------------
+        GX_FIELD(abi::vector<boxes>, person_info); // 行人信息
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
