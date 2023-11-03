@@ -16,6 +16,8 @@ namespace glasssix {
         wander_info safe_production_wander(
             const gx_img_api& mat, int current_time, int device_id);
 
+        bool wander_remove_library(int device_id);
+
     private:
         class impl;
         std::unique_ptr<impl> impl_;

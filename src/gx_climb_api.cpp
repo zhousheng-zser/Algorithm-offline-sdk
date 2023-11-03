@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -55,7 +55,9 @@ namespace glasssix {
     };
 
     //  安全生产 攀爬检测
-    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const climb_line& line) {
+    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle) {
+        if(quadrangle.size()!=4)
+            throw source_code_aware_runtime_error(U8("Error: climb quadrangle.size()  != 4"));
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -76,10 +78,17 @@ namespace glasssix {
                         .roi_height                   = mat.get_rows(),
                         .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
                             .nms_thres                                              = _config->_climb_config.nms_thres,
-                            .x1                                                     = line.x1,
-                            .y1                                                     = line.y1,
-                            .x2                                                     = line.x2,
-                            .y2                                                     = line.y2}},
+                            .x1                                                     = quadrangle[0].x,
+                            .y1                                                     = quadrangle[0].y,
+                            .x2                                                     = quadrangle[1].x,
+                            .y2                                                     = quadrangle[1].y,                                         
+                            .x3                                                     = quadrangle[2].x,
+                            .y3                                                     = quadrangle[2].y,
+                            .x4                                                     = quadrangle[3].x,
+                            .y4                                                     = quadrangle[3].y
+                    
+                    
+                    }},
                     str);
 
                 ans = std::move(result.detect_info);

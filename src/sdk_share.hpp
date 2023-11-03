@@ -164,6 +164,7 @@ namespace glasssix {
             _config->set_track(_config->_path);
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
+                    .model_type      = _config->_detect_config.model_type,
                     .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {

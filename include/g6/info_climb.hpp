@@ -32,12 +32,10 @@ namespace glasssix {
     };
 #include "detail/reflection_directive_compat_end.frag.hpp"
 
-    // 攀爬线   由两个不同的点确定一条直线  
-    struct climb_line {  
-        int x1; // 第一个点坐标x
-        int y1; // 第一个点坐标y
-        int x2; // 第二个点坐标x
-        int y2; // 第二个点坐标y
+    // 攀爬区域点
+    struct climb_point {
+        std::int32_t x; // 坐标x
+        std::int32_t y; // 坐标y
     };
-    
+
 } // namespace glasssix

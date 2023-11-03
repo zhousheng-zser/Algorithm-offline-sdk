@@ -1,8 +1,8 @@
 {
     "device": -1,
     "format": 1,
-    "feature_table_size": 200
-    /*间隔X毫秒内能识别到人 出现次数不增加*/
-    /*相似度阈值*/
-    /**/
+    "feature_table_size": 1000,
+    "feature_match_threshold": 0.92,
+    "person_conf": 0.7,
+    "interval": 10
 }

@@ -823,17 +823,18 @@ namespace glasssix {
     // 多线程测徘徊
     void thread_function_wander() {
         gx_wander_api* api_temp = new gx_wander_api();
-        int T                   = 500;
+        int T                   = 20;
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/wander.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_wander(img,i ,1);
-                printf("wander_list = %d device =%d\n",  val.person_info.size(), 1);
+                auto val = api_temp->safe_production_wander(img, i, 1);
+                printf("wander_list = %d device =%d\n", val.person_info.size(), 1);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
         }
+        printf("%d\n", api_temp->wander_remove_library(1));
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("wander time = %lld microsecond\n", duration.count());
@@ -961,8 +962,9 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/climb.jpg", static_cast<int>(1e9));
-                auto val =
-                    api_temp->safe_production_climb(img, climb_line{.x1 = 205, .y1 = 2129, .x2 = 1933, .y2 = 4085});
+                auto val = api_temp->safe_production_climb(
+                    img, abi::vector<climb_point>{
+                             climb_point{20, 30}, climb_point{1000, 20}, climb_point{1000, 710}, climb_point{50, 750}});
                 printf("normal_list = %d climb_list = %d\n", val.normal_list.size(), val.climb_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -978,12 +980,11 @@ namespace glasssix {
         gx_crowd_api* api_temp = new gx_crowd_api();
         int T                  = 100;
         for (int i = 0; i < T; ++i) {
-        auto start             = std::chrono::high_resolution_clock::now();
+            auto start = std::chrono::high_resolution_clock::now();
             try {
                  const gx_img_api img("/root/img/count6.jpg", static_cast<int>(1e9));
-                //const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
-                auto val =
-                    api_temp->safe_production_crowd(img);
+                // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_crowd(img);
                 printf("head_list = %d\n", val.head_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -1647,31 +1648,31 @@ namespace glasssix {
     void try_a_try(const std::string& name, const std::string& save_path) {
         cv::VideoCapture capture;
         capture.open(name);
-        for (int i = 0; 1; i++) {
+        for (int i = 0; i < (7 * 60 + 30) * 20; i++) {
             cv::Mat img;
             capture >> img;
             if (img.empty())
                 break;
-
+            if (i >= (7 * 60 * 20))
             cv::imwrite(save_path + "/" + std::to_string(i) + ".jpg", img);
         }
         capture.release();
     }
     void onphone_test(const std::string& save_path, const std::string& ans_path) {
         std::vector<abi::string> temp = find_file(save_path);
-        gx_onphone_api* api_temp      = new gx_onphone_api();
+        gx_flame_api* api_temp        = new gx_flame_api();
         for (int i = 0; i < temp.size(); i++) {
-            auto val = api_temp->safe_production_onphone(
-                gx_img_api{abi::string{save_path + "/" + std::to_string(i) + ".jpg"}, 1 << 28});
-            cv::Mat img = cv::imread(abi::string{save_path + "/" + std::to_string(i) + ".jpg"}.c_str());
-            if (val.onphone_list.size() > 0)
-                printf("%d.jpg --------\n", i);
-            for (int j = 0; j < val.onphone_list.size(); j++) {
-                int x1      = val.onphone_list[j].x1;
-                int x2      = val.onphone_list[j].x2;
-                int y1      = val.onphone_list[j].y1;
-                int y2      = val.onphone_list[j].y2;
-                float score = val.onphone_list[j].score;
+            auto val = api_temp->safe_production_flame(
+                gx_img_api{abi::string{save_path + "/" + std::to_string(i + (7 * 60 * 20)) + ".jpg"}, 1 << 28});
+            cv::Mat img = cv::imread(abi::string{save_path + "/" + std::to_string(i + (7 * 60 * 20)) + ".jpg"}.c_str());
+            if (val.fire_list.size() > 0)
+                printf("%d.jpg --------\n", i + (7 * 60 * 20));
+            for (int j = 0; j < val.fire_list.size(); j++) {
+                int x1      = val.fire_list[j].x1;
+                int x2      = val.fire_list[j].x2;
+                int y1      = val.fire_list[j].y1;
+                int y2      = val.fire_list[j].y2;
+                float score = val.fire_list[j].score;
                 rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                 std::string text  = std::to_string(score);
                 cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1679,22 +1680,9 @@ namespace glasssix {
                     img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                 putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
-            for (int j = 0; j < val.norm_list.size(); j++) {
-                int x1      = val.norm_list[j].x1;
-                int x2      = val.norm_list[j].x2;
-                int y1      = val.norm_list[j].y1;
-                int y2      = val.norm_list[j].y2;
-                float score = val.norm_list[j].score;
-                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), GREEN, 6);
-                std::string text  = std::to_string(score);
-                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
-                cv::rectangle(
-                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), GREEN, -1);
-                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+            // cv::imwrite(ans_path + "/" + std::to_string(i + (7 * 60 * 20)) + ".jpg", img);
             }
-            cv::imwrite(ans_path + "/" + std::to_string(i) + ".jpg", img);
         }
-    }
 
 } // namespace glasssix
 
@@ -1793,8 +1781,8 @@ int main(int argc, char** argv) {
 
         // todo_video();
  
-        // try_a_try("/root/img/onphone.MP4", "/root/img/tumble");
-        // onphone_test("/root/img/tumble", "/root/img/tumble_ans");
+        // try_a_try("/root/img/flame.mp4", "/root/img/flame");
+        // onphone_test("/root/img/flame", "/root/img/flame_ans");
         /* 多线程测性能测试 */
         std::thread t[30];
         t[0]  = std::thread(thread_function_helmet);

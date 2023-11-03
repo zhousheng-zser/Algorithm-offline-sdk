@@ -22,6 +22,7 @@ namespace glasssix {
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
+        GX_FIELD(int, model_type);
         GX_FIELD(int, min_size);
         GX_FIELD(int, min_face);
         GX_FIELD(float, threshold);
@@ -155,6 +156,9 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(int, feature_table_size);
+        GX_FIELD(double, feature_match_threshold);
+        GX_FIELD(double, person_conf);
+        GX_FIELD(std::int64_t, interval);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
