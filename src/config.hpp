@@ -22,8 +22,9 @@ namespace glasssix {
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
-        GX_FIELD(int, min_face);
+        GX_FIELD(int, model_type);
         GX_FIELD(int, min_size);
+        GX_FIELD(int, min_face);
         GX_FIELD(float, threshold);
         GX_FIELD(int, format);
         GX_FIELD(bool, do_attributing);
@@ -150,6 +151,17 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct wander_config {
+        GX_BEGIN_FIELDS(wander_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(int, feature_table_size);
+        GX_FIELD(double, feature_match_threshold);
+        GX_FIELD(double, person_conf);
+        GX_FIELD(std::int64_t, interval);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct leavepost_config {
         GX_BEGIN_FIELDS(leavepost_config);
         GX_FIELD(int, device);
@@ -227,6 +239,7 @@ namespace glasssix {
         sleep_config _sleep_config;
         smoke_config _smoke_config;
         tumble_config _tumble_config;
+        wander_config _wander_config;
         leavepost_config _leavepost_config;
         playphone_config _playphone_config;
         onphone_config _onphone_config;
@@ -249,6 +262,7 @@ namespace glasssix {
         void set_sleep(const abi::string& path);
         void set_smoke(const abi::string& path);
         void set_tumble(const abi::string& path);
+        void set_wander(const abi::string& path);
         void set_leavepost(const abi::string& path);
         void set_playphone(const abi::string& path);
         void set_onphone(const abi::string& path);
@@ -272,6 +286,7 @@ namespace glasssix {
         bool sleep_is_load               = false;
         bool smoke_is_load               = false;
         bool tumble_is_load              = false;
+        bool wander_is_load              = false;
         bool leavepost_is_load           = false;
         bool playphone_is_load           = false;
         bool onphone_is_load             = false;

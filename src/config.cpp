@@ -125,6 +125,12 @@ namespace glasssix {
         temp.get_to(_tumble_config);
         tumble_is_load = true;
     }
+    void config::set_wander(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/wander.json");
+        temp.get_to(_wander_config);
+        wander_is_load = true;
+    }
     void config::set_leavepost(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/leavepost.json");

@@ -19,6 +19,7 @@
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
 #include "../src/nessus/protocols/tumble.hpp"
+#include "../src/nessus/protocols/wander.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
@@ -46,6 +47,8 @@ namespace glasssix {
         std::string share_platform_name = "CENTOS";
 #elif (GX_PLATFORM_NAME == 6)
         std::string share_platform_name = "UBUNTU";
+#elif (GX_PLATFORM_NAME == 7)
+        std::string share_platform_name = "RV1106";
 #endif
 
 #if (EMPOWER_LANGUAGE == 0)
@@ -58,6 +61,7 @@ namespace glasssix {
         // GX_PLATFORM_NAME
     } // namespace
     extern config* _config;
+    extern bool empower_warning_flag;
     class algo_irisviel_ptr {
     public:
         algo_irisviel_ptr() {
@@ -111,6 +115,7 @@ namespace glasssix {
             Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
             Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
+            Function["wander"]           = &algo_ptr::set_protocols_handl_wander;
             Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
@@ -159,6 +164,7 @@ namespace glasssix {
             _config->set_track(_config->_path);
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
+                    .model_type      = _config->_detect_config.model_type,
                     .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {
@@ -186,6 +192,11 @@ namespace glasssix {
             _config->set_tumble(_config->_path);
             tumble_handle = protocol_ptr.make_instance<tumble>(
                 tumble_new_param{_config->_tumble_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_wander() {
+            _config->set_wander(_config->_path);
+            wander_handle = protocol_ptr.make_instance<wander>(
+                wander_new_param{_config->_wander_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_leavepost() {
             _config->set_leavepost(_config->_path);
@@ -232,6 +243,7 @@ namespace glasssix {
         sleep sleep_handle;
         smoke smoke_handle;
         tumble tumble_handle;
+        wander wander_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;
@@ -243,7 +255,7 @@ namespace glasssix {
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     extern thread_pool* pool;
     extern void empower_Callback(
-        void* context, std::string success, const char* message, std::int64_t remaining_seconds, std::string add_info);
+        void* context, std::string success, const char* message, std::int64_t remaining_seconds);
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);
     extern std::string get_time_code();
     extern std::string getSubstring(const std::string& str64, int pos_t);

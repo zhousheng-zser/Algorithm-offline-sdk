@@ -29,6 +29,10 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y1);
             GX_FIELD(std::int32_t, x2);
             GX_FIELD(std::int32_t, y2);
+            GX_FIELD(std::int32_t, x3);
+            GX_FIELD(std::int32_t, y3);
+            GX_FIELD(std::int32_t, x4);
+            GX_FIELD(std::int32_t, y4);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
