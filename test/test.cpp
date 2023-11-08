@@ -25,7 +25,6 @@
 #include <gx_tumble_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
-// #include <gx_api_c.hpp>
 #include <g6/json_extensions.hpp>
 
 #include <opencv2/opencv.hpp>

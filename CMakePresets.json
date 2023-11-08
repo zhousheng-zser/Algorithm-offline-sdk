@@ -175,8 +175,7 @@
                 "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230905_beta",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1109",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1109",
-                "GX_TOOLHAIN_TARGET_NAME": "RV1109",
-                "GX_USE_PURE_C": "OFF"
+                "GX_TOOLHAIN_TARGET_NAME": "RV1109"
             },
             "condition": {
                 "type": "equals",
@@ -206,7 +205,7 @@
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1106",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1106",
                 "GX_TOOLHAIN_TARGET_NAME": "RV1106",
-                "GX_USE_PURE_C": "OFF"
+                "GX_STATIC_RUNTIME": "OFF"
             },
             "condition": {
                 "type": "equals",

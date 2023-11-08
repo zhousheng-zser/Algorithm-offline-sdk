@@ -2,7 +2,6 @@
 
 project(gx-offline-recognition CXX)
 
-option(GX_USE_PURE_C "Whether to compile C-style APIs." OFF)
 option(GX_STATIC_RUNTIME "Whether to link C/C++ runtime statically." ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
