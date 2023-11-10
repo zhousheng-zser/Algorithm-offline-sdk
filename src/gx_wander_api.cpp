@@ -14,6 +14,7 @@ namespace glasssix {
     class gx_wander_api::impl {
     public:
         void init() {
+            wander_map.clear();
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);

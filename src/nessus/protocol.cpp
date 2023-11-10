@@ -12,7 +12,6 @@
 #include <g6/reflection.hpp>
 
 #include <parser_c.hpp>
-// #include "include/parser.hpp"
 static std::mutex nessus_protocol_mtx;
 
 namespace glasssix {
@@ -100,8 +99,8 @@ namespace glasssix {
             throw_nested_and_flatten(source_code_aware_runtime_error{U8("Failed to init the nessus parser.")}, [&] {
                 auto result = parse_raw_result<parser_init_plugin_result>(
                     parser_init_plugin(instance_.get(), config_file_path.data(), U8("")));
-                    check_result(result);
-                });
+                check_result(result);
+            });
         }
 
         protocol_object make_instance(std::string_view family, const json& param) const {
@@ -139,13 +138,13 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
-            //printf("%s\n", full_name.data());
-            //printf("%s\n", param.dump().c_str());
+            // printf("%s\n", full_name.data());
+            // printf("%s\n", param.dump().c_str());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", full_name.data());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", param.dump().c_str());
-            char* ss      = parser_parse(
+            char* ss = parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
-            //printf("%s\n", ss);
+            // printf("%s\n", ss);
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", ss);
             return parse_raw_result(ss);
         }

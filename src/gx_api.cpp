@@ -43,10 +43,10 @@ namespace glasssix {
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
 #if __has_include(<span>)
-        impl(std::span<const uchar> bgr_data, int rows, int cols, int limit ,bool ref ) {
+        impl(std::span<const uchar> bgr_data, int rows, int cols, int limit, bool ref) {
             if (!ref) {
                 img = cv::Mat(rows, cols, CV_8UC3);
-              std::memcpy(img.data, bgr_data.data(), bgr_data.size());
+                std::memcpy(img.data, bgr_data.data(), bgr_data.size());
             } else {
                 img = cv::Mat(rows, cols, CV_8UC3, const_cast<unsigned char*>(bgr_data.data()));
             }
@@ -112,7 +112,8 @@ namespace glasssix {
     gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_shared<impl>(path, limit)} {}
     gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_shared<impl>(buffer, limit)} {}
 #if __has_include(<span>)
-    gx_img_api::gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref ) // 对外接口是先宽再高
+    gx_img_api::gx_img_api(
+        std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref) // 对外接口是先宽再高
         : impl_{std::make_shared<impl>(bgr_data, rows, cols, limit, ref)} {} // opencv 构造是先高再宽
 #endif
     gx_img_api::~gx_img_api() {}
@@ -155,7 +156,7 @@ namespace glasssix {
         abi::vector<uchar> ans(buffer.begin(), buffer.end());
         return ans;
     }
-    bool  gx_img_api::write(const std::string& path) const {
+    bool gx_img_api::write(const std::string& path) const {
         return cv::imwrite(path, impl_->img);
     }
 
@@ -175,6 +176,7 @@ namespace glasssix {
             name_config["feature.json"]             = _config->_feature_config;
             name_config["climb.json"]               = _config->_climb_config;
             name_config["crowd.json"]               = _config->_crowd_config;
+            name_config["fighting.json"]            = _config->_fighting_config;
             name_config["flame.json"]               = _config->_flame_config;
             name_config["smog.json"]                = _config->_smog_config;
             name_config["helmet.json"]              = _config->_helmet_config;
@@ -242,6 +244,9 @@ namespace glasssix {
                 } else if (name == "crowd.json" && _config->crowd_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_crowd_config);
+                } else if (name == "fighting.json" && _config->fighting_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_fighting_config);
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);

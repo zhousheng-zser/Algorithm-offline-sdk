@@ -7,10 +7,13 @@
 #include <random>
 #include <thread>
 
+#include <g6/json_extensions.hpp>
+
 #include <gx_api.hpp>
 #include <gx_climb_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_face_api.hpp>
+#include <gx_fighting_api.hpp>
 #include <gx_flame_api.hpp>
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
@@ -25,8 +28,6 @@
 #include <gx_tumble_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
-#include <g6/json_extensions.hpp>
-
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 
@@ -994,6 +995,41 @@ namespace glasssix {
         }
         delete api_temp;
     }
+    // 多线程测打架
+    void thread_function_fighting() {
+        gx_fighting_api* api_temp = new gx_fighting_api();
+        printf("-------\n");
+        int T      = 1000;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img0("/root/img/0.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img0);
+                gx_img_api img1("/root/img/1.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img1);
+                gx_img_api img2("/root/img/2.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img2);
+                gx_img_api img3("/root/img/3.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img3);
+                gx_img_api img4("/root/img/4.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img4);
+                gx_img_api img5("/root/img/5.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img5);
+                gx_img_api img6("/root/img/6.jpeg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img6);
+                gx_img_api img7("/root/img/7.jpeg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_fighting(img7);
+                printf("score =%f category=%d\n", val.score, val.category);
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("flame time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 } // namespace glasssix
 
 // 处理视频的
@@ -1802,7 +1838,8 @@ int main(int argc, char** argv) {
         // t[15] = std::thread(thread_function_tumble);
         // t[16] = std::thread(thread_function_climb);
         // t[17] = std::thread(thread_function_crowd);
-        t[18] = std::thread(thread_function_wander);
+        // t[18] = std::thread(thread_function_wander);
+        // t[19] = std::thread(thread_function_fighting);
         // t[0].join();
         // t[1].join();
         // t[2].join();
@@ -1821,7 +1858,8 @@ int main(int argc, char** argv) {
         // t[15].join();
         // t[16].join();
         // t[17].join();
-        t[18].join();
+        // t[18].join();
+        // t[19].join();
         //   auto start    = std::chrono::high_resolution_clock::now();
         //   auto end      = std::chrono::high_resolution_clock::now();
         //   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
