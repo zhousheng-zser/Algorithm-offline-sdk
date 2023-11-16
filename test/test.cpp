@@ -19,7 +19,6 @@
 #include <gx_leavepost_api.hpp>
 #include <gx_onphone_api.hpp>
 #include <gx_pedestrian_api.hpp>
-#include <gx_pedestrian_labor_api.hpp>
 #include <gx_playphone_api.hpp>
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
@@ -916,25 +915,6 @@ namespace glasssix {
         printf("workcloth time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测劳保检测
-    void thread_function_pedestrian_labor() {
-        gx_pedestrian_labor_api* api_temp = new gx_pedestrian_labor_api();
-        int T                             = 1000;
-        auto start                        = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < T; ++i) {
-            try {
-                const gx_img_api img("/root/img/pedestrian_labor.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pedestrian_labor(img);
-                printf("pedestrian_labor_list = %d\n", val.pedestrian_labor_list.size());
-            } catch (const std::exception& ex) {
-                printf("error =  %s\n", ex.what());
-            }
-        }
-        auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("pedestrian_labor time = %lld microsecond\n", duration.count());
-        delete api_temp;
-    }
     // 多线程测行人检测
     void thread_function_pedestrian() {
         gx_pedestrian_api* api_temp = new gx_pedestrian_api();
@@ -1683,39 +1663,41 @@ namespace glasssix {
     void try_a_try(const std::string& name, const std::string& save_path) {
         cv::VideoCapture capture;
         capture.open(name);
-        for (int i = 0; i < (7 * 60 + 30) * 20; i++) {
+        for (int i = 0; i < (1 * 60 + 10) * 20; i++) { // 结束时间
             cv::Mat img;
             capture >> img;
             if (img.empty())
                 break;
-            if (i >= (7 * 60 * 20))
+            if (i >= ((0 * 60 + 10) * 20)) // 开始时间
                 cv::imwrite(save_path + "/" + std::to_string(i) + ".jpg", img);
         }
         capture.release();
     }
-    void onphone_test(const std::string& save_path, const std::string& ans_path) {
+    void helmet_test(const std::string& save_path, const std::string& ans_path) {
         std::vector<abi::string> temp = find_file(save_path);
-        gx_flame_api* api_temp        = new gx_flame_api();
+        gx_helmet_api* api_temp       = new gx_helmet_api();
         for (int i = 0; i < temp.size(); i++) {
-            auto val = api_temp->safe_production_flame(
-                gx_img_api{abi::string{save_path + "/" + std::to_string(i + (7 * 60 * 20)) + ".jpg"}, 1 << 28});
-            cv::Mat img = cv::imread(abi::string{save_path + "/" + std::to_string(i + (7 * 60 * 20)) + ".jpg"}.c_str());
-            if (val.fire_list.size() > 0)
-                printf("%d.jpg --------\n", i + (7 * 60 * 20));
-            for (int j = 0; j < val.fire_list.size(); j++) {
-                int x1      = val.fire_list[j].x1;
-                int x2      = val.fire_list[j].x2;
-                int y1      = val.fire_list[j].y1;
-                int y2      = val.fire_list[j].y2;
-                float score = val.fire_list[j].score;
-                rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                std::string text  = std::to_string(score);
-                cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
-                cv::rectangle(
-                    img, cv::Point(x1, y1), cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
-                putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+            auto val = api_temp->safe_production_helmet(
+                gx_img_api{abi::string{save_path + "/" + std::to_string(i + (0 * 60 + 10) * 20) + ".jpg"}, 1 << 28});
+            cv::Mat img =
+                cv::imread(abi::string{save_path + "/" + std::to_string(i + (0 * 60 + 10) * 20) + ".jpg"}.c_str());
+            if (val.head_list.size() > 0) {
+                printf("%d.jpg --------\n", i + (0 * 60 + 10) * 20);
+                for (int j = 0; j < val.head_list.size(); j++) {
+                    int x1      = val.head_list[j].x1;
+                    int x2      = val.head_list[j].x2;
+                    int y1      = val.head_list[j].y1;
+                    int y2      = val.head_list[j].y2;
+                    float score = val.head_list[j].score;
+                    rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                    std::string text  = std::to_string(score);
+                    cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                    cv::rectangle(img, cv::Point(x1, y1),
+                        cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                    putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                }
+                cv::imwrite(ans_path + "/" + std::to_string(i + (0 * 60 + 10) * 20) + ".jpg", img);
             }
-            // cv::imwrite(ans_path + "/" + std::to_string(i + (7 * 60 * 20)) + ".jpg", img);
         }
     }
 
@@ -1815,54 +1797,52 @@ int main(int argc, char** argv) {
         // test_face_liveness();
 
         // todo_video();
+        // try_a_try("/root/img/helmet.mp4", "/root/img/helmet");
+        // helmet_test("/root/img/helmet", "/root/img/helmet_ans");
 
-        // try_a_try("/root/img/flame.mp4", "/root/img/flame");
-        // onphone_test("/root/img/flame", "/root/img/flame_ans");
         /* 多线程测性能测试 */
         std::thread t[30];
-        // t[0]  = std::thread(thread_function_helmet);
-        // t[1]  = std::thread(thread_function_flame);
-        // t[2]  = std::thread(thread_function_refvest);
-        // t[3]  = std::thread(thread_function_search);
-        // t[4]  = std::thread(thread_function_integration);
-        // t[5]  = std::thread(thread_function_leavepost);
-        // t[6]  = std::thread(thread_function_sleep);
-        // t[7]  = std::thread(thread_function_smoke);
-        // t[8]  = std::thread(thread_function_playphone);
-        // t[9]  = std::thread(thread_function_onphone);
-        // t[10] = std::thread(thread_function_workcloth);
-        //  //////t[11] = std::thread(thread_function_pedestrian_labor);////////////////////
-        // t[12] = std::thread(thread_function_pedestrian);
-        // t[13] = std::thread(thread_function_Action_live_Blur);
-        // t[14] = std::thread(thread_function_smog);
-        // t[15] = std::thread(thread_function_tumble);
-        // t[16] = std::thread(thread_function_climb);
-        // t[17] = std::thread(thread_function_crowd);
-        // t[18] = std::thread(thread_function_wander);
-        // t[19] = std::thread(thread_function_fighting);
-        // t[0].join();
-        // t[1].join();
-        // t[2].join();
-        // t[3].join();
-        // t[4].join();
-        // t[5].join();
-        // t[6].join();
-        // t[7].join();
-        // t[8].join();
-        // t[9].join();
-        // t[10].join();
-        //  ////////t[11].join();
-        // t[12].join();
-        // t[13].join();
-        // t[14].join();
-        // t[15].join();
-        // t[16].join();
-        // t[17].join();
-        // t[18].join();
-        // t[19].join();
-        //   auto start    = std::chrono::high_resolution_clock::now();
-        //   auto end      = std::chrono::high_resolution_clock::now();
-        //   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        t[0]  = std::thread(thread_function_helmet);
+        t[1]  = std::thread(thread_function_flame);
+        t[2]  = std::thread(thread_function_refvest);
+        t[3]  = std::thread(thread_function_search);
+        t[4]  = std::thread(thread_function_integration);
+        t[5]  = std::thread(thread_function_leavepost);
+        t[6]  = std::thread(thread_function_sleep);
+        t[7]  = std::thread(thread_function_smoke);
+        t[8]  = std::thread(thread_function_playphone);
+        t[9]  = std::thread(thread_function_onphone);
+        t[10] = std::thread(thread_function_workcloth);
+        t[12] = std::thread(thread_function_pedestrian);
+        t[13] = std::thread(thread_function_Action_live_Blur);
+        t[14] = std::thread(thread_function_smog);
+        t[15] = std::thread(thread_function_tumble);
+        t[16] = std::thread(thread_function_climb);
+        t[17] = std::thread(thread_function_crowd);
+        t[18] = std::thread(thread_function_wander);
+        t[19] = std::thread(thread_function_fighting);
+        t[0].join();
+        t[1].join();
+        t[2].join();
+        t[3].join();
+        t[4].join();
+        t[5].join();
+        t[6].join();
+        t[7].join();
+        t[8].join();
+        t[9].join();
+        t[10].join();
+        t[12].join();
+        t[13].join();
+        t[14].join();
+        t[15].join();
+        t[16].join();
+        t[17].join();
+        t[18].join();
+        t[19].join();
+        //    auto start    = std::chrono::high_resolution_clock::now();
+        //    auto end      = std::chrono::high_resolution_clock::now();
+        //    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
         // 用于windows播放视频或图片的
         /*

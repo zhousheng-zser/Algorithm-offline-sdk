@@ -30,12 +30,23 @@ namespace glasssix {
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
         impl(std::vector<uchar>& buffer, int limit) {
-
             type = check_type(buffer, 10);
             if (type == "") {
                 throw source_code_aware_runtime_error(U8("Error: The picture is not in the right format"));
             }
             img = cv::imdecode(buffer, cv::IMREAD_COLOR);
+            if (img.cols * img.rows > limit) {
+                img.release();
+                throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
+            }
+            data_len = 1llu * img.channels() * img.cols * img.rows;
+        }
+        impl(unsigned char* yuv_data, int rows, int cols, int limit) {
+            cv::Mat yuv_img(rows * 3 / 2, cols, CV_8UC1, yuv_data);
+            img = cv::Mat(rows, cols, CV_8UC3);
+            std::memcpy(img.data, yuv_data,  rows * 3 / 2* cols );
+            cvtColor(yuv_img, img, cv::COLOR_YUV2BGR_NV12);
+
             if (img.cols * img.rows > limit) {
                 img.release();
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
@@ -111,6 +122,8 @@ namespace glasssix {
     };
     gx_img_api::gx_img_api(abi::string path, int limit) : impl_{std::make_shared<impl>(path, limit)} {}
     gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_shared<impl>(buffer, limit)} {}
+    gx_img_api::gx_img_api(unsigned char* yuv_data, int cols, int rows, int limit) // 对外接口是先宽再高
+        : impl_{std::make_shared<impl>(yuv_data, rows, cols, limit)} {} // opencv 构造是先高再宽
 #if __has_include(<span>)
     gx_img_api::gx_img_api(
         std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref) // 对外接口是先宽再高
@@ -190,7 +203,6 @@ namespace glasssix {
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
             name_config["workcloth.json"]           = _config->_workcloth_config;
-            name_config["pedestrian_labor.json"]    = _config->_pedestrian_labor_config;
             name_config["pedestrian.json"]          = _config->_pedestrian_config;
             return name_config;
         }
@@ -283,9 +295,6 @@ namespace glasssix {
                 } else if (name == "workcloth.json" && _config->workcloth_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_workcloth_config);
-                } else if (name == "pedestrian_labor.json" && _config->pedestrian_labor_is_load) {
-                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
-                    temp.get_to(_config->_pedestrian_labor_config);
                 } else if (name == "pedestrian.json" && _config->pedestrian_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pedestrian_config);

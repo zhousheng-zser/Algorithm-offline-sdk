@@ -201,7 +201,7 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1106Toolchain.cmake",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0-rv1106",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20231026_beta",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_beta",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1106",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1106",
                 "GX_TOOLHAIN_TARGET_NAME": "RV1106",
