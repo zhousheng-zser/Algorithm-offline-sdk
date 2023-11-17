@@ -829,6 +829,7 @@ namespace glasssix {
                 const gx_img_api img("/root/img/wander.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_wander(img, i, 1);
                 printf("wander_list = %d device =%d\n", val.person_info.size(), 1);
+                printf("wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }

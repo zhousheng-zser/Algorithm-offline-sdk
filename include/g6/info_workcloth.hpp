@@ -2,13 +2,10 @@
 
 #include <cstdint>
 
-#if GX_IS_GXOFFLINERECOGNITION_IMPL
 #include <g6/json_extensions.hpp>
-#endif
 typedef unsigned char uchar;
 
 namespace glasssix {
-#include "detail/reflection_directive_compat_start.frag.hpp"
     // 工服信息
     struct workcloth_info {
         struct boxes {
@@ -23,7 +20,7 @@ namespace glasssix {
             // 10:黑色，11:灰色，12:白色，13:红色，14:橙色，15:黄色，16:绿色，17:青色，18:蓝色，19:紫色,
             // 20:黑色，21:灰色，22:白色，23:红色，24:橙色，25:黄色，26:绿色，27:青色，28:蓝色，29:紫色
             // 30:黑色，31:灰色，32:白色，33:红色，34:橙色，35:黄色，36:绿色，37:青色，38:蓝色，39:紫色
-            GX_FIELD(abi::vector<float>, color_ratios); 
+            GX_FIELD(abi::vector<float>, color_ratios);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -35,5 +32,4 @@ namespace glasssix {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-#include "detail/reflection_directive_compat_end.frag.hpp"
 } // namespace glasssix

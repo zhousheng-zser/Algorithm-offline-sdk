@@ -47,7 +47,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WANDER_V1.0.2";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WANDER_V1.0.3";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -123,6 +123,29 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
+    }
+
+    bool gx_wander_api::wander_remove_id(int id) {
+
+        if (impl_->camera_id == 0)
+            return true;
+
+        auto result_pool = pool->enqueue([&] {
+            std::thread::id id_ = std::this_thread::get_id();
+            if (all_thread_algo_ptr[id_] == nullptr) {
+                all_thread_algo_ptr[id_] = new algo_ptr();
+            }
+            auto ptr = all_thread_algo_ptr[id_];
+            std::array<char, 0> arr{};
+            auto result = ptr->protocol_ptr.invoke<wander::remove_person_by_index>(ptr->wander_handle,
+                wander_remove_person_by_index_param{.id = id, .device_id = impl_->camera_id}, std::span<char>{arr});
+            if (result.delete_info == "OK")
+                return true;
+            return false;
+        });
+        impl_->wander_map.erase(id);
+
+        return result_pool.get();
     }
 
     bool gx_wander_api::wander_remove_library() {

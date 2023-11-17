@@ -2,13 +2,10 @@
 
 #include <cstdint>
 
-#if GX_IS_GXOFFLINERECOGNITION_IMPL
 #include <g6/json_extensions.hpp>
-#endif
 typedef unsigned char uchar;
 
 namespace glasssix {
-#include "detail/reflection_directive_compat_start.frag.hpp"
     // 徘徊信息
     struct wander_info {
         struct boxes {
@@ -35,5 +32,4 @@ namespace glasssix {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-#include "detail/reflection_directive_compat_end.frag.hpp"
 } // namespace glasssix

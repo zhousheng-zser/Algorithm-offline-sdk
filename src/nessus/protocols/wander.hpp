@@ -57,6 +57,16 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    struct wander_remove_person_by_index_param {
+        GX_BEGIN_FIELDS(wander_remove_person_by_index_param);
+        GX_FIELD(std::string, instance_guid);
+        GX_FIELD(std::int32_t, id);
+        GX_FIELD(std::int32_t, device_id);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     struct wander_detect_result {
         GX_BEGIN_FIELDS(wander_detect_result);
         GX_FIELD(parser_result_status, status);
@@ -73,8 +83,12 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    using wander_remove_person_by_index_result = wander_remove_library_result;
+
     struct wander : protocol_object {
         struct detect : parser_inout<wander_detect_param, wander_detect_result> {};
         struct remove_library : parser_inout<wander_remove_library_param, wander_remove_library_result> {};
+        struct remove_person_by_index
+            : parser_inout<wander_remove_person_by_index_param, wander_remove_person_by_index_result> {};
     };
 } // namespace glasssix

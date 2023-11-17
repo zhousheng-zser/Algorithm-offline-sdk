@@ -43,8 +43,7 @@ namespace glasssix {
         }
         impl(unsigned char* yuv_data, int rows, int cols, int limit) {
             cv::Mat yuv_img(rows * 3 / 2, cols, CV_8UC1, yuv_data);
-            img = cv::Mat(rows, cols, CV_8UC3);
-            std::memcpy(img.data, yuv_data,  rows * 3 / 2* cols );
+            img = cv::Mat(rows, cols, CV_8UC3).clone();
             cvtColor(yuv_img, img, cv::COLOR_YUV2BGR_NV12);
 
             if (img.cols * img.rows > limit) {
@@ -53,7 +52,6 @@ namespace glasssix {
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
-#if __has_include(<span>)
         impl(std::span<const uchar> bgr_data, int rows, int cols, int limit, bool ref) {
             if (!ref) {
                 img = cv::Mat(rows, cols, CV_8UC3);
@@ -70,7 +68,6 @@ namespace glasssix {
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
-#endif
         ~impl() {}
 
         abi::string check_type(std::vector<uchar>& val, size_t len) {
@@ -124,11 +121,9 @@ namespace glasssix {
     gx_img_api::gx_img_api(std::vector<uchar>& buffer, int limit) : impl_{std::make_shared<impl>(buffer, limit)} {}
     gx_img_api::gx_img_api(unsigned char* yuv_data, int cols, int rows, int limit) // 对外接口是先宽再高
         : impl_{std::make_shared<impl>(yuv_data, rows, cols, limit)} {} // opencv 构造是先高再宽
-#if __has_include(<span>)
     gx_img_api::gx_img_api(
         std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref) // 对外接口是先宽再高
         : impl_{std::make_shared<impl>(bgr_data, rows, cols, limit, ref)} {} // opencv 构造是先高再宽
-#endif
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(const gx_img_api&)                = default;
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;

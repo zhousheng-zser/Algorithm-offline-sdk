@@ -13,7 +13,7 @@ if(WIN32)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
-	set(target_version 1.0.32)
+	set(target_version 1.0.33)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
@@ -79,7 +79,6 @@ target_include_directories(
 		${GX_CV_SDK_INCLUDE}
 )
 
-target_compile_definitions(${target_name} PRIVATE GX_IS_GXOFFLINERECOGNITION_IMPL=1)
 target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
 target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 
