@@ -21,7 +21,6 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
             GX_END_FIELDS;
             std::int64_t sum_time;//出现时长
-            std::int32_t cnt;//出现次数
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };

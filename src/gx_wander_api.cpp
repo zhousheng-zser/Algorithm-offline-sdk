@@ -39,8 +39,8 @@ namespace glasssix {
 
         int camera_id = 0; // 摄像头ID
         struct person_cache {
-            std::int64_t sum_time = 0;
-            int cnt               = 0;
+            std::int64_t sum_time  = 0;
+            std::int64_t last_time = 0;
         };
         std::unordered_map<std::int32_t, person_cache> wander_map;
 
@@ -71,7 +71,17 @@ namespace glasssix {
         } else if (impl_->camera_id != device_id)
             throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
                                                   + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
-
+        ///  超过interval秒没出现的人自动删
+        std::vector<std::int32_t> v;
+        for (auto& it : impl_->wander_map) {
+            if (current_time - it.second.last_time > _config->_wander_config.interval)
+                v.emplace_back(it.first);
+        }
+        for (int x : v) {
+            impl_->wander_map.erase(x);
+            wander_remove_id(x);
+        }
+        wander_info ans;
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -79,7 +89,6 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                wander_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<wander::detect>(ptr->wander_handle,
                     wander_detect_param{.instance_guid = "",
@@ -99,23 +108,21 @@ namespace glasssix {
                                 .device_id               = device_id,
                             }},
                     str);
-
-                ans = std::move(result.detect_info);
-                for (int i = 0; i < ans.person_info.size(); i++) {
-                    if (!impl_->wander_map[ans.person_info[i].id].cnt) {
-                        impl_->wander_map[ans.person_info[i].id].cnt      = 1;
-                        impl_->wander_map[ans.person_info[i].id].sum_time = 0;
-                    } else if (current_time - ans.person_info[i].first_show_time > _config->_wander_config.interval) {
-                        ++impl_->wander_map[ans.person_info[i].id].cnt;
-                    } else {
-                        impl_->wander_map[ans.person_info[i].id].sum_time +=
-                            current_time - ans.person_info[i].first_show_time;
-                    }
-                }
-
-                return ans;
+                return std::move(result.detect_info);
             });
-            return result_pool.get();
+            ans              = result_pool.get();
+            for (int i = 0; i < ans.person_info.size(); i++) {
+                int id_temp = ans.person_info[i].id;
+                if (impl_->wander_map.find(id_temp) == impl_->wander_map.end()) // 库里没有
+                    impl_->wander_map[id_temp] = {.sum_time = 0, .last_time = current_time};
+                else {
+                    impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time);
+                    impl_->wander_map[id_temp].last_time = current_time;
+                }
+                ans.person_info[i].sum_time = impl_->wander_map[id_temp].sum_time;
+            }
+
+            return ans;
         } catch (const std::exception& ex) {
             const auto timestamp       = date_time::now();
             const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
