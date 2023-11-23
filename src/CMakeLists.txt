@@ -13,19 +13,19 @@ if(WIN32)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
-	set(target_version 1.0.31)
+	set(target_version 1.0.37)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
-	set(target_version 1.0.0)
+	set(target_version 1.0.1)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=3)
-	set(target_version 1.0.0)
+	set(target_version 1.0.1)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=4)
-	set(target_version 1.0.1)
+	set(target_version 1.0.3)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=5)
@@ -55,22 +55,18 @@ file(
 	*.cpp
 )
 
-if(NOT GX_USE_PURE_C)
-	list(REMOVE_ITEM private_sources gx_api_c.cpp)
-	list(REMOVE_ITEM private_sources ${CMAKE_CURRENT_SOURCE_DIR}/gx_api_c.cpp)
-endif()
-
 target_sources(
 	${target_name}
 	PRIVATE ${private_sources})
 
-if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
-	include(GXCompat)
-	gx_patch_compat(
-		TARGET ${target_name}
-		TOOLCHAIN_TARGET_NAME ${GX_TOOLHAIN_TARGET_NAME}
-	)
-endif()
+#if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
+#message("+++++++++++++++++++++++++++++++++++++++++++")
+#	include(GXCompat)
+#	gx_patch_compat(
+#		TARGET ${target_name}
+#		TOOLCHAIN_TARGET_NAME ${GX_TOOLHAIN_TARGET_NAME}
+#	)
+#endif()
 
 target_include_directories(
 	${target_name}
@@ -84,7 +80,6 @@ target_include_directories(
 		${GX_CV_SDK_INCLUDE}
 )
 
-target_compile_definitions(${target_name} PRIVATE GX_IS_GXOFFLINERECOGNITION_IMPL=1)
 target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
 target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 

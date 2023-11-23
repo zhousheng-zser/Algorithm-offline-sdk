@@ -1,6 +1,7 @@
 {
     "device": -1,
     "model_type": 1,
+    "instance_type": 0,
     "min_size": 16,
     "min_face": 64,
     "threshold": 0.5,

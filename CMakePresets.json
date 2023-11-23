@@ -38,7 +38,7 @@
                 "GX_NDK_ROOT": "/home/zser/android-ndk-r25c",
                 "GX_OPENCV_ROOT": "/home/zser/Code/OpenCV-android-sdk",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-android",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230905_beta",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20231026_beta",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rk3566",
                 "GX_STATIC_RUNTIME": "OFF"
             }
@@ -166,17 +166,14 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "/home/zser/buildroot-2023.08/output/host/bin/arm-buildroot-linux-gnueabihf-gcc",
-                "CMAKE_CXX_COMPILER": "/home/zser/buildroot-2023.08/output/host/bin/arm-buildroot-linux-gnueabihf-g++",
-                "GX_TOOLCHAIN_PREFIX": "/home/zser/buildroot-2023.08/output/host/bin/arm-buildroot-linux-gnueabihf-",
+                "GX_TOOLCHAIN_PREFIX": "/home/zser/toolchain-arm-g6-linux-gnueabihf/bin/arm-g6-linux-gnueabihf-",
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1109Toolchain.cmake",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20230905_beta",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_beta",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1109",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1109",
-                "GX_TOOLHAIN_TARGET_NAME": "RV1109",
-                "GX_USE_PURE_C": "OFF"
+                "GX_TOOLHAIN_TARGET_NAME": "RV1109"
             },
             "condition": {
                 "type": "equals",
@@ -196,17 +193,15 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "/home/zser/arm-glasssix-linux-uclibcgnueabihf_sdk-buildroot/bin/arm-glasssix-linux-uclibcgnueabihf-gcc",
-                "CMAKE_CXX_COMPILER": "/home/zser/arm-glasssix-linux-uclibcgnueabihf_sdk-buildroot/bin/arm-glasssix-linux-uclibcgnueabihf-g++",
                 "GX_TOOLCHAIN_PREFIX": "/home/zser/arm-glasssix-linux-uclibcgnueabihf_sdk-buildroot/bin/arm-glasssix-linux-uclibcgnueabihf-",
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/RV1106Toolchain.cmake",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0-rv1106",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_20231026_beta",
+                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_beta",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1106",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1106",
                 "GX_TOOLHAIN_TARGET_NAME": "RV1106",
-                "GX_USE_PURE_C": "OFF"
+                "GX_STATIC_RUNTIME": "OFF"
             },
             "condition": {
                 "type": "equals",
@@ -231,7 +226,7 @@
                 "GX_WITH_JNI": "OFF",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0-zyf",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_20231030_beta",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",

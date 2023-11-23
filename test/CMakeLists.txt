@@ -37,7 +37,7 @@ target_link_libraries(
 	gx-offline-recognition
 )
 
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU")  )
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") )
     target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
     target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
     target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})

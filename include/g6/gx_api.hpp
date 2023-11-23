@@ -1,13 +1,11 @@
 #pragma once
-#if __has_include(<span>)
-#include <span>
-#endif
 #include <string_view>
 #include <vector>
 
 #include <g6/abi/string.hpp>
 #include <g6/abi/vector.hpp>
 #include <g6/compat.hpp>
+#include <g6/data_view.hpp>
 
 typedef unsigned char uchar;
 const int IMG_2K               = 2048 * 1080;
@@ -22,11 +20,10 @@ namespace glasssix {
     class gx_img_api {
     public:
         GX_API(GXOFFLINERECOGNITION) gx_img_api(abi::string path, int limit);
-#if __has_include(<span>)
         GX_API(GXOFFLINERECOGNITION)
         gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref = false);
-#endif
         GX_API(GXOFFLINERECOGNITION) gx_img_api(std::vector<uchar>& buffer, int limit);
+        GX_API(GXOFFLINERECOGNITION) gx_img_api(unsigned char* yuv_data, int cols, int rows, int limit);
         GX_API(GXOFFLINERECOGNITION) ~gx_img_api();
         GX_API(GXOFFLINERECOGNITION) gx_img_api(const gx_img_api&);
         GX_API(GXOFFLINERECOGNITION) gx_img_api(gx_img_api&&) noexcept;
@@ -39,7 +36,7 @@ namespace glasssix {
         GX_API(GXOFFLINERECOGNITION) abi::string get_type() const; // 获取图片类型
         GX_API(GXOFFLINERECOGNITION) bool rotate(int deg); // 旋转图片
         GX_API(GXOFFLINERECOGNITION) abi::vector<uchar> cropped(int x1, int x2, int y1, int y2) const; // 裁剪人脸
-        GX_API(GXOFFLINERECOGNITION) bool write(const std::string &path) const; // 保存图片到本地
+        GX_API(GXOFFLINERECOGNITION) bool write(const std::string& path) const; // 保存图片到本地
 
     private:
         class impl;

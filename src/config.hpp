@@ -23,6 +23,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
         GX_FIELD(int, model_type);
+        GX_FIELD(int, instance_type);
         GX_FIELD(int, min_size);
         GX_FIELD(int, min_face);
         GX_FIELD(float, threshold);
@@ -84,6 +85,15 @@ namespace glasssix {
         GX_BEGIN_FIELDS(crowd_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct fighting_config {
+        GX_BEGIN_FIELDS(fighting_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(int, batch);
+        GX_FIELD(int, interval);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -198,15 +208,6 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-    struct pedestrian_labor_config {
-        GX_BEGIN_FIELDS(pedestrian_labor_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-    };
     struct pedestrian_config {
         GX_BEGIN_FIELDS(pedestrian_config);
         GX_FIELD(int, device);
@@ -232,6 +233,7 @@ namespace glasssix {
         face_user_config _face_user_config;
         climb_config _climb_config;
         crowd_config _crowd_config;
+        fighting_config _fighting_config;
         flame_config _flame_config;
         smog_config _smog_config;
         helmet_config _helmet_config;
@@ -244,7 +246,6 @@ namespace glasssix {
         playphone_config _playphone_config;
         onphone_config _onphone_config;
         workcloth_config _workcloth_config;
-        pedestrian_labor_config _pedestrian_labor_config;
         pedestrian_config _pedestrian_config;
         void set_configure_directory(const abi::string& path);
         void set_detect(const abi::string& path);
@@ -255,6 +256,7 @@ namespace glasssix {
         void set_face_user(const abi::string& path);
         void set_climb(const abi::string& path);
         void set_crowd(const abi::string& path);
+        void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
@@ -267,7 +269,6 @@ namespace glasssix {
         void set_playphone(const abi::string& path);
         void set_onphone(const abi::string& path);
         void set_workcloth(const abi::string& path);
-        void set_pedestrian_labor(const abi::string& path);
         void set_pedestrian(const abi::string& path);
 
         bool configure_directory_is_load = false;
@@ -279,6 +280,7 @@ namespace glasssix {
         bool face_user_is_load           = false;
         bool climb_is_load               = false;
         bool crowd_is_load               = false;
+        bool fighting_is_load            = false;
         bool flame_is_load               = false;
         bool smog_is_load                = false;
         bool helmet_is_load              = false;
@@ -291,7 +293,6 @@ namespace glasssix {
         bool playphone_is_load           = false;
         bool onphone_is_load             = false;
         bool workcloth_is_load           = false;
-        bool pedestrian_labor_is_load    = false;
         bool pedestrian_is_load          = false;
 
     private:

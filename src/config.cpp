@@ -83,6 +83,12 @@ namespace glasssix {
         temp.get_to(_crowd_config);
         crowd_is_load = true;
     }
+    void config::set_fighting(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/fighting.json");
+        temp.get_to(_fighting_config);
+        fighting_is_load = true;
+    }
     void config::set_flame(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/flame.json");
@@ -154,12 +160,6 @@ namespace glasssix {
         temp = read_json_file(path + "/workcloth.json");
         temp.get_to(_workcloth_config);
         workcloth_is_load = true;
-    }
-    void config::set_pedestrian_labor(const abi::string& path) {
-        glasssix::json temp;
-        temp = read_json_file(path + "/pedestrian_labor.json");
-        temp.get_to(_pedestrian_labor_config);
-        pedestrian_labor_is_load = true;
     }
     void config::set_pedestrian(const abi::string& path) {
         glasssix::json temp;

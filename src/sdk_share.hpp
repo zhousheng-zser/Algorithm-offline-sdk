@@ -3,6 +3,7 @@
 #include "../src/nessus/protocols/climb.hpp"
 #include "../src/nessus/protocols/crowd.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
+#include "../src/nessus/protocols/fighting.hpp"
 #include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
@@ -10,7 +11,6 @@
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
-#include "../src/nessus/protocols/pedestrian_labor.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
@@ -104,6 +104,7 @@ namespace glasssix {
         void set_Function() {
             Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
             Function["crowd"]            = &algo_ptr::set_protocols_handl_crowd;
+            Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
@@ -120,7 +121,6 @@ namespace glasssix {
             Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
             Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
-            Function["pedestrian_labor"] = &algo_ptr::set_protocols_handl_pedestrian_labor;
             Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
         }
         void set_protocols_handl_climb() {
@@ -132,6 +132,11 @@ namespace glasssix {
             _config->set_crowd(_config->_path);
             crowd_handle = protocol_ptr.make_instance<crowd>(
                 crowd_new_param{_config->_crowd_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_fighting() {
+            _config->set_fighting(_config->_path);
+            fighting_handle = protocol_ptr.make_instance<fighting>(fighting_new_param{_config->_fighting_config.device,
+                _config->_configure_directory.models_directory, _config->_fighting_config.batch});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -164,7 +169,8 @@ namespace glasssix {
             _config->set_track(_config->_path);
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
-                    .model_type      = _config->_detect_config.model_type,
+                    .model_type                                                 = _config->_detect_config.model_type,
+                    .instance_type                                              = _config->_detect_config.instance_type,
                     .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {
@@ -218,11 +224,6 @@ namespace glasssix {
             workcloth_handle = protocol_ptr.make_instance<workcloth>(
                 workcloth_new_param{_config->_workcloth_config.device, _config->_configure_directory.models_directory});
         }
-        void set_protocols_handl_pedestrian_labor() {
-            _config->set_pedestrian_labor(_config->_path);
-            pedestrian_labor_handle = protocol_ptr.make_instance<pedestrian_labor>(pedestrian_labor_new_param{
-                _config->_pedestrian_labor_config.device, _config->_configure_directory.models_directory});
-        }
         void set_protocols_handl_pedestrian() {
             _config->set_pedestrian(_config->_path);
             pedestrian_handle = protocol_ptr.make_instance<pedestrian>(pedestrian_new_param{
@@ -237,6 +238,7 @@ namespace glasssix {
         refvest refvest_handle;
         climb climb_handle;
         crowd crowd_handle;
+        fighting fighting_handle;
         flame flame_handle;
         smog smog_handle;
         helmet helmet_handle;
@@ -248,7 +250,6 @@ namespace glasssix {
         playphone playphone_handle;
         onphone onphone_handle;
         workcloth workcloth_handle;
-        pedestrian_labor pedestrian_labor_handle;
         pedestrian pedestrian_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;

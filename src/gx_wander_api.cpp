@@ -14,6 +14,7 @@ namespace glasssix {
     class gx_wander_api::impl {
     public:
         void init() {
+            wander_map.clear();
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -38,15 +39,15 @@ namespace glasssix {
 
         int camera_id = 0; // 摄像头ID
         struct person_cache {
-            std::int64_t sum_time = 0;
-            int cnt               = 0;
+            std::int64_t sum_time  = 0;
+            std::int64_t last_time = 0;
         };
         std::unordered_map<std::int32_t, person_cache> wander_map;
 
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WANDER_V1.0.2";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WANDER_V2.0.2";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -70,7 +71,17 @@ namespace glasssix {
         } else if (impl_->camera_id != device_id)
             throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
                                                   + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
-
+        ///  超过interval秒没出现的人自动删
+        std::vector<std::int32_t> v;
+        for (auto& it : impl_->wander_map) {
+            if (current_time - it.second.last_time > _config->_wander_config.interval)
+                v.emplace_back(it.first);
+        }
+        for (int x : v) {
+            impl_->wander_map.erase(x);
+            wander_remove_id(x);
+        }
+        wander_info ans;
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -78,7 +89,6 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                wander_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<wander::detect>(ptr->wander_handle,
                     wander_detect_param{.instance_guid = "",
@@ -98,23 +108,21 @@ namespace glasssix {
                                 .device_id               = device_id,
                             }},
                     str);
-
-                ans = std::move(result.detect_info);
-                for (int i = 0; i < ans.person_info.size(); i++) {
-                    if (!impl_->wander_map[ans.person_info[i].id].cnt) {
-                        impl_->wander_map[ans.person_info[i].id].cnt      = 1;
-                        impl_->wander_map[ans.person_info[i].id].sum_time = 0;
-                    } else if (current_time - ans.person_info[i].first_show_time > _config->_wander_config.interval) {
-                        ++impl_->wander_map[ans.person_info[i].id].cnt;
-                    } else {
-                        impl_->wander_map[ans.person_info[i].id].sum_time +=
-                            current_time - ans.person_info[i].first_show_time;
-                    }
-                }
-
-                return ans;
+                return std::move(result.detect_info);
             });
-            return result_pool.get();
+            ans              = result_pool.get();
+            for (int i = 0; i < ans.person_info.size(); i++) {
+                int id_temp = ans.person_info[i].id;
+                if (impl_->wander_map.find(id_temp) == impl_->wander_map.end()) // 库里没有
+                    impl_->wander_map[id_temp] = {.sum_time = 0, .last_time = current_time};
+                else {
+                    impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time);
+                    impl_->wander_map[id_temp].last_time = current_time;
+                }
+                ans.person_info[i].sum_time = impl_->wander_map[id_temp].sum_time;
+            }
+
+            return ans;
         } catch (const std::exception& ex) {
             const auto timestamp       = date_time::now();
             const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
@@ -122,6 +130,29 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
+    }
+
+    bool gx_wander_api::wander_remove_id(int id) {
+
+        if (impl_->camera_id == 0)
+            return true;
+
+        auto result_pool = pool->enqueue([&] {
+            std::thread::id id_ = std::this_thread::get_id();
+            if (all_thread_algo_ptr[id_] == nullptr) {
+                all_thread_algo_ptr[id_] = new algo_ptr();
+            }
+            auto ptr = all_thread_algo_ptr[id_];
+            std::array<char, 0> arr{};
+            auto result = ptr->protocol_ptr.invoke<wander::remove_person_by_index>(ptr->wander_handle,
+                wander_remove_person_by_index_param{.id = id, .device_id = impl_->camera_id}, std::span<char>{arr});
+            if (result.delete_info == "OK")
+                return true;
+            return false;
+        });
+        impl_->wander_map.erase(id);
+
+        return result_pool.get();
     }
 
     bool gx_wander_api::wander_remove_library() {
