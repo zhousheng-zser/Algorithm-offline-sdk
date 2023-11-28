@@ -23,6 +23,7 @@
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
+#include "gx_api.hpp"
 #include "glass6/secret_key_empower.hpp"
 #include "thread_pool.hpp"
 
@@ -170,7 +171,7 @@ namespace glasssix {
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .model_type                                                 = _config->_detect_config.model_type,
-                    .instance_type                                              = _config->_detect_config.instance_type,
+                    .algor_type                                              = _config->_detect_config.algor_type,
                     .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {
@@ -260,4 +261,5 @@ namespace glasssix {
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);
     extern std::string get_time_code();
     extern std::string getSubstring(const std::string& str64, int pos_t);
+    bool write_dump_img(const gx_img_api& mat,std::string);
 } // namespace glasssix

@@ -75,11 +75,11 @@ namespace glasssix {
                 if (_config->_fighting_config.batch <= 0)
                     throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : batch <= 0"));
                 int temp_id = (impl_->cnt - 1 + _config->_fighting_config.batch) % _config->_fighting_config.batch;
-                if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols())// 宽和之前的图片不一样
+                if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
                     throw source_code_aware_runtime_error(
                         "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
                         + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_cols()));
-                if (impl_->cnt && mat.get_rows() != impl_->mat_list[temp_id].get_rows())// 高和之前的图片不一样
+                if (impl_->cnt && mat.get_rows() != impl_->mat_list[temp_id].get_rows()) // 高和之前的图片不一样
                     throw source_code_aware_runtime_error(
                         "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
                         + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
@@ -120,9 +120,7 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            const auto timestamp       = date_time::now();
-            const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
-            bool flag = mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + "_dump.jpg");
+            bool flag = write_dump_img(mat, "_fighting_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }

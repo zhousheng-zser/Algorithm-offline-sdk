@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.0.3";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.0.4";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -85,9 +85,7 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            const auto timestamp       = date_time::now();
-            const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
-            bool flag = mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + "_dump.jpg");
+            bool flag = write_dump_img(mat, "_helmet_dump.jpg");
             throw source_code_aware_runtime_error{ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"} };
         }
     }
