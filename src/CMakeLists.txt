@@ -13,7 +13,7 @@ if(WIN32)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
-	set(target_version 1.0.38)
+	set(target_version 1.0.39)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
@@ -59,14 +59,6 @@ target_sources(
 	${target_name}
 	PRIVATE ${private_sources})
 
-#if(NOT "${GX_TOOLHAIN_TARGET_NAME}" STREQUAL "")
-#message("+++++++++++++++++++++++++++++++++++++++++++")
-#	include(GXCompat)
-#	gx_patch_compat(
-#		TARGET ${target_name}
-#		TOOLCHAIN_TARGET_NAME ${GX_TOOLHAIN_TARGET_NAME}
-#	)
-#endif()
 
 target_include_directories(
 	${target_name}
