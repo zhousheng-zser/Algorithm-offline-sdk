@@ -66,6 +66,7 @@ namespace glasssix {
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
         }
+        impl() {}
         ~impl() {}
 
         abi::string check_type(std::vector<uchar>& val, size_t len) {
@@ -122,6 +123,7 @@ namespace glasssix {
     gx_img_api::gx_img_api(
         std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref) // 对外接口是先宽再高
         : impl_{std::make_shared<impl>(bgr_data, rows, cols, limit, ref)} {} // opencv 构造是先高再宽
+    gx_img_api::gx_img_api() : impl_{std::make_shared<impl>()} {}
     gx_img_api::~gx_img_api() {}
     gx_img_api::gx_img_api(const gx_img_api&)                = default;
     gx_img_api::gx_img_api(gx_img_api&&) noexcept            = default;

@@ -19,6 +19,7 @@ namespace glasssix {
 
     class gx_img_api {
     public:
+        GX_API(GXOFFLINERECOGNITION) gx_img_api();
         GX_API(GXOFFLINERECOGNITION) gx_img_api(abi::string path, int limit);
         GX_API(GXOFFLINERECOGNITION)
         gx_img_api(std::span<const uchar> bgr_data, int cols, int rows, int limit, bool ref = false);

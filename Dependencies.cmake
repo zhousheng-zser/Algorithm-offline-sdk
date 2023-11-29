@@ -22,6 +22,9 @@ if(WIN32)
     HINTS ${GX_MISCELLANEOUS_ROOT}
     NO_DEFAULT_PATH
     )
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
+    set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/x64/vc16/bin)
+    set(OpenCV_LIBS opencv_world470)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RV1109" )
     find_package(
     GXMiscellaneous

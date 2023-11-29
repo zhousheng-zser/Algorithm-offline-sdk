@@ -22,8 +22,8 @@ namespace glasssix {
             time_ll--;
         }
         std::string temp = "Error empower Fail:" + std::string{message};
-        printf("%s\n",temp.c_str() );
-        throw source_code_aware_runtime_error("Error empower Fail:" + std::string{message} );
+        printf("%s\n", temp.c_str());
+        throw source_code_aware_runtime_error("Error empower Fail:" + std::string{message});
     }
 
     std::string empower_time_decode(std::string timestampStr, std::string encode_str) {
@@ -45,11 +45,37 @@ namespace glasssix {
         return glasssix::format(U8("{:016}"), timestamp);
     }
 
-
     std::string getSubstring(const std::string& str64, int pos_t) {
         if (pos_t < 0 || pos_t + 24 > 64)
             return "";
         std::string substring = str64.substr(pos_t, 24);
         return substring;
+    }
+
+    std::vector<std::string> find_file(std::filesystem::path folder_path) {
+        std::vector<std::string> ans_list;
+        for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+            if (entry.is_regular_file()) {
+                std::string temp(entry.path().filename());
+                ans_list.emplace_back(temp);
+            }
+        }
+        return ans_list;
+    }
+
+    bool write_dump_img(const gx_img_api& mat,std::string key) {
+        const auto timestamp              = date_time::now();
+        std::filesystem::path folder_path = _config->_configure_directory.dump_img_directory;
+        std::vector<std::string> file_list = find_file(folder_path);
+        for (int i = 0; i < file_list.size(); i++) {
+            if (file_list[i].find(key) == 17) {
+                try {
+                    std::filesystem::remove(_config->_configure_directory.dump_img_directory + "/" + file_list[i]);
+                } catch (...) {
+                }
+            }
+        }
+        const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
+        return mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + key);
     }
 } // namespace glasssix

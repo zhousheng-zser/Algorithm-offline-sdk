@@ -1039,16 +1039,16 @@ namespace glasssix {
     }
     void video_test(const std::string& save_path, const std::string& ans_path, video_data data_) {
         std::vector<abi::string> temp = find_file(save_path);
-        gx_tumble_api* api_temp        = new gx_tumble_api();
-        //abi::vector<tumble_point> quadrangle;
-        //quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
-        //quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
-        //quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
-        //quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
+        gx_tumble_api* api_temp       = new gx_tumble_api();
+        // abi::vector<tumble_point> quadrangle;
+        // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
+        // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
+        // quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
+        // quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
         for (int i = 0; i < temp.size(); i++) {
-            auto val = api_temp->safe_production_tumble(
-                gx_img_api{abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps)
-                                       + ".jpg"}, 1 << 28});
+            auto val    = api_temp->safe_production_tumble(gx_img_api{
+                abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"},
+                1 << 28});
             cv::Mat img = cv::imread(
                 abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"}
                     .c_str());
@@ -1190,10 +1190,10 @@ int main(int argc, char** argv) {
         // test_face_search();
         // test_face_compare();
         // test_face_liveness();
-        //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 10, .ed_y = 0, .fps = 25};
-        //todo_video("/root/img/tumble.mp4", "/root/img/video", "/root/img/video_ans", data_);
+        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 10, .ed_y = 0, .fps = 25};
+        // todo_video("/root/img/tumble.mp4", "/root/img/video", "/root/img/video_ans", data_);
 
-         //yuv_test();
+        // yuv_test();
         /* 多线程测性能测试 */
         std::thread t[30];
         t[0]  = std::thread(thread_function_helmet);

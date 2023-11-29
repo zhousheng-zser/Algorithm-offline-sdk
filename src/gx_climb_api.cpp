@@ -56,7 +56,7 @@ namespace glasssix {
 
     //  安全生产 攀爬检测
     climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle) {
-        if(quadrangle.size()!=4)
+        if (quadrangle.size() != 4)
             throw source_code_aware_runtime_error(U8("Error: climb quadrangle.size()  != 4"));
         try {
             auto result_pool = pool->enqueue([&] {
@@ -81,14 +81,14 @@ namespace glasssix {
                             .x1                                                     = quadrangle[0].x,
                             .y1                                                     = quadrangle[0].y,
                             .x2                                                     = quadrangle[1].x,
-                            .y2                                                     = quadrangle[1].y,                                         
+                            .y2                                                     = quadrangle[1].y,
                             .x3                                                     = quadrangle[2].x,
                             .y3                                                     = quadrangle[2].y,
                             .x4                                                     = quadrangle[3].x,
                             .y4                                                     = quadrangle[3].y
-                    
-                    
-                    }},
+
+
+                        }},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -96,9 +96,7 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            const auto timestamp       = date_time::now();
-            const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
-            bool flag = mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + "_dump.jpg");
+            bool flag = write_dump_img(mat, "_climb_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
