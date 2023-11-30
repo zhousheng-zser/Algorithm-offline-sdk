@@ -23,7 +23,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(detect_config);
         GX_FIELD(int, device);
         GX_FIELD(int, model_type);
-        GX_FIELD(int, algor_type);
+        GX_FIELD(int, algo_type);
         GX_FIELD(int, min_size);
         GX_FIELD(int, min_face);
         GX_FIELD(float, threshold);
@@ -194,8 +194,11 @@ namespace glasssix {
         GX_BEGIN_FIELDS(onphone_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
+        GX_FIELD(float, head_conf_thres);
+        GX_FIELD(float, head_nms_thres);
+        GX_FIELD(float, phone_conf_thres);
+        GX_FIELD(float, phone_distance_thres);
+        GX_FIELD(float, phone_nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

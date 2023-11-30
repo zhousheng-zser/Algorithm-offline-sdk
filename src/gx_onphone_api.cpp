@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_ONPHONE_V2.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_ONPHONE_V3.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -74,9 +74,14 @@ namespace glasssix {
                         .roi_y                          = 0,
                         .roi_width                      = mat.get_cols(),
                         .roi_height                     = mat.get_rows(),
-                        .params =
-                            onphone_detect_param::confidence_params{.conf_thres = _config->_onphone_config.conf_thres,
-                                .nms_thres                                      = _config->_onphone_config.nms_thres}},
+                        .params                         = onphone_detect_param::confidence_params{.head_conf_thres =
+                                                                              _config->_onphone_config.head_conf_thres,
+                                                    .head_nms_thres       = _config->_onphone_config.head_nms_thres,
+                                                    .phone_conf_thres     = _config->_onphone_config.phone_conf_thres,
+                                                    .phone_distance_thres = _config->_onphone_config.phone_distance_thres,
+                    .phone_nms_thres=_config->_onphone_config.phone_nms_thres
+                        }
+                    },
                     str);
 
                 ans = std::move(result.detect_info);

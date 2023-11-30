@@ -1,5 +1,7 @@
 ﻿#include "gx_api.hpp"
+
 #include "sdk_share.hpp"
+
 #include <g6/error_extensions.hpp>
 
 #include <opencv2/opencv.hpp>

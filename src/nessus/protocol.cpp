@@ -138,13 +138,13 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
-            // printf("%s\n", full_name.data());
-            // printf("%s\n", param.dump().c_str());
+            //printf("%s\n", full_name.data());
+            //printf("%s\n", param.dump().c_str());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", full_name.data());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", param.dump().c_str());
             char* ss = parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
-             //printf("%s\n", ss);
+            //printf("%s\n", ss);
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", ss);
             return parse_raw_result(ss);
         }
