@@ -10,7 +10,7 @@ namespace glasssix {
     struct onphone_info {
         struct norm_boxes {
             GX_BEGIN_FIELDS(norm_boxes);
-            GX_FIELD(float, head_score); // 置信度
+            GX_FIELD(float, head_score); // 人头置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
@@ -24,7 +24,7 @@ namespace glasssix {
 
             struct phone_boxes {
                 GX_BEGIN_FIELDS(phone_boxes);
-                GX_FIELD(float, phone_score); // 置信度
+                GX_FIELD(float, phone_score); // 手机置信度
                 GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
                 GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
                 GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
@@ -35,7 +35,7 @@ namespace glasssix {
             };
 
             GX_BEGIN_FIELDS(onphone_boxes);
-            GX_FIELD(float, head_score); // 置信度
+            GX_FIELD(float, head_score); // 人头置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
