@@ -2,5 +2,6 @@
         "device":-1,
         "format": 1,
 		"conf_thres":0.35,
-		"nms_thres":0.45
+		"nms_thres":0.45,
+    "little_target_con_thres":0.1
 }
