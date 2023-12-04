@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_SMOKE_V2.1.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_SMOKE_V3.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -75,7 +75,8 @@ namespace glasssix {
                         .roi_width                    = mat.get_cols(),
                         .roi_height                   = mat.get_rows(),
                         .params = smoke_detect_param::confidence_params{.conf_thres = _config->_smoke_config.conf_thres,
-                            .nms_thres = _config->_smoke_config.nms_thres}},
+                            .nms_thres = _config->_smoke_config.nms_thres,
+                            .little_target_con_thres = _config->_smoke_config.little_target_con_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
