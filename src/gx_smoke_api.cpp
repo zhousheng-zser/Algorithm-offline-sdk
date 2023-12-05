@@ -76,7 +76,7 @@ namespace glasssix {
                         .roi_height                   = mat.get_rows(),
                         .params = smoke_detect_param::confidence_params{.conf_thres = _config->_smoke_config.conf_thres,
                             .nms_thres = _config->_smoke_config.nms_thres,
-                            .little_target_con_thres = _config->_smoke_config.little_target_con_thres}},
+                            .little_target_conf_thres = _config->_smoke_config.little_target_conf_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
