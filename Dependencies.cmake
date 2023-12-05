@@ -74,8 +74,8 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU" )
     ${GX_LICENSECLIENT_ROOT}
     )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
-    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
-    set(OpenCV_LIBS ${OpenCV_LIB_DIR}/libopencv_world.so.407)
+    set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
+    set(OpenCV_LIBS opencv_world.so.407)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "CENTOS" )
     find_package(
     GXMiscellaneous
