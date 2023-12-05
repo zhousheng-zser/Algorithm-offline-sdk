@@ -144,7 +144,7 @@ namespace glasssix {
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", param.dump().c_str());
             char* ss = parser_parse(
                 instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
-            //printf("%s\n", ss);
+            printf("%s\n", ss);
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", ss);
             return parse_raw_result(ss);
         }

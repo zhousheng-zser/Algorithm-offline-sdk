@@ -1176,6 +1176,38 @@ void yuv_test() {
     }
 }
 
+void gif_test() {
+    // 读取 GIF 文件
+    cv::VideoCapture capture("/root/img/111.gif");
+
+     if (!capture.isOpened()) {
+         std::cout << "无法打开 GIF 文件" << std::endl;
+         return ;
+     }
+
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount = 0;
+    while (true) {
+        // 读取帧
+        if (!capture.read(frame))
+            break;
+
+        // 保存为图像
+        std::string outputName = "/root/img/" + std::to_string(frameCount) + ".jpeg";
+        cv::imwrite(outputName, frame);
+
+        frameCount++;
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+
+    std::cout << "成功解码 GIF 文件，共生成了 " << frameCount << " 张图像" << std::endl;
+
+    return;
+}
+
 int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {
@@ -1194,45 +1226,47 @@ int main(int argc, char** argv) {
         // todo_video("/root/img/tumble.mp4", "/root/img/video", "/root/img/video_ans", data_);
 
         // yuv_test();
+        gif_test();
+
         /* 多线程测性能测试 */
         std::thread t[30];
-         t[0]  = std::thread(thread_function_helmet);
-         t[1]  = std::thread(thread_function_flame);
-         t[2]  = std::thread(thread_function_refvest);
-         t[3]  = std::thread(thread_function_search);
-         t[4]  = std::thread(thread_function_integration);
-         t[5]  = std::thread(thread_function_leavepost);
-         t[6]  = std::thread(thread_function_sleep);
-         t[7]  = std::thread(thread_function_smoke);
-         t[8]  = std::thread(thread_function_playphone);
-         t[9]  = std::thread(thread_function_onphone);
-         t[10] = std::thread(thread_function_workcloth);
-         t[12] = std::thread(thread_function_pedestrian);
-         t[13] = std::thread(thread_function_Action_live_Blur);
-         t[14] = std::thread(thread_function_smog);
-         t[15] = std::thread(thread_function_tumble);
-         t[16] = std::thread(thread_function_climb);
-         t[17] = std::thread(thread_function_crowd);
-         t[18] = std::thread(thread_function_wander);
+         //t[0]  = std::thread(thread_function_helmet);
+         //t[1]  = std::thread(thread_function_flame);
+         //t[2]  = std::thread(thread_function_refvest);
+         //t[3]  = std::thread(thread_function_search);
+         //t[4]  = std::thread(thread_function_integration);
+         //t[5]  = std::thread(thread_function_leavepost);
+         //t[6]  = std::thread(thread_function_sleep);
+         //t[7]  = std::thread(thread_function_smoke);
+         //t[8]  = std::thread(thread_function_playphone);
+         //t[9]  = std::thread(thread_function_onphone);
+         //t[10] = std::thread(thread_function_workcloth);
+         //t[12] = std::thread(thread_function_pedestrian);
+         //t[13] = std::thread(thread_function_Action_live_Blur);
+         //t[14] = std::thread(thread_function_smog);
+         //t[15] = std::thread(thread_function_tumble);
+         //t[16] = std::thread(thread_function_climb);
+         //t[17] = std::thread(thread_function_crowd);
+         //t[18] = std::thread(thread_function_wander);
          t[19] = std::thread(thread_function_fighting);
-         t[0].join();
-         t[1].join();
-         t[2].join();
-         t[3].join();
-         t[4].join();
-         t[5].join();
-         t[6].join();
-         t[7].join();
-         t[8].join();
-         t[9].join();
-         t[10].join();
-         t[12].join();
-         t[13].join();
-         t[14].join();
-         t[15].join();
-         t[16].join();
-         t[17].join();
-         t[18].join();
+         //t[0].join();
+         //t[1].join();
+         //t[2].join();
+         //t[3].join();
+         //t[4].join();
+         //t[5].join();
+         //t[6].join();
+         //t[7].join();
+         //t[8].join();
+         //t[9].join();
+         //t[10].join();
+         //t[12].join();
+         //t[13].join();
+         //t[14].join();
+         //t[15].join();
+         //t[16].join();
+         //t[17].join();
+         //t[18].join();
          t[19].join();
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
