@@ -1226,7 +1226,7 @@ int main(int argc, char** argv) {
         // todo_video("/root/img/tumble.mp4", "/root/img/video", "/root/img/video_ans", data_);
 
         // yuv_test();
-        gif_test();
+        //gif_test();
 
         /* 多线程测性能测试 */
         std::thread t[30];
