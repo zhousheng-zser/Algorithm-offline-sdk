@@ -23,10 +23,7 @@ namespace glasssix {
 
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::int32_t, x1);
-            GX_FIELD(std::int32_t, y1);
-            GX_FIELD(std::int32_t, x2);
-            GX_FIELD(std::int32_t, y2);
+            GX_FIELD(std::optional<float>,area_threshold);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -41,6 +38,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

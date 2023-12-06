@@ -78,6 +78,7 @@ namespace glasssix {
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
+        GX_FIELD(float, little_target_conf_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -85,6 +86,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(crowd_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float,area_threshold);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -149,7 +151,7 @@ namespace glasssix {
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
-        GX_FIELD(float, little_target_con_thres);
+        GX_FIELD(float, little_target_conf_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

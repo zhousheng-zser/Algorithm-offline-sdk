@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CROWD_V1.0.1";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CROWD_V1.0.2";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -73,7 +73,11 @@ namespace glasssix {
                         .roi_x                        = 0,
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
-                        .roi_height                   = mat.get_rows()},
+                        .roi_height                   = mat.get_rows(),
+                        .params                       = crowd_detect_param::confidence_params{
+                            .area_threshold = _config->_crowd_config.area_threshold
+                        },
+                },
                     str);
 
                 ans = std::move(result.detect_info);
