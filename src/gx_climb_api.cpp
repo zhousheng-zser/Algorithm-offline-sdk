@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.1.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.1.1";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -78,6 +78,7 @@ namespace glasssix {
                         .roi_height                   = mat.get_rows(),
                         .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
                             .nms_thres                                              = _config->_climb_config.nms_thres,
+                            .little_target_conf_thres                               = _config->_climb_config.little_target_conf_thres,
                             .x1                                                     = quadrangle[0].x,
                             .y1                                                     = quadrangle[0].y,
                             .x2                                                     = quadrangle[1].x,
