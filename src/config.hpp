@@ -152,6 +152,7 @@ namespace glasssix {
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
         GX_FIELD(float, little_target_conf_thres);
+        GX_FIELD(float, smoke_conf_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
