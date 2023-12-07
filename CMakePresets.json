@@ -200,8 +200,7 @@
                 "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_beta",
                 "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-rv1106",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-rv1106",
-                "GX_TOOLHAIN_TARGET_NAME": "RV1106",
-                "GX_STATIC_RUNTIME": "OFF"
+                "GX_TOOLHAIN_TARGET_NAME": "RV1106"
             },
             "condition": {
                 "type": "equals",

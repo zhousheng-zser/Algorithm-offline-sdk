@@ -1164,17 +1164,17 @@ void yuv_test() {
 
     const gx_img_api img_new("/root/img/NULL.jpg", static_cast<int>(1e9));
     const gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
-    gx_face_api* temp_api = new gx_face_api();
+        gx_face_api* temp_api = new gx_face_api();
     temp_api->detect(img_new);
 
-    printf("face_feature    ------\n");
-    std::getchar();
+        printf("face_feature    ------\n");
+        std::getchar();
     int T = 10000;
-    while (T--) {
-        auto val_new = temp_api->face_feature(img, false);
-        printf("facerectwithfaceinfo_list.size = %d\n", val_new.facerectwithfaceinfo_list.size());
+        while (T--) {
+            auto val_new = temp_api->face_feature(img, false);
+            printf("facerectwithfaceinfo_list.size = %d\n", val_new.facerectwithfaceinfo_list.size());
+        }
     }
-}
 
 void gif_test() {
     // 读取 GIF 文件
@@ -1248,7 +1248,7 @@ int main(int argc, char** argv) {
          //t[16] = std::thread(thread_function_climb);
          //t[17] = std::thread(thread_function_crowd);
          //t[18] = std::thread(thread_function_wander);
-         t[19] = std::thread(thread_function_fighting);
+         //t[19] = std::thread(thread_function_fighting);
          //t[0].join();
          //t[1].join();
          //t[2].join();
@@ -1267,7 +1267,7 @@ int main(int argc, char** argv) {
          //t[16].join();
          //t[17].join();
          //t[18].join();
-         t[19].join();
+         //t[19].join();
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
         //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
