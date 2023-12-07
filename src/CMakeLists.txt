@@ -37,7 +37,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU" )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=7)
-	set(target_version 1.0.0)
+	set(target_version 1.0.1)
 endif()
 message("EMPOWER_LANGUAGE  = ${GX_TOOLHAIN_TARGET_NAME}" )
 
