@@ -207,11 +207,30 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
     struct workcloth_config {
+
+        struct confidence_color_hsv_cfg {
+            GX_BEGIN_FIELDS(confidence_color_hsv_cfg);
+            GX_FIELD(std::vector<int>, black);
+            GX_FIELD(std::vector<int>, grey);
+            GX_FIELD(std::vector<int>, white);
+            GX_FIELD(std::vector<int>, red);
+            GX_FIELD(std::vector<int>, orange);
+            GX_FIELD(std::vector<int>, yellow);
+            GX_FIELD(std::vector<int>, green);
+            GX_FIELD(std::vector<int>, cyan);
+            GX_FIELD(std::vector<int>, blue);
+            GX_FIELD(std::vector<int>, purple);
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
         GX_BEGIN_FIELDS(workcloth_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
+        GX_FIELD(std::vector<confidence_color_hsv_cfg>, color_hsv_list);
+
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

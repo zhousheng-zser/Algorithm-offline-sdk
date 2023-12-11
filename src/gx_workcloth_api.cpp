@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WORKCLOTH_V2.6.4";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WORKCLOTH_V2.7.1";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -55,7 +55,7 @@ namespace glasssix {
     };
 
     //  工服检测
-    workcloth_info gx_workcloth_api::safe_production_workcloth(const gx_img_api& mat) {
+    workcloth_info gx_workcloth_api::safe_production_workcloth(const gx_img_api& mat, int color_hsv_list_id) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -74,9 +74,11 @@ namespace glasssix {
                         .roi_y                            = 0,
                         .roi_width                        = mat.get_cols(),
                         .roi_height                       = mat.get_rows(),
-                        .params                           = workcloth_detect_param::confidence_params{.conf_thres =
+                        .params        = workcloth_detect_param::confidence_params{.conf_thres =
                                                                                 _config->_workcloth_config.conf_thres,
-                                                      .nms_thres = _config->_workcloth_config.nms_thres}},
+                                   .nms_thres = _config->_workcloth_config.nms_thres},
+                       .color_hsv_cfg = _config->_workcloth_config.color_hsv_list[color_hsv_list_id]
+                    },
                     str);
 
                 ans = std::move(result.detect_info);

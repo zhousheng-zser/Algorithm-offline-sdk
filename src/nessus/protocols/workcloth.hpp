@@ -2,6 +2,7 @@
 
 #include "../../../include/g6/info_workcloth.hpp"
 #include "../common_protocols.hpp"
+#include "../../config.hpp"
 
 #include <cstdint>
 #include <string>
@@ -40,6 +41,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
         GX_FIELD(confidence_params, params);
+        GX_FIELD(workcloth_config::confidence_color_hsv_cfg, color_hsv_cfg);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

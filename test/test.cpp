@@ -905,7 +905,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/workcloth.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_workcloth(img);
+                auto val = api_temp->safe_production_workcloth(img,0);
                 printf("workcloth_list = %d\n", val.cloth_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());

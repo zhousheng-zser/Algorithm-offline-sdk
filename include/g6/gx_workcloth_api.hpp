@@ -13,7 +13,7 @@ namespace glasssix {
         gx_workcloth_api& operator=(gx_workcloth_api&&) noexcept;
 
         //  安全生产 工服检测
-        workcloth_info safe_production_workcloth(const gx_img_api& mat);
+        workcloth_info safe_production_workcloth(const gx_img_api& mat, int color_hsv_list_id);
 
     private:
         class impl;
