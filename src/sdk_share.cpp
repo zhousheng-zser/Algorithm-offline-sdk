@@ -3,6 +3,7 @@ namespace glasssix {
     config* _config                             = nullptr;
     bool empower_warning_flag                   = false;
     algo_irisviel_ptr* thread_algo_irisviel_ptr = nullptr;
+    algo_crowd_ptr* thread_algo_crowd_ptr       = nullptr;
     std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     thread_pool* pool = nullptr;
 
@@ -63,9 +64,9 @@ namespace glasssix {
         return ans_list;
     }
 
-    bool write_dump_img(const gx_img_api& mat,std::string key) {
-        const auto timestamp              = date_time::now();
-        std::filesystem::path folder_path = _config->_configure_directory.dump_img_directory;
+    bool write_dump_img(const gx_img_api& mat, std::string key) {
+        const auto timestamp               = date_time::now();
+        std::filesystem::path folder_path  = _config->_configure_directory.dump_img_directory;
         std::vector<std::string> file_list = find_file(folder_path);
         for (int i = 0; i < file_list.size(); i++) {
             if (file_list[i].find(key) == 17) {

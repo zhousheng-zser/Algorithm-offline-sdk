@@ -822,7 +822,7 @@ namespace glasssix {
     // 多线程测徘徊
     void thread_function_wander() {
         gx_wander_api* api_temp = new gx_wander_api();
-        int T                   = 20;
+        int T                   = 200;
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
