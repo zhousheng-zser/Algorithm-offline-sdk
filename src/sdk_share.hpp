@@ -23,8 +23,8 @@
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
-#include "gx_api.hpp"
 #include "glass6/secret_key_empower.hpp"
+#include "gx_api.hpp"
 #include "thread_pool.hpp"
 
 #include <chrono>
@@ -83,6 +83,26 @@ namespace glasssix {
         nessus_protocol protocol_ptr;
         irisviel irisivel_handle;
     };
+    class algo_crowd_ptr {
+    public:
+        algo_crowd_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "crowd") {
+                    try {
+                        _config->set_crowd(_config->_path);
+                        crowd_handle = protocol_ptr.make_instance<crowd>(crowd_new_param{
+                            _config->_crowd_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        crowd crowd_handle;
+    };
     class algo_ptr {
     public:
         typedef void (algo_ptr::*set_protocols_handle)();
@@ -103,36 +123,30 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
-            Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
-            Function["crowd"]            = &algo_ptr::set_protocols_handl_crowd;
-            Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
-            Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
-            Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
-            Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
-            Function["helmet"]           = &algo_ptr::set_protocols_handl_helmet;
-            Function["selene"]           = &algo_ptr::set_protocols_handl_selene;
-            Function["longinus"]         = &algo_ptr::set_protocols_handl_longinus;
-            Function["romancia"]         = &algo_ptr::set_protocols_handl_romancia;
-            Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
-            Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
-            Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
-            Function["wander"]           = &algo_ptr::set_protocols_handl_wander;
-            Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
-            Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
-            Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
-            Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
-            Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
+            Function["climb"]      = &algo_ptr::set_protocols_handl_climb;
+            Function["fighting"]   = &algo_ptr::set_protocols_handl_fighting;
+            Function["flame"]      = &algo_ptr::set_protocols_handl_flame;
+            Function["smog"]       = &algo_ptr::set_protocols_handl_smog;
+            Function["refvest"]    = &algo_ptr::set_protocols_handl_refvest;
+            Function["helmet"]     = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]     = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"]   = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"]   = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"]   = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]      = &algo_ptr::set_protocols_handl_sleep;
+            Function["smoke"]      = &algo_ptr::set_protocols_handl_smoke;
+            Function["tumble"]     = &algo_ptr::set_protocols_handl_tumble;
+            Function["wander"]     = &algo_ptr::set_protocols_handl_wander;
+            Function["leavepost"]  = &algo_ptr::set_protocols_handl_leavepost;
+            Function["playphone"]  = &algo_ptr::set_protocols_handl_playphone;
+            Function["onphone"]    = &algo_ptr::set_protocols_handl_onphone;
+            Function["workcloth"]  = &algo_ptr::set_protocols_handl_workcloth;
+            Function["pedestrian"] = &algo_ptr::set_protocols_handl_pedestrian;
         }
         void set_protocols_handl_climb() {
             _config->set_climb(_config->_path);
             climb_handle = protocol_ptr.make_instance<climb>(
                 climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_crowd() {
-            _config->set_crowd(_config->_path);
-            crowd_handle = protocol_ptr.make_instance<crowd>(
-                crowd_new_param{_config->_crowd_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_fighting() {
             _config->set_fighting(_config->_path);
@@ -171,7 +185,7 @@ namespace glasssix {
             longinus_handle =
                 protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
                     .model_type                                                 = _config->_detect_config.model_type,
-                    .algo_type                                              = _config->_detect_config.algo_type,
+                    .algo_type                                                  = _config->_detect_config.algo_type,
                     .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {
@@ -238,7 +252,6 @@ namespace glasssix {
         selene selene_handle;
         refvest refvest_handle;
         climb climb_handle;
-        crowd crowd_handle;
         fighting fighting_handle;
         flame flame_handle;
         smog smog_handle;
@@ -254,6 +267,7 @@ namespace glasssix {
         pedestrian pedestrian_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
+    extern algo_crowd_ptr* thread_algo_crowd_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     extern thread_pool* pool;
     extern void empower_Callback(
@@ -261,5 +275,5 @@ namespace glasssix {
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);
     extern std::string get_time_code();
     extern std::string getSubstring(const std::string& str64, int pos_t);
-    bool write_dump_img(const gx_img_api& mat,std::string);
+    bool write_dump_img(const gx_img_api& mat, std::string);
 } // namespace glasssix
