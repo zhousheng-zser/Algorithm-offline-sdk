@@ -4,7 +4,8 @@
 file(
 	GLOB private_sources
     CONFIGURE_DEPENDS
-    *.hpp *.cpp *.h
+    test.cpp
+    #nessus.cpp
 )
 add_executable(${target_name} )
 
