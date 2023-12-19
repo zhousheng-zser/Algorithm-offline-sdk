@@ -189,8 +189,10 @@ namespace glasssix {
         GX_BEGIN_FIELDS(playphone_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
+        GX_FIELD(float, head_conf_thres);
+        GX_FIELD(float, head_nms_thres);
+        GX_FIELD(float, phone_conf_thres);
+        GX_FIELD(float, phone_nms_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
