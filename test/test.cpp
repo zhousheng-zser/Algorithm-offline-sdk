@@ -868,7 +868,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
-                printf("phone_list = %d no_phone_list= %d\n", val.phone_list.size(), val.no_phone_list.size());
+                printf("bodyerror_list = %d norm_list = %d playphone_list = %d\n", val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1230,6 +1230,7 @@ int main(int argc, char** argv) {
 
         /* 多线程测性能测试 */
         std::thread t[30];
+
         t[0]  = std::thread(thread_function_helmet);
         t[1]  = std::thread(thread_function_flame);
         t[2]  = std::thread(thread_function_refvest);
@@ -1249,6 +1250,7 @@ int main(int argc, char** argv) {
         t[17] = std::thread(thread_function_crowd);
         t[18] = std::thread(thread_function_wander);
         t[19] = std::thread(thread_function_fighting);
+
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1268,6 +1270,7 @@ int main(int argc, char** argv) {
         t[17].join();
         t[18].join();
         t[19].join();
+
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
         //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
