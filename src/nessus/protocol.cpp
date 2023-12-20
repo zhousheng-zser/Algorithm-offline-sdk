@@ -164,7 +164,7 @@ namespace glasssix {
 
     void nessus_protocol::init(std::string_view config_file_path) const {
         std::lock_guard<std::mutex> lock(
-            nessus_protocol_mtx); // ĘšÓĂ std::lock_guard ťńČĄťĽłâËřŁŹÔÚ×÷ÓĂÓň˝áĘřĘą×ÔśŻĘÍˇĹËř
+            nessus_protocol_mtx); // 使用 std::lock_guard 获取互斥锁，在作用域结束时自动释放锁
         impl_->init(config_file_path);
     }
 
