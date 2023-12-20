@@ -1039,27 +1039,27 @@ namespace glasssix {
     }
     void video_test(const std::string& save_path, const std::string& ans_path, video_data data_) {
         std::vector<abi::string> temp = find_file(save_path);
-        gx_tumble_api* api_temp       = new gx_tumble_api();
+        gx_smoke_api* api_temp       = new gx_smoke_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
         // quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
         // quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
         for (int i = 0; i < temp.size(); i++) {
-            auto val    = api_temp->safe_production_tumble(gx_img_api{
+            auto val    = api_temp->safe_production_smoke(gx_img_api{
                 abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"},
                 1 << 28});
             cv::Mat img = cv::imread(
                 abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"}
                     .c_str());
-            if (val.tumble_list.size() > 0) {
+            if (val.smoke_list.size() > 0) {
                 printf("%d.jpg --------\n", i + (data_.be_x * 60 + data_.be_y) * data_.fps);
-                for (int j = 0; j < val.tumble_list.size(); j++) {
-                    int x1      = val.tumble_list[j].x1;
-                    int x2      = val.tumble_list[j].x2;
-                    int y1      = val.tumble_list[j].y1;
-                    int y2      = val.tumble_list[j].y2;
-                    float score = val.tumble_list[j].score;
+                for (int j = 0; j < val.smoke_list.size(); j++) {
+                    int x1      = val.smoke_list[j].x1;
+                    int x2      = val.smoke_list[j].x2;
+                    int y1      = val.smoke_list[j].y1;
+                    int y2      = val.smoke_list[j].y2;
+                    float score = val.smoke_list[j].score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1222,8 +1222,9 @@ int main(int argc, char** argv) {
         // test_face_search();
         // test_face_compare();
         // test_face_liveness();
-        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 10, .ed_y = 0, .fps = 25};
-        // todo_video("/root/img/tumble.mp4", "/root/img/video", "/root/img/video_ans", data_);
+        // video_data data_{.be_x = 1, .be_y = 56, .ed_x = 2, .ed_y = 7, .fps = 30};
+        // printf("start run video\n");
+        // todo_video("/root/img/smoke_test.mp4", "/root/img/video_smoke", "/root/img/video_smoke/video_ans", data_);
 
         // yuv_test();
         //gif_test();
