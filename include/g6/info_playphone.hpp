@@ -30,7 +30,7 @@ namespace glasssix {
         };
         struct bodyerror_boxes {
             GX_BEGIN_FIELDS(bodyerror_boxes);
-            //GX_FIELD(error_list, error_keypoints); // 错误列表
+            GX_FIELD(error_list, error_keypoints); // 错误列表
             GX_FIELD(float, man_score); // 置信度
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y

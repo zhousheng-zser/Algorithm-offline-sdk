@@ -138,13 +138,13 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
-            char* ss = parser_parse(//LOCAL parser 鍗忚璋冪敤鍏ュ彛
-                instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
-            // printf("%s\n", full_name.data());
-            // printf("%s\n", ss);
+            //printf("%s\n", full_name.data());
             //printf("%s\n", param.dump().c_str());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", full_name.data());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", param.dump().c_str());
+            char* ss = parser_parse(
+                instance_.get(), full_name.data(), param.dump().c_str(), data.data(), data.size(), nullptr, 0);
+            //printf("%s\n", ss);
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", ss);
             return parse_raw_result(ss);
         }
@@ -164,7 +164,7 @@ namespace glasssix {
 
     void nessus_protocol::init(std::string_view config_file_path) const {
         std::lock_guard<std::mutex> lock(
-            nessus_protocol_mtx); // 浣跨敤 std::lock_guard 鑾峰彇浜掓枼閿侊紝鍦ㄤ綔鐢ㄥ煙缁撴潫鏃惰嚜鍔ㄩ噴鏀鹃攣
+            nessus_protocol_mtx); // 使用 std::lock_guard 获取互斥锁，在作用域结束时自动释放锁
         impl_->init(config_file_path);
     }
 
