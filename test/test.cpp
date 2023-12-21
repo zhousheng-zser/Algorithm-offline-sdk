@@ -965,7 +965,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/count6.jpg", static_cast<int>(1e9));
                 // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_crowd(img);
+                auto val = api_temp->safe_production_crowd(img,5);
                 printf("head_list = %d\n", val.head_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());

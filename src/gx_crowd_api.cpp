@@ -54,7 +54,7 @@ namespace glasssix {
     };
 
     //  安全生产 聚众检测
-    crowd_info gx_crowd_api::safe_production_crowd(const gx_img_api& mat) {
+    crowd_info gx_crowd_api::safe_production_crowd(const gx_img_api& mat, int min_cluster_size) {
         try {
             auto result_pool = pool_crowd.enqueue([&] {
                 if (thread_algo_crowd_ptr == nullptr) {
@@ -65,15 +65,16 @@ namespace glasssix {
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<crowd::detect>(ptr->crowd_handle,
                     crowd_detect_param{
-                        .instance_guid = "",
-                        .format        = _config->_crowd_config.format,
-                        .height        = mat.get_rows(),
-                        .width         = mat.get_cols(),
-                        .roi_x         = 0,
-                        .roi_y         = 0,
-                        .roi_width     = mat.get_cols(),
-                        .roi_height    = mat.get_rows(),
-                        .params        = crowd_detect_param::confidence_params{.area_threshold =
+                        .instance_guid    = "",
+                        .format           = _config->_crowd_config.format,
+                        .height           = mat.get_rows(),
+                        .width            = mat.get_cols(),
+                        .roi_x            = 0,
+                        .roi_y            = 0,
+                        .roi_width        = mat.get_cols(),
+                        .roi_height       = mat.get_rows(),
+                        .min_cluster_size = min_cluster_size,
+                        .params           = crowd_detect_param::confidence_params{.area_threshold =
                                                                             _config->_crowd_config.area_threshold},
                     },
                     str);

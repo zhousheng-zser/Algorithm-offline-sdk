@@ -6,6 +6,7 @@ file(
     CONFIGURE_DEPENDS
     test.cpp
     #nessus.cpp
+    #face.cpp
 )
 add_executable(${target_name} )
 

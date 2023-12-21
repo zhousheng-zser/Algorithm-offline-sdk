@@ -38,6 +38,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(std::int32_t, min_cluster_size);
         GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 
