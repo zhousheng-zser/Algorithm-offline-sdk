@@ -868,7 +868,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
-                printf("phone_list = %d no_phone_list= %d\n", val.phone_list.size(), val.no_phone_list.size());
+                printf("bodyerror_list = %d norm_list = %d playphone_list = %d\n", val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1230,44 +1230,47 @@ int main(int argc, char** argv) {
 
         /* 多线程测性能测试 */
         std::thread t[30];
-         //t[0]  = std::thread(thread_function_helmet);
-         //t[1]  = std::thread(thread_function_flame);
-         //t[2]  = std::thread(thread_function_refvest);
-         //t[3]  = std::thread(thread_function_search);
-         //t[4]  = std::thread(thread_function_integration);
-         //t[5]  = std::thread(thread_function_leavepost);
-         //t[6]  = std::thread(thread_function_sleep);
-         //t[7]  = std::thread(thread_function_smoke);
-         //t[8]  = std::thread(thread_function_playphone);
-         //t[9]  = std::thread(thread_function_onphone);
-         //t[10] = std::thread(thread_function_workcloth);
-         //t[12] = std::thread(thread_function_pedestrian);
-         //t[13] = std::thread(thread_function_Action_live_Blur);
-         //t[14] = std::thread(thread_function_smog);
-         //t[15] = std::thread(thread_function_tumble);
-         //t[16] = std::thread(thread_function_climb);
-         //t[17] = std::thread(thread_function_crowd);
-         //t[18] = std::thread(thread_function_wander);
-         //t[19] = std::thread(thread_function_fighting);
-         //t[0].join();
-         //t[1].join();
-         //t[2].join();
-         //t[3].join();
-         //t[4].join();
-         //t[5].join();
-         //t[6].join();
-         //t[7].join();
-         //t[8].join();
-         //t[9].join();
-         //t[10].join();
-         //t[12].join();
-         //t[13].join();
-         //t[14].join();
-         //t[15].join();
-         //t[16].join();
-         //t[17].join();
-         //t[18].join();
-         //t[19].join();
+
+        t[0]  = std::thread(thread_function_helmet);
+        t[1]  = std::thread(thread_function_flame);
+        t[2]  = std::thread(thread_function_refvest);
+        t[3]  = std::thread(thread_function_search);
+        t[4]  = std::thread(thread_function_integration);
+        t[5]  = std::thread(thread_function_leavepost);
+        t[6]  = std::thread(thread_function_sleep);
+        t[7]  = std::thread(thread_function_smoke);
+        t[8]  = std::thread(thread_function_playphone);
+        t[9]  = std::thread(thread_function_onphone);
+        t[10] = std::thread(thread_function_workcloth);
+        t[12] = std::thread(thread_function_pedestrian);
+        t[13] = std::thread(thread_function_Action_live_Blur);
+        t[14] = std::thread(thread_function_smog);
+        t[15] = std::thread(thread_function_tumble);
+        t[16] = std::thread(thread_function_climb);
+        t[17] = std::thread(thread_function_crowd);
+        t[18] = std::thread(thread_function_wander);
+        t[19] = std::thread(thread_function_fighting);
+
+        t[0].join();
+        t[1].join();
+        t[2].join();
+        t[3].join();
+        t[4].join();
+        t[5].join();
+        t[6].join();
+        t[7].join();
+        t[8].join();
+        t[9].join();
+        t[10].join();
+        t[12].join();
+        t[13].join();
+        t[14].join();
+        t[15].join();
+        t[16].join();
+        t[17].join();
+        t[18].join();
+        t[19].join();
+
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
         //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
