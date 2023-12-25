@@ -361,6 +361,16 @@ namespace glasssix {
         }
         return ans_list;
     }
+    std::vector<std::string> find_file_smoke(std::filesystem::path folder_path) {
+        std::vector<std::string> ans_list;
+        for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+            if (entry.is_regular_file()) {
+                std::string temp(entry.path());
+                ans_list.emplace_back(temp);
+            }
+        }
+        return ans_list;
+    }
     // 安全生产指标测试 烟火
     void safe_test1() {
         gx_flame_api* api_temp = new gx_flame_api();
@@ -1027,33 +1037,71 @@ namespace glasssix {
     void try_a_try(const std::string& name, const std::string& save_path, video_data data_) {
         cv::VideoCapture capture;
         capture.open(name);
+        //测试要求每张图片写上对应时间与帧率
+        std::string image_name;
+
+        int x = data_.be_x;
+        int y = data_.be_y;
+        int z = 0;//视频从第一帧开始
         for (int i = 0; i < (data_.ed_x * 60 + data_.ed_y) * data_.fps; i++) { // 结束时间
             cv::Mat img;
             capture >> img;
             if (img.empty())
                 break;
             if (i >= ((data_.be_x * 60 + data_.be_y) * data_.fps)) // 开始时间
-                cv::imwrite(save_path + "/" + std::to_string(i) + ".jpg", img);
+            {
+                // cv::imwrite(save_path + "/" + std::to_string(i) + ":" std::to_string() + ".jpg", img);
+                // 默认视频不超过一个小时
+                z++;// !天杀的,少了这个
+
+                if(z>30)
+                {
+                    y++;
+                    z%=30;
+                    // z++;
+                }
+                if(y>=60)
+                {
+                    x++;
+                    y%=60;
+                }
+                cv::imwrite(save_path + "/" + std::to_string(x) + "_" + std::to_string(y) + "_" + std::to_string(z) + ".jpg", img);
+                std::cout << " " << x << " " << y << " " << z << std::endl;
+            }
         }
         capture.release();
     }
     void video_test(const std::string& save_path, const std::string& ans_path, video_data data_) {
-        std::vector<abi::string> temp = find_file(save_path);
+        std::vector<std::string> temp = find_file_smoke(save_path);
+        std::vector<std::string> relative_path;
+        for(auto const& file : temp) {
+            relative_path.push_back(std::filesystem::relative(file,save_path).string());
+            std::cout << " " << file << std::endl;
+        }
+        std::cout << "相对路径: " << std::endl;
+        for(auto const& file : relative_path) {
+            std::cout << " " << file << std::endl;
+        }
         gx_smoke_api* api_temp       = new gx_smoke_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
         // quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
         // quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
+        std::cout << temp.size() << std::endl;
+        std::cout << relative_path.size() << std::endl;
         for (int i = 0; i < temp.size(); i++) {
-            auto val    = api_temp->safe_production_smoke(gx_img_api{
-                abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"},
+            std::cout << "for 循环 : " << i << std::endl;
+            std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
+            auto val    = api_temp->safe_production_smoke(gx_img_api{abi::string{temp[i] },
                 1 << 28});
-            cv::Mat img = cv::imread(
-                abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"}
+            cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
+            
             if (val.smoke_list.size() > 0) {
-                printf("%d.jpg --------\n", i + (data_.be_x * 60 + data_.be_y) * data_.fps);
+                std::cout << " I am here: " << std::endl;
+                std::cout << "****************" << std::endl << "****************" << std::endl << "****************" << std::endl << "****************" << std::endl << "****************" << std::endl ;
+                printf("%d.jpg --------\n", temp[i]);
                 for (int j = 0; j < val.smoke_list.size(); j++) {
                     int x1      = val.smoke_list[j].x1;
                     int x2      = val.smoke_list[j].x2;
@@ -1067,8 +1115,11 @@ namespace glasssix {
                         cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                     putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
                 }
+                //cv之前要先创建路径
+                std::filesystem::create_directories(ans_path);
+                std::cout << "return path: " << ans_path << std::endl;
                 cv::imwrite(
-                    ans_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg", img);
+                    ans_path + relative, img);
             }
         }
     }
@@ -1222,9 +1273,10 @@ int main(int argc, char** argv) {
         // test_face_search();
         // test_face_compare();
         // test_face_liveness();
+
         // video_data data_{.be_x = 1, .be_y = 56, .ed_x = 2, .ed_y = 7, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/img/smoke_test.mp4", "/root/img/video_smoke", "/root/img/video_smoke/video_ans", data_);
+        // todo_video("/root/img/smoke_test.mp4", "/root/img/video_smoke", "/root/img/video_smoke/video_ans/", data_);
 
         // yuv_test();
         //gif_test();
