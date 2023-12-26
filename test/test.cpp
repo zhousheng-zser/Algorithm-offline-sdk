@@ -874,6 +874,7 @@ namespace glasssix {
         gx_playphone_api* api_temp = new gx_playphone_api();
         int T                      = 1000;
         auto start                 = std::chrono::high_resolution_clock::now();
+#if 1   //这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
@@ -883,6 +884,30 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
+#else   //测试要求进行多图片检测
+        try {
+            std::vector< std::string> v_img;
+            for(auto enter : std::filesystem::directory_iterator("/root/img/playphone/")) {
+                if(enter.is_regular_file())
+                {
+                    std::string exit{enter.path().string()};
+                    v_img.push_back(exit);
+                    std::cout << "Found " << exit << std::endl;
+                    
+                    const gx_img_api img(abi::string(exit), static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_playphone(img);
+                    std::string relative_path{};
+                    size_t subPos = exit.rfind("/") + 1;
+                    relative_path = exit.substr(subPos);
+                    printf("image_name = %s bodyerror_list = %d norm_list = %d playphone_list = %d\n",relative_path.c_str(), val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
+                }
+            }
+            for(auto exit : v_img){
+            }
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
+        }
+#endif
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("playphone time = %lld microsecond\n", duration.count());
