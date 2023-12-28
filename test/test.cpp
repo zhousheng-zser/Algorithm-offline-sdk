@@ -1107,7 +1107,7 @@ namespace glasssix {
         for(auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_smoke_api* api_temp       = new gx_smoke_api();
+        gx_climb_api* api_temp       = new gx_climb_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1116,23 +1116,23 @@ namespace glasssix {
         std::cout << temp.size() << std::endl;
         std::cout << relative_path.size() << std::endl;
         for (int i = 0; i < temp.size(); i++) {
-            std::cout << "for 循环 : " << i << std::endl;
+            // std::cout << "for 循环 : " << i << std::endl;
             std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
-            auto val    = api_temp->safe_production_smoke(gx_img_api{abi::string{temp[i] },
-                1 << 28});
+            auto val    = api_temp->safe_production_climb(gx_img_api{abi::string{temp[i] },
+                1 << 28},abi::vector<climb_point>{
+                             climb_point{0,0}, climb_point{1920,0}, climb_point{1920,1080}, climb_point{0, 1080}});
             cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
             
-            if (val.smoke_list.size() > 0) {
+            if (val.climb_list.size() > 0) {
                 std::cout << " I am here: " << std::endl;
-                std::cout << "****************" << std::endl << "****************" << std::endl << "****************" << std::endl << "****************" << std::endl << "****************" << std::endl ;
-                printf("%d.jpg --------\n", temp[i]);
-                for (int j = 0; j < val.smoke_list.size(); j++) {
-                    int x1      = val.smoke_list[j].x1;
-                    int x2      = val.smoke_list[j].x2;
-                    int y1      = val.smoke_list[j].y1;
-                    int y2      = val.smoke_list[j].y2;
-                    float score = val.smoke_list[j].score;
+                printf("-------- %s.jpg\t --------\n", temp[i].c_str());
+                for (int j = 0; j < val.climb_list.size(); j++) {
+                    int x1      = val.climb_list[j].x1;
+                    int x2      = val.climb_list[j].x2;
+                    int y1      = val.climb_list[j].y1;
+                    int y2      = val.climb_list[j].y2;
+                    float score = val.climb_list[j].score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1142,7 +1142,7 @@ namespace glasssix {
                 }
                 //cv之前要先创建路径
                 std::filesystem::create_directories(ans_path);
-                std::cout << "return path: " << ans_path << std::endl;
+                // std::cout << "return path: " << ans_path << std::endl;
                 cv::imwrite(
                     ans_path + relative, img);
             }
@@ -1299,9 +1299,9 @@ int main(int argc, char** argv) {
         // test_face_compare();
         // test_face_liveness();
 
-        // video_data data_{.be_x = 1, .be_y = 56, .ed_x = 2, .ed_y = 7, .fps = 30};
+        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/img/smoke_test.mp4", "/root/img/video_smoke", "/root/img/video_smoke/video_ans/", data_);
+        // todo_video("/root/img/climb_test.mp4", "/root/img/video_climb", "/root/img/video_climb/video_ans/", data_);
 
         // yuv_test();
         //gif_test();
