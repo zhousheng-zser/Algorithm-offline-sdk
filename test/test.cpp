@@ -361,6 +361,16 @@ namespace glasssix {
         }
         return ans_list;
     }
+    std::vector<std::string> find_file_smoke(std::filesystem::path folder_path) {
+        std::vector<std::string> ans_list;
+        for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+            if (entry.is_regular_file()) {
+                std::string temp(entry.path());
+                ans_list.emplace_back(temp);
+            }
+        }
+        return ans_list;
+    }
     // 安全生产指标测试 烟火
     void safe_test1() {
         gx_flame_api* api_temp = new gx_flame_api();
@@ -864,6 +874,7 @@ namespace glasssix {
         gx_playphone_api* api_temp = new gx_playphone_api();
         int T                      = 1000;
         auto start                 = std::chrono::high_resolution_clock::now();
+#if 1   //这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
@@ -873,6 +884,30 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
+#else   //测试要求进行多图片检测
+        try {
+            std::vector< std::string> v_img;
+            for(auto enter : std::filesystem::directory_iterator("/root/img/playphone/")) {
+                if(enter.is_regular_file())
+                {
+                    std::string exit{enter.path().string()};
+                    v_img.push_back(exit);
+                    std::cout << "Found " << exit << std::endl;
+                    
+                    const gx_img_api img(abi::string(exit), static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_playphone(img);
+                    std::string relative_path{};
+                    size_t subPos = exit.rfind("/") + 1;
+                    relative_path = exit.substr(subPos);
+                    printf("image_name = %s bodyerror_list = %d norm_list = %d playphone_list = %d\n",relative_path.c_str(), val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
+                }
+            }
+            for(auto exit : v_img){
+            }
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
+        }
+#endif
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         printf("playphone time = %lld microsecond\n", duration.count());
@@ -1027,39 +1062,77 @@ namespace glasssix {
     void try_a_try(const std::string& name, const std::string& save_path, video_data data_) {
         cv::VideoCapture capture;
         capture.open(name);
+        //测试要求每张图片写上对应时间与帧率
+        std::string image_name;
+
+        int x = data_.be_x;
+        int y = data_.be_y;
+        int z = 0;//视频从第一帧开始
         for (int i = 0; i < (data_.ed_x * 60 + data_.ed_y) * data_.fps; i++) { // 结束时间
             cv::Mat img;
             capture >> img;
             if (img.empty())
                 break;
             if (i >= ((data_.be_x * 60 + data_.be_y) * data_.fps)) // 开始时间
-                cv::imwrite(save_path + "/" + std::to_string(i) + ".jpg", img);
+            {
+                // cv::imwrite(save_path + "/" + std::to_string(i) + ":" std::to_string() + ".jpg", img);
+                // 默认视频不超过一个小时
+                z++;// !天杀的,少了这个
+
+                if(z>30)
+                {
+                    y++;
+                    z%=30;
+                    // z++;
+                }
+                if(y>=60)
+                {
+                    x++;
+                    y%=60;
+                }
+                cv::imwrite(save_path + "/" + std::to_string(x) + "_" + std::to_string(y) + "_" + std::to_string(z) + ".jpg", img);
+                std::cout << " " << x << " " << y << " " << z << std::endl;
+            }
         }
         capture.release();
     }
     void video_test(const std::string& save_path, const std::string& ans_path, video_data data_) {
-        std::vector<abi::string> temp = find_file(save_path);
-        gx_tumble_api* api_temp       = new gx_tumble_api();
+        std::vector<std::string> temp = find_file_smoke(save_path);
+        std::vector<std::string> relative_path;
+        for(auto const& file : temp) {
+            relative_path.push_back(std::filesystem::relative(file,save_path).string());
+            std::cout << " " << file << std::endl;
+        }
+        std::cout << "相对路径: " << std::endl;
+        for(auto const& file : relative_path) {
+            std::cout << " " << file << std::endl;
+        }
+        gx_climb_api* api_temp       = new gx_climb_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
         // quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
         // quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
+        std::cout << temp.size() << std::endl;
+        std::cout << relative_path.size() << std::endl;
         for (int i = 0; i < temp.size(); i++) {
-            auto val    = api_temp->safe_production_tumble(gx_img_api{
-                abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"},
-                1 << 28});
-            cv::Mat img = cv::imread(
-                abi::string{save_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg"}
+            // std::cout << "for 循环 : " << i << std::endl;
+            std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
+            auto val    = api_temp->safe_production_climb(gx_img_api{abi::string{temp[i] },
+                1 << 28},abi::vector<climb_point>{
+                             climb_point{0,0}, climb_point{1920,0}, climb_point{1920,1080}, climb_point{0, 1080}});
+            cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
-            if (val.tumble_list.size() > 0) {
-                printf("%d.jpg --------\n", i + (data_.be_x * 60 + data_.be_y) * data_.fps);
-                for (int j = 0; j < val.tumble_list.size(); j++) {
-                    int x1      = val.tumble_list[j].x1;
-                    int x2      = val.tumble_list[j].x2;
-                    int y1      = val.tumble_list[j].y1;
-                    int y2      = val.tumble_list[j].y2;
-                    float score = val.tumble_list[j].score;
+            
+            if (val.climb_list.size() > 0) {
+                std::cout << " I am here: " << std::endl;
+                printf("-------- %s.jpg\t --------\n", temp[i].c_str());
+                for (int j = 0; j < val.climb_list.size(); j++) {
+                    int x1      = val.climb_list[j].x1;
+                    int x2      = val.climb_list[j].x2;
+                    int y1      = val.climb_list[j].y1;
+                    int y2      = val.climb_list[j].y2;
+                    float score = val.climb_list[j].score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1067,8 +1140,11 @@ namespace glasssix {
                         cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                     putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
                 }
+                //cv之前要先创建路径
+                std::filesystem::create_directories(ans_path);
+                // std::cout << "return path: " << ans_path << std::endl;
                 cv::imwrite(
-                    ans_path + "/" + std::to_string(i + (data_.be_x * 60 + data_.be_y) * data_.fps) + ".jpg", img);
+                    ans_path + relative, img);
             }
         }
     }
@@ -1222,8 +1298,10 @@ int main(int argc, char** argv) {
         // test_face_search();
         // test_face_compare();
         // test_face_liveness();
-        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 10, .ed_y = 0, .fps = 25};
-        // todo_video("/root/img/tumble.mp4", "/root/img/video", "/root/img/video_ans", data_);
+
+        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
+        // printf("start run video\n");
+        // todo_video("/root/img/climb_test.mp4", "/root/img/video_climb", "/root/img/video_climb/video_ans/", data_);
 
         // yuv_test();
         //gif_test();
