@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../include/g6/info_workcloth.hpp"
+#include "../../../include/g6/info_posture.hpp"
 #include "../common_protocols.hpp"
 #include "../../config.hpp"
 
@@ -40,6 +41,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(abi::vector<posture_info>, posture_info_list);
         GX_FIELD(confidence_params, params);
         GX_FIELD(workcloth_config::confidence_color_hsv_cfg, color_hsv_cfg);
         GX_END_FIELDS;

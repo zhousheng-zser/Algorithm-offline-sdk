@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.1.2";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CLIMB_V1.2.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -55,7 +55,8 @@ namespace glasssix {
     };
 
     //  安全生产 攀爬检测
-    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle) {
+    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle,
+        const abi::vector<posture_info>& posture_info_list) {
         if (quadrangle.size() != 4)
             throw source_code_aware_runtime_error(U8("Error: climb quadrangle.size()  != 4"));
         try {
@@ -66,6 +67,12 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 climb_info ans;
+                // 过滤掉姿态置信度小于0.5的
+                abi::vector<posture_info> posture_list_temp;
+                for (int i = 0; i < posture_info_list.size(); i++) {
+                    if (posture_info_list[i].score >= 0.5)
+                        posture_list_temp.emplace_back(posture_info_list[i]);
+                }
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<climb::detect>(ptr->climb_handle,
                     climb_detect_param{.instance_guid = "",
@@ -76,17 +83,18 @@ namespace glasssix {
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
                         .roi_height                   = mat.get_rows(),
+                        .posture_info_list            = posture_list_temp,
                         .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
                             .nms_thres                                              = _config->_climb_config.nms_thres,
-                            .little_target_conf_thres                               = _config->_climb_config.little_target_conf_thres,
-                            .x1                                                     = quadrangle[0].x,
-                            .y1                                                     = quadrangle[0].y,
-                            .x2                                                     = quadrangle[1].x,
-                            .y2                                                     = quadrangle[1].y,
-                            .x3                                                     = quadrangle[2].x,
-                            .y3                                                     = quadrangle[2].y,
-                            .x4                                                     = quadrangle[3].x,
-                            .y4                                                     = quadrangle[3].y
+                            .little_target_conf_thres = _config->_climb_config.little_target_conf_thres,
+                            .x1                       = quadrangle[0].x,
+                            .y1                       = quadrangle[0].y,
+                            .x2                       = quadrangle[1].x,
+                            .y2                       = quadrangle[1].y,
+                            .x3                       = quadrangle[2].x,
+                            .y3                       = quadrangle[2].y,
+                            .x4                       = quadrangle[3].x,
+                            .y4                       = quadrangle[3].y
 
 
                         }},
@@ -101,6 +109,11 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
+    }
+    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle) {
+        gx_posture_api* api_temp = new gx_posture_api();
+        auto posture_info_list   = api_temp->safe_production_posture(mat);
+        return safe_production_climb(mat, quadrangle, posture_info_list);
     }
 
 } // namespace glasssix
