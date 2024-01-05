@@ -1,6 +1,7 @@
 #pragma once
 #include "gx_api.hpp"
 #include "info_refvest.hpp"
+#include "gx_posture_api.hpp"
 
 namespace glasssix {
 
@@ -14,6 +15,9 @@ namespace glasssix {
 
         //  安全生产 反光衣检测
         refvest_info safe_production_refvest(const gx_img_api& mat);
+
+        //  安全生产 反光衣检测
+        refvest_info safe_production_refvest(const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list);
 
     private:
         class impl;

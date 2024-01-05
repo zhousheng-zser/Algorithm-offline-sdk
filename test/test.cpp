@@ -20,6 +20,7 @@
 #include <gx_onphone_api.hpp>
 #include <gx_pedestrian_api.hpp>
 #include <gx_playphone_api.hpp>
+#include <gx_posture_api.hpp>
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smog_api.hpp>
@@ -1046,6 +1047,29 @@ namespace glasssix {
         printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测姿态
+    void thread_function_posture() {
+        gx_posture_api* api_temp = new gx_posture_api();
+        printf("-------\n");
+        int T      = 1000;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
+                api_temp->safe_production_posture(img);
+                auto val = api_temp->safe_production_posture(img);
+                //printf("score =%f category=%d\n", val.info_list[0].score, val.info_list[0].key_points.size() );
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("flame time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
 } // namespace glasssix
 
 // 处理视频的
@@ -1328,6 +1352,7 @@ int main(int argc, char** argv) {
         t[17] = std::thread(thread_function_crowd);
         t[18] = std::thread(thread_function_wander);
         t[19] = std::thread(thread_function_fighting);
+        //t[20] = std::thread(thread_function_posture);
 
         t[0].join();
         t[1].join();
@@ -1347,7 +1372,7 @@ int main(int argc, char** argv) {
         t[16].join();
         t[17].join();
         t[18].join();
-        t[19].join();
+        //t[20].join();
 
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();

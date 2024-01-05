@@ -1,5 +1,6 @@
 #pragma once
 #include "gx_api.hpp"
+#include "gx_posture_api.hpp"
 #include "info_workcloth.hpp"
 
 namespace glasssix {
@@ -14,6 +15,10 @@ namespace glasssix {
 
         //  安全生产 工服检测
         workcloth_info safe_production_workcloth(const gx_img_api& mat, int color_hsv_list_id);
+
+        //  安全生产 工服检测
+        workcloth_info safe_production_workcloth(
+            const gx_img_api& mat, int color_hsv_list_id, const abi::vector<posture_info>& posture_info_list);
 
     private:
         class impl;

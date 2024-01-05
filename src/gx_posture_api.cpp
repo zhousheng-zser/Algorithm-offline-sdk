@@ -1,15 +1,15 @@
-﻿#include "gx_refvest_api.hpp"
+﻿#include "gx_posture_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_refvest_api::gx_refvest_api() : impl_{std::make_unique<impl>()} {}
-    gx_refvest_api::gx_refvest_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_refvest_api::~gx_refvest_api() {}
-    gx_refvest_api::gx_refvest_api(gx_refvest_api&&) noexcept            = default;
-    gx_refvest_api& gx_refvest_api::operator=(gx_refvest_api&&) noexcept = default;
-    class gx_refvest_api::impl {
+    gx_posture_api::gx_posture_api() : impl_{std::make_unique<impl>()} {}
+    gx_posture_api::gx_posture_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_posture_api::~gx_posture_api() {}
+    gx_posture_api::gx_posture_api(gx_posture_api&&) noexcept            = default;
+    gx_posture_api& gx_posture_api::operator=(gx_posture_api&&) noexcept = default;
+    class gx_posture_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_REFVEST_V2.2.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_POSTURE_V3.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -54,10 +54,8 @@ namespace glasssix {
         }
     };
 
-
-    //  安全生产 反光衣检测
-    refvest_info gx_refvest_api::safe_production_refvest(
-        const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
+    //  姿态检测
+    abi::vector<posture_info> gx_posture_api::safe_production_posture(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -65,43 +63,28 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                refvest_info ans;
-                // 过滤掉姿态置信度小于0.65的
-                abi::vector<posture_info> posture_list_temp;
-                for (int i = 0; i < posture_info_list.size(); i++) {
-                    if (posture_info_list[i].score >= 0.65)
-                        posture_list_temp.emplace_back(posture_info_list[i]);
-                }
+                abi::vector<posture_info> ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-                auto result = ptr->protocol_ptr.invoke<refvest::detect>(ptr->refvest_handle,
-                    refvest_detect_param{.instance_guid = "",
+                auto result = ptr->protocol_ptr.invoke<posture::detect>(ptr->posture_handle,
+                    posture_detect_param{.instance_guid = "",
+                        .format                         = 1,
                         .height                         = mat.get_rows(),
                         .width                          = mat.get_cols(),
                         .roi_x                          = 0,
                         .roi_y                          = 0,
                         .roi_width                      = mat.get_cols(),
-                        .roi_height                     = mat.get_rows(),
-                        .format                         = _config->_refvest_config.format,
-                        .posture_info_list              = posture_list_temp,
-                        .params =
-                            refvest_detect_param::confidence_params{.conf_thres = _config->_refvest_config.conf_thres,
-                                .nms_thres                                      = _config->_refvest_config.nms_thres}},
+                        .roi_height                     = mat.get_rows()},
                     str);
-                ans         = std::move(result.detect_info);
+
+                ans = std::move(result.info_list);
                 return ans;
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_refvest_dump.jpg");
+            bool flag = write_dump_img(mat, "_posture_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
-    }
-
-    refvest_info gx_refvest_api::safe_production_refvest(const gx_img_api& mat) {
-        gx_posture_api* api_temp = new gx_posture_api();
-        auto posture_info_list   = api_temp->safe_production_posture(mat);
-        return safe_production_refvest(mat, posture_info_list);
     }
 
 } // namespace glasssix

@@ -1,5 +1,6 @@
 #pragma once
 #include "gx_api.hpp"
+#include "gx_posture_api.hpp"
 #include "info_climb.hpp"
 
 namespace glasssix {
@@ -14,6 +15,10 @@ namespace glasssix {
 
         //  安全生产 攀爬检测
         climb_info safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle);
+
+        //  安全生产 攀爬检测
+        climb_info safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle,
+            const abi::vector<posture_info>& posture_info_list);
 
     private:
         class impl;

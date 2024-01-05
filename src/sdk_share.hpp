@@ -11,6 +11,7 @@
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
+#include "../src/nessus/protocols/posture.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
@@ -142,6 +143,7 @@ namespace glasssix {
             Function["onphone"]    = &algo_ptr::set_protocols_handl_onphone;
             Function["workcloth"]  = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian"] = &algo_ptr::set_protocols_handl_pedestrian;
+            Function["posture"]    = &algo_ptr::set_protocols_handl_posture;
         }
         void set_protocols_handl_climb() {
             _config->set_climb(_config->_path);
@@ -244,6 +246,10 @@ namespace glasssix {
             pedestrian_handle = protocol_ptr.make_instance<pedestrian>(pedestrian_new_param{
                 _config->_pedestrian_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_posture() {
+            posture_handle = protocol_ptr.make_instance<posture>(posture_new_param{
+                .device = -1, .models_directory =_config->_configure_directory.models_directory,.model_type= 1});
+        }
 
         nessus_protocol protocol_ptr;
         damocles damocles_handle;
@@ -265,6 +271,7 @@ namespace glasssix {
         onphone onphone_handle;
         workcloth workcloth_handle;
         pedestrian pedestrian_handle;
+        posture posture_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern algo_crowd_ptr* thread_algo_crowd_ptr;
