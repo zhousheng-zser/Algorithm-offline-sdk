@@ -1372,6 +1372,7 @@ int main(int argc, char** argv) {
         t[16].join();
         t[17].join();
         t[18].join();
+        t[19].join();
         //t[20].join();
 
         //     auto start    = std::chrono::high_resolution_clock::now();
