@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../include/g6/info_wander.hpp"
+#include "../../../include/g6/info_pedestrian.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -26,7 +27,6 @@ namespace glasssix {
             GX_FIELD(std::int64_t, current_time);
             GX_FIELD(std::int32_t, feature_table_size);
             GX_FIELD(double, feature_match_threshold);
-            GX_FIELD(double, person_conf);
             GX_FIELD(std::int32_t, device_id);
             GX_END_FIELDS;
 
@@ -42,6 +42,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(abi::vector<pedestrian_info::boxes>, person_list);
         GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 

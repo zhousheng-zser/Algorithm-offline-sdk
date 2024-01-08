@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../include/g6/info_smoke.hpp"
+#include "../../../include/g6/gx_posture_api.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -41,6 +42,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(abi::vector<posture_info>, posture_info_list);
         GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 

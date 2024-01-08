@@ -55,7 +55,8 @@ namespace glasssix {
     };
 
     //  抽烟检测
-    smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
+    smoke_info gx_smoke_api::safe_production_smoke(
+        const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -64,6 +65,12 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 smoke_info ans;
+                // 过滤掉姿态置信度小于0.6的
+                abi::vector<posture_info> posture_list_temp;
+                for (int i = 0; i < posture_info_list.size(); i++) {
+                    if (posture_info_list[i].score >= 0.6)
+                        posture_list_temp.emplace_back(posture_info_list[i]);
+                }
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<smoke::detect>(ptr->smoke_handle,
                     smoke_detect_param{.instance_guid = "",
@@ -74,12 +81,11 @@ namespace glasssix {
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
                         .roi_height                   = mat.get_rows(),
-                        .params = smoke_detect_param::confidence_params{
-                            .conf_thres               = _config->_smoke_config.conf_thres,
-                            .nms_thres                = _config->_smoke_config.nms_thres,
+                        .posture_info_list            = posture_list_temp,
+                        .params = smoke_detect_param::confidence_params{.conf_thres = _config->_smoke_config.conf_thres,
+                            .nms_thres                                              = _config->_smoke_config.nms_thres,
                             .little_target_conf_thres = _config->_smoke_config.little_target_conf_thres,
-                            .smoke_conf_thres         = _config->_smoke_config.smoke_conf_thres
-                            }},
+                            .smoke_conf_thres         = _config->_smoke_config.smoke_conf_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -91,6 +97,12 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
+    }
+    //  抽烟检测
+    smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
+        gx_posture_api* api_temp = new gx_posture_api();
+        auto posture_info_list   = api_temp->safe_production_posture(mat);
+        return safe_production_smoke(mat, posture_info_list);
     }
 
 } // namespace glasssix
