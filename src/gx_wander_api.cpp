@@ -47,7 +47,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WANDER_V2.0.5";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_WANDER_V2.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -65,7 +65,8 @@ namespace glasssix {
     };
 
     //  徘徊检测
-    wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id) {
+    wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id,
+        const abi::vector<pedestrian_info::boxes>& person_list) {
         if (!impl_->camera_id) {
             impl_->camera_id = device_id;
         } else if (impl_->camera_id != device_id)
@@ -82,6 +83,12 @@ namespace glasssix {
             wander_remove_id(x);
         }
         wander_info ans;
+        // 过滤掉行人置信度小于person_conf的
+        abi::vector<pedestrian_info::boxes> posture_list_temp;
+        for (int i = 0; i < person_list.size(); i++) {
+            if (person_list[i].score >= _config->_wander_config.person_conf)
+                posture_list_temp.emplace_back(person_list[i]);
+        }
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -99,12 +106,12 @@ namespace glasssix {
                         .roi_y                         = 0,
                         .roi_width                     = mat.get_cols(),
                         .roi_height                    = mat.get_rows(),
+                        .person_list                   = posture_list_temp,
                         .params =
                             wander_detect_param::confidence_params{
                                 .current_time            = current_time,
                                 .feature_table_size      = _config->_wander_config.feature_table_size,
                                 .feature_match_threshold = _config->_wander_config.feature_match_threshold,
-                                .person_conf             = _config->_wander_config.person_conf,
                                 .device_id               = device_id,
                             }},
                     str);
@@ -128,6 +135,13 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
+    }
+
+        //  徘徊检测
+    wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id) {
+        gx_pedestrian_api* api_temp = new gx_pedestrian_api();
+        auto person_list            = api_temp->safe_production_pedestrian(mat);
+        return safe_production_wander(mat, current_time, device_id, person_list.person_list);
     }
 
     bool gx_wander_api::wander_remove_id(int id) {

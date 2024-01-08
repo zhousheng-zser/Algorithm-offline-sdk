@@ -65,7 +65,7 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 workcloth_info ans;
-                // 过滤掉姿态置信度小于0.65的
+                // 过滤掉姿态置信度小于0.7的
                 abi::vector<posture_info> posture_list_temp;
                 for (int i = 0; i < posture_info_list.size(); i++) {
                     if (posture_info_list[i].score >= 0.7)
