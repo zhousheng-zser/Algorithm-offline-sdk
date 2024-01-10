@@ -663,7 +663,7 @@ namespace glasssix {
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/smog.png", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/smog/lQDPJyC9wEDvzQfNAaDNAaCw_OMd7wpXvSQFjflQQrDhAA_416_416.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smog(img);
                 printf("smog_list = %d\n", val.smog_list.size());
             } catch (const std::exception& ex) {
