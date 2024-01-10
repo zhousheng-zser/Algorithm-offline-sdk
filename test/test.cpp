@@ -1352,7 +1352,7 @@ int main(int argc, char** argv) {
         t[17] = std::thread(thread_function_crowd);
         t[18] = std::thread(thread_function_wander);
         t[19] = std::thread(thread_function_fighting);
-        //t[20] = std::thread(thread_function_posture);
+        t[20] = std::thread(thread_function_posture);
 
         t[0].join();
         t[1].join();
@@ -1373,7 +1373,7 @@ int main(int argc, char** argv) {
         t[17].join();
         t[18].join();
         t[19].join();
-        //t[20].join();
+        t[20].join();
 
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
