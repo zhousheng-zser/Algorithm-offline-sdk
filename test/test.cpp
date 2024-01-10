@@ -26,6 +26,7 @@
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
+#include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
 #include <opencv2/opencv.hpp>
@@ -830,6 +831,26 @@ namespace glasssix {
         printf("tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测车辆
+    void thread_function_vehicle() {
+        gx_vehicle_api* api_temp = new gx_vehicle_api();
+        int T                  = 100;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/vehicle.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_vehicle(img);
+                printf("vehicle_list = %d\n", val.vehicle_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("vehicle time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
     // 多线程测徘徊
     void thread_function_wander() {
         gx_wander_api* api_temp = new gx_wander_api();
@@ -1344,6 +1365,7 @@ int main(int argc, char** argv) {
         t[8]  = std::thread(thread_function_playphone);
         t[9]  = std::thread(thread_function_onphone);
         t[10] = std::thread(thread_function_workcloth);
+        t[11] = std::thread(thread_function_vehicle);
         t[12] = std::thread(thread_function_pedestrian);
         t[13] = std::thread(thread_function_Action_live_Blur);
         t[14] = std::thread(thread_function_smog);
@@ -1365,6 +1387,7 @@ int main(int argc, char** argv) {
         t[8].join();
         t[9].join();
         t[10].join();
+        t[11].join();
         t[12].join();
         t[13].join();
         t[14].join();

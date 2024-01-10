@@ -131,6 +131,12 @@ namespace glasssix {
         temp.get_to(_tumble_config);
         tumble_is_load = true;
     }
+    void config::set_vehicle(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/vehicle.json");
+        temp.get_to(_vehicle_config);
+        vehicle_is_load = true;
+    }
     void config::set_wander(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/wander.json");

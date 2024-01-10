@@ -165,6 +165,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct vehicle_config {
+        GX_BEGIN_FIELDS(vehicle_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct wander_config {
         GX_BEGIN_FIELDS(wander_config);
         GX_FIELD(int, device);
@@ -269,6 +278,7 @@ namespace glasssix {
         sleep_config _sleep_config;
         smoke_config _smoke_config;
         tumble_config _tumble_config;
+        vehicle_config _vehicle_config;
         wander_config _wander_config;
         leavepost_config _leavepost_config;
         playphone_config _playphone_config;
@@ -292,6 +302,7 @@ namespace glasssix {
         void set_sleep(const abi::string& path);
         void set_smoke(const abi::string& path);
         void set_tumble(const abi::string& path);
+        void set_vehicle(const abi::string& path);
         void set_wander(const abi::string& path);
         void set_leavepost(const abi::string& path);
         void set_playphone(const abi::string& path);
@@ -316,6 +327,7 @@ namespace glasssix {
         bool sleep_is_load               = false;
         bool smoke_is_load               = false;
         bool tumble_is_load              = false;
+        bool vehicle_is_load             = false;
         bool wander_is_load              = false;
         bool leavepost_is_load           = false;
         bool playphone_is_load           = false;
