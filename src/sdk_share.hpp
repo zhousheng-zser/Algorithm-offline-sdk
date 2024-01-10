@@ -20,6 +20,7 @@
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
 #include "../src/nessus/protocols/tumble.hpp"
+#include "../src/nessus/protocols/vehicle.hpp"
 #include "../src/nessus/protocols/wander.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
@@ -137,6 +138,7 @@ namespace glasssix {
             Function["sleep"]      = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]      = &algo_ptr::set_protocols_handl_smoke;
             Function["tumble"]     = &algo_ptr::set_protocols_handl_tumble;
+            Function["vehicle"]     = &algo_ptr::set_protocols_handl_vehicle;
             Function["wander"]     = &algo_ptr::set_protocols_handl_wander;
             Function["leavepost"]  = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"]  = &algo_ptr::set_protocols_handl_playphone;
@@ -216,6 +218,11 @@ namespace glasssix {
             tumble_handle = protocol_ptr.make_instance<tumble>(
                 tumble_new_param{_config->_tumble_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_vehicle() {
+            _config->set_vehicle(_config->_path);
+            vehicle_handle = protocol_ptr.make_instance<vehicle>(
+                vehicle_new_param{_config->_vehicle_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_wander() {
             _config->set_wander(_config->_path);
             wander_handle = protocol_ptr.make_instance<wander>(
@@ -265,6 +272,7 @@ namespace glasssix {
         sleep sleep_handle;
         smoke smoke_handle;
         tumble tumble_handle;
+        vehicle vehicle_handle;
         wander wander_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
