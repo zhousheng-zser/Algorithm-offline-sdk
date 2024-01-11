@@ -21,9 +21,9 @@ namespace glasssix {
         };
         GX_BEGIN_FIELDS(sleep_info);
 
-        GX_FIELD(abi::vector<boxes>, desk_list); //   趴桌子
+        //GX_FIELD(abi::vector<boxes>, desk_list); //   趴桌子
         GX_FIELD(abi::vector<boxes>, lying_list); //  躺着
-        GX_FIELD(abi::vector<boxes>, standing_list); // 站着
+        //GX_FIELD(abi::vector<boxes>, standing_list); // 站着
         GX_FIELD(abi::vector<boxes>, work_list); // 工作
         GX_END_FIELDS;
 

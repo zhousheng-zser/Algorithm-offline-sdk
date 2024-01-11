@@ -458,21 +458,21 @@ namespace glasssix {
             try {
                 const gx_img_api img(img_list[i], 1 << 30);
                 auto val = api_temp->safe_production_sleep(img);
-                safe_file << "desk_list = " << val.desk_list.size() << "\n";
-                for (int j = 0; j < val.desk_list.size(); j++)
-                    safe_file << "score = " << val.desk_list[j].score << " x1 = " << val.desk_list[j].x1
-                              << " y1 = " << val.desk_list[j].y1 << " x2 = " << val.desk_list[j].x2
-                              << " y2 = " << val.desk_list[j].y2 << "\n";
+                //safe_file << "desk_list = " << val.desk_list.size() << "\n";
+                //for (int j = 0; j < val.desk_list.size(); j++)
+                //    safe_file << "score = " << val.desk_list[j].score << " x1 = " << val.desk_list[j].x1
+                //              << " y1 = " << val.desk_list[j].y1 << " x2 = " << val.desk_list[j].x2
+                //              << " y2 = " << val.desk_list[j].y2 << "\n";
                 safe_file << "lying_list = " << val.lying_list.size() << "\n";
                 for (int j = 0; j < val.lying_list.size(); j++)
                     safe_file << "score = " << val.lying_list[j].score << " x1 = " << val.lying_list[j].x1
                               << " y1 = " << val.lying_list[j].y1 << " x2 = " << val.lying_list[j].x2
                               << " y2 = " << val.lying_list[j].y2 << "\n";
-                safe_file << "standing_list = " << val.standing_list.size() << "\n";
-                for (int j = 0; j < val.standing_list.size(); j++)
-                    safe_file << "score = " << val.standing_list[j].score << " x1 = " << val.standing_list[j].x1
-                              << " y1 = " << val.standing_list[j].y1 << " x2 = " << val.standing_list[j].x2
-                              << " y2 = " << val.standing_list[j].y2 << "\n";
+                //safe_file << "standing_list = " << val.standing_list.size() << "\n";
+                //for (int j = 0; j < val.standing_list.size(); j++)
+                //    safe_file << "score = " << val.standing_list[j].score << " x1 = " << val.standing_list[j].x1
+                //              << " y1 = " << val.standing_list[j].y1 << " x2 = " << val.standing_list[j].x2
+                //              << " y2 = " << val.standing_list[j].y2 << "\n";
                 safe_file << "work_list = " << val.work_list.size() << "\n";
                 for (int j = 0; j < val.work_list.size(); j++)
                     safe_file << "score = " << val.work_list[j].score << " x1 = " << val.work_list[j].x1
@@ -782,8 +782,8 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/sleep.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_sleep(img);
-                printf("desk_list = %d lying_list = %d standing_list = %d work_list = %d\n", val.desk_list.size(),
-                    val.lying_list.size(), val.standing_list.size(), val.work_list.size());
+                printf("lying_list = %d work_list = %d\n", 
+                    val.lying_list.size(), val.work_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
