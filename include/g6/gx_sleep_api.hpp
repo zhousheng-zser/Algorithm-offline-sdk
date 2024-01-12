@@ -14,6 +14,8 @@ namespace glasssix {
 
         //  安全生产 睡岗检测
         sleep_info safe_production_sleep(const gx_img_api& mat);
+        //  安全生产 睡岗检测
+        sleep_info safe_production_sleep(const gx_img_api& mat, int device_id);
 
     private:
         class impl;
