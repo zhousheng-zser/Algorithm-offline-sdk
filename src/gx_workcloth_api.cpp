@@ -12,6 +12,9 @@ namespace glasssix {
     class gx_workcloth_api::impl {
     public:
         void init() {
+            if (api_temp == nullptr) {
+                api_temp = new gx_posture_api();
+            }
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -33,6 +36,7 @@ namespace glasssix {
             init();
         }
         ~impl() {}
+        gx_posture_api* api_temp = nullptr;
 
     private:
         secret_key_empower empower;
@@ -101,8 +105,7 @@ namespace glasssix {
 
     //  工服检测
     workcloth_info gx_workcloth_api::safe_production_workcloth(const gx_img_api& mat, int color_hsv_list_id) {
-        gx_posture_api* api_temp = new gx_posture_api();
-        auto posture_info_list   = api_temp->safe_production_posture(mat);
+        auto posture_info_list   = impl_->api_temp->safe_production_posture(mat);
         return safe_production_workcloth(mat, color_hsv_list_id, posture_info_list);
     }
 

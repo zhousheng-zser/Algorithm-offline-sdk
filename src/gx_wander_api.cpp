@@ -15,6 +15,9 @@ namespace glasssix {
     public:
         void init() {
             wander_map.clear();
+            if (api_temp == nullptr) {
+                api_temp = new gx_pedestrian_api();
+            }
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -43,6 +46,7 @@ namespace glasssix {
             std::int64_t last_time = 0;
         };
         std::unordered_map<std::int32_t, person_cache> wander_map;
+        gx_pedestrian_api* api_temp = nullptr;
 
     private:
         secret_key_empower empower;
@@ -137,10 +141,9 @@ namespace glasssix {
         }
     }
 
-        //  徘徊检测
+    //  徘徊检测
     wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id) {
-        gx_pedestrian_api* api_temp = new gx_pedestrian_api();
-        auto person_list            = api_temp->safe_production_pedestrian(mat);
+        auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
         return safe_production_wander(mat, current_time, device_id, person_list.person_list);
     }
 
