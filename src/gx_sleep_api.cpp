@@ -74,8 +74,50 @@ namespace glasssix {
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
                         .roi_height                   = mat.get_rows(),
-                        .params = sleep_detect_param::confidence_params{.conf_thres = _config->_sleep_config.conf_thres,
-                            .nms_thres = _config->_sleep_config.nms_thres}},
+                        .params = sleep_detect_param::confidence_params{
+                            .conf_thres         = _config->_sleep_config.conf_thres,
+                            .nms_thres          = _config->_sleep_config.nms_thres,
+                            .frame_count_thres  = 1,
+                            .device_id          = -1
+                            }},
+                    str);
+
+                ans = std::move(result.detect_info);
+                return ans;
+            });
+            return result_pool.get();
+        } catch (const std::exception& ex) {
+            bool flag = write_dump_img(mat, "_sleep_dump.jpg");
+            throw source_code_aware_runtime_error{
+                ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
+        }
+    }
+    //  睡岗检测
+    sleep_info gx_sleep_api::safe_production_sleep(const gx_img_api& mat, int device_id) {
+        try {
+            auto result_pool = pool->enqueue([&] {
+                std::thread::id id_ = std::this_thread::get_id();
+                if (all_thread_algo_ptr[id_] == nullptr) {
+                    all_thread_algo_ptr[id_] = new algo_ptr();
+                }
+                auto ptr = all_thread_algo_ptr[id_];
+                sleep_info ans;
+                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+                auto result = ptr->protocol_ptr.invoke<sleep::detect>(ptr->sleep_handle,
+                    sleep_detect_param{.instance_guid = "",
+                        .format                       = _config->_sleep_config.format,
+                        .height                       = mat.get_rows(),
+                        .width                        = mat.get_cols(),
+                        .roi_x                        = 0,
+                        .roi_y                        = 0,
+                        .roi_width                    = mat.get_cols(),
+                        .roi_height                   = mat.get_rows(),
+                        .params = sleep_detect_param::confidence_params{
+                            .conf_thres         = _config->_sleep_config.conf_thres,
+                            .nms_thres          = _config->_sleep_config.nms_thres,
+                            .frame_count_thres  = _config->_sleep_config.frame_count_thres,
+                            .device_id          = device_id
+                            }},
                     str);
 
                 ans = std::move(result.detect_info);

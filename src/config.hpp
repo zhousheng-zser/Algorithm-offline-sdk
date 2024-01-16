@@ -140,6 +140,8 @@ namespace glasssix {
         GX_BEGIN_FIELDS(sleep_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(int, frame_count_thres);
+        // GX_FIELD(int, device_id);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
