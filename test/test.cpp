@@ -664,7 +664,7 @@ namespace glasssix {
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/smog/lQDPJyC9wEDvzQfNAaDNAaCw_OMd7wpXvSQFjflQQrDhAA_416_416.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/smog.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smog(img);
                 printf("smog_list = %d\n", val.smog_list.size());
             } catch (const std::exception& ex) {
@@ -683,7 +683,7 @@ namespace glasssix {
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/refvest.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/refvest.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_refvest(img);
                 printf("without_refvest_list = %d with_refvest_list = %d\n", val.without_refvest_list.size(),
                     val.with_refvest_list.size());
@@ -756,17 +756,17 @@ namespace glasssix {
         int T              = 100;
         while (T--) {
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[0]);
-            printf("BDFACE_ACTION_LIVE_BLINK %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            // printf("BDFACE_ACTION_LIVE_BLINK %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
-            printf("BDFACE_ACTION_LIVE_OPEN_MOUTH %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            // printf("BDFACE_ACTION_LIVE_OPEN_MOUTH %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
-            printf("BDFACE_ACTION_LIVE_NOD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            // printf("BDFACE_ACTION_LIVE_NOD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
-            printf("BDFACE_ACTION_LIVE_LEFT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            // printf("BDFACE_ACTION_LIVE_LEFT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
-            printf("BDFACE_ACTION_LIVE_RIGHT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            // printf("BDFACE_ACTION_LIVE_RIGHT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             auto val = api_temp->face_blur(img[5]);
-            printf("blur ====== %.2f\n", val.clarity[0]);
+            // printf("blur ====== %.2f\n", val.clarity[0]);
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -796,20 +796,26 @@ namespace glasssix {
     // 多线程测抽烟
     void thread_function_smoke() {
         gx_smoke_api* api_temp = new gx_smoke_api();
-        int T                  = 1000;
+        int T                  = 10000;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/smoke.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smoke(img);
-                printf("norm_list = %d smoke_list = %d\n", val.norm_list.size(), val.smoke_list.size());
+                //printf("norm_list = %d smoke_list = %d\n", val.norm_list.size(), val.smoke_list.size());
+                auto end      = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                printf("smoke only  time = %lld microsecond\n", duration);
             } catch (const std::exception& ex) {
+                auto end = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                printf("smoke error time = %lld microsecond\n", duration);
                 printf("error =  %s\n", ex.what());
             }
         }
         auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("smoke time = %lld microsecond\n", duration.count());
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        printf("smoke time = %lld microsecond\n", duration);
         delete api_temp;
     }
     // 多线程测跌倒
@@ -819,7 +825,7 @@ namespace glasssix {
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/tumble.png", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/tumble.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_tumble(img);
                 printf("stand_list = %d tumble_list = %d\n", val.stand_list.size(), val.tumble_list.size());
             } catch (const std::exception& ex) {
@@ -879,7 +885,7 @@ namespace glasssix {
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/leavepost.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/leavepost.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_leavepost(img);
                 printf("hat_list = %d\n", val.hat_list.size());
             } catch (const std::exception& ex) {
@@ -899,7 +905,7 @@ namespace glasssix {
 #if 1   //这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/playphone.jpeg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/playphone.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 printf("bodyerror_list = %d norm_list = %d playphone_list = %d\n", val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
             } catch (const std::exception& ex) {
@@ -1020,7 +1026,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             auto start = std::chrono::high_resolution_clock::now();
             try {
-                const gx_img_api img("/root/img/count6.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/crowd.jpg", static_cast<int>(1e9));
                 // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_crowd(img,5);
                 printf("head_list = %d\n", val.head_list.size());
@@ -1041,21 +1047,21 @@ namespace glasssix {
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img0("/root/img/0.jpeg", static_cast<int>(1e9));
+                gx_img_api img0("/root/img/0.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img0);
-                gx_img_api img1("/root/img/1.jpeg", static_cast<int>(1e9));
+                gx_img_api img1("/root/img/1.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img1);
-                gx_img_api img2("/root/img/2.jpeg", static_cast<int>(1e9));
+                gx_img_api img2("/root/img/2.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img2);
-                gx_img_api img3("/root/img/3.jpeg", static_cast<int>(1e9));
+                gx_img_api img3("/root/img/3.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img3);
-                gx_img_api img4("/root/img/4.jpeg", static_cast<int>(1e9));
+                gx_img_api img4("/root/img/4.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img4);
-                gx_img_api img5("/root/img/5.jpeg", static_cast<int>(1e9));
+                gx_img_api img5("/root/img/5.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img5);
-                gx_img_api img6("/root/img/6.jpeg", static_cast<int>(1e9));
+                gx_img_api img6("/root/img/6.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img6);
-                gx_img_api img7("/root/img/7.jpeg", static_cast<int>(1e9));
+                gx_img_api img7("/root/img/7.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_fighting(img7);
                 printf("score =%f category=%d\n", val.score, val.category);
 
@@ -1076,7 +1082,7 @@ namespace glasssix {
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/posture.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_posture(img);
                 auto val = api_temp->safe_production_posture(img);
                 //printf("score =%f category=%d\n", val.info_list[0].score, val.info_list[0].key_points.size() );
@@ -1152,32 +1158,34 @@ namespace glasssix {
         for(auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_climb_api* api_temp       = new gx_climb_api();
+        gx_sleep_api* api_temp       = new gx_sleep_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
         // quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
         // quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
+        
         std::cout << temp.size() << std::endl;
         std::cout << relative_path.size() << std::endl;
+        int F = 1;
+        while(F--){
         for (int i = 0; i < temp.size(); i++) {
             // std::cout << "for 循环 : " << i << std::endl;
             std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
-            auto val    = api_temp->safe_production_climb(gx_img_api{abi::string{temp[i] },
-                1 << 28},abi::vector<climb_point>{
-                             climb_point{0,0}, climb_point{1920,0}, climb_point{1920,1080}, climb_point{0, 1080}});
+            auto val    = api_temp->safe_production_sleep(gx_img_api{abi::string{temp[i] },
+                1 << 28});
             cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
-            
-            if (val.climb_list.size() > 0) {
+#if 1
+            if (val.lying_list.size() > 0) {
                 std::cout << " I am here: " << std::endl;
                 printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                for (int j = 0; j < val.climb_list.size(); j++) {
-                    int x1      = val.climb_list[j].x1;
-                    int x2      = val.climb_list[j].x2;
-                    int y1      = val.climb_list[j].y1;
-                    int y2      = val.climb_list[j].y2;
-                    float score = val.climb_list[j].score;
+                for (int j = 0; j < val.lying_list.size(); j++) {
+                    int x1      = val.lying_list[j].x1;
+                    int x2      = val.lying_list[j].x2;
+                    int y1      = val.lying_list[j].y1;
+                    int y2      = val.lying_list[j].y2;
+                    float score = val.lying_list[j].score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1191,12 +1199,40 @@ namespace glasssix {
                 cv::imwrite(
                     ans_path + relative, img);
             }
+// #else
+            // ans_path += "2";//常量,不允许自加
+            std::string new_path = ans_path + "2/";
+            if (val.work_list.size() > 0) {
+                std::cout << " I am here: " << std::endl;
+                printf("-------- %s.jpg\t --------\n", temp[i].c_str());
+                for (int j = 0; j < val.work_list.size(); j++) {
+                    int x1      = val.work_list[j].x1;
+                    int x2      = val.work_list[j].x2;
+                    int y1      = val.work_list[j].y1;
+                    int y2      = val.work_list[j].y2;
+                    float score = val.work_list[j].score;
+                    rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                    std::string text  = std::to_string(score);
+                    cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                    cv::rectangle(img, cv::Point(x1, y1),
+                        cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                    putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                }
+                //cv之前要先创建路径
+                std::filesystem::create_directories(new_path);
+                std::cout << "return path: " << new_path << std::endl;
+                cv::imwrite(
+                    new_path + relative, img);
+            }
+#endif
+
+        }
         }
     }
 
     void todo_video(
         const std::string& name, const std::string& save_path, const std::string& ans_path, video_data data_) {
-        try_a_try(name, save_path, data_);
+        // try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用
         video_test(save_path, ans_path, data_);
     }
 
@@ -1346,7 +1382,7 @@ int main(int argc, char** argv) {
 
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/img/climb_test.mp4", "/root/img/video_climb", "/root/img/video_climb/video_ans/", data_);
+        // todo_video("/root/img/climb_test.mp4", "/root/img/test/", "/root/img/test/ans/", data_);
 
         // yuv_test();
         //gif_test();
@@ -1375,7 +1411,7 @@ int main(int argc, char** argv) {
         t[18] = std::thread(thread_function_wander);
         t[19] = std::thread(thread_function_fighting);
         t[20] = std::thread(thread_function_posture);
-
+        
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1384,7 +1420,7 @@ int main(int argc, char** argv) {
         t[5].join();
         t[6].join();
         t[7].join();
-        t[8].join();
+        t[8].join(); 
         t[9].join();
         t[10].join();
         t[11].join();

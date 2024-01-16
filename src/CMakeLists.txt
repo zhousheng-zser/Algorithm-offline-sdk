@@ -1,5 +1,6 @@
 ﻿set(target_name gx-offline-recognition)
 set(package_name GxOfflineRecognition)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 add_library(${target_name} SHARED)
 
@@ -13,7 +14,7 @@ if(WIN32)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
-	set(target_version 2.0.2)
+	set(target_version 2.0.4)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
