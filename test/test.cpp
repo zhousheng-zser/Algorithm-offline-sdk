@@ -780,7 +780,7 @@ namespace glasssix {
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/sleep.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/sleep1.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_sleep(img);
                 printf("lying_list = %d work_list = %d\n", 
                     val.lying_list.size(), val.work_list.size());
