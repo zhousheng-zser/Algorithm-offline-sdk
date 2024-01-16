@@ -243,6 +243,36 @@
                 }
             }
         },
+        {
+            "name": "rk3588-sophon",
+            "displayName": "Linux Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "GX_WITH_NET": "OFF",
+                "GX_WITH_TESTS": "OFF",
+                "GX_WITH_JNI": "OFF",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "GX_OPENCV_ROOT": "/home/linaro/install/opencv-4.7.0",
+                "GX_CV_SDK_ROOT": "/home/linaro/Glasssix_CV_SDK_beta",
+                "GX_MISCELLANEOUS_ROOT": "/home/linaro/install/miscellaneous-debian",
+                "GX_TOOLHAIN_TARGET_NAME": "RK3588",
+                "GX_LICENSECLIENT_ROOT": "/home/linaro/install/LicenseClient",
+                "CMAKE_C_COMPILER": "/usr/local/gcc-11/bin/gcc",
+                "CMAKE_CXX_COMPILER": "/usr/local/gcc-11/bin/g++"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/zser/$ms{projectDirName}"
+                }
+            }
+        },
 
         {
             "name": "rk3588-debug",

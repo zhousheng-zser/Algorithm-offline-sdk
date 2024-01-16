@@ -1,6 +1,7 @@
 #pragma once
 #include "gx_api.hpp"
 #include "info_playphone.hpp"
+#include "gx_posture_api.hpp"
 
 namespace glasssix {
 
@@ -14,6 +15,10 @@ namespace glasssix {
 
         //  安全生产 玩手机检测
         playphone_info safe_production_playphone(const gx_img_api& mat);
+
+        //  安全生产 玩手机检测
+        playphone_info safe_production_playphone(
+            const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list);
 
     private:
         class impl;
