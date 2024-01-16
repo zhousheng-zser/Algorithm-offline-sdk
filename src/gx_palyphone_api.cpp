@@ -11,6 +11,9 @@ namespace glasssix {
     class gx_playphone_api::impl {
     public:
         void init() {
+            if (api_temp == nullptr) {
+                api_temp = new gx_posture_api();
+            }
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -32,11 +35,12 @@ namespace glasssix {
             init();
         }
         ~impl() {}
+        gx_posture_api* api_temp = nullptr;
 
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PLAYPHONE_V2.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PLAYPHONE_V2.2.1";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -54,7 +58,8 @@ namespace glasssix {
     };
 
     //  玩手机检测
-    playphone_info gx_playphone_api::safe_production_playphone(const gx_img_api& mat) {
+    playphone_info gx_playphone_api::safe_production_playphone(
+        const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -63,6 +68,12 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 playphone_info ans;
+                // 过滤掉姿态置信度小于0.6的
+                abi::vector<posture_info> posture_list_temp;
+                for (int i = 0; i < posture_info_list.size(); i++) {
+                    if (posture_info_list[i].score >= 0.6)
+                        posture_list_temp.emplace_back(posture_info_list[i]);
+                }
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<playphone::detect>(ptr->playphone_handle,
                     playphone_detect_param{.instance_guid = "",
@@ -73,13 +84,13 @@ namespace glasssix {
                         .roi_y                            = 0,
                         .roi_width                        = mat.get_cols(),
                         .roi_height                       = mat.get_rows(),
-                        .params                           = playphone_detect_param::confidence_params{.head_conf_thres =
-                                                                                _config->_playphone_config.head_conf_thres,
-                                                      .head_nms_thres = _config->_playphone_config.head_nms_thres,
-                                                      .phone_conf_thres =
-                                                                                _config->_playphone_config.phone_conf_thres,
-                                                      .phone_nms_thres = _config->_playphone_config.phone_nms_thres
-                                                      }},
+                        .posture_info_list                = posture_list_temp,
+                        .params =
+                            playphone_detect_param::confidence_params{
+                                .head_conf_thres  = _config->_playphone_config.head_conf_thres,
+                                .head_nms_thres   = _config->_playphone_config.head_nms_thres,
+                                .phone_conf_thres = _config->_playphone_config.phone_conf_thres,
+                                .phone_nms_thres  = _config->_playphone_config.phone_nms_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -93,4 +104,9 @@ namespace glasssix {
         }
     }
 
+
+    playphone_info gx_playphone_api::safe_production_playphone(const gx_img_api& mat) {
+        auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
+        return safe_production_playphone(mat, posture_info_list);
+    }
 } // namespace glasssix
