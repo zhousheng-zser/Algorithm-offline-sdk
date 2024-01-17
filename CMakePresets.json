@@ -226,7 +226,7 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-4.7.0",
                 "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta",
-              "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
+                "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",
                 "CMAKE_C_COMPILER": "gcc-11",
@@ -253,14 +253,14 @@
                 "GX_WITH_NET": "OFF",
                 "GX_WITH_TESTS": "OFF",
                 "GX_WITH_JNI": "OFF",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "GX_OPENCV_ROOT": "/home/linaro/install/opencv-4.7.0",
+                "CMAKE_BUILD_TYPE": "Release",
+                "GX_OPENCV_ROOT": "/home/linaro/install/opencv-4.7.0-ubuntu",
                 "GX_CV_SDK_ROOT": "/home/linaro/Glasssix_CV_SDK_beta",
-                "GX_MISCELLANEOUS_ROOT": "/home/linaro/install/miscellaneous-debian",
+                "GX_MISCELLANEOUS_ROOT": "/home/linaro/install/miscellaneous-sophon",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/home/linaro/install/LicenseClient",
-                "CMAKE_C_COMPILER": "/usr/local/gcc-11/bin/gcc",
-                "CMAKE_CXX_COMPILER": "/usr/local/gcc-11/bin/g++"
+                "CMAKE_C_COMPILER": "/usr/local/gcc-11.4.0/bin/gcc-11.4",
+                "CMAKE_CXX_COMPILER": "/usr/local/gcc-11.4.0/bin/g++-11.4"
             },
             "condition": {
                 "type": "equals",
@@ -314,6 +314,12 @@
             "name": "rk3588-debug",
             "configurePreset": "rk3588-debug",
             "configuration": "Debug",
+            "jobs": 4
+        },
+        {
+            "name": "rk3588-sophon",
+            "configurePreset": "rk3588-sophon",
+            "configuration": "Release",
             "jobs": 4
         },
         {

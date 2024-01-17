@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 namespace glasssix {
-
     gx_wander_api::gx_wander_api() : impl_{std::make_unique<impl>()} {}
     gx_wander_api::gx_wander_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_wander_api::~gx_wander_api() {}
@@ -41,9 +40,11 @@ namespace glasssix {
         ~impl() {}
 
         int camera_id = 0; // 摄像头ID
+        int category  = 0; // 0:未分类 1:徘徊 2:越界
         struct person_cache {
             std::int64_t sum_time  = 0;
             std::int64_t last_time = 0;
+            int x, y;
         };
         std::unordered_map<std::int32_t, person_cache> wander_map;
         gx_pedestrian_api* api_temp = nullptr;
@@ -73,9 +74,15 @@ namespace glasssix {
         const abi::vector<pedestrian_info::boxes>& person_list) {
         if (!impl_->camera_id) {
             impl_->camera_id = device_id;
+            impl_->category  = 1;
         } else if (impl_->camera_id != device_id)
             throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
                                                   + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
+        else if (impl_->category == 2)
+            throw source_code_aware_runtime_error{
+                "device_id:" + std::to_string(device_id)
+                + " \"wander\" and \"wander_limit\" cannot be used at the same time\n"};
+
         ///  超过interval秒没出现的人自动删
         std::vector<std::int32_t> v;
         for (auto& it : impl_->wander_map) {
@@ -125,7 +132,7 @@ namespace glasssix {
             for (int i = 0; i < ans.person_info.size(); i++) {
                 int id_temp = ans.person_info[i].id;
                 if (impl_->wander_map.find(id_temp) == impl_->wander_map.end()) // 库里没有
-                    impl_->wander_map[id_temp] = {.sum_time = 0, .last_time = current_time};
+                    impl_->wander_map[id_temp] = impl::person_cache{.sum_time = 0, .last_time = current_time};
                 else {
                     impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time);
                     impl_->wander_map[id_temp].last_time = current_time;
@@ -145,6 +152,93 @@ namespace glasssix {
     wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id) {
         auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
         return safe_production_wander(mat, current_time, device_id, person_list.person_list);
+    }
+
+    //  安全生产 越界检测
+    wander_limit_info gx_wander_api::safe_production_wander_limit(const gx_img_api& mat, std::int64_t current_time,
+        int device_id, const abi::vector<pedestrian_info::boxes>& person_list) {
+        if (!impl_->camera_id) {
+            impl_->camera_id = device_id;
+            impl_->category  = 2;
+        } else if (impl_->camera_id != device_id)
+            throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
+                                                  + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
+        else if (impl_->category == 1)
+            throw source_code_aware_runtime_error{
+                "device_id:" + std::to_string(device_id)
+                + " \"wander\" and \"wander_limit\" cannot be used at the same time\n"};
+        ///  超过interval秒没出现的人自动删
+        std::vector<std::int32_t> v;
+        for (auto& it : impl_->wander_map) {
+            if (current_time - it.second.last_time > _config->_wander_config.interval)
+                v.emplace_back(it.first);
+        }
+        for (int x : v) {
+            impl_->wander_map.erase(x);
+            wander_remove_id(x);
+        }
+        wander_info temp_ans;
+        // 过滤掉行人置信度小于person_conf的
+        abi::vector<pedestrian_info::boxes> posture_list_temp;
+        for (int i = 0; i < person_list.size(); i++) {
+            if (person_list[i].score >= _config->_wander_config.person_conf)
+                posture_list_temp.emplace_back(person_list[i]);
+        }
+        try {
+            auto result_pool = pool->enqueue([&] {
+                std::thread::id id_ = std::this_thread::get_id();
+                if (all_thread_algo_ptr[id_] == nullptr) {
+                    all_thread_algo_ptr[id_] = new algo_ptr();
+                }
+                auto ptr = all_thread_algo_ptr[id_];
+                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+                auto result = ptr->protocol_ptr.invoke<wander::detect>(ptr->wander_handle,
+                    wander_detect_param{.instance_guid = "",
+                        .format                        = _config->_wander_config.format,
+                        .height                        = mat.get_rows(),
+                        .width                         = mat.get_cols(),
+                        .roi_x                         = 0,
+                        .roi_y                         = 0,
+                        .roi_width                     = mat.get_cols(),
+                        .roi_height                    = mat.get_rows(),
+                        .person_list                   = posture_list_temp,
+                        .params =
+                            wander_detect_param::confidence_params{
+                                .current_time            = current_time,
+                                .feature_table_size      = _config->_wander_config.feature_table_size,
+                                .feature_match_threshold = _config->_wander_config.feature_match_threshold,
+                                .device_id               = device_id,
+                            }},
+                    str);
+                return std::move(result.detect_info);
+            });
+            temp_ans         = result_pool.get();
+            wander_limit_info ans(temp_ans);
+            for (int i = 0; i < ans.person_info.size(); i++) {
+                int id_temp = ans.person_info[i].id;
+                int xx      = ans.person_info[i].x1 + ans.person_info[i].x2 >> 1;
+                int yy      = ans.person_info[i].y2;
+                if (impl_->wander_map.find(id_temp) == impl_->wander_map.end()) // 库里没有
+                {
+                    impl_->wander_map[id_temp] =
+                        impl::person_cache{.sum_time = 0, .last_time = current_time, .x = xx, .y = yy};
+                    ans.segment_info.emplace_back(wander_limit_info::segment{.x1 = xx, .y1 = yy, .x2 = xx, .y2 = yy});
+                } else {
+                    ans.segment_info.emplace_back(wander_limit_info::segment{
+                        .x1 = impl_->wander_map[id_temp].x, .y1 = impl_->wander_map[id_temp].y, .x2 = xx, .y2 = yy});
+                    impl_->wander_map[id_temp].x = xx;
+                    impl_->wander_map[id_temp].y = yy;
+                    impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time);
+                    impl_->wander_map[id_temp].last_time = current_time;
+                }
+            }
+
+            return ans;
+        } catch (const std::exception& ex) {
+            bool flag = write_dump_img(mat, "_wander_limit_dump.jpg");
+            throw source_code_aware_runtime_error{
+                ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
+        }
     }
 
     bool gx_wander_api::wander_remove_id(int id) {

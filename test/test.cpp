@@ -878,6 +878,36 @@ namespace glasssix {
         printf("wander time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测越界
+    void thread_function_wander_limit() {
+        gx_wander_api* api_temp = new gx_wander_api();
+        gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api();
+        int T                   = 200;
+        auto start              = std::chrono::high_resolution_clock::now();
+        const gx_img_api img1("/root/img/wander_limit1.png", static_cast<int>(1e9));
+        const gx_img_api img2("/root/img/wander_limit2.png", static_cast<int>(1e9));
+        auto post1 = api_pedestrian_temp->safe_production_pedestrian(img1);
+        auto post2 = api_pedestrian_temp->safe_production_pedestrian(img2);
+        for (int i = 0; i < T; i+=2) {
+            try {
+                auto val_1 = api_temp->safe_production_wander_limit(img1, i, 2, post1.person_list);
+                auto val_2 = api_temp->safe_production_wander_limit(img2, i+1, 2, post2.person_list);
+                for (int j = 0; j < val_2.person_info.size(); ++j) {
+                    printf("segment: %d %d %d %d\n", val_2.segment_info[j].x1, val_2.segment_info[j].x2,
+                        val_2.segment_info[j].y1, val_2.segment_info[j].y2 );
+                    printf("boxes:   %d %d %d %d\n", val_2.person_info[j].x1, val_2.person_info[j].x2,
+                        val_2.person_info[j].y1, val_2.person_info[j].y2);
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        printf("%d\n", api_temp->wander_remove_library());
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("wander time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
     // 多线程测离岗
     void thread_function_leavepost() {
         gx_leavepost_api* api_temp = new gx_leavepost_api();
@@ -1411,6 +1441,7 @@ int main(int argc, char** argv) {
         t[18] = std::thread(thread_function_wander);
         t[19] = std::thread(thread_function_fighting);
         t[20] = std::thread(thread_function_posture);
+        t[21] = std::thread(thread_function_wander_limit);
         
         t[0].join();
         t[1].join();
@@ -1433,6 +1464,7 @@ int main(int argc, char** argv) {
         t[18].join();
         t[19].join();
         t[20].join();
+        t[21].join();
 
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
