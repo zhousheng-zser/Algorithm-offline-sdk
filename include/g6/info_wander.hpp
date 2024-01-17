@@ -31,4 +31,16 @@ namespace glasssix {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+
+    // 越界信息
+    struct wander_limit_info : public wander_info {
+         wander_limit_info(wander_info& temp){
+            person_info.swap(temp.person_info);
+         }
+        // 行人轨迹线段
+         struct segment {
+            std::int32_t x1, y1, x2, y2;
+         };
+         abi::vector<segment> segment_info;
+    };
 } // namespace glasssix

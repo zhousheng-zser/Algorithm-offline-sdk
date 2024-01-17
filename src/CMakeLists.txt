@@ -1,6 +1,5 @@
 ﻿set(target_name gx-offline-recognition)
 set(package_name GxOfflineRecognition)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 add_library(${target_name} SHARED)
 
