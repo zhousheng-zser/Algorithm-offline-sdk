@@ -783,7 +783,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/sleep1.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_sleep(img);
-                printf("lying_list = %d work_list = %d\n", 
+                printf("lying_list = %d work_list = %d\n",
                     val.lying_list.size(), val.work_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -883,7 +883,7 @@ namespace glasssix {
     void thread_function_wander_limit() {
         gx_wander_api* api_temp = new gx_wander_api();
         gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api();
-        int T                   = 200;
+        int T                   = TIMES;
         auto start              = std::chrono::high_resolution_clock::now();
         const gx_img_api img1("/root/img/wander_limit1.png", static_cast<int>(1e9));
         const gx_img_api img2("/root/img/wander_limit2.png", static_cast<int>(1e9));
@@ -952,7 +952,7 @@ namespace glasssix {
                     std::string exit{enter.path().string()};
                     v_img.push_back(exit);
                     std::cout << "Found " << exit << std::endl;
-                    
+
                     const gx_img_api img(abi::string(exit), static_cast<int>(1e9));
                     auto val = api_temp->safe_production_playphone(img);
                     std::string relative_path{};
@@ -1195,7 +1195,7 @@ namespace glasssix {
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
         // quadrangle.emplace_back(tumble_point{.x =1296, .y =789 });
         // quadrangle.emplace_back(tumble_point{.x =762, .y = 742});
-        
+
         std::cout << temp.size() << std::endl;
         std::cout << relative_path.size() << std::endl;
         int F = 1;
@@ -1443,7 +1443,7 @@ int main(int argc, char** argv) {
         t[19] = std::thread(thread_function_fighting);
         t[20] = std::thread(thread_function_posture);
         t[21] = std::thread(thread_function_wander_limit);
-        
+
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1452,7 +1452,7 @@ int main(int argc, char** argv) {
         t[5].join();
         t[6].join();
         t[7].join();
-        t[8].join(); 
+        t[8].join();
         t[9].join();
         t[10].join();
         t[11].join();
