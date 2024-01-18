@@ -5,14 +5,15 @@
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/fighting.hpp"
 #include "../src/nessus/protocols/flame.hpp"
+#include "../src/nessus/protocols/head.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
 #include "../src/nessus/protocols/leavepost.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
-#include "../src/nessus/protocols/posture.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
+#include "../src/nessus/protocols/posture.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
@@ -130,6 +131,7 @@ namespace glasssix {
             Function["flame"]      = &algo_ptr::set_protocols_handl_flame;
             Function["smog"]       = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]    = &algo_ptr::set_protocols_handl_refvest;
+            Function["head"]       = &algo_ptr::set_protocols_handl_head;
             Function["helmet"]     = &algo_ptr::set_protocols_handl_helmet;
             Function["selene"]     = &algo_ptr::set_protocols_handl_selene;
             Function["longinus"]   = &algo_ptr::set_protocols_handl_longinus;
@@ -138,7 +140,7 @@ namespace glasssix {
             Function["sleep"]      = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]      = &algo_ptr::set_protocols_handl_smoke;
             Function["tumble"]     = &algo_ptr::set_protocols_handl_tumble;
-            Function["vehicle"]     = &algo_ptr::set_protocols_handl_vehicle;
+            Function["vehicle"]    = &algo_ptr::set_protocols_handl_vehicle;
             Function["wander"]     = &algo_ptr::set_protocols_handl_wander;
             Function["leavepost"]  = &algo_ptr::set_protocols_handl_leavepost;
             Function["playphone"]  = &algo_ptr::set_protocols_handl_playphone;
@@ -171,6 +173,10 @@ namespace glasssix {
             _config->set_refvest(_config->_path);
             refvest_handle = protocol_ptr.make_instance<refvest>(
                 refvest_new_param{_config->_refvest_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_head() {
+            head_handle = protocol_ptr.make_instance<head>(
+                head_new_param{.device = -1, .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_helmet() {
             _config->set_helmet(_config->_path);
@@ -255,7 +261,7 @@ namespace glasssix {
         }
         void set_protocols_handl_posture() {
             posture_handle = protocol_ptr.make_instance<posture>(posture_new_param{
-                .device = -1, .models_directory =_config->_configure_directory.models_directory,.model_type= 1});
+                .device = -1, .models_directory = _config->_configure_directory.models_directory, .model_type = 1});
         }
 
         nessus_protocol protocol_ptr;
@@ -268,6 +274,7 @@ namespace glasssix {
         fighting fighting_handle;
         flame flame_handle;
         smog smog_handle;
+        head head_handle;
         helmet helmet_handle;
         sleep sleep_handle;
         smoke smoke_handle;

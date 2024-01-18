@@ -2,8 +2,7 @@
     "device": -1,
     "format": 1,
     "head_conf_thres": 0.3,
-    "head_nms_thres": 0.6,
-    "phone_conf_thres": 0.4,
-    "phone_nms_thres": 0.45,
+    "conf_thres": 0.4,
+    "nms_thres": 0.45,
     "phone_distance_thres": 1.0
 }

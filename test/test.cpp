@@ -15,6 +15,7 @@
 #include <gx_face_api.hpp>
 #include <gx_fighting_api.hpp>
 #include <gx_flame_api.hpp>
+#include <gx_head_api.hpp>
 #include <gx_helmet_api.hpp>
 #include <gx_leavepost_api.hpp>
 #include <gx_onphone_api.hpp>
@@ -638,6 +639,26 @@ namespace glasssix {
         printf("helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // 多线程测人头
+    void thread_function_head() {
+        gx_head_api* api_temp = new gx_head_api();
+        int T                   = 1000;
+        auto start              = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/head.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_head(img);
+                printf("head_list = %d\n",val.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        printf("head time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
     // 多线程测火焰
     void thread_function_flame() {
         gx_flame_api* api_temp = new gx_flame_api();
@@ -975,13 +996,19 @@ namespace glasssix {
     // 多线程测打电话
     void thread_function_onphone() {
         gx_onphone_api* api_temp = new gx_onphone_api();
-        int T                    = TIMES;
+        gx_head_api* api_head_temp       = new gx_head_api();
+        gx_posture_api* api_posture_temp = new gx_posture_api();
+        const gx_img_api img("/root/img/onphone.png", static_cast<int>(1e9));
+        auto val_head                    = api_head_temp->safe_production_head(img);
+        auto val_posture                 = api_posture_temp->safe_production_posture(img);
+        int T                    = 1000;
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/onphone.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_onphone(img);
-                printf("norm_list = %d onphone_list = %d\n", val.norm_list.size(), val.onphone_list.size());
+                auto val1 = api_temp->safe_production_onphone(img,val_head);
+                printf("head norm_list = %d onphone_list = %d\n", val1.norm_list.size(), val1.onphone_list.size());
+                auto val2 = api_temp->safe_production_onphone(img, val_posture);
+                printf("post norm_list = %d onphone_list = %d\n", val2.norm_list.size(), val2.onphone_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1443,7 +1470,8 @@ int main(int argc, char** argv) {
         t[19] = std::thread(thread_function_fighting);
         t[20] = std::thread(thread_function_posture);
         t[21] = std::thread(thread_function_wander_limit);
-
+        t[22] = std::thread(thread_function_head);
+        
         t[0].join();
         t[1].join();
         t[2].join();
@@ -1466,6 +1494,7 @@ int main(int argc, char** argv) {
         t[19].join();
         t[20].join();
         t[21].join();
+        t[22].join();
 
         //     auto start    = std::chrono::high_resolution_clock::now();
         //     auto end      = std::chrono::high_resolution_clock::now();
