@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_ONPHONE_V3.0.1";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_ONPHONE_V3.2.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -55,7 +55,8 @@ namespace glasssix {
     };
 
     //  打电话检测
-    onphone_info gx_onphone_api::safe_production_onphone(const gx_img_api& mat) {
+    onphone_info gx_onphone_api::safe_production_onphone(
+        const gx_img_api& mat, const abi::vector<head_info>& head_info_list) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -64,6 +65,14 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 onphone_info ans;
+
+                // 过滤掉人头置信度小于head_conf_thres的
+                abi::vector<head_info> head_list_temp;
+                for (int i = 0; i < head_info_list.size(); i++) {
+                    if (head_info_list[i].score >= _config->_onphone_config.head_conf_thres)
+                        head_list_temp.emplace_back(head_info_list[i]);
+                }
+
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<onphone::detect>(ptr->onphone_handle,
                     onphone_detect_param{.instance_guid = "",
@@ -74,14 +83,11 @@ namespace glasssix {
                         .roi_y                          = 0,
                         .roi_width                      = mat.get_cols(),
                         .roi_height                     = mat.get_rows(),
-                        .params                         = onphone_detect_param::confidence_params{.head_conf_thres =
-                                                                              _config->_onphone_config.head_conf_thres,
-                                                    .head_nms_thres       = _config->_onphone_config.head_nms_thres,
-                                                    .phone_conf_thres     = _config->_onphone_config.phone_conf_thres,
-                                                    .phone_distance_thres = _config->_onphone_config.phone_distance_thres,
-                    .phone_nms_thres=_config->_onphone_config.phone_nms_thres
-                        }
-                    },
+                        .head_info_list                 = head_list_temp,
+                        .params =
+                            onphone_detect_param::confidence_params{.conf_thres = _config->_onphone_config.conf_thres,
+                                .nms_thres                                      = _config->_onphone_config.nms_thres,
+                                .phone_distance_thres = _config->_onphone_config.phone_distance_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -89,7 +95,52 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_onphone_dump.jpg");
+            bool flag = write_dump_img(mat, "_onphone_head_dump.jpg");
+            throw source_code_aware_runtime_error{
+                ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
+        }
+    }
+
+    //  打电话检测
+    onphone_info gx_onphone_api::safe_production_onphone(
+        const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
+        try {
+            auto result_pool = pool->enqueue([&] {
+                std::thread::id id_ = std::this_thread::get_id();
+                if (all_thread_algo_ptr[id_] == nullptr) {
+                    all_thread_algo_ptr[id_] = new algo_ptr();
+                }
+                auto ptr = all_thread_algo_ptr[id_];
+                onphone_info ans;
+                // 过滤掉姿态置信度小于0.6的
+                abi::vector<posture_info> posture_list_temp;
+                for (int i = 0; i < posture_info_list.size(); i++) {
+                    if (posture_info_list[i].score >= 0.6)
+                        posture_list_temp.emplace_back(posture_info_list[i]);
+                }
+                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+                auto result = ptr->protocol_ptr.invoke<onphone::detect2>(ptr->onphone_handle,
+                    onphone_detect2_param{.instance_guid = "",
+                        .format                          = _config->_onphone_config.format,
+                        .height                          = mat.get_rows(),
+                        .width                           = mat.get_cols(),
+                        .roi_x                           = 0,
+                        .roi_y                           = 0,
+                        .roi_width                       = mat.get_cols(),
+                        .roi_height                      = mat.get_rows(),
+                        .posture_info_list               = posture_list_temp,
+                        .params =
+                            onphone_detect2_param::confidence_params{.conf_thres = _config->_onphone_config.conf_thres,
+                                .nms_thres                                       = _config->_onphone_config.nms_thres,
+                                .phone_distance_thres = _config->_onphone_config.phone_distance_thres}},
+                    str);
+
+                ans = std::move(result.detect_info);
+                return ans;
+            });
+            return result_pool.get();
+        } catch (const std::exception& ex) {
+            bool flag = write_dump_img(mat, "_onphone_posture_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
