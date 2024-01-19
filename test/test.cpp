@@ -1066,7 +1066,7 @@ namespace glasssix {
                 const gx_img_api img("/root/img/climb.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_climb(
                     img, abi::vector<climb_point>{
-                             climb_point{20, 30}, climb_point{1000, 20}, climb_point{1000, 710}, climb_point{50, 750}});
+                             climb_point{0,0}, climb_point{1080,0}, climb_point{1920,1080}, climb_point{0,1920}});
                 printf("[climb] : normal_list = %d climb_list = %d\n", val.normal_list.size(), val.climb_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
