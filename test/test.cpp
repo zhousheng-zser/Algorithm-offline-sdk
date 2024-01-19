@@ -1216,7 +1216,7 @@ namespace glasssix {
         for(auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_smog_api* api_temp       = new gx_smog_api();
+        gx_climb_api* api_temp       = new gx_climb_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1231,20 +1231,21 @@ namespace glasssix {
         for (int i = 0; i < temp.size(); i++) {
             // std::cout << "for 循环 : " << i << std::endl;
             std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
-            auto val    = api_temp->safe_production_smog(gx_img_api{abi::string{temp[i] },
-                1 << 28});
+            auto val    = api_temp->safe_production_climb(gx_img_api{abi::string{temp[i] },
+                1 << 28},abi::vector<climb_point>{
+                             climb_point{0,0}, climb_point{1920,0}, climb_point{1920,1080}, climb_point{0, 1080}});
             cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
 #if 1
-            if (val.smog_list.size() > 0) {
+            if (val.climb_list.size() > 0) {
                 std::cout << " I am here: " << std::endl;
                 printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                for (int j = 0; j < val.smog_list.size(); j++) {
-                    int x1      = val.smog_list[j].x1;
-                    int x2      = val.smog_list[j].x2;
-                    int y1      = val.smog_list[j].y1;
-                    int y2      = val.smog_list[j].y2;
-                    float score = val.smog_list[j].score;
+                for (int j = 0; j < val.climb_list.size(); j++) {
+                    int x1      = val.climb_list[j].x1;
+                    int x2      = val.climb_list[j].x2;
+                    int y1      = val.climb_list[j].y1;
+                    int y2      = val.climb_list[j].y2;
+                    float score = val.climb_list[j].score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1293,7 +1294,7 @@ namespace glasssix {
 
     void todo_video(
         const std::string& name, const std::string& save_path, const std::string& ans_path, video_data data_) {
-        // try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用
+        // try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用//! 目前报错,暂不使用
         video_test(save_path, ans_path, data_);
     }
 
@@ -1443,7 +1444,7 @@ int main(int argc, char** argv) {
 
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/img/climb_test.mp4", "/root/img/smog/", "/root/img/smog/ans/", data_);
+        // todo_video("/root/video/climb_test.mp4", "/root/video/climb/", "/root/video/climb/ans/", data_);
 
         // yuv_test();
         //gif_test();
