@@ -365,7 +365,7 @@ namespace glasssix {
         }
         return ans_list;
     }
-    std::vector<std::string> find_file_smoke(std::filesystem::path folder_path) {
+    std::vector<std::string> find_file_test(std::filesystem::path folder_path) {
         std::vector<std::string> ans_list;
         for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
             if (entry.is_regular_file()) {
@@ -1206,7 +1206,7 @@ namespace glasssix {
         capture.release();
     }
     void video_test(const std::string& save_path, const std::string& ans_path, video_data data_) {
-        std::vector<std::string> temp = find_file_smoke(save_path);
+        std::vector<std::string> temp = find_file_test(save_path);
         std::vector<std::string> relative_path;
         for(auto const& file : temp) {
             relative_path.push_back(std::filesystem::relative(file,save_path).string());
@@ -1216,7 +1216,7 @@ namespace glasssix {
         for(auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_sleep_api* api_temp       = new gx_sleep_api();
+        gx_playphone_api* api_temp       = new gx_playphone_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1230,20 +1230,20 @@ namespace glasssix {
         for (int i = 0; i < temp.size(); i++) {
             // std::cout << "for 循环 : " << i << std::endl;
             std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
-            auto val    = api_temp->safe_production_sleep(gx_img_api{abi::string{temp[i] },
+            auto val    = api_temp->safe_production_playphone(gx_img_api{abi::string{temp[i] },
                 1 << 28});
             cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
 #if 1
-            if (val.lying_list.size() > 0) {
+            if (val.playphone_list.size() > 0) {
                 std::cout << " I am here: " << std::endl;
                 printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                for (int j = 0; j < val.lying_list.size(); j++) {
-                    int x1      = val.lying_list[j].x1;
-                    int x2      = val.lying_list[j].x2;
-                    int y1      = val.lying_list[j].y1;
-                    int y2      = val.lying_list[j].y2;
-                    float score = val.lying_list[j].score;
+                for (int j = 0; j < val.playphone_list.size(); j++) {
+                    int x1      = val.playphone_list[j].x1;
+                    int x2      = val.playphone_list[j].x2;
+                    int y1      = val.playphone_list[j].y1;
+                    int y2      = val.playphone_list[j].y2;
+                    float score = val.playphone_list[j].man_score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1260,15 +1260,15 @@ namespace glasssix {
 // #else
             // ans_path += "2";//常量,不允许自加
             std::string new_path = ans_path + "2/";
-            if (val.work_list.size() > 0) {
+            if (val.norm_list.size() > 0) {
                 std::cout << " I am here: " << std::endl;
                 printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                for (int j = 0; j < val.work_list.size(); j++) {
-                    int x1      = val.work_list[j].x1;
-                    int x2      = val.work_list[j].x2;
-                    int y1      = val.work_list[j].y1;
-                    int y2      = val.work_list[j].y2;
-                    float score = val.work_list[j].score;
+                for (int j = 0; j < val.norm_list.size(); j++) {
+                    int x1      = val.norm_list[j].x1;
+                    int x2      = val.norm_list[j].x2;
+                    int y1      = val.norm_list[j].y1;
+                    int y2      = val.norm_list[j].y2;
+                    float score = val.norm_list[j].man_score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1440,7 +1440,7 @@ int main(int argc, char** argv) {
 
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/img/climb_test.mp4", "/root/img/test/", "/root/img/test/ans/", data_);
+        // todo_video("/root/img/climb_test.mp4", "/root/img/playphone/", "/root/img/playphone/ans/", data_);
 
         // yuv_test();
         //gif_test();
@@ -1471,7 +1471,7 @@ int main(int argc, char** argv) {
         t[20] = std::thread(thread_function_posture);
         t[21] = std::thread(thread_function_wander_limit);
         t[22] = std::thread(thread_function_head);
-        
+
         t[0].join();
         t[1].join();
         t[2].join();
