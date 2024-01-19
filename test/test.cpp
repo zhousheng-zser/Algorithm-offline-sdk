@@ -1216,7 +1216,7 @@ namespace glasssix {
         for(auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_playphone_api* api_temp       = new gx_playphone_api();
+        gx_smog_api* api_temp       = new gx_smog_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1225,25 +1225,26 @@ namespace glasssix {
 
         std::cout << temp.size() << std::endl;
         std::cout << relative_path.size() << std::endl;
+		auto begin = std::chrono::high_resolution_clock::now();
         int F = 1;
         while(F--){
         for (int i = 0; i < temp.size(); i++) {
             // std::cout << "for 循环 : " << i << std::endl;
             std::string relative = std::filesystem::relative(temp.at(i),save_path).string();
-            auto val    = api_temp->safe_production_playphone(gx_img_api{abi::string{temp[i] },
+            auto val    = api_temp->safe_production_smog(gx_img_api{abi::string{temp[i] },
                 1 << 28});
             cv::Mat img = cv::imread(abi::string{temp[i]}
                     .c_str());
 #if 1
-            if (val.playphone_list.size() > 0) {
+            if (val.smog_list.size() > 0) {
                 std::cout << " I am here: " << std::endl;
                 printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                for (int j = 0; j < val.playphone_list.size(); j++) {
-                    int x1      = val.playphone_list[j].x1;
-                    int x2      = val.playphone_list[j].x2;
-                    int y1      = val.playphone_list[j].y1;
-                    int y2      = val.playphone_list[j].y2;
-                    float score = val.playphone_list[j].man_score;
+                for (int j = 0; j < val.smog_list.size(); j++) {
+                    int x1      = val.smog_list[j].x1;
+                    int x2      = val.smog_list[j].x2;
+                    int y1      = val.smog_list[j].y1;
+                    int y2      = val.smog_list[j].y2;
+                    float score = val.smog_list[j].score;
                     rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                     std::string text  = std::to_string(score);
                     cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1257,35 +1258,37 @@ namespace glasssix {
                 cv::imwrite(
                     ans_path + relative, img);
             }
-// #else
+#else
             // ans_path += "2";//常量,不允许自加
-            std::string new_path = ans_path + "2/";
-            if (val.norm_list.size() > 0) {
-                std::cout << " I am here: " << std::endl;
-                printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                for (int j = 0; j < val.norm_list.size(); j++) {
-                    int x1      = val.norm_list[j].x1;
-                    int x2      = val.norm_list[j].x2;
-                    int y1      = val.norm_list[j].y1;
-                    int y2      = val.norm_list[j].y2;
-                    float score = val.norm_list[j].man_score;
-                    rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                    std::string text  = std::to_string(score);
-                    cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
-                    cv::rectangle(img, cv::Point(x1, y1),
-                        cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
-                    putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
-                }
-                //cv之前要先创建路径
-                std::filesystem::create_directories(new_path);
-                std::cout << "return path: " << new_path << std::endl;
-                cv::imwrite(
-                    new_path + relative, img);
-            }
+            // std::string new_path = ans_path + "2/";
+            // if (val.norm_list.size() > 0) {
+            //     std::cout << " I am here: " << std::endl;
+            //     printf("-------- %s.jpg\t --------\n", temp[i].c_str());
+            //     for (int j = 0; j < val.norm_list.size(); j++) {
+            //         int x1      = val.norm_list[j].x1;
+            //         int x2      = val.norm_list[j].x2;
+            //         int y1      = val.norm_list[j].y1;
+            //         int y2      = val.norm_list[j].y2;
+            //         float score = val.norm_list[j].man_score;
+            //         rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+            //         std::string text  = std::to_string(score);
+            //         cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+            //         cv::rectangle(img, cv::Point(x1, y1),
+            //             cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+            //         putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+            //     }
+            //     //cv之前要先创建路径
+            //     std::filesystem::create_directories(new_path);
+            //     std::cout << "return path: " << new_path << std::endl;
+            //     cv::imwrite(
+            //         new_path + relative, img);
+            // }
 #endif
-
         }
         }
+		auto end = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+		std::cout << "all video cost time :" << duration << " milliseconds" << std::endl;
     }
 
     void todo_video(
@@ -1440,7 +1443,7 @@ int main(int argc, char** argv) {
 
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/img/climb_test.mp4", "/root/img/playphone/", "/root/img/playphone/ans/", data_);
+        // todo_video("/root/img/climb_test.mp4", "/root/img/smog/", "/root/img/smog/ans/", data_);
 
         // yuv_test();
         //gif_test();
