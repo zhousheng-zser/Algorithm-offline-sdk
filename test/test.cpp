@@ -33,7 +33,7 @@
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 
-#define TIMES 1
+#define TIMES 1000
 // 用于windows 播放显示
 /*
 namespace glasssix::display_test {
