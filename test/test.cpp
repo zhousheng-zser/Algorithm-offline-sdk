@@ -33,7 +33,7 @@
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 
-#define TIMES 10000
+#define TIMES 1
 // 用于windows 播放显示
 /*
 namespace glasssix::display_test {
@@ -336,7 +336,7 @@ namespace glasssix::display_test {
         std::vector<abi::string> namelist;
         getFiles(working_directory, namelist);
         for (int i = 2; i < namelist.size();) {
-            int T = 500;
+            int T                   = TIMES;
             abi::vector<gx_img_api> imgs;
             abi::vector<abi::string> keys;
             while (T--) {
@@ -523,7 +523,7 @@ namespace glasssix {
         while (1) {
             abi::vector<abi::string> keys;
             abi::vector<gx_img_api> mat;
-            int T = 1000;
+            int T                   = TIMES;
             while ((path_file >> path >> key) && (T--)) {
                 try {
                     mat.emplace_back(gx_img_api{"/root/cc_test_origin/" + path, static_cast<int>(1e9)});
@@ -618,7 +618,7 @@ namespace glasssix {
 
 // 调试代码
 namespace glasssix {
-    // 多线程测安全帽
+    //t0 多线程测安全帽
     void thread_function_helmet() {
         gx_helmet_api* api_temp = new gx_helmet_api();
         int T                   = TIMES;
@@ -627,7 +627,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/helmet.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_helmet(img);
-                printf("with_helmet_list = %d with_hat_list = %d head_list = %d\n", val.with_helmet_list.size(),
+                printf("[helmet] : with_helmet_list = %d with_hat_list = %d head_list = %d\n", val.with_helmet_list.size(),
                     val.with_hat_list.size(), val.head_list.size());
 
             } catch (const std::exception& ex) {
@@ -639,16 +639,16 @@ namespace glasssix {
         printf("helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测人头
+    //t22 多线程测人头
     void thread_function_head() {
         gx_head_api* api_temp = new gx_head_api();
-        int T                   = 1000;
+        int T                   = TIMES;
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/head.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_head(img);
-                printf("head_list = %d\n",val.size());
+                printf("[head] : head_list = %d\n",val.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -659,7 +659,7 @@ namespace glasssix {
         printf("head time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测火焰
+    //t1 多线程测火焰
     void thread_function_flame() {
         gx_flame_api* api_temp = new gx_flame_api();
         int T                  = TIMES;
@@ -668,7 +668,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/flame.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_flame(img);
-                printf("fire_list = %d\n", val.fire_list.size());
+                printf("[flame] : fire_list = %d\n", val.fire_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -679,16 +679,16 @@ namespace glasssix {
         printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测烟雾
+    //t14 多线程测烟雾
     void thread_function_smog() {
         gx_smog_api* api_temp = new gx_smog_api();
         int T                 = TIMES;
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/smog.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/smog3.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smog(img);
-                printf("smog_list = %d\n", val.smog_list.size());
+                printf("[smog] : smog_list = %d\n", val.smog_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -698,7 +698,7 @@ namespace glasssix {
         printf("smog time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测反光衣
+    //t2 多线程测反光衣
     void thread_function_refvest() {
         gx_refvest_api* api_temp = new gx_refvest_api();
         int T                    = TIMES;
@@ -707,7 +707,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/refvest.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_refvest(img);
-                printf("without_refvest_list = %d with_refvest_list = %d\n", val.without_refvest_list.size(),
+                printf("[refvest] : without_refvest_list = %d with_refvest_list = %d\n", val.without_refvest_list.size(),
                     val.with_refvest_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -718,11 +718,11 @@ namespace glasssix {
         printf("refvest time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测搜索
+    //t3 多线程测搜索
     void thread_function_search() {
         gx_face_api* api_temp = new gx_face_api();
         api_temp->user_load();
-        int T      = TIMES;
+        int T                   = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
         const gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
         api_temp->user_add_records(abi::vector<abi::string>{"123"}, abi::vector<gx_img_api>{img}, false, false);
@@ -730,7 +730,7 @@ namespace glasssix {
             try {
                 auto val =
                     api_temp->user_search(gx_img_api{"/root/img/action_live_5.jpg", static_cast<int>(1e9)}, 1, 0.5);
-                printf("similarity =%.3f\n", val.result.size() > 0 ? val.result[0].similarity : 0.0);
+                printf("[search] : similarity =%.3f\n", val.result.size() > 0 ? val.result[0].similarity : 0.0);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -740,17 +740,17 @@ namespace glasssix {
         printf("search time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测融合搜索
+    //t4 多线程测融合搜索
     void thread_function_integration() {
         gx_face_api* api_temp = new gx_face_api();
         api_temp->user_load();
         auto start = std::chrono::high_resolution_clock::now();
-        int T      = TIMES;
+        int T                   = TIMES;
         while (T--) {
             try {
                 const gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
                 auto val = api_temp->detect_integration(img, 1, 0.5);
-                printf("prob = %.3f\n", val.prob);
+                printf("[integration] : prob = %.3f\n", val.prob);
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -761,7 +761,7 @@ namespace glasssix {
         printf("integration time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测 配合活体 与 质量检测
+    //t13 多线程测 配合活体 与 质量检测
     void thread_function_Action_live_Blur() {
         gx_face_api* api_temp = new gx_face_api();
         auto start            = std::chrono::high_resolution_clock::now();
@@ -795,7 +795,7 @@ namespace glasssix {
         printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测睡岗
+    //t6 多线程测睡岗
     void thread_function_sleep() {
         gx_sleep_api* api_temp = new gx_sleep_api();
         int T                  = TIMES;
@@ -804,7 +804,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/sleep1.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_sleep(img);
-                printf("lying_list = %d work_list = %d\n",
+                printf("[sleep] : lying_list = %d work_list = %d\n",
                     val.lying_list.size(), val.work_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -815,7 +815,7 @@ namespace glasssix {
         printf("sleep time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测抽烟
+    //t7 多线程测抽烟
     void thread_function_smoke() {
         gx_smoke_api* api_temp = new gx_smoke_api();
         int T                  = TIMES;
@@ -824,14 +824,14 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/smoke.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smoke(img);
-                //printf("norm_list = %d smoke_list = %d\n", val.norm_list.size(), val.smoke_list.size());
+                printf("[smoke] : norm_list = %d smoke_list = %d\n", val.norm_list.size(), val.smoke_list.size());
                 auto end      = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-                printf("smoke only  time = %lld microsecond\n", duration);
+                // printf("smoke only  time = %lld microsecond\n", duration);
             } catch (const std::exception& ex) {
                 auto end = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-                printf("smoke error time = %lld microsecond\n", duration);
+                // printf("smoke error time = %lld microsecond\n", duration);
                 printf("error =  %s\n", ex.what());
             }
         }
@@ -840,7 +840,7 @@ namespace glasssix {
         printf("smoke time = %lld microsecond\n", duration);
         delete api_temp;
     }
-    // 多线程测跌倒
+    //t15 多线程测跌倒
     void thread_function_tumble() {
         gx_tumble_api* api_temp = new gx_tumble_api();
         int T                   = TIMES;
@@ -849,7 +849,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/tumble.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_tumble(img);
-                printf("stand_list = %d tumble_list = %d\n", val.stand_list.size(), val.tumble_list.size());
+                printf("[tumble] : stand_list = %d tumble_list = %d\n", val.stand_list.size(), val.tumble_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -859,7 +859,7 @@ namespace glasssix {
         printf("tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测车辆
+    //t11 多线程测车辆
     void thread_function_vehicle() {
         gx_vehicle_api* api_temp = new gx_vehicle_api();
         int T                  = TIMES;
@@ -868,7 +868,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/vehicle.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_vehicle(img);
-                printf("vehicle_list = %d\n", val.vehicle_list.size());
+                printf("[vehicle] : vehicle_list = %d\n", val.vehicle_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -879,7 +879,7 @@ namespace glasssix {
         printf("vehicle time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测徘徊
+    //t18 多线程测徘徊
     void thread_function_wander() {
         gx_wander_api* api_temp = new gx_wander_api();
         int T                   = TIMES;
@@ -888,8 +888,8 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/wander.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_wander(img, i, 1);
-                printf("wander_list = %d device =%d\n", val.person_info.size(), 1);
-                printf("wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
+                printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
+                printf("[wander] : wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -900,7 +900,7 @@ namespace glasssix {
         printf("wander time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测越界
+    //t21 多线程测越界
     void thread_function_wander_limit() {
         gx_wander_api* api_temp = new gx_wander_api();
         gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api();
@@ -930,7 +930,7 @@ namespace glasssix {
         printf("wander time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测离岗
+    //t5 多线程测离岗
     void thread_function_leavepost() {
         gx_leavepost_api* api_temp = new gx_leavepost_api();
         int T                      = TIMES;
@@ -939,7 +939,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/leavepost.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_leavepost(img);
-                printf("hat_list = %d\n", val.hat_list.size());
+                printf("[leavepost] : hat_list = %d\n", val.hat_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -949,7 +949,7 @@ namespace glasssix {
         printf("leavepost time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测玩手机
+    //t8 多线程测玩手机
     void thread_function_playphone() {
         gx_playphone_api* api_temp = new gx_playphone_api();
         int T                      = TIMES;
@@ -957,9 +957,9 @@ namespace glasssix {
 #if 1   //这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/playphone.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/playphone_zj.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
-                printf("bodyerror_list = %d norm_list = %d playphone_list = %d\n", val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
+                printf("[playphone] : bodyerror_list = %d norm_list = %d playphone_list = %d\n", val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -993,7 +993,7 @@ namespace glasssix {
         printf("playphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测打电话
+    //t9 多线程测打电话
     void thread_function_onphone() {
         gx_onphone_api* api_temp = new gx_onphone_api();
         gx_head_api* api_head_temp       = new gx_head_api();
@@ -1001,14 +1001,14 @@ namespace glasssix {
         const gx_img_api img("/root/img/onphone.png", static_cast<int>(1e9));
         auto val_head                    = api_head_temp->safe_production_head(img);
         auto val_posture                 = api_posture_temp->safe_production_posture(img);
-        int T                    = 1000;
+        int T                            = TIMES;
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 auto val1 = api_temp->safe_production_onphone(img,val_head);
-                printf("head norm_list = %d onphone_list = %d\n", val1.norm_list.size(), val1.onphone_list.size());
+                printf("[onphone] : head norm_list = %d onphone_list = %d\n", val1.norm_list.size(), val1.onphone_list.size());
                 auto val2 = api_temp->safe_production_onphone(img, val_posture);
-                printf("post norm_list = %d onphone_list = %d\n", val2.norm_list.size(), val2.onphone_list.size());
+                printf("[onphone] : post norm_list = %d onphone_list = %d\n", val2.norm_list.size(), val2.onphone_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1018,7 +1018,7 @@ namespace glasssix {
         printf("onphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测工服检测
+    //t10 多线程测工服检测
     void thread_function_workcloth() {
         gx_workcloth_api* api_temp = new gx_workcloth_api();
         int T                      = TIMES;
@@ -1027,7 +1027,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/workcloth.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_workcloth(img,0);
-                printf("workcloth_list = %d\n", val.cloth_list.size());
+                printf("[workcloth] : workcloth_list = %d\n", val.cloth_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1037,7 +1037,7 @@ namespace glasssix {
         printf("workcloth time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测行人检测
+    //t12 多线程测行人检测
     void thread_function_pedestrian() {
         gx_pedestrian_api* api_temp = new gx_pedestrian_api();
         int T                       = TIMES;
@@ -1046,7 +1046,7 @@ namespace glasssix {
             try {
                 const gx_img_api img("/root/img/pedestrian.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pedestrian(img);
-                printf("person_list = %d\n", val.person_list.size());
+                printf("[pedestrian] : person_list = %d\n", val.person_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1056,7 +1056,7 @@ namespace glasssix {
         printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测攀爬
+    //t16 多线程测攀爬
     void thread_function_climb() {
         gx_climb_api* api_temp = new gx_climb_api();
         int T                  = TIMES;
@@ -1067,7 +1067,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_climb(
                     img, abi::vector<climb_point>{
                              climb_point{20, 30}, climb_point{1000, 20}, climb_point{1000, 710}, climb_point{50, 750}});
-                printf("normal_list = %d climb_list = %d\n", val.normal_list.size(), val.climb_list.size());
+                printf("[climb] : normal_list = %d climb_list = %d\n", val.normal_list.size(), val.climb_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1077,7 +1077,7 @@ namespace glasssix {
         printf("climb time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测聚众
+    //t17 多线程测聚众
     void thread_function_crowd() {
         gx_crowd_api* api_temp = new gx_crowd_api();
         int T                  = TIMES;
@@ -1087,7 +1087,7 @@ namespace glasssix {
                 const gx_img_api img("/root/img/crowd.jpg", static_cast<int>(1e9));
                 // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_crowd(img,5);
-                printf("head_list = %d\n", val.head_list.size());
+                printf("[crowd] : head_list = %d\n", val.head_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1121,7 +1121,7 @@ namespace glasssix {
                 api_temp->safe_production_fighting(img6);
                 gx_img_api img7("/root/img/7.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_fighting(img7);
-                printf("score =%f category=%d\n", val.score, val.category);
+                printf("[fighting] : score =%f category=%d\n", val.score, val.category);
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -1132,7 +1132,7 @@ namespace glasssix {
         printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测姿态
+    //t20 多线程测姿态
     void thread_function_posture() {
         gx_posture_api* api_temp = new gx_posture_api();
         printf("-------\n");
@@ -1306,7 +1306,7 @@ namespace glasssix {
 // void thread_function_search() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
 //     api_temp->user_load();
-//     int T      = 500;
+//     int T                   = TIMES;
 //     auto start = std::chrono::high_resolution_clock::now();
 //     while (T--) {
 //         try {
@@ -1327,7 +1327,7 @@ namespace glasssix {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
 //     api_temp->user_load();
 //     auto start = std::chrono::high_resolution_clock::now();
-//     int T      = 100;
+//     int T                   = TIMES;
 //     while (T--) {
 //         try {
 //             // gx_img_api img("/root/img/bbb.jpg", static_cast<int>(1e9));
@@ -1357,7 +1357,7 @@ namespace glasssix {
 //     img.emplace_back(gx_img_api("/sdcard/img/action_live_5.jpg", IMG_2K));
 //     face_info info;
 //     bool action_result = 0;
-//     int T              = 500;
+//     int T                   = TIMES;
 //     while (T--) {
 //         info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[0]);
 //         printf("BDFACE_ACTION_LIVE_BLINK %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
@@ -1388,7 +1388,7 @@ void yuv_test() {
 
         printf("face_feature    ------\n");
         std::getchar();
-    int T = 10000;
+        int T                   = TIMES;
         while (T--) {
             auto val_new = temp_api->face_feature(img, false);
             printf("facerectwithfaceinfo_list.size = %d\n", val_new.facerectwithfaceinfo_list.size());
