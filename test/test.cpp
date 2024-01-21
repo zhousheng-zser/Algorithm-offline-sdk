@@ -842,7 +842,7 @@ namespace glasssix {
                 const gx_img_api img("/root/img/smoke.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smoke(img);
 				if(condition)
-                printf("[smoke] : norm_list = %d smoke_list = %d\n", val.norm_list.size(), val.smoke_list.size());
+                printf("[smoke] : smoke_list = %d norm_list = %d\n", val.smoke_list.size(), val.norm_list.size());
                 auto end      = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
                 // printf("smoke only  time = %lld microsecond\n", duration);
@@ -869,7 +869,7 @@ namespace glasssix {
                 const gx_img_api img("/root/img/tumble.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_tumble(img);
 				if(condition)
-                printf("[tumble] : stand_list = %d tumble_list = %d\n", val.stand_list.size(), val.tumble_list.size());
+                printf("[tumble] : tumble_list = %d stand_list = %d\n", val.tumble_list.size(), val.stand_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -943,9 +943,9 @@ namespace glasssix {
                 auto val_2 = api_temp->safe_production_wander_limit(img2, i+1, 2, post2.person_list);
                 for (int j = 0; j < val_2.person_info.size(); ++j) {
 				if(condition){
-                    printf("segment: %d %d %d %d\n", val_2.segment_info[j].x1, val_2.segment_info[j].x2,
+                    printf("[wander_limit] : segment: %d %d %d %d\n", val_2.segment_info[j].x1, val_2.segment_info[j].x2,
                         val_2.segment_info[j].y1, val_2.segment_info[j].y2 );
-                    printf("boxes:   %d %d %d %d\n", val_2.person_info[j].x1, val_2.person_info[j].x2,
+                    printf("[wander_limit] : boxes:   %d %d %d %d\n", val_2.person_info[j].x1, val_2.person_info[j].x2,
                         val_2.person_info[j].y1, val_2.person_info[j].y2);
 				}
                 }
@@ -953,12 +953,12 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
-		if(condition)
-        printf("%d\n", api_temp->wander_remove_library());
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-		if(condition)
-        printf("wander time = %lld microsecond\n", duration.count());
+		if(condition){
+        printf("[wander_limit] : %d\n", api_temp->wander_remove_library());
+        printf("wander_limit time = %lld microsecond\n", duration.count());
+		}
         delete api_temp;
     }
     //t5 多线程测离岗
@@ -1043,9 +1043,9 @@ namespace glasssix {
             try {
                 auto val1 = api_temp->safe_production_onphone(img,val_head);
 				if(condition){
-                printf("[onphone] : head norm_list = %d onphone_list = %d\n", val1.norm_list.size(), val1.onphone_list.size());
+                printf("[onphone] : head-> onphone_list = %d norm_list = %d\n", val1.onphone_list.size(), val1.norm_list.size());
                 auto val2 = api_temp->safe_production_onphone(img, val_posture);
-                printf("[onphone] : post norm_list = %d onphone_list = %d\n", val2.norm_list.size(), val2.onphone_list.size());
+                printf("[onphone] : post-> onphone_list = %d norm_list = %d\n", val2.onphone_list.size(), val2.norm_list.size());
 				}
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -1111,7 +1111,7 @@ namespace glasssix {
                     img, abi::vector<climb_point>{
                              climb_point{0,0}, climb_point{1080,0}, climb_point{1920,1080}, climb_point{0,1920}});
 				if(condition)
-                printf("[climb] : normal_list = %d climb_list = %d\n", val.normal_list.size(), val.climb_list.size());
+                printf("[climb] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1153,22 +1153,26 @@ namespace glasssix {
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img0("/root/img/0.jpg", static_cast<int>(1e9));
+                gx_img_api img0("/root/img/fighting/fight_0th.jpg" , static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img0);
-                gx_img_api img1("/root/img/1.jpg", static_cast<int>(1e9));
+                gx_img_api img1("/root/img/fighting/fight_5th.jpg" , static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img1);
-                gx_img_api img2("/root/img/2.jpg", static_cast<int>(1e9));
+                gx_img_api img2("/root/img/fighting/fight_10th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img2);
-                gx_img_api img3("/root/img/3.jpg", static_cast<int>(1e9));
+                gx_img_api img3("/root/img/fighting/fight_15th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img3);
-                gx_img_api img4("/root/img/4.jpg", static_cast<int>(1e9));
+                gx_img_api img4("/root/img/fighting/fight_20th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img4);
-                gx_img_api img5("/root/img/5.jpg", static_cast<int>(1e9));
+                gx_img_api img5("/root/img/fighting/fight_25th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img5);
-                gx_img_api img6("/root/img/6.jpg", static_cast<int>(1e9));
+                gx_img_api img6("/root/img/fighting/fight_30th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img6);
-                gx_img_api img7("/root/img/7.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_fighting(img7);
+                gx_img_api img7("/root/img/fighting/fight_35th.jpg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img7);
+                gx_img_api img8("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9));
+                api_temp->safe_production_fighting(img8);
+                gx_img_api img9("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_fighting(img9);
 				if(condition)
                 printf("[fighting] : score =%f category=%d\n", val.score, val.category);
 
@@ -1192,9 +1196,9 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/posture.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_posture(img);
                 auto val = api_temp->safe_production_posture(img);
-                //printf("score =%f category=%d\n", val.info_list[0].score, val.info_list[0].key_points.size() );
+				if(condition)
+                printf("[posture] : score =%f category=%d\n", val[0].score, val[0].key_points.size() );
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -1483,6 +1487,7 @@ int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {
         printf("hello world\n");
+		auto begin = std::chrono::steady_clock::now();
         // 安全生产 指标测试
         // safe_test1();
         // safe_test2();
@@ -1552,9 +1557,6 @@ int main(int argc, char** argv) {
         t[21].join();
         t[22].join();
 
-        //     auto start    = std::chrono::high_resolution_clock::now();
-        //     auto end      = std::chrono::high_resolution_clock::now();
-        //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
         // 用于windows播放视频或图片的
         /*
@@ -1569,7 +1571,9 @@ int main(int argc, char** argv) {
          display_test::test_detect_integration(api);
          display_test::test_add_folder_all(_Api);
         */
-
+	   auto end = std::chrono::steady_clock::now();
+	   auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
+	   printf("the test all cost time : %d seconds\n",duration);
     } catch (const std::exception& ex) {
         printf("%s\n", ex.what());
     }
