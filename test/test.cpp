@@ -162,8 +162,8 @@ namespace glasssix {
                 const gx_img_api img("/root/img/refvest.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_refvest(img);
                 if (condition)
-                    printf("[refvest] : without_refvest_list = %d with_refvest_list = %d\n",
-                        val.without_refvest_list.size(), val.with_refvest_list.size());
+                    printf("[refvest] : with_refvest_list = %d without_refvest_list = %d\n",
+                        val.with_refvest_list.size(), val.without_refvest_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -238,17 +238,23 @@ namespace glasssix {
         int T              = TIMES;
         while (T--) {
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[0]);
-            // printf("BDFACE_ACTION_LIVE_BLINK %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            if (condition)
+                printf("[action_live] : BDFACE_ACTION_LIVE_BLINK %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
-            // printf("BDFACE_ACTION_LIVE_OPEN_MOUTH %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            if (condition)
+                printf("[action_live] : BDFACE_ACTION_LIVE_OPEN_MOUTH %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
-            // printf("BDFACE_ACTION_LIVE_NOD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            if (condition)
+                printf("[action_live] : BDFACE_ACTION_LIVE_NOD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
-            // printf("BDFACE_ACTION_LIVE_LEFT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            if (condition)
+                printf("[action_live] : BDFACE_ACTION_LIVE_LEFT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
-            // printf("BDFACE_ACTION_LIVE_RIGHT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
+            if (condition)
+                printf("[action_live] : BDFACE_ACTION_LIVE_RIGHT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             auto val = api_temp->face_blur(img[5]);
-            // printf("blur ====== %.2f\n", val.clarity[0]);
+            if (condition)
+                printf("[action_live] : blur ====== %.2f\n", val.clarity[0]);
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -1009,7 +1015,7 @@ int main(int argc, char** argv) {
         t[20] = std::thread(thread_function_posture);
         t[21] = std::thread(thread_function_wander_limit);
         t[22] = std::thread(thread_function_head);
-         t[23] = std::thread(thread_function_batterypilferers);
+        t[23] = std::thread(thread_function_batterypilferers);
 
         t[0].join();
         t[1].join();
@@ -1038,7 +1044,7 @@ int main(int argc, char** argv) {
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
-        printf("the test all cost time : %d seconds\n", duration);
+        printf("[ ] : the test all cost time : %d seconds\n", duration);
     } catch (const std::exception& ex) {
         printf("%s\n", ex.what());
     }
