@@ -1,0 +1,45 @@
+#pragma once
+
+#include "../../../include/g6/info_batterypilferers.hpp"
+#include "../common_protocols.hpp"
+
+#include <cstdint>
+#include <string>
+#include <vector>
+
+#include <g6/json_extensions.hpp>
+
+namespace glasssix {
+    struct batterypilferers_new_param {
+        GX_BEGIN_FIELDS(batterypilferers_new_param);
+        GX_FIELD(std::int32_t, device);
+        GX_FIELD(std::string, models_directory);
+        GX_FIELD(std::int32_t, batch);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct batterypilferers_detect_param {
+        GX_BEGIN_FIELDS(batterypilferers_detect_param);
+        GX_FIELD(std::string, instance_guid);
+        GX_FIELD(std::int32_t, format);
+        GX_FIELD(std::int32_t, height);
+        GX_FIELD(std::int32_t, width);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct batterypilferers_detect_result {
+        GX_BEGIN_FIELDS(batterypilferers_detect_result);
+        GX_FIELD(parser_result_status, status);
+        GX_FIELD(batterypilferers_info, detect_info);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct batterypilferers : protocol_object {
+        struct detect : parser_inout<batterypilferers_detect_param, batterypilferers_detect_result> {};
+    };
+} // namespace glasssix
