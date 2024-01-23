@@ -1,6 +1,8 @@
 {
     "device": -1,
     "format": 1,
-    "batch": 10,
-    "interval": 5
+    "batch": 8,
+    "interval": 4,
+    "conf_thres": 0.3,
+    "nms_thres": 0.45
 }

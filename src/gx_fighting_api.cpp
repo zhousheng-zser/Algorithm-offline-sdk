@@ -102,12 +102,11 @@ namespace glasssix {
                     _config->_fighting_config.batch * mat.get_data_len()); // push batch img to array
                 for (int i = impl_->cnt, j = 0; j < _config->_fighting_config.batch; ++i, ++j) {
                     //   构造图片数组
-                    int id = i % _config->_fighting_config.batch;
-                    std::copy(impl_->mat_list[id].get_data(),
-                        impl_->mat_list[id].get_data() + impl_->mat_list[id].get_data_len(),
-                        imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len());
+                    int id = i % _config->_batterypilferers_config.batch;
+                    std::memcpy(imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len(),
+                        impl_->mat_list[id].get_data(), impl_->mat_list[id].get_data_len());
                 }
-                std::span<char> str{reinterpret_cast<char*>(imgBatchDataArr.data()), imgBatchDataArr.size()};
+                std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
                 auto result = ptr->protocol_ptr.invoke<fighting::detect>(ptr->fighting_handle,
                     fighting_detect_param{.instance_guid = "",
                         .format                          = _config->_fighting_config.format,
