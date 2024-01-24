@@ -1,5 +1,6 @@
 #pragma once
 #include "../src/nessus/protocol.hpp"
+#include "../src/nessus/protocols/batterypilferers.hpp"
 #include "../src/nessus/protocols/climb.hpp"
 #include "../src/nessus/protocols/crowd.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
@@ -126,33 +127,40 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
-            Function["climb"]      = &algo_ptr::set_protocols_handl_climb;
-            Function["fighting"]   = &algo_ptr::set_protocols_handl_fighting;
-            Function["flame"]      = &algo_ptr::set_protocols_handl_flame;
-            Function["smog"]       = &algo_ptr::set_protocols_handl_smog;
-            Function["refvest"]    = &algo_ptr::set_protocols_handl_refvest;
-            Function["head"]       = &algo_ptr::set_protocols_handl_head;
-            Function["helmet"]     = &algo_ptr::set_protocols_handl_helmet;
-            Function["selene"]     = &algo_ptr::set_protocols_handl_selene;
-            Function["longinus"]   = &algo_ptr::set_protocols_handl_longinus;
-            Function["romancia"]   = &algo_ptr::set_protocols_handl_romancia;
-            Function["damocles"]   = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]      = &algo_ptr::set_protocols_handl_sleep;
-            Function["smoke"]      = &algo_ptr::set_protocols_handl_smoke;
-            Function["tumble"]     = &algo_ptr::set_protocols_handl_tumble;
-            Function["vehicle"]    = &algo_ptr::set_protocols_handl_vehicle;
-            Function["wander"]     = &algo_ptr::set_protocols_handl_wander;
-            Function["leavepost"]  = &algo_ptr::set_protocols_handl_leavepost;
-            Function["playphone"]  = &algo_ptr::set_protocols_handl_playphone;
-            Function["onphone"]    = &algo_ptr::set_protocols_handl_onphone;
-            Function["workcloth"]  = &algo_ptr::set_protocols_handl_workcloth;
-            Function["pedestrian"] = &algo_ptr::set_protocols_handl_pedestrian;
-            Function["posture"]    = &algo_ptr::set_protocols_handl_posture;
+            Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
+            Function["batterypilferers"] = &algo_ptr::set_protocols_handl_batterypilferers;
+            Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
+            Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
+            Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
+            Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
+            Function["head"]             = &algo_ptr::set_protocols_handl_head;
+            Function["helmet"]           = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]           = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"]         = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"]         = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
+            Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
+            Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
+            Function["vehicle"]          = &algo_ptr::set_protocols_handl_vehicle;
+            Function["wander"]           = &algo_ptr::set_protocols_handl_wander;
+            Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
+            Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
+            Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
+            Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
+            Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
+            Function["posture"]          = &algo_ptr::set_protocols_handl_posture;
         }
         void set_protocols_handl_climb() {
             _config->set_climb(_config->_path);
             climb_handle = protocol_ptr.make_instance<climb>(
                 climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_batterypilferers() {
+            _config->set_batterypilferers(_config->_path);
+            batterypilferers_handle = protocol_ptr.make_instance<batterypilferers>(
+                batterypilferers_new_param{_config->_batterypilferers_config.device,
+                    _config->_configure_directory.models_directory, _config->_batterypilferers_config.batch});
         }
         void set_protocols_handl_fighting() {
             _config->set_fighting(_config->_path);
@@ -271,6 +279,7 @@ namespace glasssix {
         selene selene_handle;
         refvest refvest_handle;
         climb climb_handle;
+        batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
         smog smog_handle;
