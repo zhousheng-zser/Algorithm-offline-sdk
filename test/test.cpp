@@ -601,7 +601,7 @@ namespace glasssix {
         }
         delete api_temp;
     }
-    // 多线程测偷电瓶
+    // t23 多线程测偷电瓶
     void thread_function_batterypilferers() {
         gx_batterypilferers_api* api_temp = new gx_batterypilferers_api();
         if (condition)
@@ -639,7 +639,7 @@ namespace glasssix {
             printf("batterypilferers time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // 多线程测打架
+    // t19 多线程测打架
     void thread_function_fighting() {
         gx_fighting_api* api_temp = new gx_fighting_api();
         if (condition)
@@ -984,7 +984,7 @@ int main(int argc, char** argv) {
 
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/video/climb_test.mp4", "/root/video/climb/", "/root/video/climb/ans/", data_);
+        // todo_video("/root/video/climb_test.mp4", "/root/video/climb_new/", "/root/video/climb_new/ans/", data_);
 
         // yuv_test();
         // gif_test();
