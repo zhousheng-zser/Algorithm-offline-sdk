@@ -1036,20 +1036,6 @@ int main(int argc, char** argv) {
         t[22].join();
         t[23].join();
 
-
-        // 用于windows播放视频或图片的
-        /*
-         display_test::test_detect(api);
-         display_test::test_track(api);
-         display_test::test_blur(api);
-         display_test::test_action_live(api);
-         display_test::test_spoofing_live(api);
-         display_test::test_feature(api);
-         display_test::test_feature_comparison(api);
-         display_test::test_user(api);
-         display_test::test_detect_integration(api);
-         display_test::test_add_folder_all(_Api);
-        */
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
         printf("the test all cost time : %d seconds\n", duration);
