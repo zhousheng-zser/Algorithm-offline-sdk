@@ -4,6 +4,7 @@
 file(
 	GLOB private_sources
     CONFIGURE_DEPENDS
+    #sophon.cpp
     test.cpp
     #nessus.cpp
     #face.cpp
@@ -39,7 +40,14 @@ target_link_libraries(
 	gx-offline-recognition
 )
 
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") )
+
+if(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")
+    target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
+    target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
+    target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
+endif()
+
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") )
     target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
     target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
     target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})

@@ -502,7 +502,7 @@ namespace glasssix {
                     auto val2 = api_temp->safe_production_onphone(img, val_posture);
                     printf("[onphone] : post-> onphone_list = %d norm_list = %d\n", val2.onphone_list.size(),
                         val2.norm_list.size());
-                }
+                    }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1040,7 +1040,7 @@ int main(int argc, char** argv) {
         t[20].join();
         t[21].join();
         t[22].join();
-        t[23].join();
+         t[23].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

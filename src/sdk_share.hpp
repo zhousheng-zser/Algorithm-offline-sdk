@@ -54,6 +54,8 @@ namespace glasssix {
         std::string share_platform_name = "UBUNTU";
 #elif (GX_PLATFORM_NAME == 7)
         std::string share_platform_name = "RV1106";
+#elif (GX_PLATFORM_NAME == 8)
+        std::string share_platform_name = "SOPHON";
 #endif
 
 #if (EMPOWER_LANGUAGE == 0)

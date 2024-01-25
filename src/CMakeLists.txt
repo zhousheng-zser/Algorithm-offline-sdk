@@ -4,7 +4,7 @@ set(package_name GxOfflineRecognition)
 add_library(${target_name} SHARED)
 
 #EMPOWER_LANGUAGE 0:C++ 1:JAVA
-#GX_PLATFORM_NAME 0:WINDOWS 1:RK3588 2:RK3399 3:RK3566 4:RV1109 5:CENTOS 6:UBUNTU
+#GX_PLATFORM_NAME 0:WINDOWS 1:RK3588 2:RK3399 3:RK3566 4:RV1109 5:CENTOS 6:UBUNTU 7:RV1106 8:SOPHON
 
 if(WIN32)
 	set(target_version 1.0.0)
@@ -38,6 +38,10 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=7)
 	set(target_version 1.0.1)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=8)
+	set(target_version 1.0.0)
 endif()
 message("EMPOWER_LANGUAGE  = ${GX_TOOLHAIN_TARGET_NAME}" )
 
@@ -84,6 +88,12 @@ target_link_libraries(
 	GXMiscellaneous::gx-miscellaneous
 	LicenseClient::license_client
 )
+
+if(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")
+    target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
+    target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
+    target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
+endif()
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")
 target_link_libraries(
