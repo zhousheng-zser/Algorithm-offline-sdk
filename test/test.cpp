@@ -496,7 +496,7 @@ namespace glasssix {
                     auto val2 = api_temp->safe_production_onphone(img, val_posture);
                     printf("[onphone] : post-> onphone_list = %d norm_list = %d\n", val2.onphone_list.size(),
                         val2.norm_list.size());
-                }
+                    }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -979,7 +979,6 @@ int main(int argc, char** argv) {
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
         // todo_video("/root/video/climb_test.mp4", "/root/video/climb/", "/root/video/climb/ans/", data_);
-
         // yuv_test();
         // gif_test();
 
@@ -1009,7 +1008,7 @@ int main(int argc, char** argv) {
         t[20] = std::thread(thread_function_posture);
         t[21] = std::thread(thread_function_wander_limit);
         t[22] = std::thread(thread_function_head);
-         t[23] = std::thread(thread_function_batterypilferers);
+        t[23] = std::thread(thread_function_batterypilferers);
 
         t[0].join();
         t[1].join();
@@ -1034,7 +1033,7 @@ int main(int argc, char** argv) {
         t[20].join();
         t[21].join();
         t[22].join();
-        t[23].join();
+         t[23].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

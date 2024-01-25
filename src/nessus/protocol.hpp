@@ -4,14 +4,15 @@
 #include "protocol_object.hpp"
 
 #include <memory>
+#include <mutex>
 #include <span>
 #include <string>
 #include <string_view>
-#include <mutex>
 
 #include <g6/char8_t_remediation.hpp>
 #include <g6/error_extensions.hpp>
 #include <g6/exception.hpp>
+#include <g6/meta/literal_string.hpp>
 #include <g6/naming_convention.hpp>
 #include <g6/reflection.hpp>
 
@@ -19,8 +20,9 @@ namespace glasssix {
     namespace detail {
         template <typename T>
         struct protocol_family {
-            inline static constexpr auto value =
-                convert_naming_convention_v<meta::name_of_v<T>, naming_convention::lower_case_with_underscores> + meta_string{U8('.')};
+            inline static constexpr meta::literal_string value{
+                convert_naming_convention_v<meta::name_of_v<T>, naming_convention::lower_case_with_underscores>,
+                meta::literal_string{"."}};
         };
 
         std::string make_procotol_full_name(std::string_view family, std::string_view name);
@@ -57,6 +59,7 @@ namespace glasssix {
                     }
                 });
         }
+
     private:
         class impl;
         std::unique_ptr<impl> impl_;

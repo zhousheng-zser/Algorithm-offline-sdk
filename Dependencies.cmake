@@ -123,6 +123,28 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3588" )
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_LIBS opencv_world)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON" )
+    find_package(
+    GXMiscellaneous
+    REQUIRED
+    NO_DEFAULT_PATH
+    HINTS
+    ${GX_MISCELLANEOUS_ROOT}
+    )
+    find_package(
+    LicenseClient
+    REQUIRED
+    NO_DEFAULT_PATH
+    HINTS
+    ${GX_LICENSECLIENT_ROOT}
+    )
+
+    find_package(OpenCV
+    REQUIRED 
+    NO_DEFAULT_PATH 
+    HINTS 
+    ${GX_OPENCV_ROOT}/lib/cmake/opencv4
+    )
 endif()
 
 if(WIN32)
@@ -148,6 +170,9 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3566")
     set(GX_CV_SDK_LIBS parser primitives)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     set(cvsdk_lib_relative_path "/lib/rk3588/aarch64-linux-gnu/release")
+    set(GX_CV_SDK_LIBS parser primitives)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON" )
+    set(cvsdk_lib_relative_path "/lib/sophon/aarch64-linux-gnu/release")
     set(GX_CV_SDK_LIBS parser primitives)
 endif()
 
