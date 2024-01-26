@@ -12,19 +12,29 @@
 #include <g6/char8_t_remediation.hpp>
 #include <g6/error_extensions.hpp>
 #include <g6/exception.hpp>
+#if (GX_PLATFORM_NAME == 8)
 #include <g6/meta/literal_string.hpp>
+#endif
 #include <g6/naming_convention.hpp>
 #include <g6/reflection.hpp>
 
 namespace glasssix {
     namespace detail {
         template <typename T>
+
+#if(GX_PLATFORM_NAME == 8)
         struct protocol_family {
             inline static constexpr meta::literal_string value{
                 convert_naming_convention_v<meta::name_of_v<T>, naming_convention::lower_case_with_underscores>,
                 meta::literal_string{"."}};
         };
-
+#else
+        struct protocol_family {
+            inline static constexpr auto value =
+                convert_naming_convention_v<meta::name_of_v<T>, naming_convention::lower_case_with_underscores>
+                + meta_string{U8('.')};
+        };
+#endif
         std::string make_procotol_full_name(std::string_view family, std::string_view name);
     } // namespace detail
 
