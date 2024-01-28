@@ -15,6 +15,7 @@
 #include "../src/nessus/protocols/pedestrian.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/posture.hpp"
+#include "../src/nessus/protocols/pump_light.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
@@ -133,6 +134,7 @@ namespace glasssix {
             Function["batterypilferers"] = &algo_ptr::set_protocols_handl_batterypilferers;
             Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
+            Function["pump_light"]       = &algo_ptr::set_protocols_handl_pump_light;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
             Function["head"]             = &algo_ptr::set_protocols_handl_head;
@@ -173,6 +175,10 @@ namespace glasssix {
             _config->set_flame(_config->_path);
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pump_light() {
+            _config->set_pump_light(_config->_path);
+            pump_light_handle = protocol_ptr.make_instance<pump_light>(pump_light_new_param{});
         }
         void set_protocols_handl_smog() {
             _config->set_smog(_config->_path);
@@ -284,6 +290,7 @@ namespace glasssix {
         batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
+        pump_light pump_light_handle;
         smog smog_handle;
         head head_handle;
         helmet helmet_handle;

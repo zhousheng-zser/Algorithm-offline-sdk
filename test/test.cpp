@@ -31,6 +31,7 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
+#include <gx_pump_light_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
@@ -705,6 +706,53 @@ namespace glasssix {
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t20 多线程测定制灯光
+    void thread_function_pump_light() {
+        gx_pump_light_api* api_temp = new gx_pump_light_api();
+        if (condition)
+            printf("-------\n");
+        int T      = TIMES;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                {
+                    gx_img_api img("/root/img/pump_light1.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_light(
+                        img, abi::vector<pump_light_point>{pump_light_point{1273, 161}, pump_light_point{1377, 187},
+                                 pump_light_point{1376, 220}, pump_light_point{1272, 195}});
+                    if (condition)
+                        printf("[posture] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                            val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
+                }
+                {
+                    gx_img_api img("/root/img/pump_light2.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_light(
+                        img, abi::vector<pump_light_point>{pump_light_point{731, 189}, pump_light_point{798, 189},
+                                 pump_light_point{798, 249}, pump_light_point{730, 248}});
+                    if (condition)
+                        printf("[posture] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                            val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
+                }
+                {
+                    gx_img_api img("/root/img/pump_light3.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_light(
+                        img, abi::vector<pump_light_point>{pump_light_point{436, 302}, pump_light_point{665, 232},
+                                 pump_light_point{667, 280}, pump_light_point{440, 363}});
+                    if (condition)
+                        printf("[posture] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                            val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
+                }
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_light time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 
 } // namespace glasssix
 
@@ -1014,6 +1062,7 @@ int main(int argc, char** argv) {
         t[21] = std::thread(thread_function_wander_limit);
         t[22] = std::thread(thread_function_head);
         t[23] = std::thread(thread_function_batterypilferers);
+        t[24] = std::thread(thread_function_pump_light);
 
         t[0].join();
         t[1].join();
@@ -1039,6 +1088,7 @@ int main(int argc, char** argv) {
         t[21].join();
         t[22].join();
          t[23].join();
+        t[24].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
