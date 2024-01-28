@@ -101,6 +101,12 @@ namespace glasssix {
         temp.get_to(_flame_config);
         flame_is_load = true;
     }
+    void config::set_pump_light(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_light.json");
+        temp.get_to(_pump_light_config);
+        pump_light_is_load = true;
+    }
     void config::set_smog(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/smog.json");
