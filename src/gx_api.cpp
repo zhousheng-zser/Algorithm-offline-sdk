@@ -264,6 +264,9 @@ namespace glasssix {
                 } else if (name == "pump_light.json" && _config->pump_light_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pump_light_config);
+                } else if (name == "pump_vesthelmet.json" && _config->pump_vesthelmet_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_vesthelmet_config);
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);
