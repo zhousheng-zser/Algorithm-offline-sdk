@@ -40,7 +40,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PLAYPHONE_V2.2.1";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PLAYPHONE_V2.3.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -60,6 +60,8 @@ namespace glasssix {
     //  玩手机检测
     playphone_info gx_playphone_api::safe_production_playphone(
         const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
+        if (mat.get_infrared_status())
+            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -106,6 +108,8 @@ namespace glasssix {
 
 
     playphone_info gx_playphone_api::safe_production_playphone(const gx_img_api& mat) {
+        if (mat.get_infrared_status())
+            return {};
         auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
         return safe_production_playphone(mat, posture_info_list);
     }

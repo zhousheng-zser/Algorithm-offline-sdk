@@ -65,7 +65,7 @@ namespace glasssix {
                 auto ptr = all_thread_algo_ptr[id_];
                 pump_vesthelmet_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-                auto result = ptr->protocol_ptr.invoke<pump_vesthelmet::detect>(ptr->pump_vesthelmet_handle,
+                auto result = ptr->protocol_ptr.invoke<vesthelmet::detect>(ptr->pump_vesthelmet_handle,
                     pump_vesthelmet_detect_param{.instance_guid = "",
                         .format                       = _config->_pump_vesthelmet_config.format,
                         .height                       = mat.get_rows(),

@@ -61,6 +61,8 @@ namespace glasssix {
     //  抽烟检测
     smoke_info gx_smoke_api::safe_production_smoke(
         const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
+        if (mat.get_infrared_status())
+            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -104,6 +106,8 @@ namespace glasssix {
     }
     //  抽烟检测
     smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
+        if (mat.get_infrared_status())
+            return {};
         auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
         return safe_production_smoke(mat, posture_info_list);
     }

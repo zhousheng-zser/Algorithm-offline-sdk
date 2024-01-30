@@ -28,6 +28,7 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len = 1llu * img.channels() * img.cols * img.rows;
+            is_infrared = check_infrared();
         }
         impl(std::vector<uchar>& buffer, int limit) {
             type = check_type(buffer, 10);
@@ -39,7 +40,8 @@ namespace glasssix {
                 img.release();
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
-            data_len = 1llu * img.channels() * img.cols * img.rows;
+            data_len    = 1llu * img.channels() * img.cols * img.rows;
+            is_infrared = check_infrared();
         }
         impl(unsigned char* yuv_data, int rows, int cols, int limit) {
             cv::Mat yuv_img(rows * 3 / 2, cols, CV_8UC1, yuv_data);
@@ -50,7 +52,8 @@ namespace glasssix {
                 img.release();
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
-            data_len = 1llu * img.channels() * img.cols * img.rows;
+            data_len    = 1llu * img.channels() * img.cols * img.rows;
+            is_infrared = check_infrared();
         }
         impl(std::span<const uchar> bgr_data, int rows, int cols, int limit, bool ref) {
             if (!ref) {
@@ -66,7 +69,8 @@ namespace glasssix {
                 img.release();
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
-            data_len = 1llu * img.channels() * img.cols * img.rows;
+            data_len    = 1llu * img.channels() * img.cols * img.rows;
+            is_infrared = check_infrared();
         }
         impl() {}
         ~impl() {}
@@ -113,7 +117,22 @@ namespace glasssix {
             }
             return "";
         }
-
+        bool check_infrared() {
+            cv::Mat hsv_frame;
+            cv::cvtColor(img, hsv_frame, cv::COLOR_BGR2HSV);
+            double sum = 0;
+            for (int i = 0; i < hsv_frame.rows; ++i) {
+                for (int j = 0; j < hsv_frame.cols; ++j) {
+                    // 访问S通道的值
+                    sum += hsv_frame.at<cv::Vec3b>(i, j)[1];
+                }
+            }
+            sum /= (hsv_frame.rows * hsv_frame.cols);
+            if (sum < 10)
+                return  true;
+             return  false;
+        }
+        bool is_infrared; // 判断是否为红外图像
         cv::Mat img;
         size_t data_len;
         abi::string type;
@@ -145,6 +164,9 @@ namespace glasssix {
     }
     abi::string gx_img_api::get_type() const {
         return impl_->type;
+    }
+    bool gx_img_api::get_infrared_status() const {
+        return impl_->is_infrared;
     }
     bool gx_img_api::rotate(int deg) {
         if (deg == image_rotation_type::DEG90) {

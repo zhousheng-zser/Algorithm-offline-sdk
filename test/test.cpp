@@ -32,6 +32,7 @@
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
 #include <gx_pump_light_api.hpp>
+#include <gx_pump_vesthelmet_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
@@ -721,7 +722,7 @@ namespace glasssix {
                         img, abi::vector<pump_light_point>{pump_light_point{1273, 161}, pump_light_point{1377, 187},
                                  pump_light_point{1376, 220}, pump_light_point{1272, 195}});
                     if (condition)
-                        printf("[posture] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                        printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
                             val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
                 }
                 {
@@ -730,7 +731,7 @@ namespace glasssix {
                         img, abi::vector<pump_light_point>{pump_light_point{731, 189}, pump_light_point{798, 189},
                                  pump_light_point{798, 249}, pump_light_point{730, 248}});
                     if (condition)
-                        printf("[posture] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                        printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
                             val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
                 }
                 {
@@ -739,7 +740,7 @@ namespace glasssix {
                         img, abi::vector<pump_light_point>{pump_light_point{436, 302}, pump_light_point{665, 232},
                                  pump_light_point{667, 280}, pump_light_point{440, 363}});
                     if (condition)
-                        printf("[posture] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                        printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
                             val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
                 }
 
@@ -751,6 +752,30 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition)
             printf("pump_light time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t25 多线程测定制天车工
+    void thread_function_pump_vesthelmet() {
+        gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api();
+        if (condition)
+            printf("-------\n");
+        int T      = TIMES;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                    gx_img_api img("/root/img/tcg.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_vesthelmet(img);
+                    //if (condition)
+                    //printf("[pump_vesthelmet] : category=%d %.2f\n", val.vesthelmet_list[0].category,
+                    //    val.vesthelmet_list[0].score);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_vesthelmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 
@@ -1063,6 +1088,7 @@ int main(int argc, char** argv) {
         t[22] = std::thread(thread_function_head);
         t[23] = std::thread(thread_function_batterypilferers);
         t[24] = std::thread(thread_function_pump_light);
+        t[25] = std::thread(thread_function_pump_vesthelmet);
 
         t[0].join();
         t[1].join();
@@ -1089,6 +1115,7 @@ int main(int argc, char** argv) {
         t[22].join();
         t[23].join();
         t[24].join();
+        t[25].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

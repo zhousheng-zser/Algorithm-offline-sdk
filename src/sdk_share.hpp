@@ -135,7 +135,7 @@ namespace glasssix {
             Function["batterypilferers"] = &algo_ptr::set_protocols_handl_batterypilferers;
             Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
-            Function["pump_vesthelmet"]  = &algo_ptr::set_protocols_handl_pump_vesthelmet;
+            Function["vesthelmet"]       = &algo_ptr::set_protocols_handl_pump_vesthelmet; //   临时先不加pump_
             Function["pump_light"]       = &algo_ptr::set_protocols_handl_pump_light;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
@@ -180,7 +180,7 @@ namespace glasssix {
         }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
-            pump_vesthelmet_handle = protocol_ptr.make_instance<pump_vesthelmet>(
+            pump_vesthelmet_handle = protocol_ptr.make_instance<vesthelmet>(
                 pump_vesthelmet_new_param{_config->_pump_vesthelmet_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_light() {
@@ -297,7 +297,7 @@ namespace glasssix {
         batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
-        pump_vesthelmet pump_vesthelmet_handle;
+        vesthelmet pump_vesthelmet_handle;
         pump_light pump_light_handle;
         smog smog_handle;
         head head_handle;
