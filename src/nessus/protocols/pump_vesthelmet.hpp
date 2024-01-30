@@ -21,15 +21,6 @@ namespace glasssix {
 
     struct pump_vesthelmet_detect_param {
 
-        struct confidence_params {
-            GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::optional<float>, conf_thres);
-            GX_FIELD(std::optional<float>, nms_thres);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
-        };
-
         GX_BEGIN_FIELDS(pump_vesthelmet_detect_param);
         GX_FIELD(std::string, instance_guid);
         GX_FIELD(std::int32_t, format);
@@ -39,7 +30,6 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
-        GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
