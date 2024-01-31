@@ -180,7 +180,7 @@ namespace glasssix {
         }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
-            pump_vesthelmet_handle = protocol_ptr.make_instance<vesthelmet>(
+            pump_vesthelmet_handle = protocol_ptr.make_instance<pump_vesthelmet>(
                 pump_vesthelmet_new_param{_config->_pump_vesthelmet_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_light() {
@@ -297,7 +297,7 @@ namespace glasssix {
         batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
-        vesthelmet pump_vesthelmet_handle;
+        pump_vesthelmet pump_vesthelmet_handle;
         pump_light pump_light_handle;
         smog smog_handle;
         head head_handle;

@@ -43,7 +43,7 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct vesthelmet : protocol_object {
+    struct pump_vesthelmet : protocol_object {
         struct detect : parser_inout<pump_vesthelmet_detect_param, pump_vesthelmet_detect_result> {};
     };
 } // namespace glasssix

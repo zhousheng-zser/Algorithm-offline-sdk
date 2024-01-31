@@ -22,7 +22,7 @@ namespace glasssix {
         };
         GX_BEGIN_FIELDS(pump_vesthelmet_info);
 
-        GX_FIELD(abi::vector<boxes>, vesthelmet_list); // 天车工列表
+        GX_FIELD(abi::vector<boxes>, pump_vesthelmet_list); // 天车工:穿了反光衣的人
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
