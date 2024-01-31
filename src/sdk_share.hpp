@@ -6,6 +6,7 @@
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/fighting.hpp"
 #include "../src/nessus/protocols/flame.hpp"
+#include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/head.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
@@ -16,6 +17,7 @@
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/posture.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
+#include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
@@ -134,6 +136,7 @@ namespace glasssix {
             Function["batterypilferers"] = &algo_ptr::set_protocols_handl_batterypilferers;
             Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
+            Function["pump_vesthelmet"]  = &algo_ptr::set_protocols_handl_pump_vesthelmet;
             Function["pump_light"]       = &algo_ptr::set_protocols_handl_pump_light;
             Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
@@ -175,6 +178,11 @@ namespace glasssix {
             _config->set_flame(_config->_path);
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pump_vesthelmet() {
+            _config->set_pump_vesthelmet(_config->_path);
+            pump_vesthelmet_handle = protocol_ptr.make_instance<pump_vesthelmet>(pump_vesthelmet_new_param{
+                _config->_pump_vesthelmet_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_light() {
             _config->set_pump_light(_config->_path);
@@ -290,6 +298,7 @@ namespace glasssix {
         batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
+        pump_vesthelmet pump_vesthelmet_handle;
         pump_light pump_light_handle;
         smog smog_handle;
         head head_handle;

@@ -101,6 +101,12 @@ namespace glasssix {
         temp.get_to(_flame_config);
         flame_is_load = true;
     }
+    void config::set_pump_vesthelmet(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_vesthelmet.json");
+        temp.get_to(_pump_vesthelmet_config);
+        pump_vesthelmet_is_load = true;
+    }
     void config::set_pump_light(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/pump_light.json");

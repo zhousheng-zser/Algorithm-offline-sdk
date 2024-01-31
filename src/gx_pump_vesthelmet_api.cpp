@@ -1,20 +1,17 @@
-﻿#include "gx_smoke_api.hpp"
+﻿#include "gx_pump_vesthelmet_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_smoke_api::gx_smoke_api() : impl_{std::make_unique<impl>()} {}
-    gx_smoke_api::gx_smoke_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_smoke_api::~gx_smoke_api() {}
-    gx_smoke_api::gx_smoke_api(gx_smoke_api&&) noexcept            = default;
-    gx_smoke_api& gx_smoke_api::operator=(gx_smoke_api&&) noexcept = default;
-    class gx_smoke_api::impl {
+    gx_pump_vesthelmet_api::gx_pump_vesthelmet_api() : impl_{std::make_unique<impl>()} {}
+    gx_pump_vesthelmet_api::gx_pump_vesthelmet_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pump_vesthelmet_api::~gx_pump_vesthelmet_api() {}
+    gx_pump_vesthelmet_api::gx_pump_vesthelmet_api(gx_pump_vesthelmet_api&&) noexcept            = default;
+    gx_pump_vesthelmet_api& gx_pump_vesthelmet_api::operator=(gx_pump_vesthelmet_api&&) noexcept = default;
+    class gx_pump_vesthelmet_api::impl {
     public:
         void init() {
-            if (api_temp == nullptr) {
-                api_temp = new gx_posture_api();
-            }
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -36,12 +33,11 @@ namespace glasssix {
             init();
         }
         ~impl() {}
-        gx_posture_api* api_temp = nullptr;
 
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_SMOKE_V3.0.3";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -58,11 +54,8 @@ namespace glasssix {
         }
     };
 
-    //  抽烟检测
-    smoke_info gx_smoke_api::safe_production_smoke(
-        const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
-        if (mat.get_infrared_status())
-            return {};
+    //  安全生产 天车工检测
+    pump_vesthelmet_info gx_pump_vesthelmet_api::safe_production_pump_vesthelmet(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -70,28 +63,17 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                smoke_info ans;
-                // 过滤掉姿态置信度小于0.6的
-                abi::vector<posture_info> posture_list_temp;
-                for (int i = 0; i < posture_info_list.size(); i++) {
-                    if (posture_info_list[i].score >= 0.6)
-                        posture_list_temp.emplace_back(posture_info_list[i]);
-                }
+                pump_vesthelmet_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-                auto result = ptr->protocol_ptr.invoke<smoke::detect>(ptr->smoke_handle,
-                    smoke_detect_param{.instance_guid = "",
-                        .format                       = _config->_smoke_config.format,
+                auto result = ptr->protocol_ptr.invoke<pump_vesthelmet::detect>(ptr->pump_vesthelmet_handle,
+                    pump_vesthelmet_detect_param{.instance_guid = "",
+                        .format                       = _config->_pump_vesthelmet_config.format,
                         .height                       = mat.get_rows(),
                         .width                        = mat.get_cols(),
                         .roi_x                        = 0,
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
-                        .roi_height                   = mat.get_rows(),
-                        .posture_info_list            = posture_list_temp,
-                        .params = smoke_detect_param::confidence_params{.conf_thres = _config->_smoke_config.conf_thres,
-                            .nms_thres                                              = _config->_smoke_config.nms_thres,
-                            .little_target_conf_thres = _config->_smoke_config.little_target_conf_thres,
-                            .smoke_conf_thres         = _config->_smoke_config.smoke_conf_thres}},
+                        .roi_height                   = mat.get_rows()},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -99,17 +81,10 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_smoke_dump.jpg");
+            bool flag = write_dump_img(mat, "_pump_vesthelmet_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
-    }
-    //  抽烟检测
-    smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
-        auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
-        return safe_production_smoke(mat, posture_info_list);
     }
 
 } // namespace glasssix
