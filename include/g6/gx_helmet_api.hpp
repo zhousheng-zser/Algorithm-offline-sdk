@@ -1,5 +1,6 @@
 #pragma once
 #include "gx_api.hpp"
+#include "gx_head_api.hpp"
 #include "info_helmet.hpp"
 
 namespace glasssix {
@@ -13,6 +14,9 @@ namespace glasssix {
         gx_helmet_api& operator=(gx_helmet_api&&) noexcept;
         //  安全生产 安全帽检测
         helmet_info safe_production_helmet(const gx_img_api& mat);
+
+        //  安全生产 安全帽检测
+        helmet_info safe_production_helmet(const gx_img_api& mat, const abi::vector<head_info>& head_info_list);
 
     private:
         class impl;

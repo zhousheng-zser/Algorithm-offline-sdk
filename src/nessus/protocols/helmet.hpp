@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../include/g6/info_helmet.hpp"
+#include "../../../include/g6/info_head.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -40,6 +41,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(abi::vector<head_info>, head_info_list);
         GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 

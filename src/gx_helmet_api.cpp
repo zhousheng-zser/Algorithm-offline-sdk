@@ -12,6 +12,9 @@ namespace glasssix {
     class gx_helmet_api::impl {
     public:
         void init() {
+            if (api_temp == nullptr) {
+                api_temp = new gx_head_api();
+            }
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -33,11 +36,12 @@ namespace glasssix {
             init();
         }
         ~impl() {}
+        gx_head_api* api_temp = nullptr;
 
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.1.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V2.2.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -56,7 +60,8 @@ namespace glasssix {
 
 
     //  安全生产 安全帽检测
-    helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {
+    helmet_info gx_helmet_api::safe_production_helmet(
+        const gx_img_api& mat, const abi::vector<head_info>& head_info_list) {
         try {
             if (mat.get_infrared_status())
                 return {};
@@ -67,6 +72,12 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 helmet_info ans;
+                // 过滤掉人头置信度小于conf_thres的
+                abi::vector<head_info> head_list_temp;
+                for (int i = 0; i < head_info_list.size(); i++) {
+                    if (head_info_list[i].score >= _config->_helmet_config.conf_thres)
+                        head_list_temp.emplace_back(head_info_list[i]);
+                }
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<helmet::detect>(ptr->helmet_handle,
                     helmet_detect_param{.instance_guid = "",
@@ -77,6 +88,7 @@ namespace glasssix {
                         .roi_y                         = 0,
                         .roi_width                     = mat.get_cols(),
                         .roi_height                    = mat.get_rows(),
+                        .head_info_list                = head_list_temp,
                         .params =
                             helmet_detect_param::confidence_params{.conf_thres = _config->_helmet_config.conf_thres,
                                 .nms_thres                                     = _config->_helmet_config.nms_thres,
@@ -92,4 +104,10 @@ namespace glasssix {
         }
     }
 
+    helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {
+        if (mat.get_infrared_status())
+            return {};
+        auto head_info_list = impl_->api_temp->safe_production_head(mat);
+        return safe_production_helmet(mat, head_info_list);
+    }
 } // namespace glasssix
