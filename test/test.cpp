@@ -707,7 +707,7 @@ namespace glasssix {
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t20 多线程测定制灯光
+    // t24 多线程测定制灯光
     void thread_function_pump_light() {
         gx_pump_light_api* api_temp = new gx_pump_light_api();
         if (condition)
