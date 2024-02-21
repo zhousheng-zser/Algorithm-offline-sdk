@@ -373,8 +373,7 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
-        if (condition)
-            printf("%d\n", api_temp->wander_remove_library());
+        api_temp->wander_remove_library();
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition)
@@ -606,8 +605,6 @@ namespace glasssix {
     // t23 多线程测偷电瓶
     void thread_function_batterypilferers() {
         gx_batterypilferers_api* api_temp = new gx_batterypilferers_api();
-        if (condition)
-            printf("-------\n");
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -644,8 +641,6 @@ namespace glasssix {
     // t19 多线程测打架
     void thread_function_fighting() {
         gx_fighting_api* api_temp = new gx_fighting_api();
-        if (condition)
-            printf("-------\n");
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -686,8 +681,6 @@ namespace glasssix {
     // t20 多线程测姿态
     void thread_function_posture() {
         gx_posture_api* api_temp = new gx_posture_api();
-        if (condition)
-            printf("-------\n");
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -710,8 +703,6 @@ namespace glasssix {
     // t24 多线程测定制灯光
     void thread_function_pump_light() {
         gx_pump_light_api* api_temp = new gx_pump_light_api();
-        if (condition)
-            printf("-------\n");
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -757,8 +748,6 @@ namespace glasssix {
     // t25 多线程测定制天车工
     void thread_function_pump_vesthelmet() {
         gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api();
-        if (condition)
-            printf("-------\n");
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {

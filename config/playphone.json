@@ -3,6 +3,6 @@
     "format": 1,
     "head_conf_thres": 0.6,
     "head_nms_thres": 0.8,
-    "phone_conf_thres": 0.6,
+    "phone_conf_thres": 0.7,
     "phone_nms_thres": 0.5
 }
