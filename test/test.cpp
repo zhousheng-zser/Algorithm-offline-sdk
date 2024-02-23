@@ -33,13 +33,15 @@
 #include <gx_workcloth_api.hpp>
 #include <gx_pump_light_api.hpp>
 #include <gx_pump_vesthelmet_api.hpp>
+#include <gx_pump_gate_status_api.hpp>
+#include <gx_pump_pumptop_person_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
 #define TIMES 1000
 
 namespace glasssix {
-
+    // 返回的绝对路径
     std::vector<abi::string> find_file(std::filesystem::path folder_path) {
         std::vector<abi::string> ans_list;
         for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
@@ -767,6 +769,51 @@ namespace glasssix {
             printf("pump_vesthelmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t26 多线程测定制大门状态
+    void thread_function_pump_gate_status() {
+        gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+        int T                            = TIMES;
+        auto start                       = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/gate_open.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_gate_status(img,0);
+                //if (condition)
+                //    printf("[pump_gate_status] : category = %d score = %.2f  \n", val.pump_gate_status_list[0].category,
+                //        val.pump_gate_status_list[0].score);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_gate_status time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t27 多线程测定制泵顶行人
+    void thread_function_pump_pumptop_person() {
+        gx_pump_pumptop_person_api* api_temp = new gx_pump_pumptop_person_api();
+        int T                            = TIMES;
+        auto start                       = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                //gx_img_api img("/root/img/pumptop_person.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/1.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_pumptop_person(img);
+                //if (condition)
+                //    printf("[pump_pumptop_person] : category = %d score = %.2f  \n", val.pump_pumptop_person_list[0].category,
+                //        val.pump_pumptop_person_list[0].score);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_pumptop_person time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 
 } // namespace glasssix
 
@@ -1078,6 +1125,8 @@ int main(int argc, char** argv) {
         t[23] = std::thread(thread_function_batterypilferers);
         t[24] = std::thread(thread_function_pump_light);
         t[25] = std::thread(thread_function_pump_vesthelmet);
+        t[26] = std::thread(thread_function_pump_gate_status);
+        t[27] = std::thread(thread_function_pump_pumptop_person);
 
         t[0].join();
         t[1].join();
@@ -1105,6 +1154,8 @@ int main(int argc, char** argv) {
         t[23].join();
         t[24].join();
         t[25].join();
+        t[26].join();
+        t[27].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

@@ -126,6 +126,16 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_gate_status_config {
+        GX_BEGIN_FIELDS(pump_gate_status_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, door_close_ratio);
+        GX_FIELD(float, door_open_ratio);
+        GX_FIELD(float, floor_ratio);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct pump_light_config {
         GX_BEGIN_FIELDS(pump_light_config);
         GX_FIELD(int, format);
@@ -197,6 +207,14 @@ namespace glasssix {
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct pump_pumptop_person_config {
+        GX_BEGIN_FIELDS(pump_pumptop_person_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -299,6 +317,7 @@ namespace glasssix {
         fighting_config _fighting_config;
         flame_config _flame_config;
         pump_vesthelmet_config _pump_vesthelmet_config;
+        pump_gate_status_config _pump_gate_status_config;
         pump_light_config _pump_light_config;
         smog_config _smog_config;
         helmet_config _helmet_config;
@@ -308,6 +327,7 @@ namespace glasssix {
         tumble_config _tumble_config;
         vehicle_config _vehicle_config;
         wander_config _wander_config;
+        pump_pumptop_person_config _pump_pumptop_person_config;
         leavepost_config _leavepost_config;
         playphone_config _playphone_config;
         onphone_config _onphone_config;
@@ -326,6 +346,7 @@ namespace glasssix {
         void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_pump_vesthelmet(const abi::string& path);
+        void set_pump_gate_status(const abi::string& path);
         void set_pump_light(const abi::string& path);
         void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
@@ -335,6 +356,7 @@ namespace glasssix {
         void set_tumble(const abi::string& path);
         void set_vehicle(const abi::string& path);
         void set_wander(const abi::string& path);
+        void set_pump_pumptop_person(const abi::string& path);
         void set_leavepost(const abi::string& path);
         void set_playphone(const abi::string& path);
         void set_onphone(const abi::string& path);
@@ -353,7 +375,9 @@ namespace glasssix {
         bool batterypilferers_is_load    = false;
         bool fighting_is_load            = false;
         bool flame_is_load               = false;
+        bool pump_pumptop_person_is_load = false;
         bool pump_vesthelmet_is_load     = false;
+        bool pump_gate_status_is_load    = false;
         bool pump_light_is_load          = false;
         bool smog_is_load                = false;
         bool helmet_is_load              = false;
