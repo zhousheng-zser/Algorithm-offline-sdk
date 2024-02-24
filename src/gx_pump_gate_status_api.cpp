@@ -80,6 +80,9 @@ namespace glasssix {
     //  安全生产 大门状态检测
     abi::string gx_pump_gate_status_api::safe_production_pump_gate_status(
         const gx_img_api& mat, int device_id) {
+        if (device_id < 10 || device_id > 17) {
+            throw std::invalid_argument("作业间ID不是有效值，传入值为 " + std::to_string(device_id) + "，请输入10-17");
+        }
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
