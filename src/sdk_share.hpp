@@ -15,6 +15,7 @@
 #include "../src/nessus/protocols/pedestrian.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/posture.hpp"
+#include "../src/nessus/protocols/pump_mask.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/pump_gate_status.hpp"
@@ -137,6 +138,7 @@ namespace glasssix {
             Function["batterypilferers"]    = &algo_ptr::set_protocols_handl_batterypilferers;
             Function["fighting"]            = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
+            Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
             Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
             Function["pump_light"]          = &algo_ptr::set_protocols_handl_pump_light;
@@ -181,6 +183,11 @@ namespace glasssix {
             _config->set_flame(_config->_path);
             flame_handle = protocol_ptr.make_instance<flame>(
                 flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pump_mask() {
+            _config->set_pump_mask(_config->_path);
+            pump_mask_handle = protocol_ptr.make_instance<pump_mask>(
+                pump_mask_new_param{_config->_pump_mask_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
@@ -311,6 +318,7 @@ namespace glasssix {
         batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
+        pump_mask pump_mask_handle;
         pump_vesthelmet pump_vesthelmet_handle;
         pump_gate_status pump_gate_status_handle;
         pump_light pump_light_handle;

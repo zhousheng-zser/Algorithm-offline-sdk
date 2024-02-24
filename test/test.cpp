@@ -31,6 +31,7 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
+#include <gx_pump_mask_api.hpp>
 #include <gx_pump_light_api.hpp>
 #include <gx_pump_vesthelmet_api.hpp>
 #include <gx_pump_gate_status_api.hpp>
