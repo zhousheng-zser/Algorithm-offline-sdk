@@ -1,17 +1,19 @@
-﻿#include "gx_tumble_api.hpp"
+﻿#include "gx_pump_pumptop_person_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
-
-    gx_tumble_api::gx_tumble_api() : impl_{std::make_unique<impl>()} {}
-    gx_tumble_api::gx_tumble_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_tumble_api::~gx_tumble_api() {}
-    gx_tumble_api::gx_tumble_api(gx_tumble_api&&) noexcept            = default;
-    gx_tumble_api& gx_tumble_api::operator=(gx_tumble_api&&) noexcept = default;
-    class gx_tumble_api::impl {
+    gx_pump_pumptop_person_api::gx_pump_pumptop_person_api() : impl_{std::make_unique<impl>()} {}
+    gx_pump_pumptop_person_api::gx_pump_pumptop_person_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pump_pumptop_person_api::~gx_pump_pumptop_person_api() {}
+    gx_pump_pumptop_person_api::gx_pump_pumptop_person_api(gx_pump_pumptop_person_api&&) noexcept            = default;
+    gx_pump_pumptop_person_api& gx_pump_pumptop_person_api::operator=(gx_pump_pumptop_person_api&&) noexcept = default;
+    class gx_pump_pumptop_person_api::impl {
     public:
         void init() {
+            if (api_temp == nullptr) {
+                api_temp = new gx_pedestrian_api();
+            }
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -33,11 +35,13 @@ namespace glasssix {
             init();
         }
         ~impl() {}
+        gx_pedestrian_api* api_temp = nullptr;
 
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_TUMBLE_V3.0.5";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_PUMPTOP_PERSON_V1.0.0";
+
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -54,10 +58,16 @@ namespace glasssix {
         }
     };
 
-    //  跌倒检测
-    tumble_info gx_tumble_api::safe_production_tumble(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
+    //  泵顶行人检测
+    pump_pumptop_person_info gx_pump_pumptop_person_api::safe_production_pump_pumptop_person(const gx_img_api& mat,
+        const abi::vector<pedestrian_info::boxes>& person_list) {
+        pump_pumptop_person_info ans;
+        // 过滤掉行人置信度小于person_conf的
+        abi::vector<pedestrian_info::boxes> person_list_temp;
+        for (int i = 0; i < person_list.size(); i++) {
+            if (person_list[i].score >= _config->_pump_pumptop_person_config.conf_thres)
+                person_list_temp.emplace_back(person_list[i]);
+        }
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -65,31 +75,29 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                tumble_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-                auto result = ptr->protocol_ptr.invoke<tumble::detect>(ptr->tumble_handle,
-                    tumble_detect_param{.instance_guid = "",
-                        .format                        = _config->_tumble_config.format,
+                auto result = ptr->protocol_ptr.invoke<pump_pumptop_person::detect>(ptr->pump_pumptop_person_handle,
+                    pump_pumptop_person_detect_param{.instance_guid = "",
+                        .format                        = _config->_pump_pumptop_person_config.format,
                         .height                        = mat.get_rows(),
                         .width                         = mat.get_cols(),
-                        .roi_x                         = 0,
-                        .roi_y                         = 0,
-                        .roi_width                     = mat.get_cols(),
-                        .roi_height                    = mat.get_rows(),
-                        .params =
-                            tumble_detect_param::confidence_params{.conf_thres = _config->_tumble_config.conf_thres,
-                                .nms_thres                                     = _config->_tumble_config.nms_thres}},
+                        .person_list                   = person_list_temp},
                     str);
-
-                ans = std::move(result.detect_info);
-                return ans;
+                return std::move(result.detect_info);
             });
-            return result_pool.get();
+            ans              = result_pool.get();
+            return ans;
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_tumble_dump.jpg");
+            bool flag = write_dump_img(mat, "_pump_pumptop_person_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
+    }
+
+    //  徘徊检测
+    pump_pumptop_person_info gx_pump_pumptop_person_api::safe_production_pump_pumptop_person(const gx_img_api& mat) {
+        auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
+        return safe_production_pump_pumptop_person(mat, person_list.person_list);
     }
 
 } // namespace glasssix

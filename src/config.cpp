@@ -107,6 +107,12 @@ namespace glasssix {
         temp.get_to(_pump_vesthelmet_config);
         pump_vesthelmet_is_load = true;
     }
+    void config::set_pump_gate_status(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_gate_status.json");
+        temp.get_to(_pump_gate_status_config);
+        pump_gate_status_is_load = true;
+    }
     void config::set_pump_light(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/pump_light.json");
@@ -160,6 +166,12 @@ namespace glasssix {
         temp = read_json_file(path + "/wander.json");
         temp.get_to(_wander_config);
         wander_is_load = true;
+    }
+    void config::set_pump_pumptop_person(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_pumptop_person.json");
+        temp.get_to(_pump_pumptop_person_config);
+        pump_pumptop_person_is_load = true; 
     }
     void config::set_leavepost(const abi::string& path) {
         glasssix::json temp;

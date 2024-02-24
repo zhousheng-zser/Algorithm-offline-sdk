@@ -27,7 +27,7 @@ namespace glasssix {
                 img.release();
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
-            data_len = 1llu * img.channels() * img.cols * img.rows;
+            data_len    = 1llu * img.channels() * img.cols * img.rows;
             is_infrared = check_infrared();
         }
         impl(std::vector<uchar>& buffer, int limit) {
@@ -129,8 +129,8 @@ namespace glasssix {
             }
             sum /= (hsv_frame.rows * hsv_frame.cols);
             if (sum < 10)
-                return  true;
-             return  false;
+                return true;
+            return false;
         }
         bool is_infrared; // 判断是否为红外图像
         cv::Mat img;
@@ -220,6 +220,7 @@ namespace glasssix {
             name_config["tumble.json"]              = _config->_tumble_config;
             name_config["vehicle.json"]             = _config->_vehicle_config;
             name_config["wander.json"]              = _config->_wander_config;
+            name_config["pump_pumptop_person.json"] = _config->_pump_pumptop_person_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
@@ -289,6 +290,12 @@ namespace glasssix {
                 } else if (name == "pump_vesthelmet.json" && _config->pump_vesthelmet_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pump_vesthelmet_config);
+                } else if (name == "pump_gate_status.json" && _config->pump_gate_status_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_gate_status_config);
+                } else if (name == "pump_pumptop_person.json" && _config->pump_pumptop_person_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_pumptop_person_config);
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);

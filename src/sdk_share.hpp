@@ -6,7 +6,6 @@
 #include "../src/nessus/protocols/damocles.hpp"
 #include "../src/nessus/protocols/fighting.hpp"
 #include "../src/nessus/protocols/flame.hpp"
-#include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/head.hpp"
 #include "../src/nessus/protocols/helmet.hpp"
 #include "../src/nessus/protocols/irisviel.hpp"
@@ -18,6 +17,7 @@
 #include "../src/nessus/protocols/posture.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
+#include "../src/nessus/protocols/pump_gate_status.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
@@ -27,6 +27,7 @@
 #include "../src/nessus/protocols/tumble.hpp"
 #include "../src/nessus/protocols/vehicle.hpp"
 #include "../src/nessus/protocols/wander.hpp"
+#include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
@@ -132,31 +133,33 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
-            Function["climb"]            = &algo_ptr::set_protocols_handl_climb;
-            Function["batterypilferers"] = &algo_ptr::set_protocols_handl_batterypilferers;
-            Function["fighting"]         = &algo_ptr::set_protocols_handl_fighting;
-            Function["flame"]            = &algo_ptr::set_protocols_handl_flame;
-            Function["pump_vesthelmet"]  = &algo_ptr::set_protocols_handl_pump_vesthelmet;
-            Function["pump_light"]       = &algo_ptr::set_protocols_handl_pump_light;
-            Function["smog"]             = &algo_ptr::set_protocols_handl_smog;
-            Function["refvest"]          = &algo_ptr::set_protocols_handl_refvest;
-            Function["head"]             = &algo_ptr::set_protocols_handl_head;
-            Function["helmet"]           = &algo_ptr::set_protocols_handl_helmet;
-            Function["selene"]           = &algo_ptr::set_protocols_handl_selene;
-            Function["longinus"]         = &algo_ptr::set_protocols_handl_longinus;
-            Function["romancia"]         = &algo_ptr::set_protocols_handl_romancia;
-            Function["damocles"]         = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]            = &algo_ptr::set_protocols_handl_sleep;
-            Function["smoke"]            = &algo_ptr::set_protocols_handl_smoke;
-            Function["tumble"]           = &algo_ptr::set_protocols_handl_tumble;
-            Function["vehicle"]          = &algo_ptr::set_protocols_handl_vehicle;
-            Function["wander"]           = &algo_ptr::set_protocols_handl_wander;
-            Function["leavepost"]        = &algo_ptr::set_protocols_handl_leavepost;
-            Function["playphone"]        = &algo_ptr::set_protocols_handl_playphone;
-            Function["onphone"]          = &algo_ptr::set_protocols_handl_onphone;
-            Function["workcloth"]        = &algo_ptr::set_protocols_handl_workcloth;
-            Function["pedestrian"]       = &algo_ptr::set_protocols_handl_pedestrian;
-            Function["posture"]          = &algo_ptr::set_protocols_handl_posture;
+            Function["climb"]               = &algo_ptr::set_protocols_handl_climb;
+            Function["batterypilferers"]    = &algo_ptr::set_protocols_handl_batterypilferers;
+            Function["fighting"]            = &algo_ptr::set_protocols_handl_fighting;
+            Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
+            Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
+            Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
+            Function["pump_light"]          = &algo_ptr::set_protocols_handl_pump_light;
+            Function["smog"]                = &algo_ptr::set_protocols_handl_smog;
+            Function["refvest"]             = &algo_ptr::set_protocols_handl_refvest;
+            Function["head"]                = &algo_ptr::set_protocols_handl_head;
+            Function["helmet"]              = &algo_ptr::set_protocols_handl_helmet;
+            Function["selene"]              = &algo_ptr::set_protocols_handl_selene;
+            Function["longinus"]            = &algo_ptr::set_protocols_handl_longinus;
+            Function["romancia"]            = &algo_ptr::set_protocols_handl_romancia;
+            Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
+            Function["sleep"]               = &algo_ptr::set_protocols_handl_sleep;
+            Function["smoke"]               = &algo_ptr::set_protocols_handl_smoke;
+            Function["tumble"]              = &algo_ptr::set_protocols_handl_tumble;
+            Function["vehicle"]             = &algo_ptr::set_protocols_handl_vehicle;
+            Function["wander"]              = &algo_ptr::set_protocols_handl_wander;
+            Function["pump_pumptop_person"] = &algo_ptr::set_protocols_handl_pump_pumptop_person;
+            Function["leavepost"]           = &algo_ptr::set_protocols_handl_leavepost;
+            Function["playphone"]           = &algo_ptr::set_protocols_handl_playphone;
+            Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
+            Function["workcloth"]           = &algo_ptr::set_protocols_handl_workcloth;
+            Function["pedestrian"]          = &algo_ptr::set_protocols_handl_pedestrian;
+            Function["posture"]             = &algo_ptr::set_protocols_handl_posture;
         }
         void set_protocols_handl_climb() {
             _config->set_climb(_config->_path);
@@ -183,6 +186,11 @@ namespace glasssix {
             _config->set_pump_vesthelmet(_config->_path);
             pump_vesthelmet_handle = protocol_ptr.make_instance<pump_vesthelmet>(pump_vesthelmet_new_param{
                 _config->_pump_vesthelmet_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pump_gate_status() {
+            _config->set_pump_gate_status(_config->_path);
+            pump_gate_status_handle = protocol_ptr.make_instance<pump_gate_status>(pump_gate_status_new_param{
+                _config->_pump_gate_status_config.device});
         }
         void set_protocols_handl_pump_light() {
             _config->set_pump_light(_config->_path);
@@ -258,6 +266,11 @@ namespace glasssix {
             wander_handle = protocol_ptr.make_instance<wander>(
                 wander_new_param{_config->_wander_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pump_pumptop_person() {
+            _config->set_pump_pumptop_person(_config->_path);
+            pump_pumptop_person_handle = protocol_ptr.make_instance<pump_pumptop_person>(pump_pumptop_person_new_param{
+                _config->_pump_pumptop_person_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_leavepost() {
             _config->set_leavepost(_config->_path);
             leavepost_handle = protocol_ptr.make_instance<leavepost>(
@@ -299,6 +312,7 @@ namespace glasssix {
         fighting fighting_handle;
         flame flame_handle;
         pump_vesthelmet pump_vesthelmet_handle;
+        pump_gate_status pump_gate_status_handle;
         pump_light pump_light_handle;
         smog smog_handle;
         head head_handle;
@@ -308,6 +322,7 @@ namespace glasssix {
         tumble tumble_handle;
         vehicle vehicle_handle;
         wander wander_handle;
+        pump_pumptop_person pump_pumptop_person_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;
