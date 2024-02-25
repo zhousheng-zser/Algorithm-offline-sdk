@@ -6,6 +6,7 @@ file(
     CONFIGURE_DEPENDS
     #sophon.cpp
     test.cpp
+    #zser.cpp
     #nessus.cpp
     #face.cpp
 )

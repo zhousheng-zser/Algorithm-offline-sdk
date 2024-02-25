@@ -119,6 +119,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_mask_config {
+        GX_BEGIN_FIELDS(pump_mask_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct pump_vesthelmet_config {
         GX_BEGIN_FIELDS(pump_vesthelmet_config);
         GX_FIELD(int, device);
@@ -316,6 +325,7 @@ namespace glasssix {
         batterypilferers_config _batterypilferers_config;
         fighting_config _fighting_config;
         flame_config _flame_config;
+        pump_mask_config _pump_mask_config;
         pump_vesthelmet_config _pump_vesthelmet_config;
         pump_gate_status_config _pump_gate_status_config;
         pump_light_config _pump_light_config;
@@ -345,6 +355,7 @@ namespace glasssix {
         void set_batterypilferers(const abi::string& path);
         void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
+        void set_pump_mask(const abi::string& path);
         void set_pump_vesthelmet(const abi::string& path);
         void set_pump_gate_status(const abi::string& path);
         void set_pump_light(const abi::string& path);
@@ -375,6 +386,7 @@ namespace glasssix {
         bool batterypilferers_is_load    = false;
         bool fighting_is_load            = false;
         bool flame_is_load               = false;
+        bool pump_mask_is_load           = false;
         bool pump_pumptop_person_is_load = false;
         bool pump_vesthelmet_is_load     = false;
         bool pump_gate_status_is_load    = false;

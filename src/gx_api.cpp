@@ -221,6 +221,9 @@ namespace glasssix {
             name_config["vehicle.json"]             = _config->_vehicle_config;
             name_config["wander.json"]              = _config->_wander_config;
             name_config["pump_pumptop_person.json"] = _config->_pump_pumptop_person_config;
+            name_config["pump_vesthelmet.json"]     = _config->_pump_vesthelmet_config;
+            name_config["pump_mask.json"]           = _config->_pump_mask_config;
+            name_config["pump_light.json"]           = _config->_pump_light_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
@@ -287,6 +290,9 @@ namespace glasssix {
                 } else if (name == "pump_light.json" && _config->pump_light_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pump_light_config);
+                } else if (name == "pump_mask.json" && _config->pump_mask_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_mask_config);
                 } else if (name == "pump_vesthelmet.json" && _config->pump_vesthelmet_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pump_vesthelmet_config);
