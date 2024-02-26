@@ -32,6 +32,7 @@
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
 #include <gx_pump_mask_api.hpp>
+#include <gx_pump_hoisting_api.hpp>
 #include <gx_pump_light_api.hpp>
 #include <gx_pump_vesthelmet_api.hpp>
 #include <gx_pumptop_helmet_api.hpp>
@@ -780,9 +781,8 @@ namespace glasssix {
             try {
                 gx_img_api img("/root/img/gate_open.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_gate_status(img,10);
-                //if (condition)
-                //    printf("[pump_gate_status] : category = %d score = %.2f  \n", val.pump_gate_status_list[0].category,
-                //        val.pump_gate_status_list[0].score);
+                if (condition)
+                    printf("[pump_gate_status] : %s  \n", val.c_str());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -857,6 +857,29 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition)
             printf("pumptop_helmet time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t30 多线程测定制泵业狭小空间
+    void thread_function_pump_hoisting() {
+        gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api();
+        int T                           = TIMES;
+        auto start                      = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img1("/root/img/pump_hoistring1.png", static_cast<int>(1e9));
+                gx_img_api img2("/root/img/pump_hoistring2.png", static_cast<int>(1e9));
+                api_temp->safe_production_pump_hoisting(img1);
+                auto val = api_temp->safe_production_pump_hoisting(img2);
+                if (condition)
+                    printf("[pump_hoisting] : dangerous_region = %llu \n", val.dangerous_region.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_hoisting time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 
@@ -1142,7 +1165,7 @@ int main(int argc, char** argv) {
         // gif_test();
 
         /* 多线程测性能测试 */
-        std::thread t[30];
+        std::thread t[50];
 
         t[0]  = std::thread(thread_function_helmet);
         t[1]  = std::thread(thread_function_flame);
@@ -1174,6 +1197,7 @@ int main(int argc, char** argv) {
         t[27] = std::thread(thread_function_pump_pumptop_person);
         t[28] = std::thread(thread_function_pump_mask);
         t[29] = std::thread(thread_function_pumptop_helmet);
+        t[30] = std::thread(thread_function_pump_hoisting);
 
         t[0].join();
         t[1].join();
@@ -1205,6 +1229,7 @@ int main(int argc, char** argv) {
         t[27].join();
         t[28].join();
         t[29].join();
+        t[30].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

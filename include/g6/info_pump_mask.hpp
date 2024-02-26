@@ -11,7 +11,7 @@ namespace glasssix {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
             GX_FIELD(float, score); // 置信度
-            GX_FIELD(std::int32_t, category); // 1带了面子 2没带面罩 3不能判断带没带面罩
+            GX_FIELD(std::int32_t, category); // 1带了面罩 2没带面罩 3不能判断带没带面罩
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x

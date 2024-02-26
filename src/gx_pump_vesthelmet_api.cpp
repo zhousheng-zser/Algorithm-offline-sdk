@@ -5,7 +5,8 @@
 namespace glasssix {
 
     gx_pump_vesthelmet_api::gx_pump_vesthelmet_api() : impl_{std::make_unique<impl>()} {}
-    gx_pump_vesthelmet_api::gx_pump_vesthelmet_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pump_vesthelmet_api::gx_pump_vesthelmet_api(const abi::string& config_path)
+        : impl_{std::make_unique<impl>(config_path)} {}
     gx_pump_vesthelmet_api::~gx_pump_vesthelmet_api() {}
     gx_pump_vesthelmet_api::gx_pump_vesthelmet_api(gx_pump_vesthelmet_api&&) noexcept            = default;
     gx_pump_vesthelmet_api& gx_pump_vesthelmet_api::operator=(gx_pump_vesthelmet_api&&) noexcept = default;
@@ -36,8 +37,9 @@ namespace glasssix {
 
     private:
         secret_key_empower empower;
-        std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.1.0";
+        std::string empower_key = "";
+        std::string empower_algorithm_id =
+            share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -67,21 +69,21 @@ namespace glasssix {
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<pump_vesthelmet::detect>(ptr->pump_vesthelmet_handle,
                     pump_vesthelmet_detect_param{.instance_guid = "",
-                        .format                       = _config->_pump_vesthelmet_config.format,
-                        .height                       = mat.get_rows(),
-                        .width                        = mat.get_cols(),
-                        .roi_x                        = 0,
-                        .roi_y                        = 0,
-                        .roi_width                    = mat.get_cols(),
+                        .format                                 = _config->_pump_vesthelmet_config.format,
+                        .height                                 = mat.get_rows(),
+                        .width                                  = mat.get_cols(),
+                        .roi_x                                  = 0,
+                        .roi_y                                  = 0,
+                        .roi_width                              = mat.get_cols(),
                         .roi_height                             = mat.get_rows(),
                         .params =
                             pump_vesthelmet_detect_param::confidence_params{
                                 .posture_conf_thres = _config->_pump_vesthelmet_config.posture_conf_thres,
                                 .head_conf_thres    = _config->_pump_vesthelmet_config.head_conf_thres,
                                 .head_min_h_thres   = _config->_pump_vesthelmet_config.head_min_h_thres,
-                                .head_min_w_thres   = _config->_pump_vesthelmet_config.head_min_w_thres
-                    }
-                    },
+                                .head_min_w_thres   = _config->_pump_vesthelmet_config.head_min_w_thres,
+                                .vest_cls_thres     = _config->_pump_vesthelmet_config.vest_cls_thres,
+                                .helmet_cls_thres   = _config->_pump_vesthelmet_config.helmet_cls_thres}},
                     str);
 
                 ans = std::move(result.detect_info);

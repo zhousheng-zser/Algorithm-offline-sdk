@@ -20,12 +20,21 @@ namespace glasssix {
     };
 
     struct pumptop_helmet_detect_param {
+        struct confidence_params {
+            GX_BEGIN_FIELDS(confidence_params);
+            GX_FIELD(std::optional<float>, head_conf_thres);
+            GX_FIELD(std::optional<float>, pump_conf_thres);
+            GX_END_FIELDS;
+
+            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        };
 
         GX_BEGIN_FIELDS(pumptop_helmet_detect_param);
         GX_FIELD(std::string, instance_guid);
         GX_FIELD(std::int32_t, format);
         GX_FIELD(std::int32_t, height);
         GX_FIELD(std::int32_t, width);
+        GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

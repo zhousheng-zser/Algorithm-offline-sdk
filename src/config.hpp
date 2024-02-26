@@ -86,7 +86,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(crowd_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
-        GX_FIELD(float,area_threshold);
+        GX_FIELD(float, area_threshold);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -128,6 +128,16 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_hoisting_config {
+        GX_BEGIN_FIELDS(pump_hoisting_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_FIELD(float, move_threshold);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct pump_vesthelmet_config {
         GX_BEGIN_FIELDS(pump_vesthelmet_config);
         GX_FIELD(int, device);
@@ -136,6 +146,8 @@ namespace glasssix {
         GX_FIELD(float, head_conf_thres);
         GX_FIELD(float, head_min_h_thres);
         GX_FIELD(float, head_min_w_thres);
+        GX_FIELD(float, vest_cls_thres);
+        GX_FIELD(float, helmet_cls_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -143,6 +155,8 @@ namespace glasssix {
         GX_BEGIN_FIELDS(pumptop_helmet_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float, head_conf_thres);
+        GX_FIELD(float, pump_conf_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -334,6 +348,7 @@ namespace glasssix {
         fighting_config _fighting_config;
         flame_config _flame_config;
         pump_mask_config _pump_mask_config;
+        pump_hoisting_config _pump_hoisting_config;
         pump_vesthelmet_config _pump_vesthelmet_config;
         pumptop_helmet_config _pumptop_helmet_config;
         pump_gate_status_config _pump_gate_status_config;
@@ -365,6 +380,7 @@ namespace glasssix {
         void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_pump_mask(const abi::string& path);
+        void set_pump_hoisting(const abi::string& path);
         void set_pump_vesthelmet(const abi::string& path);
         void set_pumptop_helmet(const abi::string& path);
         void set_pump_gate_status(const abi::string& path);
@@ -397,9 +413,10 @@ namespace glasssix {
         bool fighting_is_load            = false;
         bool flame_is_load               = false;
         bool pump_mask_is_load           = false;
+        bool pump_hoisting_is_load      = false;
         bool pump_pumptop_person_is_load = false;
         bool pump_vesthelmet_is_load     = false;
-        bool pumptop_helmet_is_load     = false;
+        bool pumptop_helmet_is_load      = false;
         bool pump_gate_status_is_load    = false;
         bool pump_light_is_load          = false;
         bool smog_is_load                = false;

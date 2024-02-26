@@ -119,6 +119,12 @@ namespace glasssix {
         temp.get_to(_pump_mask_config);
         pump_mask_is_load = true;
     }
+    void config::set_pump_hoisting(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_hoisting.json");
+        temp.get_to(_pump_hoisting_config);
+        pump_hoisting_is_load = true;
+    }
     void config::set_pump_gate_status(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/pump_gate_status.json");

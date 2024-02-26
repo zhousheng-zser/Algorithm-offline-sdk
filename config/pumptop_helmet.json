@@ -1,4 +1,6 @@
 {
-        "device":-1,
-        "format": 1
+    "device": -1,
+    "format": 1,
+    "head_conf_thres": 0.1,
+    "pump_conf_thres": 0.8
 }
