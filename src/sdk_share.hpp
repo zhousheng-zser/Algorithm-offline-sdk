@@ -18,6 +18,7 @@
 #include "../src/nessus/protocols/pump_mask.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
+#include "../src/nessus/protocols/pumptop_helmet.hpp"
 #include "../src/nessus/protocols/pump_gate_status.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
@@ -140,6 +141,7 @@ namespace glasssix {
             Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
             Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
+            Function["pumptop_helmet"]     = &algo_ptr::set_protocols_handl_pumptop_helmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
             Function["pump_light"]          = &algo_ptr::set_protocols_handl_pump_light;
             Function["smog"]                = &algo_ptr::set_protocols_handl_smog;
@@ -193,6 +195,11 @@ namespace glasssix {
             _config->set_pump_vesthelmet(_config->_path);
             pump_vesthelmet_handle = protocol_ptr.make_instance<pump_vesthelmet>(pump_vesthelmet_new_param{
                 _config->_pump_vesthelmet_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pumptop_helmet() {
+            _config->set_pumptop_helmet(_config->_path);
+            pumptop_helmet_handle = protocol_ptr.make_instance<pumptop_helmet>(pumptop_helmet_new_param{
+                _config->_pumptop_helmet_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_gate_status() {
             _config->set_pump_gate_status(_config->_path);
@@ -320,6 +327,7 @@ namespace glasssix {
         flame flame_handle;
         pump_mask pump_mask_handle;
         pump_vesthelmet pump_vesthelmet_handle;
+        pumptop_helmet pumptop_helmet_handle;
         pump_gate_status pump_gate_status_handle;
         pump_light pump_light_handle;
         smog smog_handle;

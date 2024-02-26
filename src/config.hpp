@@ -132,6 +132,17 @@ namespace glasssix {
         GX_BEGIN_FIELDS(pump_vesthelmet_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float, posture_conf_thres);
+        GX_FIELD(float, head_conf_thres);
+        GX_FIELD(float, head_min_h_thres);
+        GX_FIELD(float, head_min_w_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    struct pumptop_helmet_config {
+        GX_BEGIN_FIELDS(pumptop_helmet_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -139,9 +150,6 @@ namespace glasssix {
         GX_BEGIN_FIELDS(pump_gate_status_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
-        GX_FIELD(float, door_close_ratio);
-        GX_FIELD(float, door_open_ratio);
-        GX_FIELD(float, floor_ratio);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -327,6 +335,7 @@ namespace glasssix {
         flame_config _flame_config;
         pump_mask_config _pump_mask_config;
         pump_vesthelmet_config _pump_vesthelmet_config;
+        pumptop_helmet_config _pumptop_helmet_config;
         pump_gate_status_config _pump_gate_status_config;
         pump_light_config _pump_light_config;
         smog_config _smog_config;
@@ -357,6 +366,7 @@ namespace glasssix {
         void set_flame(const abi::string& path);
         void set_pump_mask(const abi::string& path);
         void set_pump_vesthelmet(const abi::string& path);
+        void set_pumptop_helmet(const abi::string& path);
         void set_pump_gate_status(const abi::string& path);
         void set_pump_light(const abi::string& path);
         void set_smog(const abi::string& path);
@@ -389,6 +399,7 @@ namespace glasssix {
         bool pump_mask_is_load           = false;
         bool pump_pumptop_person_is_load = false;
         bool pump_vesthelmet_is_load     = false;
+        bool pumptop_helmet_is_load     = false;
         bool pump_gate_status_is_load    = false;
         bool pump_light_is_load          = false;
         bool smog_is_load                = false;

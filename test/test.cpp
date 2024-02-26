@@ -34,6 +34,7 @@
 #include <gx_pump_mask_api.hpp>
 #include <gx_pump_light_api.hpp>
 #include <gx_pump_vesthelmet_api.hpp>
+#include <gx_pumptop_helmet_api.hpp>
 #include <gx_pump_gate_status_api.hpp>
 #include <gx_pump_pumptop_person_api.hpp>
 #include <opencv2/opencv.hpp>
@@ -778,7 +779,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/gate_open.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_gate_status(img,0);
+                auto val = api_temp->safe_production_pump_gate_status(img,10);
                 //if (condition)
                 //    printf("[pump_gate_status] : category = %d score = %.2f  \n", val.pump_gate_status_list[0].category,
                 //        val.pump_gate_status_list[0].score);
@@ -800,11 +801,11 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 //gx_img_api img("/root/img/pumptop_person.jpg", static_cast<int>(1e9));
-                gx_img_api img("/root/img/1.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/pump_pumptop_person.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_pumptop_person(img);
-                //if (condition)
-                //    printf("[pump_pumptop_person] : category = %d score = %.2f  \n", val.pump_pumptop_person_list[0].category,
-                //        val.pump_pumptop_person_list[0].score);
+                if (condition)
+                    printf("[pump_pumptop_person] : category = %d score = %.2f  \n", val.persons_in_pumptop[0].category,
+                        val.persons_in_pumptop[0].score);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -813,6 +814,49 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition)
             printf("pump_pumptop_person time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t28 多线程测定制防护面罩
+    void thread_function_pump_mask() {
+        gx_pump_mask_api* api_temp = new gx_pump_mask_api();
+        int T                            = TIMES;
+        auto start                       = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/pump_mak.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_mask(img);
+                if (condition)
+                    printf("[pump_mask] : category = %d score = %.2f  \n", val.pump_head_list[0].category,
+                        val.pump_head_list[0].score);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_mask time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t29 多线程测定制泵顶安全帽
+    void thread_function_pumptop_helmet() {
+        gx_pumptop_helmet_api* api_temp = new gx_pumptop_helmet_api();
+        int T                            = TIMES;
+        auto start                       = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/pumptop_helmet.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pumptop_helmet(img);
+                if (condition)
+                    printf("[pumptop_helmet] : category = %d \n", val.person_list[0].category);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pumptop_helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 
@@ -1128,6 +1172,8 @@ int main(int argc, char** argv) {
         t[25] = std::thread(thread_function_pump_vesthelmet);
         t[26] = std::thread(thread_function_pump_gate_status);
         t[27] = std::thread(thread_function_pump_pumptop_person);
+        t[28] = std::thread(thread_function_pump_mask);
+        t[29] = std::thread(thread_function_pumptop_helmet);
 
         t[0].join();
         t[1].join();
@@ -1157,6 +1203,8 @@ int main(int argc, char** argv) {
         t[25].join();
         t[26].join();
         t[27].join();
+        t[28].join();
+        t[29].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

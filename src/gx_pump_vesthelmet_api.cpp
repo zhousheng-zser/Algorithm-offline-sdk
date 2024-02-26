@@ -73,7 +73,15 @@ namespace glasssix {
                         .roi_x                        = 0,
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
-                        .roi_height                   = mat.get_rows()},
+                        .roi_height                             = mat.get_rows(),
+                        .params =
+                            pump_vesthelmet_detect_param::confidence_params{
+                                .posture_conf_thres = _config->_pump_vesthelmet_config.posture_conf_thres,
+                                .head_conf_thres    = _config->_pump_vesthelmet_config.head_conf_thres,
+                                .head_min_h_thres   = _config->_pump_vesthelmet_config.head_min_h_thres,
+                                .head_min_w_thres   = _config->_pump_vesthelmet_config.head_min_w_thres
+                    }
+                    },
                     str);
 
                 ans = std::move(result.detect_info);

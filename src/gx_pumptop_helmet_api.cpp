@@ -1,15 +1,15 @@
-﻿#include "gx_tumble_api.hpp"
+﻿#include "gx_pumptop_helmet_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_tumble_api::gx_tumble_api() : impl_{std::make_unique<impl>()} {}
-    gx_tumble_api::gx_tumble_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_tumble_api::~gx_tumble_api() {}
-    gx_tumble_api::gx_tumble_api(gx_tumble_api&&) noexcept            = default;
-    gx_tumble_api& gx_tumble_api::operator=(gx_tumble_api&&) noexcept = default;
-    class gx_tumble_api::impl {
+    gx_pumptop_helmet_api::gx_pumptop_helmet_api() : impl_{std::make_unique<impl>()} {}
+    gx_pumptop_helmet_api::gx_pumptop_helmet_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pumptop_helmet_api::~gx_pumptop_helmet_api() {}
+    gx_pumptop_helmet_api::gx_pumptop_helmet_api(gx_pumptop_helmet_api&&) noexcept            = default;
+    gx_pumptop_helmet_api& gx_pumptop_helmet_api::operator=(gx_pumptop_helmet_api&&) noexcept = default;
+    class gx_pumptop_helmet_api::impl {
     public:
         void init() {
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_TUMBLE_V3.0.6";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMPTOP_HELMET_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -54,10 +54,8 @@ namespace glasssix {
         }
     };
 
-    //  跌倒检测
-    tumble_info gx_tumble_api::safe_production_tumble(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
+    //  安全生产 泵顶安全帽检测
+    pumptop_helmet_info gx_pumptop_helmet_api::safe_production_pumptop_helmet(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -65,20 +63,13 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                tumble_info ans;
+                pumptop_helmet_info ans;
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
-                auto result = ptr->protocol_ptr.invoke<tumble::detect>(ptr->tumble_handle,
-                    tumble_detect_param{.instance_guid = "",
-                        .format                        = _config->_tumble_config.format,
-                        .height                        = mat.get_rows(),
-                        .width                         = mat.get_cols(),
-                        .roi_x                         = 0,
-                        .roi_y                         = 0,
-                        .roi_width                     = mat.get_cols(),
-                        .roi_height                    = mat.get_rows(),
-                        .params =
-                            tumble_detect_param::confidence_params{.conf_thres = _config->_tumble_config.conf_thres,
-                                .nms_thres                                     = _config->_tumble_config.nms_thres}},
+                auto result = ptr->protocol_ptr.invoke<pumptop_helmet::detect>(ptr->pumptop_helmet_handle,
+                    pumptop_helmet_detect_param{.instance_guid = "",
+                        .format                       = _config->_pumptop_helmet_config.format,
+                        .height                       = mat.get_rows(),
+                        .width                        = mat.get_cols()},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -86,7 +77,7 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_tumble_dump.jpg");
+            bool flag = write_dump_img(mat, "_pumptop_helmet_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
