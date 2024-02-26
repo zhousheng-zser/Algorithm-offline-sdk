@@ -19,10 +19,23 @@ struct pump_gate_room_info {
         std::int32_t x2; // 检出框体右下坐标x
         std::int32_t y2; // 检出框体右下坐标y
     } floor;
+
+    float door_close_ratio;
+    float door_open_ratio;
+    float floor_ratio;
 };
 std::vector<pump_gate_room_info> rooms_list = {
-    pump_gate_room_info{255051128, 255051128, 255051128, 255051128, {980, 152, 1010, 201}, {980, 915, 1260, 1010}}};
+    pump_gate_room_info{25051128, 33204255, 15013051, 45038115, {720, 206, 777, 255}, {980, 915, 1260, 1010}, 0.16,0.04 ,0.22 },//10
+    pump_gate_room_info{25051128, 33204255, 00000, 00000, {000, 000, 0000, 0000}, {000, 000, 0000, 0000},0 , 0,0 },//11
+    pump_gate_room_info{25051128, 33204255, 105051026, 115102128, {750, 210, 811, 261}, {1054, 980, 1258, 1080},0.09 , 0.04, 0.24},//12
+    pump_gate_room_info{25051128, 33204255, 110000038, 150051128, {631, 210, 692, 264}, {1066, 945, 1187, 1033}, 0.09, 0.04, 0.18}, // 13
+    pump_gate_room_info{25051128, 33204255, 00000, 00000, {000, 000, 0000, 0000}, {000, 000, 0000, 0000}, 0,0 ,0 },//14
+    pump_gate_room_info{25051128, 33204255, 20026013, 50128077, {704, 123, 792, 198}, {1110, 910, 1390, 1080},0.18 ,0.13 ,0.18 },//15
+    pump_gate_room_info{25051128, 33204255, 105026013, 140128128, {933, 70, 1037, 172}, {990, 914, 1230, 1080}, 0.18, 0.13, 0.18}, // 16
+    pump_gate_room_info{25051128, 33204255, 95026013, 125153128, {000, 000, 000, 000}, {1048, 884, 1410, 1080}, 0, 0, 0.18} // 17
 
+};
+    
 namespace glasssix {
 
     gx_pump_gate_status_api::gx_pump_gate_status_api() : impl_{std::make_unique<impl>()} {}
@@ -78,8 +91,11 @@ namespace glasssix {
     };
 
     //  安全生产 大门状态检测
-    abi::string gx_pump_gate_status_api::safe_production_pump_gate_status(
-        const gx_img_api& mat, int device_id) {
+    abi::string gx_pump_gate_status_api::safe_production_pump_gate_status(const gx_img_api& mat, int device_id) {
+        if (device_id < 10 || device_id > 17) 
+            throw source_code_aware_runtime_error(
+                "Error: Invalid device_id: 10 <= device_id <= 17.");
+        device_id -= 10;
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -111,9 +127,9 @@ namespace glasssix {
                                         rooms_list[device_id].floor.x2, rooms_list[device_id].floor.y2}},
                             .params =
                                 pump_gate_status_detect_param::confidence_params{
-                                    .door_close_ratio = _config->_pump_gate_status_config.door_close_ratio,
-                                    .door_open_ratio  = _config->_pump_gate_status_config.door_open_ratio,
-                                    .floor_ratio      = _config->_pump_gate_status_config.floor_ratio}},
+                                    .door_close_ratio = rooms_list[device_id].door_close_ratio,
+                                    .door_open_ratio  = rooms_list[device_id].door_open_ratio,
+                                    .floor_ratio      = rooms_list[device_id].floor_ratio}},
                         str);
 
                 ans = std::move(result.security_status);

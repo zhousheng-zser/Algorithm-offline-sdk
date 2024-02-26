@@ -1,7 +1,4 @@
 {
     "device": -1,
-    "format": 1,
-    "door_close_ratio": 0.02,
-    "door_open_ratio": 0.18,
-    "floor_ratio": 0.18
+    "format": 1
 }

@@ -94,7 +94,7 @@ namespace glasssix {
         }
     }
 
-    //  徘徊检测
+    //  泵顶行人检测
     pump_pumptop_person_info gx_pump_pumptop_person_api::safe_production_pump_pumptop_person(const gx_img_api& mat) {
         auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
         return safe_production_pump_pumptop_person(mat, person_list.person_list);

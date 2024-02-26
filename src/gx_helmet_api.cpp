@@ -41,7 +41,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V3.2.1";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_HELMET_V3.2.2";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
