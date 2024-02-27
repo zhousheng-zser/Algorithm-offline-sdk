@@ -5,7 +5,8 @@
 namespace glasssix {
 
     gx_pumptop_helmet_api::gx_pumptop_helmet_api() : impl_{std::make_unique<impl>()} {}
-    gx_pumptop_helmet_api::gx_pumptop_helmet_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pumptop_helmet_api::gx_pumptop_helmet_api(const abi::string& config_path)
+        : impl_{std::make_unique<impl>(config_path)} {}
     gx_pumptop_helmet_api::~gx_pumptop_helmet_api() {}
     gx_pumptop_helmet_api::gx_pumptop_helmet_api(gx_pumptop_helmet_api&&) noexcept            = default;
     gx_pumptop_helmet_api& gx_pumptop_helmet_api::operator=(gx_pumptop_helmet_api&&) noexcept = default;
@@ -36,8 +37,9 @@ namespace glasssix {
 
     private:
         secret_key_empower empower;
-        std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMPTOP_HELMET_V1.0.0";
+        std::string empower_key = "";
+        std::string empower_algorithm_id =
+            share_platform_name + "_" + share_empower_language + "_PUMPTOP_HELMET_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -67,9 +69,13 @@ namespace glasssix {
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<pumptop_helmet::detect>(ptr->pumptop_helmet_handle,
                     pumptop_helmet_detect_param{.instance_guid = "",
-                        .format                       = _config->_pumptop_helmet_config.format,
-                        .height                       = mat.get_rows(),
-                        .width                        = mat.get_cols()},
+                        .format                                = _config->_pumptop_helmet_config.format,
+                        .height                                = mat.get_rows(),
+                        .width                                 = mat.get_cols(),
+                        .params =
+                            pumptop_helmet_detect_param::confidence_params{
+                                .head_conf_thres = _config->_pumptop_helmet_config.head_conf_thres,
+                                .pump_conf_thres = _config->_pumptop_helmet_config.pump_conf_thres}},
                     str);
 
                 ans = std::move(result.detect_info);

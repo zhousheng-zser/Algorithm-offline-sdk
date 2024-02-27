@@ -1,4 +1,4 @@
-﻿#include "gx_fighting_api.hpp"
+﻿#include "gx_pump_weld_api.hpp"
 
 #include "sdk_share.hpp"
 
@@ -6,12 +6,13 @@
 
 namespace glasssix {
 
-    gx_fighting_api::gx_fighting_api() : impl_{std::make_unique<impl>()} {}
-    gx_fighting_api::gx_fighting_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_fighting_api::~gx_fighting_api() {}
-    gx_fighting_api::gx_fighting_api(gx_fighting_api&&) noexcept            = default;
-    gx_fighting_api& gx_fighting_api::operator=(gx_fighting_api&&) noexcept = default;
-    class gx_fighting_api::impl {
+    gx_pump_weld_api::gx_pump_weld_api() : impl_{std::make_unique<impl>()} {}
+    gx_pump_weld_api::gx_pump_weld_api(const abi::string& config_path)
+        : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pump_weld_api::~gx_pump_weld_api() {}
+    gx_pump_weld_api::gx_pump_weld_api(gx_pump_weld_api&&) noexcept            = default;
+    gx_pump_weld_api& gx_pump_weld_api::operator=(gx_pump_weld_api&&) noexcept = default;
+    class gx_pump_weld_api::impl {
     public:
         void init() {
             mat_list.clear();
@@ -43,8 +44,9 @@ namespace glasssix {
 
     private:
         secret_key_empower empower;
-        std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_FIGHTING_V2.1.0";
+        std::string empower_key = "";
+        std::string empower_algorithm_id =
+            share_platform_name + "_" + share_empower_language + "_PUMP_WELD_V1.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -61,8 +63,8 @@ namespace glasssix {
         }
     };
 
-    //  打架检测
-    fighting_info gx_fighting_api::safe_production_fighting(const gx_img_api& mat) {
+    //  泵业定制化焊接检测
+    pump_weld_info gx_pump_weld_api::safe_production_pump_weld(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -70,11 +72,13 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                if (_config->_fighting_config.interval <= 0)
-                    throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : interval <= 0"));
-                if (_config->_fighting_config.batch <= 0)
-                    throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : batch <= 0"));
-                int temp_id = (impl_->cnt - 1 + _config->_fighting_config.batch) % _config->_fighting_config.batch;
+                if (_config->_pump_weld_config.interval <= 0)
+                    throw source_code_aware_runtime_error(
+                        U8("Error: The config/pump_weld.json : interval <= 0"));
+                if (_config->_pump_weld_config.batch <= 0)
+                    throw source_code_aware_runtime_error(U8("Error: The config/pump_weld.json : batch <= 0"));
+                int temp_id = (impl_->cnt - 1 + _config->_pump_weld_config.batch)
+                            % _config->_pump_weld_config.batch;
                 if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
                     throw source_code_aware_runtime_error(
                         "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
@@ -83,35 +87,40 @@ namespace glasssix {
                     throw source_code_aware_runtime_error(
                         "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
                         + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
-                if (impl_->mat_list.size() < _config->_fighting_config.batch - 1) {
+                if (impl_->mat_list.size() < _config->_pump_weld_config.batch - 1) {
                     impl_->mat_list.emplace_back(mat);
                     impl_->cnt++;
-                    return fighting_info{.score = 0, .category = 0};
-                } else if (impl_->mat_list.size() == _config->_fighting_config.batch - 1) {
+                    return pump_weld_info{};
+                } else if (impl_->mat_list.size() == _config->_pump_weld_config.batch - 1) {
                     impl_->mat_list.emplace_back(mat);
                     impl_->cnt++;
                 } else {
-                    impl_->mat_list[impl_->cnt % _config->_fighting_config.batch] =
+                    impl_->mat_list[impl_->cnt % _config->_pump_weld_config.batch] =
                         mat; // 覆盖之后原本的gx_img_api会自动析构
                     impl_->cnt++;
                 }
-                if (impl_->cnt % _config->_fighting_config.interval)
-                    return fighting_info{.score = 0, .category = 0};
-                fighting_info ans;
+                if (impl_->cnt % _config->_pump_weld_config.interval)
+                    return pump_weld_info{};
+                pump_weld_info ans;
                 std::vector<char> imgBatchDataArr(
-                    _config->_fighting_config.batch * mat.get_data_len()); // push batch img to array
-                for (int i = impl_->cnt, j = 0; j < _config->_fighting_config.batch; ++i, ++j) {
+                    _config->_pump_weld_config.batch * mat.get_data_len()); // push batch img to array
+                for (int i = impl_->cnt, j = 0; j < _config->_pump_weld_config.batch; ++i, ++j) {
                     //   构造图片数组
-                    int id = i % _config->_fighting_config.batch;
+                    int id = i % _config->_pump_weld_config.batch;
                     std::memcpy(imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len(),
                         impl_->mat_list[id].get_data(), impl_->mat_list[id].get_data_len());
                 }
                 std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
-                auto result = ptr->protocol_ptr.invoke<fighting::detect>(ptr->fighting_handle,
-                    fighting_detect_param{.instance_guid = "",
-                        .format                          = _config->_fighting_config.format,
-                        .height                          = mat.get_rows(),
-                        .width                           = mat.get_cols()},
+                auto result = ptr->protocol_ptr.invoke<pump_weld::detect>(ptr->pump_weld_handle,
+                    pump_weld_detect_param{.instance_guid = "",
+                        .format                                  = _config->_pump_weld_config.format,
+                        .height                                  = mat.get_rows(),
+                        .width                                   = mat.get_cols(),
+                        .batch                                   = _config->_pump_weld_config.batch,
+                        .params =
+                            pump_weld_detect_param::confidence_params{
+                                .conf_thres = _config->_pump_weld_config.conf_thres,
+                                .nms_thres  = _config->_pump_weld_config.nms_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -119,7 +128,7 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_fighting_dump.jpg");
+            bool flag = write_dump_img(mat, "_pump_weld_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }

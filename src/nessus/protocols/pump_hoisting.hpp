@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/info_pump_vesthelmet.hpp"
+#include "../../../include/g6/info_pump_hoisting.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -10,8 +10,8 @@
 #include <g6/json_extensions.hpp>
 
 namespace glasssix {
-    struct pump_vesthelmet_new_param {
-        GX_BEGIN_FIELDS(pump_vesthelmet_new_param);
+    struct pump_hoisting_new_param {
+        GX_BEGIN_FIELDS(pump_hoisting_new_param);
         GX_FIELD(std::int32_t, device);
         GX_FIELD(std::string, models_directory);
         GX_END_FIELDS;
@@ -19,21 +19,18 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct pump_vesthelmet_detect_param {
+    struct pump_hoisting_detect_param {
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::optional<float>, posture_conf_thres);
-            GX_FIELD(std::optional<float>, head_conf_thres);
-            GX_FIELD(std::optional<float>, head_min_h_thres);
-            GX_FIELD(std::optional<float>, head_min_w_thres);
-            GX_FIELD(std::optional<float>, vest_cls_thres);
-            GX_FIELD(std::optional<float>, helmet_cls_thres);
+            GX_FIELD(std::optional<float>, conf_thres);
+            GX_FIELD(std::optional<float>, nms_thres);
+            GX_FIELD(std::optional<float>, move_threshold);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
 
-        GX_BEGIN_FIELDS(pump_vesthelmet_detect_param);
+        GX_BEGIN_FIELDS(pump_hoisting_detect_param);
         GX_FIELD(std::string, instance_guid);
         GX_FIELD(std::int32_t, format);
         GX_FIELD(std::int32_t, height);
@@ -48,15 +45,15 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct pump_vesthelmet_detect_result {
-        GX_BEGIN_FIELDS(pump_vesthelmet_detect_result);
+    struct pump_hoisting_detect_result {
+        GX_BEGIN_FIELDS(pump_hoisting_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(pump_vesthelmet_info, detect_info);
+        GX_FIELD(pump_hoisting_info, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
-    struct pump_vesthelmet : protocol_object {
-        struct detect : parser_inout<pump_vesthelmet_detect_param, pump_vesthelmet_detect_result> {};
+    struct pump_hoisting : protocol_object {
+        struct detect : parser_inout<pump_hoisting_detect_param, pump_hoisting_detect_result> {};
     };
 } // namespace glasssix
