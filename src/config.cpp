@@ -89,6 +89,12 @@ namespace glasssix {
         temp.get_to(_batterypilferers_config);
         batterypilferers_is_load = true;
     }
+    void config::set_pump_weld(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_weld.json");
+        temp.get_to(_pump_weld_config);
+        pump_weld_is_load = true;
+    }
     void config::set_fighting(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/fighting.json");

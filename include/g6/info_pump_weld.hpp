@@ -6,12 +6,11 @@
 typedef unsigned char uchar;
 
 namespace glasssix {
-    // 防护面罩信息
-    struct pump_mask_info {
+    // 焊接信息
+    struct pump_weld_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score); // 置信度
-            GX_FIELD(std::int32_t, category); // 1戴了面罩 2没戴面罩 3不能判断戴没戴面罩
+            GX_FIELD(std::int32_t, category); // 1标准 2不标准
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
@@ -20,9 +19,9 @@ namespace glasssix {
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
-        GX_BEGIN_FIELDS(pump_mask_info);
+        GX_BEGIN_FIELDS(pump_weld_info);
 
-        GX_FIELD(abi::vector<boxes>, pump_head_list); // 没戴面罩的人
+        GX_FIELD(abi::vector<boxes>, persons_weld); // 焊接的人
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

@@ -15,12 +15,14 @@
 #include "../src/nessus/protocols/pedestrian.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/posture.hpp"
-#include "../src/nessus/protocols/pump_mask.hpp"
+#include "../src/nessus/protocols/pump_gate_status.hpp"
 #include "../src/nessus/protocols/pump_hoisting.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
+#include "../src/nessus/protocols/pump_mask.hpp"
+#include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
+#include "../src/nessus/protocols/pump_weld.hpp"
 #include "../src/nessus/protocols/pumptop_helmet.hpp"
-#include "../src/nessus/protocols/pump_gate_status.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/selene.hpp"
@@ -30,7 +32,6 @@
 #include "../src/nessus/protocols/tumble.hpp"
 #include "../src/nessus/protocols/vehicle.hpp"
 #include "../src/nessus/protocols/wander.hpp"
-#include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
@@ -141,9 +142,10 @@ namespace glasssix {
             Function["fighting"]            = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
-            Function["pump_hoisting"]           = &algo_ptr::set_protocols_handl_pump_hoisting;
+            Function["pump_weld"]           = &algo_ptr::set_protocols_handl_pump_weld;
+            Function["pump_hoisting"]       = &algo_ptr::set_protocols_handl_pump_hoisting;
             Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
-            Function["pumptop_helmet"]     = &algo_ptr::set_protocols_handl_pumptop_helmet;
+            Function["pumptop_helmet"]      = &algo_ptr::set_protocols_handl_pumptop_helmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
             Function["pump_light"]          = &algo_ptr::set_protocols_handl_pump_light;
             Function["smog"]                = &algo_ptr::set_protocols_handl_smog;
@@ -193,10 +195,16 @@ namespace glasssix {
             pump_mask_handle = protocol_ptr.make_instance<pump_mask>(
                 pump_mask_new_param{_config->_pump_mask_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pump_weld() {
+            _config->set_pump_weld(_config->_path);
+            pump_weld_handle =
+                protocol_ptr.make_instance<pump_weld>(pump_weld_new_param{_config->_pump_weld_config.device,
+                    _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_pump_hoisting() {
             _config->set_pump_hoisting(_config->_path);
-            pump_hoisting_handle = protocol_ptr.make_instance<pump_hoisting>(
-                pump_hoisting_new_param{_config->_pump_hoisting_config.device, _config->_configure_directory.models_directory});
+            pump_hoisting_handle = protocol_ptr.make_instance<pump_hoisting>(pump_hoisting_new_param{
+                _config->_pump_hoisting_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
@@ -210,8 +218,8 @@ namespace glasssix {
         }
         void set_protocols_handl_pump_gate_status() {
             _config->set_pump_gate_status(_config->_path);
-            pump_gate_status_handle = protocol_ptr.make_instance<pump_gate_status>(pump_gate_status_new_param{
-                _config->_pump_gate_status_config.device});
+            pump_gate_status_handle = protocol_ptr.make_instance<pump_gate_status>(
+                pump_gate_status_new_param{_config->_pump_gate_status_config.device});
         }
         void set_protocols_handl_pump_light() {
             _config->set_pump_light(_config->_path);
@@ -333,11 +341,13 @@ namespace glasssix {
         fighting fighting_handle;
         flame flame_handle;
         pump_mask pump_mask_handle;
+        pump_weld pump_weld_handle;
         pump_hoisting pump_hoisting_handle;
         pump_vesthelmet pump_vesthelmet_handle;
         pumptop_helmet pumptop_helmet_handle;
         pump_gate_status pump_gate_status_handle;
         pump_light pump_light_handle;
+        pump_pumptop_person pump_pumptop_person_handle;
         smog smog_handle;
         head head_handle;
         helmet helmet_handle;
@@ -346,7 +356,6 @@ namespace glasssix {
         tumble tumble_handle;
         vehicle vehicle_handle;
         wander wander_handle;
-        pump_pumptop_person pump_pumptop_person_handle;
         leavepost leavepost_handle;
         playphone playphone_handle;
         onphone onphone_handle;
