@@ -13,7 +13,7 @@ namespace glasssix {
         gx_pump_hoisting_api& operator=(gx_pump_hoisting_api&&) noexcept;
 
         //  安全生产 泵业定制狭小区域检测
-        pump_hoisting_info safe_production_pump_hoisting(const gx_img_api& mat);
+        pump_hoisting_info safe_production_pump_hoisting(const gx_img_api& mat, int device_id);
 
     private:
         class impl;

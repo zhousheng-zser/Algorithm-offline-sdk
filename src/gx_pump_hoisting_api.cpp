@@ -34,10 +34,11 @@ namespace glasssix {
         }
         ~impl() {}
 
+        int camera_id = 0; // 摄像头ID
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_HOISTING_V1.0.2";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_HOISTING_V1.0.3";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -55,7 +56,12 @@ namespace glasssix {
     };
 
     //  安全生产 泵业吊装狭小区域检测
-    pump_hoisting_info gx_pump_hoisting_api::safe_production_pump_hoisting(const gx_img_api& mat) {
+    pump_hoisting_info gx_pump_hoisting_api::safe_production_pump_hoisting(const gx_img_api& mat, int device_id) {
+        if (!impl_->camera_id) {
+            impl_->camera_id = device_id;
+        } else if (impl_->camera_id != device_id)
+            throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
+                                                  + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
