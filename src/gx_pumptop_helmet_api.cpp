@@ -75,7 +75,9 @@ namespace glasssix {
                         .params =
                             pumptop_helmet_detect_param::confidence_params{
                                 .head_conf_thres = _config->_pumptop_helmet_config.head_conf_thres,
-                                .pump_conf_thres = _config->_pumptop_helmet_config.pump_conf_thres}},
+                                .pump_conf_thres = _config->_pumptop_helmet_config.pump_conf_thres,
+                                .people_conf_thres     = _config->_pumptop_helmet_config.people_conf_thres,
+                                .head_score_conf_thres = _config->_pumptop_helmet_config.head_score_conf_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
