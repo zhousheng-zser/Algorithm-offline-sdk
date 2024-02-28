@@ -3,5 +3,5 @@
     "format": 1,
     "conf_thres": 0.4,
     "nms_thres": 0.7,
-    "move_threshold": 0.2
+    "move_threshold": 0.05
 }

@@ -13,7 +13,7 @@ namespace glasssix {
         gx_pump_vesthelmet_api& operator=(gx_pump_vesthelmet_api&&) noexcept;
 
         //  安全生产 天车工检测
-        pump_vesthelmet_info safe_production_pump_vesthelmet(const gx_img_api& mat);
+        pump_vesthelmet_info safe_production_pump_vesthelmet(const gx_img_api& mat, float head_conf_thres = 0.6);
 
     private:
         class impl;

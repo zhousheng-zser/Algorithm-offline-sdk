@@ -84,7 +84,8 @@ namespace glasssix {
                             pump_hoisting_detect_param::confidence_params{
                                 .conf_thres = _config->_pump_hoisting_config.conf_thres,
                                 .nms_thres  = _config->_pump_hoisting_config.nms_thres,
-                                .move_threshold = _config->_pump_hoisting_config.move_threshold}},
+                                .move_threshold = _config->_pump_hoisting_config.move_threshold,
+                                .device_id      = device_id}},
                     str);
 
                 ans = std::move(result.detect_info);

@@ -154,7 +154,6 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, posture_conf_thres);
-        GX_FIELD(float, head_conf_thres);
         GX_FIELD(float, head_min_h_thres);
         GX_FIELD(float, head_min_w_thres);
         GX_FIELD(float, vest_cls_thres);

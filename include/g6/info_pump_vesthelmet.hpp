@@ -10,7 +10,7 @@ namespace glasssix {
     struct pump_vesthelmet_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score); // 置信度
+            GX_FIELD(float, score); // 分类的置信度
             GX_FIELD(std::int32_t, category); // 类型   0没带安全帽 1戴了安全帽 2戴的不是安全帽
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
