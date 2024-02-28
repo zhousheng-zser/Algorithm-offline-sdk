@@ -10,7 +10,7 @@ namespace glasssix {
     struct pump_weld_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(std::int32_t, category); // 1标准 2不标准
+            GX_FIELD(std::int32_t, category); //0标准焊接 1不规范焊接
             GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x

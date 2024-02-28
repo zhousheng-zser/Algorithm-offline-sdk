@@ -46,7 +46,7 @@ namespace glasssix {
         secret_key_empower empower;
         std::string empower_key = "";
         std::string empower_algorithm_id =
-            share_platform_name + "_" + share_empower_language + "_PUMP_WELD_V1.0.0";
+            share_platform_name + "_" + share_empower_language + "_PUMP_WELD_V1.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -64,7 +64,8 @@ namespace glasssix {
     };
 
     //  泵业定制化焊接检测
-    pump_weld_info gx_pump_weld_api::safe_production_pump_weld(const gx_img_api& mat) {
+    pump_weld_info gx_pump_weld_api::safe_production_pump_weld(
+        const gx_img_api& mat, float candidate_box_width, float candidate_box_height) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -120,7 +121,9 @@ namespace glasssix {
                         .params =
                             pump_weld_detect_param::confidence_params{
                                 .conf_thres = _config->_pump_weld_config.conf_thres,
-                                .nms_thres  = _config->_pump_weld_config.nms_thres}},
+                                .nms_thres = _config->_pump_weld_config.nms_thres,
+                                .candidate_box_width  = candidate_box_width,
+                                .candidate_box_height = candidate_box_height}},
                     str);
 
                 ans = std::move(result.detect_info);

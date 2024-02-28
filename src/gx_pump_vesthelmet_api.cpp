@@ -39,7 +39,7 @@ namespace glasssix {
         secret_key_empower empower;
         std::string empower_key = "";
         std::string empower_algorithm_id =
-            share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.1.1";
+            share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.3.1";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -57,7 +57,8 @@ namespace glasssix {
     };
 
     //  安全生产 天车工检测
-    pump_vesthelmet_info gx_pump_vesthelmet_api::safe_production_pump_vesthelmet(const gx_img_api& mat) {
+    pump_vesthelmet_info gx_pump_vesthelmet_api::safe_production_pump_vesthelmet(
+        const gx_img_api& mat, float head_conf_thres) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -79,7 +80,7 @@ namespace glasssix {
                         .params =
                             pump_vesthelmet_detect_param::confidence_params{
                                 .posture_conf_thres = _config->_pump_vesthelmet_config.posture_conf_thres,
-                                .head_conf_thres    = _config->_pump_vesthelmet_config.head_conf_thres,
+                                .head_conf_thres    = head_conf_thres,
                                 .head_min_h_thres   = _config->_pump_vesthelmet_config.head_min_h_thres,
                                 .head_min_w_thres   = _config->_pump_vesthelmet_config.head_min_w_thres,
                                 .vest_cls_thres     = _config->_pump_vesthelmet_config.vest_cls_thres,

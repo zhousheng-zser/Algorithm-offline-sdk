@@ -24,6 +24,8 @@ namespace glasssix {
             GX_BEGIN_FIELDS(confidence_params);
             GX_FIELD(std::optional<float>, head_conf_thres);
             GX_FIELD(std::optional<float>, pump_conf_thres);
+            GX_FIELD(std::optional<float>, people_conf_thres);
+            GX_FIELD(std::optional<float>, head_score_conf_thres);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
