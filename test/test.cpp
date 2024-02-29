@@ -788,6 +788,47 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
+        //{ 
+        //    auto list = find_file("/root/img/10/");
+        //    for (int i = 0; i < list.size(); i++) {
+        //        gx_img_api img(list[i], static_cast<int>(1e9));
+        //        auto val = api_temp->safe_production_pump_gate_status(img,10);
+        //        std::cout << list[i] << "\n";
+        //        if (condition)
+        //            printf("[pump_gate_status] : %s  \n", val.c_str());
+        //    }
+        //}
+        //{
+        //    auto list = find_file("/root/img/12/");
+        //    for (int i = 0; i < list.size(); i++) {
+        //        gx_img_api img(list[i], static_cast<int>(1e9));
+        //        auto val = api_temp->safe_production_pump_gate_status(img, 12);
+        //        std::cout << list[i] << "\n";
+        //        if (condition)
+        //            printf("[pump_gate_status] : %s  \n", val.c_str());
+        //    }
+        //}
+        //{
+        //    auto list = find_file("/root/img/15/");
+        //    for (int i = 0; i < list.size(); i++) {
+        //        gx_img_api img(list[i], static_cast<int>(1e9));
+        //        auto val = api_temp->safe_production_pump_gate_status(img, 15);
+        //        std::cout << list[i] << "\n";
+        //        if (condition)
+        //            printf("[pump_gate_status] : %s  \n", val.c_str());
+        //    }
+        //}
+        //{
+        //    auto list = find_file("/root/img/16/");
+        //    for (int i = 0; i < list.size(); i++) {
+        //        gx_img_api img(list[i], static_cast<int>(1e9));
+        //        auto val = api_temp->safe_production_pump_gate_status(img, 16);
+        //        std::cout << list[i] << "\n";
+        //        if (condition)
+        //            printf("[pump_gate_status] : %s  \n", val.c_str());
+        //    }
+        //}
+
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition)
@@ -865,10 +906,10 @@ namespace glasssix {
         gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api();
         int T                           = TIMES;
         auto start                      = std::chrono::high_resolution_clock::now();
-        gx_img_api img1("/root/img/pump_hoistring1.jpg", static_cast<int>(1e9));
-        api_temp->safe_production_pump_hoisting(img1, 1);
         for (int i = 0; i < T; ++i) {
             try {
+                gx_img_api img1("/root/img/pump_hoistring1.jpg", static_cast<int>(1e9));
+                api_temp->safe_production_pump_hoisting(img1, 1);
                 gx_img_api img2("/root/img/pump_hoistring2.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_hoisting(img2,1);
                 if (condition)
@@ -890,21 +931,21 @@ namespace glasssix {
         auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img0("/root/img/pump_weld/42_2_2.mp4_0.jpeg", static_cast<int>(1e9));
+                gx_img_api img0("/root/img/pump_weld/test_weld.mp4_0.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img0);
-                gx_img_api img1("/root/img/pump_weld/42_2_2.mp4_1.jpeg", static_cast<int>(1e9));
+                gx_img_api img1("/root/img/pump_weld/test_weld.mp4_1.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img1);
-                gx_img_api img2("/root/img/pump_weld/42_2_2.mp4_2.jpeg", static_cast<int>(1e9));
+                gx_img_api img2("/root/img/pump_weld/test_weld.mp4_2.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img2);
-                gx_img_api img3("/root/img/pump_weld/42_2_2.mp4_3.jpeg", static_cast<int>(1e9));
+                gx_img_api img3("/root/img/pump_weld/test_weld.mp4_3.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img3);
-                gx_img_api img4("/root/img/pump_weld/42_2_2.mp4_4.jpeg", static_cast<int>(1e9));
+                gx_img_api img4("/root/img/pump_weld/test_weld.mp4_4.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img4);
-                gx_img_api img5("/root/img/pump_weld/42_2_2.mp4_5.jpeg", static_cast<int>(1e9));
+                gx_img_api img5("/root/img/pump_weld/test_weld.mp4_5.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img5);
-                gx_img_api img6("/root/img/pump_weld/42_2_2.mp4_6.jpeg", static_cast<int>(1e9));
+                gx_img_api img6("/root/img/pump_weld/test_weld.mp4_6.jpeg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img6);
-                gx_img_api img7("/root/img/pump_weld/42_2_2.mp4_7.jpeg", static_cast<int>(1e9));
+                gx_img_api img7("/root/img/pump_weld/test_weld.mp4_7.jpeg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_weld(img7);
                 if (condition)
                     printf("[pump_weld] : category=%d\n", val.persons_weld[0].category);
