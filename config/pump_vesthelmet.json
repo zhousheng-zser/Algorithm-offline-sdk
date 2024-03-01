@@ -3,8 +3,5 @@
     "format": 1,
     "posture_conf_thres": 0.1,
     "head_min_h_thres": 24,
-    "head_min_w_thres": 24,
-    "vest_cls_thres": 0.7,
-    "helmet_cls_thres": 0.7
-
+    "head_min_w_thres": 24
 }

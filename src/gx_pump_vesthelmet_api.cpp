@@ -39,7 +39,7 @@ namespace glasssix {
         secret_key_empower empower;
         std::string empower_key = "";
         std::string empower_algorithm_id =
-            share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.3.2";
+            share_platform_name + "_" + share_empower_language + "_PUMP_VESTHELMET_V1.4.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -82,9 +82,7 @@ namespace glasssix {
                                 .posture_conf_thres = _config->_pump_vesthelmet_config.posture_conf_thres,
                                 .head_conf_thres    = head_conf_thres,
                                 .head_min_h_thres   = _config->_pump_vesthelmet_config.head_min_h_thres,
-                                .head_min_w_thres   = _config->_pump_vesthelmet_config.head_min_w_thres,
-                                .vest_cls_thres     = _config->_pump_vesthelmet_config.vest_cls_thres,
-                                .helmet_cls_thres   = _config->_pump_vesthelmet_config.helmet_cls_thres}},
+                                .head_min_w_thres   = _config->_pump_vesthelmet_config.head_min_w_thres}},
                     str);
 
                 ans = std::move(result.detect_info);

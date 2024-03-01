@@ -26,8 +26,6 @@ namespace glasssix {
             GX_FIELD(std::optional<float>, head_conf_thres);
             GX_FIELD(std::optional<float>, head_min_h_thres);
             GX_FIELD(std::optional<float>, head_min_w_thres);
-            GX_FIELD(std::optional<float>, vest_cls_thres);
-            GX_FIELD(std::optional<float>, helmet_cls_thres);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

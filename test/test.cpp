@@ -908,9 +908,9 @@ namespace glasssix {
         auto start                      = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img1("/root/img/pump_hoistring1.jpg", static_cast<int>(1e9));
+                gx_img_api img1("/root/img/pump_hoistring2.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_hoisting(img1, 1);
-                gx_img_api img2("/root/img/pump_hoistring2.jpg", static_cast<int>(1e9));
+                gx_img_api img2("/root/img/pump_hoistring1.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_hoisting(img2,1);
                 if (condition)
                     printf("[pump_hoisting] : dangerous_region = %llu \n", val.dangerous_region.size());
