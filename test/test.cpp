@@ -887,7 +887,7 @@ namespace glasssix {
         auto start                       = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/pumptop_helmet.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/pumptop_helmet.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pumptop_helmet(img);
                 if (condition)
                     printf("[pumptop_helmet] : category = %d \n", val.person_list[0].category);
