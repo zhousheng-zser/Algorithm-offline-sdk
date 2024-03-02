@@ -4,7 +4,8 @@
 
 namespace glasssix {
     gx_pump_pumptop_person_api::gx_pump_pumptop_person_api() : impl_{std::make_unique<impl>()} {}
-    gx_pump_pumptop_person_api::gx_pump_pumptop_person_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pump_pumptop_person_api::gx_pump_pumptop_person_api(const abi::string& config_path)
+        : impl_{std::make_unique<impl>(config_path)} {}
     gx_pump_pumptop_person_api::~gx_pump_pumptop_person_api() {}
     gx_pump_pumptop_person_api::gx_pump_pumptop_person_api(gx_pump_pumptop_person_api&&) noexcept            = default;
     gx_pump_pumptop_person_api& gx_pump_pumptop_person_api::operator=(gx_pump_pumptop_person_api&&) noexcept = default;
@@ -39,8 +40,9 @@ namespace glasssix {
 
     private:
         secret_key_empower empower;
-        std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_PUMPTOP_PERSON_V1.0.0";
+        std::string empower_key = "";
+        std::string empower_algorithm_id =
+            share_platform_name + "_" + share_empower_language + "_PUMP_PUMPTOP_PERSON_V1.2.0";
 
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
@@ -59,8 +61,8 @@ namespace glasssix {
     };
 
     //  泵顶行人检测
-    pump_pumptop_person_info gx_pump_pumptop_person_api::safe_production_pump_pumptop_person(const gx_img_api& mat,
-        const abi::vector<pedestrian_info::boxes>& person_list) {
+    pump_pumptop_person_info gx_pump_pumptop_person_api::safe_production_pump_pumptop_person(
+        const gx_img_api& mat, const abi::vector<pedestrian_info::boxes>& person_list) {
         pump_pumptop_person_info ans;
         // 过滤掉行人置信度小于person_conf的
         abi::vector<pedestrian_info::boxes> person_list_temp;
@@ -78,10 +80,14 @@ namespace glasssix {
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<pump_pumptop_person::detect>(ptr->pump_pumptop_person_handle,
                     pump_pumptop_person_detect_param{.instance_guid = "",
-                        .format                        = _config->_pump_pumptop_person_config.format,
-                        .height                        = mat.get_rows(),
-                        .width                         = mat.get_cols(),
-                        .person_list                   = person_list_temp},
+                        .format                                     = _config->_pump_pumptop_person_config.format,
+                        .height                                     = mat.get_rows(),
+                        .width                                      = mat.get_cols(),
+                        .person_list                                = person_list_temp,
+                        .params =
+                            pump_pumptop_person_detect_param::confidence_params{
+                                .person_area_ratio_thres =
+                                    _config->_pump_pumptop_person_config.person_area_ratio_thres}},
                     str);
                 return std::move(result.detect_info);
             });

@@ -156,8 +156,6 @@ namespace glasssix {
         GX_FIELD(float, posture_conf_thres);
         GX_FIELD(float, head_min_h_thres);
         GX_FIELD(float, head_min_w_thres);
-        GX_FIELD(float, vest_cls_thres);
-        GX_FIELD(float, helmet_cls_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -258,6 +256,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
+        GX_FIELD(float, person_area_ratio_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
