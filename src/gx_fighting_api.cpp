@@ -64,39 +64,41 @@ namespace glasssix {
     //  打架检测
     fighting_info gx_fighting_api::safe_production_fighting(const gx_img_api& mat) {
         try {
+            _config->_fighting_config.interval = 5;
+            _config->_fighting_config.batch    = 10;
+            if (_config->_fighting_config.interval <= 0)
+                throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : interval <= 0"));
+            if (_config->_fighting_config.batch <= 0)
+                throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : batch <= 0"));
+            int temp_id = (impl_->cnt - 1 + _config->_fighting_config.batch) % _config->_fighting_config.batch;
+            if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
+                throw source_code_aware_runtime_error(
+                    "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
+                    + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_cols()));
+            if (impl_->cnt && mat.get_rows() != impl_->mat_list[temp_id].get_rows()) // 高和之前的图片不一样
+                throw source_code_aware_runtime_error(
+                    "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
+                    + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
+            if (impl_->mat_list.size() < _config->_fighting_config.batch - 1) {
+                impl_->mat_list.emplace_back(mat);
+                impl_->cnt++;
+                return fighting_info{.score = 0, .category = 0};
+            } else if (impl_->mat_list.size() == _config->_fighting_config.batch - 1) {
+                impl_->mat_list.emplace_back(mat);
+                impl_->cnt++;
+            } else {
+                impl_->mat_list[impl_->cnt % _config->_fighting_config.batch] =
+                    mat; // 覆盖之后原本的gx_img_api会自动析构
+                impl_->cnt++;
+            }
+            if (impl_->cnt % _config->_fighting_config.interval)
+                return fighting_info{.score = 0, .category = 0};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                if (_config->_fighting_config.interval <= 0)
-                    throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : interval <= 0"));
-                if (_config->_fighting_config.batch <= 0)
-                    throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : batch <= 0"));
-                int temp_id = (impl_->cnt - 1 + _config->_fighting_config.batch) % _config->_fighting_config.batch;
-                if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
-                    throw source_code_aware_runtime_error(
-                        "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
-                        + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_cols()));
-                if (impl_->cnt && mat.get_rows() != impl_->mat_list[temp_id].get_rows()) // 高和之前的图片不一样
-                    throw source_code_aware_runtime_error(
-                        "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
-                        + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
-                if (impl_->mat_list.size() < _config->_fighting_config.batch - 1) {
-                    impl_->mat_list.emplace_back(mat);
-                    impl_->cnt++;
-                    return fighting_info{.score = 0, .category = 0};
-                } else if (impl_->mat_list.size() == _config->_fighting_config.batch - 1) {
-                    impl_->mat_list.emplace_back(mat);
-                    impl_->cnt++;
-                } else {
-                    impl_->mat_list[impl_->cnt % _config->_fighting_config.batch] =
-                        mat; // 覆盖之后原本的gx_img_api会自动析构
-                    impl_->cnt++;
-                }
-                if (impl_->cnt % _config->_fighting_config.interval)
-                    return fighting_info{.score = 0, .category = 0};
                 fighting_info ans;
                 std::vector<char> imgBatchDataArr(
                     _config->_fighting_config.batch * mat.get_data_len()); // push batch img to array
