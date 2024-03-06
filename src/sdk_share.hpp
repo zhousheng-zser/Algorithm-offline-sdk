@@ -25,6 +25,7 @@
 #include "../src/nessus/protocols/pumptop_helmet.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
+#include "../src/nessus/protocols/face_attributes.hpp"
 #include "../src/nessus/protocols/selene.hpp"
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smog.hpp"
@@ -137,6 +138,7 @@ namespace glasssix {
         }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
+            Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
             Function["climb"]               = &algo_ptr::set_protocols_handl_climb;
             Function["batterypilferers"]    = &algo_ptr::set_protocols_handl_batterypilferers;
             Function["fighting"]            = &algo_ptr::set_protocols_handl_fighting;
@@ -264,6 +266,11 @@ namespace glasssix {
             romancia_handle = protocol_ptr.make_instance<romancia>(
                 romancia_new_param{_config->_blur_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_face_attributes() {
+            _config->set_attributes(_config->_path);
+            face_attributes_handle = protocol_ptr.make_instance<face_attributes>(face_attributes_new_param{
+                _config->_attributes_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_damocles() {
             _config->set_action_live(_config->_path);
             damocles_handle =
@@ -331,6 +338,7 @@ namespace glasssix {
         }
 
         nessus_protocol protocol_ptr;
+        face_attributes face_attributes_handle;
         damocles damocles_handle;
         longinus longinus_handle;
         romancia romancia_handle;

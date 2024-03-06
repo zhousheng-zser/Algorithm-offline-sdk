@@ -261,6 +261,32 @@ namespace glasssix {
         return result_pool.get();
     }
 
+    // 人脸属性检测
+    abi::vector<attributes> gx_face_api::face_attributes(const gx_img_api& mat) {
+        abi::vector<attributes> ans;
+        abi::vector<face_info> faces = detect(mat);
+        if (faces.size() == 0)
+            return ans;
+        auto result_pool = pool->enqueue([&] {
+            std::thread::id id_ = std::this_thread::get_id();
+            if (all_thread_algo_ptr[id_] == nullptr) {
+                all_thread_algo_ptr[id_] = new algo_ptr();
+            }
+            auto ptr = all_thread_algo_ptr[id_];
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+            auto result                   = ptr->protocol_ptr.invoke<face_attributes::detect>(ptr->face_attributes_handle,
+                face_attributes_detect_param{.instance_guid = "",
+                            .format                               = _config->_attributes_config.format,
+                                      .height                               = mat.get_rows(),
+                                      .width                                = mat.get_cols(),
+                                      .facerect_list                        = faces},
+                str);
+            ans = result.face_attributes;
+            return ans;
+        });
+        return result_pool.get();
+    }
+
     // 配合活体检测
     face_info gx_face_api::face_action_live(action_live_type action_type, bool& action_result, const gx_img_api& mat) {
         face_info ans;

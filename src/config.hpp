@@ -47,6 +47,13 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct attributes_config {
+        GX_BEGIN_FIELDS(attributes_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct action_live_config {
         GX_BEGIN_FIELDS(action_live_config);
         GX_FIELD(int, device);
@@ -350,6 +357,7 @@ namespace glasssix {
         detect_config _detect_config;
         track_config _track_config;
         blur_config _blur_config;
+        attributes_config _attributes_config;
         action_live_config _action_live_config;
         feature_config _feature_config;
         face_user_config _face_user_config;
@@ -383,6 +391,7 @@ namespace glasssix {
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
         void set_blur(const abi::string& path);
+        void set_attributes(const abi::string& path);
         void set_action_live(const abi::string& path);
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
@@ -417,6 +426,7 @@ namespace glasssix {
         bool detect_is_load              = false;
         bool track_is_load               = false;
         bool blur_is_load                = false;
+        bool attributes_is_load          = false;
         bool action_live_is_load         = false;
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
