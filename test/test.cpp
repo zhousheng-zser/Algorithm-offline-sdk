@@ -1300,7 +1300,7 @@ void wangder_limit() {
         if (frame.empty())
             break;
         
-        if (frameCount % 5 == 0) {
+        if (frameCount % 20 == 0) {
             // 保存为图像
             std::string outputName = "/root/video/temp.jpg";
             cv::imwrite(outputName, frame);
@@ -1315,19 +1315,18 @@ void wangder_limit() {
                 int y1 = val.segment_info[i].y1;
                 int y2 = val.segment_info[i].y2;
 
-                result += segmentsIntersect(x1, y1, x2, y2, 976, 640, 1532, 699);
-                if (segmentsIntersect(x1, y1, x2, y2, 976, 640, 1532, 699)) {
+                result += segmentsIntersect(x1, y1, x2, y2, 991, 570, 1727, 580);
+                if (segmentsIntersect(x1, y1, x2, y2, 991, 570, 1727, 580)) {
                     rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
                         cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
                 }
                 rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
                     cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
-                if (val.person_info[i].id==0) {
+
                     line(frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 3);
                     printf("%d %d %d %d\n", x1, y1, x2, y2);
                 
-                }
-                line(frame, cv::Point(976, 640), cv::Point(1532, 699), cv::Scalar(0, 255,0 ), 3);
+                line(frame, cv::Point(991, 570), cv::Point(1727, 580), cv::Scalar(0, 255,0 ), 3);
                 putText(
                     frame, std::to_string(val.person_info[i].id), cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
@@ -1337,8 +1336,7 @@ void wangder_limit() {
             }
             if (result) {
                 cnnt++;
-                printf("--------------\n");
-                std::getchar();
+                printf("-------------------------------------------------\n");
             }
         }
             frameCount++;
