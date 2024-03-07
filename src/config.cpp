@@ -53,6 +53,12 @@ namespace glasssix {
         temp.get_to(_blur_config);
         blur_is_load = true;
     }
+    void config::set_attributes(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/attributes.json");
+        temp.get_to(_attributes_config);
+        attributes_is_load = true;
+    }
     void config::set_action_live(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/action_live.json");

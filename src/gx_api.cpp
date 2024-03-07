@@ -201,6 +201,7 @@ namespace glasssix {
         nlohmann::json init() {
             nlohmann::json name_config;
             name_config["action_live.json"]         = _config->_action_live_config;
+            name_config["attributes.json"]          = _config->_attributes_config;
             name_config["blur.json"]                = _config->_blur_config;
             name_config["configure_directory.json"] = _config->_configure_directory;
             name_config["detect.json"]              = _config->_detect_config;
@@ -259,6 +260,9 @@ namespace glasssix {
                 if (name == "action_live.json" && _config->action_live_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_action_live_config);
+                } else if (name == "attributes.json" && _config->attributes_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_attributes_config);
                 } else if (name == "blur.json" && _config->blur_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_blur_config);

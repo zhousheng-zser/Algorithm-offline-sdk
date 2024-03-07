@@ -36,6 +36,10 @@ namespace glasssix {
         GX_FIELD(std::int32_t, y);
         GX_FIELD(std::int32_t, height);
         GX_FIELD(std::int32_t, width);
+        GX_FIELD(std::int32_t, ori_x);
+        GX_FIELD(std::int32_t, ori_y);
+        GX_FIELD(std::int32_t, ori_height);
+        GX_FIELD(std::int32_t, ori_width);
         GX_FIELD(float, confidence); // 人脸置信度
         GX_FIELD(std::optional<attributes_info>, attributes); // 人脸属性
         GX_FIELD(abi::vector<point>, landmark); // 人脸关键点坐标
@@ -60,6 +64,17 @@ namespace glasssix {
         GX_BEGIN_FIELDS(faces_blur);
         GX_FIELD(abi::vector<face_info>, facerectwithfaceinfo_list); // 人脸的定位及信息
         GX_FIELD(abi::vector<float>, clarity); // 人脸质量程度,值为[0, 1]，值越小表明人脸质量越好
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+    // 人脸属性检测
+    struct attributes {
+        GX_BEGIN_FIELDS(attributes);
+        GX_FIELD(std::int32_t, age); // 0: (0,15)岁 1:[15,35)岁 2:[35,55)岁 3:大于等于55岁
+        GX_FIELD(std::int32_t, gender); // 0:女 1:男
+        GX_FIELD(std::int32_t, mask); // 0不戴口罩 1:戴口罩
+        GX_FIELD(std::int32_t, glass); // 0:不戴眼镜 1:戴眼镜
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

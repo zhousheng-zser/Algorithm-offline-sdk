@@ -45,6 +45,10 @@ bool condition = true;
 #define TIMES 1000
 
 namespace glasssix {
+
+    const cv::Scalar RED   = CV_RGB(250, 0, 0); // 红
+    const cv::Scalar GREEN = CV_RGB(0, 250, 0); // 绿
+    const cv::Scalar WHITE = CV_RGB(255, 255, 255); // 白
     // 返回的绝对路径
     std::vector<abi::string> find_file(std::filesystem::path folder_path) {
         std::vector<abi::string> ans_list;
@@ -776,17 +780,17 @@ namespace glasssix {
     // t26 多线程测定制大门状态
     void thread_function_pump_gate_status() {
         gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
-        int T                            = TIMES;
-        auto start                       = std::chrono::high_resolution_clock::now();
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/gate_open.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_gate_status(img,10);
+                auto val = api_temp->safe_production_pump_gate_status(img, 10);
                 if (condition)
                     printf("[pump_gate_status] : %s  \n", val.c_str());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
-            }
+        }
         }
         //{ 
         //    auto list = find_file("/root/img/10/");
@@ -887,7 +891,7 @@ namespace glasssix {
         auto start                       = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/pumptop_helmet.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/pumptop_helmet.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pumptop_helmet(img);
                 if (condition)
                     printf("[pumptop_helmet] : category = %d \n", val.person_list[0].category);
@@ -959,15 +963,32 @@ namespace glasssix {
             printf("pump_weld time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t32 多线程测人脸属性
+    void thread_function_face_attributes() {
+        gx_face_api* api_temp      = new gx_face_api();
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
+                auto val = api_temp->face_attributes(img);
+                 if (condition && val.size())
+                    printf("[faceattributes] : age=%d gender=%d glass=%d mask=%d\n", val[0].age, val[0].gender, val[0].glass, val[0].mask);
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("face_attributes time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 
 } // namespace glasssix
 
 // 处理视频的
 namespace glasssix {
-
-    const cv::Scalar RED   = CV_RGB(250, 0, 0); // 红
-    const cv::Scalar GREEN = CV_RGB(0, 250, 0); // 绿
-    const cv::Scalar WHITE = CV_RGB(255, 255, 255); // 白
     struct video_data {
         int be_x, be_y;
         int ed_x, ed_y;
@@ -993,9 +1014,9 @@ namespace glasssix {
                 // 默认视频不超过一个小时
                 z++; // !天杀的,少了这个
 
-                if (z > 30) {
+                if (z > data_.fps) {
                     y++;
-                    z %= 30;
+                    z %= data_.fps;
                     // z++;
                 }
                 if (y >= 60) {
@@ -1228,6 +1249,169 @@ void gif_test() {
     return;
 }
 
+bool onSegment(double x1, double y1, double x2, double y2, double x, double y) {
+    return (x >= std::min(x1, x2) && x <= std::max(x1, x2) && y >= std::min(y1, y2) && y <= std::max(y1, y2));
+}
+
+double orientation(double x1, double y1, double x2, double y2, double x3, double y3) {
+    double val = (y2 - y1) * (x3 - x2) - (x2 - x1) * (y3 - y2);
+    if (val == 0)
+        return 0;
+    return (val > 0) ? 1 : 2;
+}
+
+bool segmentsIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) {
+    double o1 = orientation(x1, y1, x2, y2, x3, y3);
+    double o2 = orientation(x1, y1, x2, y2, x4, y4);
+    double o3 = orientation(x3, y3, x4, y4, x1, y1);
+    double o4 = orientation(x3, y3, x4, y4, x2, y2);
+
+    if (o1 != o2 && o3 != o4)
+        return true;
+
+    if (o1 == 0 && onSegment(x1, y1, x2, y2, x3, y3))
+        return true;
+    if (o2 == 0 && onSegment(x1, y1, x2, y2, x4, y4))
+        return true;
+    if (o3 == 0 && onSegment(x3, y3, x4, y4, x1, y1))
+        return true;
+    if (o4 == 0 && onSegment(x3, y3, x4, y4, x2, y2))
+        return true;
+
+    return false;
+}
+
+
+void wangder_limit() {
+
+    // 读取 视频 文件
+    cv::VideoCapture capture;
+    capture.open("/root/video/wander_limit/wander_limit.mp4");
+
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount                 = 0;
+    gx_wander_api* api_temp = new gx_wander_api();
+    gx_pedestrian_api* api_ped    = new gx_pedestrian_api();
+        int cnnt = 0;
+    while (true) {
+        // 读取帧
+        capture >> frame;
+        if (frame.empty())
+            break;
+        
+        if (frameCount % 5 == 0) {
+            // 保存为图像
+            std::string outputName = "/root/video/temp.jpg";
+            cv::imwrite(outputName, frame);
+
+            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+            auto val_ped = api_ped->safe_production_pedestrian(img1);
+            auto val     = api_temp->safe_production_wander_limit(img1, frameCount / 26, 1, val_ped.person_list);
+            int result   = 0;
+            for (int i = 0; i < val.segment_info.size(); i++) {
+                int x1 = val.segment_info[i].x1;
+                int x2 = val.segment_info[i].x2;
+                int y1 = val.segment_info[i].y1;
+                int y2 = val.segment_info[i].y2;
+
+                result += segmentsIntersect(x1, y1, x2, y2, 976, 640, 1532, 699);
+                if (segmentsIntersect(x1, y1, x2, y2, 976, 640, 1532, 699)) {
+                    rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
+                        cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
+                }
+                rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
+                    cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
+                if (val.person_info[i].id==0) {
+                    line(frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 3);
+                    printf("%d %d %d %d\n", x1, y1, x2, y2);
+                
+                }
+                line(frame, cv::Point(976, 640), cv::Point(1532, 699), cv::Scalar(0, 255,0 ), 3);
+                putText(
+                    frame, std::to_string(val.person_info[i].id), cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+            }
+            cv::imwrite("/root/video/temp_x.jpg", frame);
+            if (cnnt==3) {
+                std::getchar();
+            }
+            if (result) {
+                cnnt++;
+                printf("--------------\n");
+                std::getchar();
+            }
+        }
+            frameCount++;
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+}
+
+
+void gate_status1() {
+
+    // 读取 视频 文件
+    cv::VideoCapture capture;
+    capture.open("/root/video/pump_gate_status/192.168.116.240_12_20240306162533192.mp4");
+
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount             = 0;
+    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+    int cnnt                   = 0;
+    while (true) {
+            // 读取帧
+            capture >> frame;
+            if (frame.empty())
+            break;
+
+            std::string outputName = "/root/video/temp.jpg";
+            cv::imwrite(outputName, frame);
+
+            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+            auto val   = api_temp->safe_production_pump_gate_status(img1,12);
+            if (val == "dangerous")
+                cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_192.jpg", frame);
+            frameCount++;
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+}
+
+void gate_status2() {
+
+    // 读取 视频 文件
+    cv::VideoCapture capture;
+    capture.open("/root/video/pump_gate_status/192.168.116.240_12_20240306163128579.mp4");
+
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount                    = 0;
+    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+    int cnnt                          = 0;
+    while (true) {
+            // 读取帧
+            capture >> frame;
+            if (frame.empty())
+                break;
+
+            std::string outputName = "/root/video/temp.jpg";
+            cv::imwrite(outputName, frame);
+
+            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+            auto val = api_temp->safe_production_pump_gate_status(img1, 12);
+            if (val == "dangerous")
+                cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_579.jpg", frame);
+            frameCount++;
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+}
+
+
 int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {
@@ -1240,6 +1424,9 @@ int main(int argc, char** argv) {
 
         // yuv_test();
         // gif_test();
+        // wangder_limit();
+        //gate_status1();
+        //gate_status2();
 
         /* 多线程测性能测试 */
         std::thread t[50];
@@ -1276,6 +1463,7 @@ int main(int argc, char** argv) {
         t[29] = std::thread(thread_function_pumptop_helmet);
         t[30] = std::thread(thread_function_pump_hoisting);
         t[31] = std::thread(thread_function_pump_weld);
+        t[32] = std::thread(thread_function_face_attributes);
 
         t[0].join();
         t[1].join();
@@ -1309,6 +1497,7 @@ int main(int argc, char** argv) {
         t[29].join();
         t[30].join();
         t[31].join();
+        t[32].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

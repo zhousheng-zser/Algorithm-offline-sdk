@@ -20,6 +20,8 @@ namespace glasssix {
         bool clear_track_history();
         // 人脸质量(模糊度)检测
         faces_blur face_blur(const gx_img_api& mat);
+        // 人脸属性检测
+        abi::vector <attributes> face_attributes(const gx_img_api& mat);
         // 配合活体检测
         face_info face_action_live(action_live_type action_type, bool& action_result, const gx_img_api& mat);
         // 静默活体检测
