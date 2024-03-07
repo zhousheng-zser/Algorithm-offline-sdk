@@ -780,12 +780,12 @@ namespace glasssix {
     // t26 多线程测定制大门状态
     void thread_function_pump_gate_status() {
         gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
-        int T                            = TIMES;
-        auto start                       = std::chrono::high_resolution_clock::now();
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/gate_open.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_gate_status(img,10);
+                auto val = api_temp->safe_production_pump_gate_status(img, 10);
                 if (condition)
                     printf("[pump_gate_status] : %s  \n", val.c_str());
             } catch (const std::exception& ex) {
@@ -1349,6 +1349,69 @@ void wangder_limit() {
 }
 
 
+void gate_status1() {
+
+    // 读取 视频 文件
+    cv::VideoCapture capture;
+    capture.open("/root/video/pump_gate_status/192.168.116.240_12_20240306162533192.mp4");
+
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount             = 0;
+    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+    int cnnt                   = 0;
+    while (true) {
+            // 读取帧
+            capture >> frame;
+            if (frame.empty())
+            break;
+
+            std::string outputName = "/root/video/temp.jpg";
+            cv::imwrite(outputName, frame);
+
+            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+            auto val   = api_temp->safe_production_pump_gate_status(img1,12);
+            if (val == "dangerous")
+                cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_192.jpg", frame);
+            frameCount++;
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+}
+
+void gate_status2() {
+
+    // 读取 视频 文件
+    cv::VideoCapture capture;
+    capture.open("/root/video/pump_gate_status/192.168.116.240_12_20240306163128579.mp4");
+
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount                    = 0;
+    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+    int cnnt                          = 0;
+    while (true) {
+            // 读取帧
+            capture >> frame;
+            if (frame.empty())
+                break;
+
+            std::string outputName = "/root/video/temp.jpg";
+            cv::imwrite(outputName, frame);
+
+            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+            auto val = api_temp->safe_production_pump_gate_status(img1, 12);
+            if (val == "dangerous")
+                cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_579.jpg", frame);
+            frameCount++;
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+}
+
+
 int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {
@@ -1362,6 +1425,8 @@ int main(int argc, char** argv) {
         // yuv_test();
         // gif_test();
         // wangder_limit();
+        //gate_status1();
+        //gate_status2();
 
         /* 多线程测性能测试 */
         std::thread t[50];
