@@ -18,6 +18,7 @@
 #include "../src/nessus/protocols/pump_gate_status.hpp"
 #include "../src/nessus/protocols/pump_hoisting.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
+#include "../src/nessus/protocols/pump_work_status.hpp"
 #include "../src/nessus/protocols/pump_mask.hpp"
 #include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
@@ -150,6 +151,7 @@ namespace glasssix {
             Function["pumptop_helmet"]      = &algo_ptr::set_protocols_handl_pumptop_helmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
             Function["pump_light"]          = &algo_ptr::set_protocols_handl_pump_light;
+            Function["pump_work_status"]    = &algo_ptr::set_protocols_handl_pump_work_status;
             Function["smog"]                = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]             = &algo_ptr::set_protocols_handl_refvest;
             Function["head"]                = &algo_ptr::set_protocols_handl_head;
@@ -226,6 +228,10 @@ namespace glasssix {
         void set_protocols_handl_pump_light() {
             _config->set_pump_light(_config->_path);
             pump_light_handle = protocol_ptr.make_instance<pump_light>(pump_light_new_param{});
+        }
+        void set_protocols_handl_pump_work_status() {
+            _config->set_pump_work_status(_config->_path);
+            pump_work_status_handle = protocol_ptr.make_instance<pump_work_status>(pump_work_status_new_param{});
         }
         void set_protocols_handl_smog() {
             _config->set_smog(_config->_path);
@@ -355,6 +361,7 @@ namespace glasssix {
         pumptop_helmet pumptop_helmet_handle;
         pump_gate_status pump_gate_status_handle;
         pump_light pump_light_handle;
+        pump_work_status pump_work_status_handle;
         pump_pumptop_person pump_pumptop_person_handle;
         smog smog_handle;
         head head_handle;

@@ -227,6 +227,7 @@ namespace glasssix {
             name_config["pump_weld.json"]           = _config->_pump_weld_config;
             name_config["pump_hoisting.json"]       = _config->_pump_hoisting_config;
             name_config["pump_light.json"]          = _config->_pump_light_config;
+            name_config["pump_work_status.json"]    = _config->_pump_work_status_config;
             name_config["leavepost.json"]           = _config->_leavepost_config;
             name_config["playphone.json"]           = _config->_playphone_config;
             name_config["onphone.json"]             = _config->_onphone_config;
@@ -296,6 +297,9 @@ namespace glasssix {
                 } else if (name == "pump_light.json" && _config->pump_light_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pump_light_config);
+                } else if (name == "pump_work_status.json" && _config->pump_work_status_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_work_status_config);
                 } else if (name == "pump_mask.json" && _config->pump_mask_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pump_mask_config);

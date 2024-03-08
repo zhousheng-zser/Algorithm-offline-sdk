@@ -149,6 +149,12 @@ namespace glasssix {
         temp.get_to(_pump_light_config);
         pump_light_is_load = true;
     }
+    void config::set_pump_work_status(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_work_status.json");
+        temp.get_to(_pump_work_status_config);
+        pump_work_status_is_load = true;
+    }
     void config::set_smog(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/smog.json");
