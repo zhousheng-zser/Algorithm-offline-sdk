@@ -38,6 +38,7 @@
 #include <gx_pump_vesthelmet_api.hpp>
 #include <gx_pumptop_helmet_api.hpp>
 #include <gx_pump_gate_status_api.hpp>
+#include <gx_pump_work_status_api.hpp>
 #include <gx_pump_pumptop_person_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
@@ -790,7 +791,7 @@ namespace glasssix {
                     printf("[pump_gate_status] : %s  \n", val.c_str());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
-        }
+            }
         }
         //{ 
         //    auto list = find_file("/root/img/10/");
@@ -985,6 +986,33 @@ namespace glasssix {
         delete api_temp;
     }
 
+    // t33 多线程测定制工作状态
+    void thread_function_pump_work_status() {
+        gx_pump_work_status_api* api_temp = new gx_pump_work_status_api();
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
+        abi::vector<pump_work_status_point> polygon;
+        polygon.emplace_back(pump_work_status_point{741, 412});
+        polygon.emplace_back(pump_work_status_point{1035, 412});
+        polygon.emplace_back(pump_work_status_point{1475, 1080});
+        polygon.emplace_back(pump_work_status_point{847, 1080});
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/pump_work_status.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_work_status(img, 1, polygon);
+                if (condition)
+                    printf("[pump_work_status] : %s \n", val.c_str());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition)
+            printf("pump_work_status time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 } // namespace glasssix
 
 // 处理视频的
@@ -1323,17 +1351,14 @@ void wangder_limit() {
                 rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
                     cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
 
-                    line(frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 3);
-                    printf("%d %d %d %d\n", x1, y1, x2, y2);
-                
+                line(frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 3);
+                printf("%d %d %d %d\n", x1, y1, x2, y2);
+
                 line(frame, cv::Point(991, 570), cv::Point(1727, 580), cv::Scalar(0, 255,0 ), 3);
                 putText(
                     frame, std::to_string(val.person_info[i].id), cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
             }
             cv::imwrite("/root/video/temp_x.jpg", frame);
-            if (cnnt==3) {
-                std::getchar();
-            }
             if (result) {
                 cnnt++;
                 printf("-------------------------------------------------\n");
@@ -1462,6 +1487,7 @@ int main(int argc, char** argv) {
         t[30] = std::thread(thread_function_pump_hoisting);
         t[31] = std::thread(thread_function_pump_weld);
         t[32] = std::thread(thread_function_face_attributes);
+        t[33] = std::thread(thread_function_pump_work_status);
 
         t[0].join();
         t[1].join();
@@ -1496,6 +1522,7 @@ int main(int argc, char** argv) {
         t[30].join();
         t[31].join();
         t[32].join();
+        t[33].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();

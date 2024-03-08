@@ -190,6 +190,12 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_work_status_config {
+        GX_BEGIN_FIELDS(pump_work_status_config);
+        GX_FIELD(int, format);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct smog_config {
         GX_BEGIN_FIELDS(smog_config);
         GX_FIELD(int, device);
@@ -373,6 +379,7 @@ namespace glasssix {
         pumptop_helmet_config _pumptop_helmet_config;
         pump_gate_status_config _pump_gate_status_config;
         pump_light_config _pump_light_config;
+        pump_work_status_config _pump_work_status_config;
         smog_config _smog_config;
         helmet_config _helmet_config;
         refvest_config _refvest_config;
@@ -407,6 +414,7 @@ namespace glasssix {
         void set_pumptop_helmet(const abi::string& path);
         void set_pump_gate_status(const abi::string& path);
         void set_pump_light(const abi::string& path);
+        void set_pump_work_status(const abi::string& path);
         void set_smog(const abi::string& path);
         void set_helmet(const abi::string& path);
         void set_refvest(const abi::string& path);
@@ -443,6 +451,7 @@ namespace glasssix {
         bool pumptop_helmet_is_load      = false;
         bool pump_gate_status_is_load    = false;
         bool pump_light_is_load          = false;
+        bool pump_work_status_is_load    = false;
         bool smog_is_load                = false;
         bool helmet_is_load              = false;
         bool refvest_is_load             = false;
