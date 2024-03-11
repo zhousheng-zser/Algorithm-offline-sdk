@@ -721,8 +721,35 @@ namespace glasssix {
                 {
                     gx_img_api img("/root/img/pump_light1.jpg", static_cast<int>(1e9));
                     auto val = api_temp->safe_production_pump_light(
-                        img, abi::vector<pump_light_point>{pump_light_point{1273, 161}, pump_light_point{1377, 187},
-                                 pump_light_point{1376, 220}, pump_light_point{1272, 195}});
+                        img, abi::vector<pump_light_point>{pump_light_point{654, 201}, pump_light_point{665, 201},
+                                 pump_light_point{665, 213}, pump_light_point{654,213}});
+                    if (condition)
+                        printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                            val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
+                }
+                {
+                    gx_img_api img("/root/img/pump_light2.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_light(
+                        img, abi::vector<pump_light_point>{pump_light_point{654, 201}, pump_light_point{665, 201},
+                                 pump_light_point{665, 213}, pump_light_point{654, 213}});
+                    if (condition)
+                        printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                            val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
+                }
+                {
+                    gx_img_api img("/root/img/pump_light3.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_light(
+                        img, abi::vector<pump_light_point>{pump_light_point{654, 201}, pump_light_point{665, 201},
+                                 pump_light_point{665, 213}, pump_light_point{654, 213}});
+                    if (condition)
+                        printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
+                            val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
+                }
+                {
+                    gx_img_api img("/root/img/pump_light1.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_light(
+                        img, abi::vector<pump_light_point>{pump_light_point{438, 264}, pump_light_point{449, 264},
+                                 pump_light_point{449, 280}, pump_light_point{438, 280}});
                     if (condition)
                         printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
                             val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
@@ -793,7 +820,7 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
-        //{ 
+        //{
         //    auto list = find_file("/root/img/10/");
         //    for (int i = 0; i < list.size(); i++) {
         //        gx_img_api img(list[i], static_cast<int>(1e9));
