@@ -42,6 +42,7 @@
 #include <gx_pump_pumptop_person_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
+bool condition_time = true;
 bool condition = true;
 #define TIMES 1000
 
@@ -96,7 +97,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -118,7 +119,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("head time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -140,7 +141,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -161,7 +162,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("smog time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -183,7 +184,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("refvest time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -207,7 +208,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("search time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -230,7 +231,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("integration time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -271,7 +272,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -292,7 +293,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("sleep time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -319,7 +320,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-        if (condition)
+        if (condition_time)
             printf("smoke time = %lld microsecond\n", duration);
         delete api_temp;
     }
@@ -341,7 +342,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -363,7 +364,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("vehicle time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -387,7 +388,7 @@ namespace glasssix {
         api_temp->wander_remove_library();
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("wander time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -421,6 +422,8 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition) {
             printf("[wander_limit] : %d\n", api_temp->wander_remove_library());
+        }
+        if (condition_time) {
             printf("wander_limit time = %lld microsecond\n", duration.count());
         }
         delete api_temp;
@@ -442,7 +445,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("leavepost time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -491,7 +494,7 @@ namespace glasssix {
 #endif
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("playphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -521,7 +524,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("onphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -542,7 +545,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("workcloth time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -563,7 +566,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -587,7 +590,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("climb time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -608,7 +611,7 @@ namespace glasssix {
             }
             auto end      = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            if (condition)
+            if (condition_time)
                 printf("crowd time = %lld microsecond\n", duration.count());
         }
         delete api_temp;
@@ -645,7 +648,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("batterypilferers time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -685,7 +688,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -707,7 +710,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -779,7 +782,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_light time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -801,7 +804,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_vesthelmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -863,7 +866,7 @@ namespace glasssix {
 
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_gate_status time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -886,7 +889,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_pumptop_person time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -908,7 +911,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_mask time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -929,7 +932,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pumptop_helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -952,7 +955,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_hoisting time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -987,7 +990,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_weld time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -1008,7 +1011,7 @@ namespace glasssix {
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("face_attributes time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -1036,7 +1039,7 @@ namespace glasssix {
 
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition)
+        if (condition_time)
             printf("pump_work_status time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
@@ -1097,7 +1100,7 @@ namespace glasssix {
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_smog_api* api_temp = new gx_smog_api();
+        gx_smoke_api* api_temp = new gx_smoke_api();
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1112,18 +1115,18 @@ namespace glasssix {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
-                auto val             = api_temp->safe_production_smog(gx_img_api{abi::string{temp[i]}, 1 << 28});
+                auto val             = api_temp->safe_production_smoke(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
-                if (val.smog_list.size() > 0) {
+                if (val.smoke_list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
                     printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                    for (int j = 0; j < val.smog_list.size(); j++) {
-                        int x1      = val.smog_list[j].x1;
-                        int x2      = val.smog_list[j].x2;
-                        int y1      = val.smog_list[j].y1;
-                        int y2      = val.smog_list[j].y2;
-                        float score = val.smog_list[j].score;
+                    for (int j = 0; j < val.smoke_list.size(); j++) {
+                        int x1      = val.smoke_list[j].x1;
+                        int x2      = val.smoke_list[j].x2;
+                        int y1      = val.smoke_list[j].y1;
+                        int y2      = val.smoke_list[j].y2;
+                        float score = val.smoke_list[j].score;
                         rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                         std::string text  = std::to_string(score);
                         cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
@@ -1470,7 +1473,7 @@ int main(int argc, char** argv) {
 
         // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 0, .ed_y = 18, .fps = 30};
         // printf("start run video\n");
-        // todo_video("/root/video/climb_test.mp4", "/root/video/smog/", "/root/video/smog/ans/", data_);
+        // todo_video("/root/video/climb_test.mp4", "/root/video/smk0311/", "/root/video/smk0311/ans/", data_);
 
         // yuv_test();
         // gif_test();

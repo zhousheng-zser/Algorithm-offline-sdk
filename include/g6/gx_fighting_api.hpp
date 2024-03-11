@@ -14,7 +14,8 @@ namespace glasssix {
 
         //  安全生产 打架检测
         fighting_info safe_production_fighting(const gx_img_api& mat);
-
+        //  安全生产 清空数据
+        void safe_production_clear();
     private:
         class impl;
         std::unique_ptr<impl> impl_;
