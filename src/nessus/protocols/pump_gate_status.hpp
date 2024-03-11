@@ -25,6 +25,7 @@ namespace glasssix {
             GX_FIELD(std::optional<float>, door_close_ratio);
             GX_FIELD(std::optional<float>, door_open_ratio);
             GX_FIELD(std::optional<float>, floor_ratio);
+            GX_FIELD(std::optional<float>, device_id);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

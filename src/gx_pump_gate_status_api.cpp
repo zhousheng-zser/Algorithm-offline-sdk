@@ -129,7 +129,8 @@ namespace glasssix {
                                 pump_gate_status_detect_param::confidence_params{
                                     .door_close_ratio = rooms_list[device_id].door_close_ratio,
                                     .door_open_ratio  = rooms_list[device_id].door_open_ratio,
-                                    .floor_ratio      = rooms_list[device_id].floor_ratio}},
+                                    .floor_ratio      = rooms_list[device_id].floor_ratio,
+                                    .device_id        = device_id+10}},
                         str);
 
                 ans = std::move(result.security_status);
