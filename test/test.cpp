@@ -152,7 +152,7 @@ namespace glasssix {
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/smog3.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/smog.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_smog(img);
                 if (condition)
                     printf("[smog] : smog_list = %d\n", val.smog_list.size());
@@ -786,7 +786,7 @@ namespace glasssix {
             printf("pump_light time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t25 多线程测定制天车工
+    // t25 多线程测定制天车工（反光衣安全帽）
     void thread_function_pump_vesthelmet() {
         gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api();
         int T      = TIMES;
@@ -936,7 +936,7 @@ namespace glasssix {
             printf("pumptop_helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t30 多线程测定制泵业狭小空间
+    // t30 多线程测定制泵业狭小空间（天车工吊装）
     void thread_function_pump_hoisting() {
         gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api();
         int T                           = TIMES;
