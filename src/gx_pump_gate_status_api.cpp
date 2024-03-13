@@ -73,7 +73,7 @@ namespace glasssix {
         secret_key_empower empower;
         std::string empower_key = "";
         std::string empower_algorithm_id =
-            share_platform_name + "_" + share_empower_language + "_PUMP_GATE_STATUS_V1.1.1";
+            share_platform_name + "_" + share_empower_language + "_PUMP_GATE_STATUS_V1.2.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
