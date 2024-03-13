@@ -127,5 +127,11 @@ namespace glasssix {
         }
     }
 
+    //  安全生产 清空数据
+    void gx_fighting_api::safe_production_clear() {
+        impl_->cnt = 0;
+        impl_->mat_list.clear();
+    }
+
 
 } // namespace glasssix

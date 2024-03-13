@@ -305,7 +305,7 @@
             "name": "rk3588",
             "configurePreset": "rk3588",
             "configuration": "Release",
-            "jobs": 4
+            "jobs": 3
         },
         {
             "name": "rk3588-debug",
