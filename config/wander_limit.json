@@ -1,0 +1,8 @@
+{
+    "device": -1,
+    "format": 1,
+    "feature_table_size": 20,
+    "feature_match_threshold": 0.94,
+    "person_conf": 0.85,
+    "interval": 10
+}

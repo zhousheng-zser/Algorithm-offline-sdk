@@ -203,6 +203,12 @@ namespace glasssix {
         temp.get_to(_wander_config);
         wander_is_load = true;
     }
+    void config::set_wander_limit(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/wander_limit.json");
+        temp.get_to(_wander_limit_config);
+        wander_limit_is_load = true;
+    }
     void config::set_pump_pumptop_person(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/pump_pumptop_person.json");

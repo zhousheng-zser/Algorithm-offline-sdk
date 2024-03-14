@@ -221,6 +221,7 @@ namespace glasssix {
             name_config["tumble.json"]              = _config->_tumble_config;
             name_config["vehicle.json"]             = _config->_vehicle_config;
             name_config["wander.json"]              = _config->_wander_config;
+            name_config["wander_limit.json"]        = _config->_wander_limit_config;
             name_config["pump_pumptop_person.json"] = _config->_pump_pumptop_person_config;
             name_config["pump_vesthelmet.json"]     = _config->_pump_vesthelmet_config;
             name_config["pump_mask.json"]           = _config->_pump_mask_config;
@@ -348,6 +349,9 @@ namespace glasssix {
                 } else if (name == "wander.json" && _config->wander_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_wander_config);
+                } else if (name == "wander_limit.json" && _config->wander_limit_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_wander_limit_config);
                 } else if (name == "leavepost.json" && _config->leavepost_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_leavepost_config);
