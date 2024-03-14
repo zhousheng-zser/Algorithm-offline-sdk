@@ -305,6 +305,7 @@ namespace glasssix {
         }
         void set_protocols_handl_wander() {
             _config->set_wander(_config->_path);
+            _config->set_wander_limit(_config->_path);
             wander_handle = protocol_ptr.make_instance<wander>(
                 wander_new_param{_config->_wander_config.device, _config->_configure_directory.models_directory});
         }

@@ -17,6 +17,7 @@ namespace glasssix {
             if (api_temp == nullptr) {
                 api_temp = new gx_pedestrian_api();
             }
+            time        = 0;
             empower_key = get_empower_key(_config->_configure_directory.license_directory);
             empower.set_serial_number(_config->_configure_directory.empower_serial_number);
             empower.set_algorithm_id(empower_algorithm_id);
@@ -41,6 +42,7 @@ namespace glasssix {
 
         int camera_id = 0; // 摄像头ID
         int category  = 0; // 0:未分类 1:徘徊 2:越界
+        int time      = 0;
         struct person_cache {
             std::int64_t sum_time  = 0;
             std::int64_t last_time = 0;
@@ -167,21 +169,26 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 "device_id:" + std::to_string(device_id)
                 + " \"wander\" and \"wander_limit\" cannot be used at the same time\n"};
-        ///  超过interval秒没出现的人自动删
-        std::vector<std::int32_t> v;
-        for (auto& it : impl_->wander_map) {
-            if (current_time - it.second.last_time > _config->_wander_config.interval)
-                v.emplace_back(it.first);
-        }
-        for (int x : v) {
-            impl_->wander_map.erase(x);
-            wander_remove_id(x);
+
+        ///  超过interval秒全部删库
+        if (current_time - impl_->time > _config->_wander_limit_config.interval) {
+            wander_remove_library();
+            impl_->time = current_time;
+            //    ///  超过interval秒没出现的人自动删
+            //    std::vector<std::int32_t> v;
+            //    for (auto& it : impl_->wander_map) {
+            //        if (current_time - it.second.last_time > _config->_wander_config.interval)
+            //            v.emplace_back(it.first);
+            //    }
+            //    for (int x : v) {
+            //        impl_->wander_map.erase(x);
+            //        wander_remove_id(x);
         }
         wander_info temp_ans;
         // 过滤掉行人置信度小于person_conf的
         abi::vector<pedestrian_info::boxes> posture_list_temp;
         for (int i = 0; i < person_list.size(); i++) {
-            if (person_list[i].score >= _config->_wander_config.person_conf)
+            if (person_list[i].score >= _config->_wander_limit_config.person_conf)
                 posture_list_temp.emplace_back(person_list[i]);
         }
         try {
@@ -194,7 +201,7 @@ namespace glasssix {
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
                 auto result = ptr->protocol_ptr.invoke<wander::detect>(ptr->wander_handle,
                     wander_detect_param{.instance_guid = "",
-                        .format                        = _config->_wander_config.format,
+                        .format                        = _config->_wander_limit_config.format,
                         .height                        = mat.get_rows(),
                         .width                         = mat.get_cols(),
                         .roi_x                         = 0,
@@ -205,8 +212,8 @@ namespace glasssix {
                         .params =
                             wander_detect_param::confidence_params{
                                 .current_time            = current_time,
-                                .feature_table_size      = _config->_wander_config.feature_table_size,
-                                .feature_match_threshold = _config->_wander_config.feature_match_threshold,
+                                .feature_table_size      = _config->_wander_limit_config.feature_table_size,
+                                .feature_match_threshold = _config->_wander_limit_config.feature_match_threshold,
                                 .device_id               = device_id,
                             }},
                     str);
@@ -255,11 +262,11 @@ namespace glasssix {
             std::array<char, 0> arr{};
             auto result = ptr->protocol_ptr.invoke<wander::remove_person_by_index>(ptr->wander_handle,
                 wander_remove_person_by_index_param{.id = id, .device_id = impl_->camera_id}, std::span<char>{arr});
+            impl_->wander_map.erase(id);
             if (result.delete_info == "OK")
                 return true;
             return false;
         });
-        impl_->wander_map.erase(id);
 
         return result_pool.get();
     }
@@ -278,12 +285,12 @@ namespace glasssix {
             std::array<char, 0> arr{};
             auto result = ptr->protocol_ptr.invoke<wander::remove_library>(
                 ptr->wander_handle, wander_remove_library_param{.id = impl_->camera_id}, std::span<char>{arr});
+            impl_->wander_map.clear();
+            impl_->camera_id = 0;
             if (result.delete_info == "ok")
                 return true;
             return false;
         });
-        impl_->wander_map.clear();
-        impl_->camera_id = 0;
 
         return result_pool.get();
     }
