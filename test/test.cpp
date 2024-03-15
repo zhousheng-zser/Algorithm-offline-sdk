@@ -42,7 +42,7 @@
 #include <gx_pump_pumptop_person_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
-bool condition_time = true;
+bool condition_time = false;
 bool condition = true;
 #define TIMES 1000
 
@@ -925,7 +925,13 @@ namespace glasssix {
                 gx_img_api img("/root/img/pumptop_helmet.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pumptop_helmet(img);
                 if (condition)
-                    printf("[pumptop_helmet] : category = %d \n", val.person_list[0].category);
+                {
+                    if( val.person_list.size() > 0 )
+                        printf("[pumptop_helmet] : category = %d \n", 1);
+                    else
+                        printf("[pumptop_helmet] : category = %d \n", 0);
+                }
+
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
