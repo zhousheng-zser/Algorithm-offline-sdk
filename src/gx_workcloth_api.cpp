@@ -61,8 +61,6 @@ namespace glasssix {
     //  工服检测
     workcloth_info gx_workcloth_api::safe_production_workcloth(
         const gx_img_api& mat, int color_hsv_list_id, const abi::vector<posture_info>& posture_info_list) {
-        if (mat.get_infrared_status())
-            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -107,8 +105,6 @@ namespace glasssix {
 
     //  工服检测
     workcloth_info gx_workcloth_api::safe_production_workcloth(const gx_img_api& mat, int color_hsv_list_id) {
-        if (mat.get_infrared_status())
-            return {};
         auto posture_info_list   = impl_->api_temp->safe_production_posture(mat);
         return safe_production_workcloth(mat, color_hsv_list_id, posture_info_list);
     }

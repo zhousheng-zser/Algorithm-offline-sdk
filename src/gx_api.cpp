@@ -28,7 +28,7 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
-            is_infrared = check_infrared();
+            is_infrared = -1;
         }
         impl(std::vector<uchar>& buffer, int limit) {
             type = check_type(buffer, 10);
@@ -41,7 +41,7 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
-            is_infrared = check_infrared();
+            is_infrared = -1;
         }
         impl(unsigned char* yuv_data, int rows, int cols, int limit) {
             cv::Mat yuv_img(rows * 3 / 2, cols, CV_8UC1, yuv_data);
@@ -53,7 +53,7 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
-            is_infrared = check_infrared();
+            is_infrared = -1;
         }
         impl(std::span<const uchar> bgr_data, int rows, int cols, int limit, bool ref) {
             if (!ref) {
@@ -70,7 +70,7 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(U8("Error: The picture has more than maximun limit pixels"));
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
-            is_infrared = check_infrared();
+            is_infrared = -1;
         }
         impl() {}
         ~impl() {}
@@ -117,7 +117,7 @@ namespace glasssix {
             }
             return "";
         }
-        bool check_infrared() {
+        int check_infrared() {
             cv::Mat hsv_frame;
             cv::cvtColor(img, hsv_frame, cv::COLOR_BGR2HSV);
             double sum = 0;
@@ -128,11 +128,11 @@ namespace glasssix {
                 }
             }
             sum /= (hsv_frame.rows * hsv_frame.cols);
-            if (sum < 10)
-                return true;
-            return false;
+            if (sum < 4)
+                return 1;
+            return 0;
         }
-        bool is_infrared; // 判断是否为红外图像
+        int is_infrared; // 判断是否为红外图像
         cv::Mat img;
         size_t data_len;
         abi::string type;
@@ -166,6 +166,8 @@ namespace glasssix {
         return impl_->type;
     }
     bool gx_img_api::get_infrared_status() const {
+        if (impl_->is_infrared == -1)
+            impl_->is_infrared = impl_->check_infrared();
         return impl_->is_infrared;
     }
     bool gx_img_api::rotate(int deg) {

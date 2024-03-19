@@ -56,8 +56,6 @@ namespace glasssix {
 
     //  行人检测
     pedestrian_info gx_pedestrian_api::safe_production_pedestrian(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();

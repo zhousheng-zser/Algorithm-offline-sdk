@@ -56,8 +56,6 @@ namespace glasssix {
 
     //  睡岗检测
     sleep_info gx_sleep_api::safe_production_sleep(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -96,8 +94,6 @@ namespace glasssix {
     }
     //  睡岗检测
     sleep_info gx_sleep_api::safe_production_sleep(const gx_img_api& mat, int device_id) {
-        if (mat.get_infrared_status())
-            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();

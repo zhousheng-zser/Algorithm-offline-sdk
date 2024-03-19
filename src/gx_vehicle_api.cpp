@@ -56,8 +56,6 @@ namespace glasssix {
 
     //  安全生产 车辆检测
     vehicle_info gx_vehicle_api::safe_production_vehicle(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
