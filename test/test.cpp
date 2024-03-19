@@ -23,6 +23,15 @@
 #include <gx_pedestrian_api.hpp>
 #include <gx_playphone_api.hpp>
 #include <gx_posture_api.hpp>
+#include <gx_pump_gate_status_api.hpp>
+#include <gx_pump_hoisting_api.hpp>
+#include <gx_pump_light_api.hpp>
+#include <gx_pump_mask_api.hpp>
+#include <gx_pump_pumptop_person_api.hpp>
+#include <gx_pump_vesthelmet_api.hpp>
+#include <gx_pump_weld_api.hpp>
+#include <gx_pump_work_status_api.hpp>
+#include <gx_pumptop_helmet_api.hpp>
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smog_api.hpp>
@@ -31,20 +40,11 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
-#include <gx_pump_mask_api.hpp>
-#include <gx_pump_weld_api.hpp>
-#include <gx_pump_hoisting_api.hpp>
-#include <gx_pump_light_api.hpp>
-#include <gx_pump_vesthelmet_api.hpp>
-#include <gx_pumptop_helmet_api.hpp>
-#include <gx_pump_gate_status_api.hpp>
-#include <gx_pump_work_status_api.hpp>
-#include <gx_pump_pumptop_person_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time = false;
-bool condition = true;
-#define TIMES 1000
+bool condition      = true;
+#define TIMES 1
 
 namespace glasssix {
 
@@ -457,11 +457,11 @@ namespace glasssix {
 #if 1 // 这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img("/root/img/playphone_zj.jpeg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/wsj_13.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 if (condition)
-                    printf("[playphone] : bodyerror_list = %d norm_list = %d playphone_list = %d\n",
-                        val.bodyerror_list.size(), val.norm_list.size(), val.playphone_list.size());
+                    printf("[playphone] : playphone_list = %d norm_list = %d bodyerror_list = %d\n",
+                        val.playphone_list.size(), val.norm_list.size(), val.bodyerror_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -517,7 +517,7 @@ namespace glasssix {
                     auto val2 = api_temp->safe_production_onphone(img, val_posture);
                     printf("[onphone] : post-> onphone_list = %d norm_list = %d\n", val2.onphone_list.size(),
                         val2.norm_list.size());
-                    }
+                }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -619,8 +619,8 @@ namespace glasssix {
     // t23 多线程测偷电瓶
     void thread_function_batterypilferers() {
         gx_batterypilferers_api* api_temp = new gx_batterypilferers_api();
-        int T      = TIMES;
-        auto start = std::chrono::high_resolution_clock::now();
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img0("/root/img/batterypilferers/batterypilferers_2.jpg", static_cast<int>(1e9));
@@ -655,8 +655,8 @@ namespace glasssix {
     // t19 多线程测打架
     void thread_function_fighting() {
         gx_fighting_api* api_temp = new gx_fighting_api();
-        int T      = TIMES;
-        auto start = std::chrono::high_resolution_clock::now();
+        int T                     = TIMES;
+        auto start                = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img0("/root/img/fighting/fight_0th.jpg", static_cast<int>(1e9));
@@ -695,8 +695,8 @@ namespace glasssix {
     // t20 多线程测姿态
     void thread_function_posture() {
         gx_posture_api* api_temp = new gx_posture_api();
-        int T      = TIMES;
-        auto start = std::chrono::high_resolution_clock::now();
+        int T                    = TIMES;
+        auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/posture.jpg", static_cast<int>(1e9));
@@ -717,15 +717,15 @@ namespace glasssix {
     // t24 多线程测定制灯光
     void thread_function_pump_light() {
         gx_pump_light_api* api_temp = new gx_pump_light_api();
-        int T      = TIMES;
-        auto start = std::chrono::high_resolution_clock::now();
+        int T                       = TIMES;
+        auto start                  = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 {
                     gx_img_api img("/root/img/pump_light1.jpg", static_cast<int>(1e9));
                     auto val = api_temp->safe_production_pump_light(
                         img, abi::vector<pump_light_point>{pump_light_point{654, 201}, pump_light_point{665, 201},
-                                 pump_light_point{665, 213}, pump_light_point{654,213}});
+                                 pump_light_point{665, 213}, pump_light_point{654, 213}});
                     if (condition)
                         printf("[pump_light] : red_ratio =%f white_ratio =%f orange_ratio =%f light_status=%d\n",
                             val.red_ratio, val.white_ratio, val.orange_ratio, val.light_status);
@@ -789,13 +789,13 @@ namespace glasssix {
     // t25 多线程测定制天车工（反光衣安全帽）
     void thread_function_pump_vesthelmet() {
         gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api();
-        int T      = TIMES;
-        auto start = std::chrono::high_resolution_clock::now();
+        int T                            = TIMES;
+        auto start                       = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                    gx_img_api img("/root/img/tcg.jpg", static_cast<int>(1e9));
-                    auto val = api_temp->safe_production_pump_vesthelmet(img);
-                    if (condition)
+                gx_img_api img("/root/img/tcg.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_vesthelmet(img);
+                if (condition)
                     printf("[pump_vesthelmet] : category = %d score = %.2f  \n", val.pump_vesthelmet_list[0].category,
                         val.pump_vesthelmet_list[0].score);
             } catch (const std::exception& ex) {
@@ -873,11 +873,11 @@ namespace glasssix {
     // t27 多线程测定制泵顶行人
     void thread_function_pump_pumptop_person() {
         gx_pump_pumptop_person_api* api_temp = new gx_pump_pumptop_person_api();
-        int T                            = TIMES;
-        auto start                       = std::chrono::high_resolution_clock::now();
+        int T                                = TIMES;
+        auto start                           = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                //gx_img_api img("/root/img/pumptop_person.jpg", static_cast<int>(1e9));
+                // gx_img_api img("/root/img/pumptop_person.jpg", static_cast<int>(1e9));
                 gx_img_api img("/root/img/pump_pumptop_person.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_pumptop_person(img);
                 if (condition)
@@ -896,8 +896,8 @@ namespace glasssix {
     // t28 多线程测定制防护面罩
     void thread_function_pump_mask() {
         gx_pump_mask_api* api_temp = new gx_pump_mask_api();
-        int T                            = TIMES;
-        auto start                       = std::chrono::high_resolution_clock::now();
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/pump_mak.jpg", static_cast<int>(1e9));
@@ -918,15 +918,14 @@ namespace glasssix {
     // t29 多线程测定制泵顶安全帽
     void thread_function_pumptop_helmet() {
         gx_pumptop_helmet_api* api_temp = new gx_pumptop_helmet_api();
-        int T                            = TIMES;
-        auto start                       = std::chrono::high_resolution_clock::now();
+        int T                           = TIMES;
+        auto start                      = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/pumptop_helmet.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pumptop_helmet(img);
-                if (condition)
-                {
-                    if( val.person_list.size() > 0 )
+                if (condition) {
+                    if (val.person_list.size() > 0)
                         printf("[pumptop_helmet] : category = %d \n", 1);
                     else
                         printf("[pumptop_helmet] : category = %d \n", 0);
@@ -945,14 +944,14 @@ namespace glasssix {
     // t30 多线程测定制泵业狭小空间（天车工吊装）
     void thread_function_pump_hoisting() {
         gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api();
-        int T                           = TIMES;
-        auto start                      = std::chrono::high_resolution_clock::now();
+        int T                          = TIMES;
+        auto start                     = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img1("/root/img/pump_hoistring2.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_pump_hoisting(img1, 1);
                 gx_img_api img2("/root/img/pump_hoistring1.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_hoisting(img2,1);
+                auto val = api_temp->safe_production_pump_hoisting(img2, 1);
                 if (condition)
                     printf("[pump_hoisting] : dangerous_region = %llu \n", val.dangerous_region.size());
             } catch (const std::exception& ex) {
@@ -968,8 +967,8 @@ namespace glasssix {
     // t31 多线程测定制泵业焊接
     void thread_function_pump_weld() {
         gx_pump_weld_api* api_temp = new gx_pump_weld_api();
-        int T                             = TIMES;
-        auto start                        = std::chrono::high_resolution_clock::now();
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img0("/root/img/pump_weld/test_weld.mp4_0.jpeg", static_cast<int>(1e9));
@@ -990,6 +989,14 @@ namespace glasssix {
                 auto val = api_temp->safe_production_pump_weld(img7);
                 if (condition)
                     printf("[pump_weld] : category=%d\n", val.persons_weld[0].category);
+#if 0
+                for (int i = 0; i < val.persons_weld[0].weld_list.size(); ++i) {
+                    std::cout << val.persons_weld[0].weld_list[i].x1 << std::endl;
+                    std::cout << val.persons_weld[0].weld_list[i].y1 << std::endl;
+                    std::cout << val.persons_weld[0].weld_list[i].x2 << std::endl;
+                    std::cout << val.persons_weld[0].weld_list[i].y2 << std::endl;
+                }
+#endif
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1002,15 +1009,16 @@ namespace glasssix {
     }
     // t32 多线程测人脸属性
     void thread_function_face_attributes() {
-        gx_face_api* api_temp      = new gx_face_api();
-        int T                      = TIMES;
-        auto start                 = std::chrono::high_resolution_clock::now();
+        gx_face_api* api_temp = new gx_face_api();
+        int T                 = TIMES;
+        auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
                 auto val = api_temp->face_attributes(img);
-                 if (condition && val.size())
-                    printf("[faceattributes] : age=%d gender=%d glass=%d mask=%d\n", val[0].age, val[0].gender, val[0].glass, val[0].mask);
+                if (condition && val.size())
+                    printf("[faceattributes] : age=%d gender=%d glass=%d mask=%d\n", val[0].age, val[0].gender,
+                        val[0].glass, val[0].mask);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1354,16 +1362,16 @@ void wangder_limit() {
 
     // 逐帧解码并保存为图像
     cv::Mat frame;
-    int frameCount                 = 0;
-    gx_wander_api* api_temp = new gx_wander_api();
-    gx_pedestrian_api* api_ped    = new gx_pedestrian_api();
-        int cnnt = 0;
+    int frameCount             = 0;
+    gx_wander_api* api_temp    = new gx_wander_api();
+    gx_pedestrian_api* api_ped = new gx_pedestrian_api();
+    int cnnt                   = 0;
     while (true) {
         // 读取帧
         capture >> frame;
         if (frame.empty())
             break;
-        
+
         if (frameCount % 20 == 0) {
             // 保存为图像
             std::string outputName = "/root/video/temp.jpg";
@@ -1390,9 +1398,9 @@ void wangder_limit() {
                 line(frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 3);
                 printf("%d %d %d %d\n", x1, y1, x2, y2);
 
-                line(frame, cv::Point(991, 570), cv::Point(1727, 580), cv::Scalar(0, 255,0 ), 3);
-                putText(
-                    frame, std::to_string(val.person_info[i].id), cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                line(frame, cv::Point(991, 570), cv::Point(1727, 580), cv::Scalar(0, 255, 0), 3);
+                putText(frame, std::to_string(val.person_info[i].id), cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1,
+                    WHITE, 2);
             }
             cv::imwrite("/root/video/temp_x.jpg", frame);
             if (result) {
@@ -1400,7 +1408,7 @@ void wangder_limit() {
                 printf("-------------------------------------------------\n");
             }
         }
-            frameCount++;
+        frameCount++;
     }
 
     // 释放 VideoCapture 资源
@@ -1416,23 +1424,23 @@ void gate_status1() {
 
     // 逐帧解码并保存为图像
     cv::Mat frame;
-    int frameCount             = 0;
+    int frameCount                    = 0;
     gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
-    int cnnt                   = 0;
+    int cnnt                          = 0;
     while (true) {
-            // 读取帧
-            capture >> frame;
-            if (frame.empty())
+        // 读取帧
+        capture >> frame;
+        if (frame.empty())
             break;
 
-            std::string outputName = "/root/video/temp.jpg";
-            cv::imwrite(outputName, frame);
+        std::string outputName = "/root/video/temp.jpg";
+        cv::imwrite(outputName, frame);
 
-            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-            auto val   = api_temp->safe_production_pump_gate_status(img1,12);
-            if (val == "dangerous")
-                cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_192.jpg", frame);
-            frameCount++;
+        gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+        auto val = api_temp->safe_production_pump_gate_status(img1, 12);
+        if (val == "dangerous")
+            cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_192.jpg", frame);
+        frameCount++;
     }
 
     // 释放 VideoCapture 资源
@@ -1451,19 +1459,19 @@ void gate_status2() {
     gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
     int cnnt                          = 0;
     while (true) {
-            // 读取帧
-            capture >> frame;
-            if (frame.empty())
-                break;
+        // 读取帧
+        capture >> frame;
+        if (frame.empty())
+            break;
 
-            std::string outputName = "/root/video/temp.jpg";
-            cv::imwrite(outputName, frame);
+        std::string outputName = "/root/video/temp.jpg";
+        cv::imwrite(outputName, frame);
 
-            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-            auto val = api_temp->safe_production_pump_gate_status(img1, 12);
-            if (val == "dangerous")
-                cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_579.jpg", frame);
-            frameCount++;
+        gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+        auto val = api_temp->safe_production_pump_gate_status(img1, 12);
+        if (val == "dangerous")
+            cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_579.jpg", frame);
+        frameCount++;
     }
 
     // 释放 VideoCapture 资源
@@ -1484,8 +1492,8 @@ int main(int argc, char** argv) {
         // yuv_test();
         // gif_test();
         // wangder_limit();
-        //gate_status1();
-        //gate_status2();
+        // gate_status1();
+        // gate_status2();
 
         /* 多线程测性能测试 */
         std::thread t[50];
