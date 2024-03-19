@@ -63,8 +63,6 @@ namespace glasssix {
     helmet_info gx_helmet_api::safe_production_helmet(
         const gx_img_api& mat, const abi::vector<head_info>& head_info_list) {
         try {
-            if (mat.get_infrared_status())
-                return {};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
@@ -105,8 +103,6 @@ namespace glasssix {
     }
 
     helmet_info gx_helmet_api::safe_production_helmet(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
         auto head_info_list = impl_->api_temp->safe_production_head(mat);
         return safe_production_helmet(mat, head_info_list);
     }

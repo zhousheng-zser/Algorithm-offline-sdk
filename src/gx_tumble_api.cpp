@@ -56,8 +56,6 @@ namespace glasssix {
 
     //  跌倒检测
     tumble_info gx_tumble_api::safe_production_tumble(const gx_img_api& mat) {
-        if (mat.get_infrared_status())
-            return {};
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
