@@ -44,7 +44,7 @@
 using namespace glasssix;
 bool condition_time = false;
 bool condition      = true;
-#define TIMES 1
+#define TIMES 1000
 
 namespace glasssix {
 
@@ -815,7 +815,7 @@ namespace glasssix {
         auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/gate_open.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/gate_open2.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_gate_status(img, 10);
                 if (condition)
                     printf("[pump_gate_status] : %s  \n", val.c_str());
