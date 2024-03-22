@@ -193,7 +193,9 @@ namespace glasssix {
     bool gx_img_api::write(const std::string& path) const {
         return cv::imwrite(path, impl_->img);
     }
-
+    const uchar* gx_img_api::get_row_ptr(int val) const {
+        return impl_->img.ptr<uchar>(val);
+    }
 
     class gx_config_api::impl {
     public:
