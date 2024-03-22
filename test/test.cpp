@@ -12,6 +12,7 @@
 #include <gx_api.hpp>
 #include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
+#include <gx_crossing_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_fighting_api.hpp>
@@ -36,7 +37,6 @@
 #include <gx_sleep_api.hpp>
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
-#include <gx_crossing_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
@@ -655,11 +655,12 @@ namespace glasssix {
     }
     // t19 多线程测打架
     void thread_function_fighting() {
-        gx_fighting_api* api_temp = new gx_fighting_api();
-        int T                     = TIMES;
-        auto start                = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < T; ++i) {
-            try {
+        try {
+
+            gx_fighting_api* api_temp = new gx_fighting_api();
+            int T                     = TIMES;
+            auto start                = std::chrono::high_resolution_clock::now();
+            for (int i = 0; i < T; ++i) {
                 gx_img_api img0("/root/img/fighting/fight_0th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img0);
                 gx_img_api img1("/root/img/fighting/fight_5th.jpg", static_cast<int>(1e9));
@@ -682,16 +683,15 @@ namespace glasssix {
                 auto val = api_temp->safe_production_fighting(img9);
                 if (condition)
                     printf("[fighting] : score =%f category=%d\n", val.score, val.category);
-
-            } catch (const std::exception& ex) {
-                printf("error =  %s\n", ex.what());
             }
+            auto end      = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            if (condition_time)
+                printf("flame time = %lld microsecond\n", duration.count());
+            delete api_temp;
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
         }
-        auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition_time)
-            printf("flame time = %lld microsecond\n", duration.count());
-        delete api_temp;
     }
     // t20 多线程测姿态
     void thread_function_posture() {
@@ -1418,29 +1418,29 @@ void wangder_limit() {
     capture.release();
 }
 
-void crossing(std::string path,std::string name ) {
+void crossing(std::string path, std::string name) {
 
     // 读取 视频 文件
     cv::VideoCapture capture;
     capture.open(path.c_str());
     // 逐帧解码并保存为图像
     cv::Mat frame;
-    int frameCount             = 0;
-    gx_crossing_api* api_temp    = new gx_crossing_api();
-    int cnnt                   = 0;
+    int frameCount            = 0;
+    gx_crossing_api* api_temp = new gx_crossing_api();
+    int cnnt                  = 0;
     while (true) {
         // 读取帧
         capture >> frame;
         if (frame.empty())
             break;
 
-            // 保存为图像
+        // 保存为图像
         std::string outputName = "/root/video/temp.jpg";
         cv::imwrite(outputName, frame);
 
         gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-        auto val   = api_temp ->safe_production_crossing(img1);
-        int result   = 0;
+        auto val   = api_temp->safe_production_crossing(img1);
+        int result = 0;
 
         //for (auto& ss : val) {
         //    bool k = zser(ss);
@@ -1461,7 +1461,6 @@ void crossing(std::string path,std::string name ) {
     // 释放 VideoCapture 资源
     capture.release();
 }
-
 
 
 void gate_status1() {
@@ -1540,10 +1539,10 @@ int main(int argc, char** argv) {
         // yuv_test();
         // gif_test();
         // wangder_limit();
-        crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
-        crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
-        crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
-        crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
+        // crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
+        // crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
+        // crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
+        // crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
         // gate_status1();
         // gate_status2();
 
