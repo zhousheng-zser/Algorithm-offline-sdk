@@ -182,12 +182,12 @@ namespace glasssix {
             _config->set_batterypilferers(_config->_path);
             batterypilferers_handle = protocol_ptr.make_instance<batterypilferers>(
                 batterypilferers_new_param{_config->_batterypilferers_config.device,
-                    _config->_configure_directory.models_directory, _config->_batterypilferers_config.batch});
+                    _config->_configure_directory.models_directory, 3});
         }
         void set_protocols_handl_fighting() {
             _config->set_fighting(_config->_path);
             fighting_handle = protocol_ptr.make_instance<fighting>(fighting_new_param{_config->_fighting_config.device,
-                _config->_configure_directory.models_directory, _config->_fighting_config.batch});
+                _config->_configure_directory.models_directory, 8});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
