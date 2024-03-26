@@ -1,8 +1,6 @@
 {
     "device": -1,
     "format": 1,
-    "batch": 8,
-    "interval": 4,
     "conf_thres": 0.3,
     "nms_thres": 0.45,
     "wmachine_conf_thres": 0.3,

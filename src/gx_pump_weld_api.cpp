@@ -71,8 +71,8 @@ namespace glasssix {
     pump_weld_info gx_pump_weld_api::safe_production_pump_weld(
         const gx_img_api& mat, float candidate_box_width, float candidate_box_height) {
         try {
-            _config->_pump_weld_config.interval = 4;
-            _config->_pump_weld_config.batch    = 8;
+            _config->_pump_weld_config.interval = 2;
+            _config->_pump_weld_config.batch    = 3;
             if (_config->_pump_weld_config.interval <= 0)
                 throw source_code_aware_runtime_error(U8("Error: The config/pump_weld.json : interval <= 0"));
             if (_config->_pump_weld_config.batch <= 0)
@@ -98,7 +98,8 @@ namespace glasssix {
                     mat; // 覆盖之后原本的gx_img_api会自动析构
                 impl_->cnt++;
             }
-            if (impl_->cnt % _config->_pump_weld_config.interval)
+            int val = (impl_->cnt - _config->_pump_weld_config.batch) % _config->_pump_weld_config.interval;
+            if ((impl_->cnt - _config->_pump_weld_config.batch) % _config->_pump_weld_config.interval)
                 return pump_weld_info{};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
