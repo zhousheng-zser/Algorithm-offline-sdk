@@ -12,10 +12,17 @@ namespace glasssix {
             GX_BEGIN_FIELDS(boxes);
             GX_FIELD(int, category); // 类别
             GX_FIELD(float, score); // 置信度
-            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
-            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
-            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
-            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            //目前会返回五边形:共五个顶点,以左上角的顶点为第一个点,顺时针//& 注意,会存在第五个点与第一个点重合的情况
+            GX_FIELD(std::int32_t, x1);
+            GX_FIELD(std::int32_t, y1);
+            GX_FIELD(std::int32_t, x2);
+            GX_FIELD(std::int32_t, y2);
+            GX_FIELD(std::int32_t, x3);
+            GX_FIELD(std::int32_t, y3);
+            GX_FIELD(std::int32_t, x4);
+            GX_FIELD(std::int32_t, y4);
+            GX_FIELD(std::int32_t, x5);
+            GX_FIELD(std::int32_t, y5);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

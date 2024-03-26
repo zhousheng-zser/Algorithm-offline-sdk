@@ -50,7 +50,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_WELD_V1.5.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_WELD_V2.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -125,6 +125,8 @@ namespace glasssix {
                         .params                           = pump_weld_detect_param::confidence_params{.conf_thres =
                                                                                 _config->_pump_weld_config.conf_thres,
                                                       .nms_thres            = _config->_pump_weld_config.nms_thres,
+                                                      .wmachine_conf_thres            = _config->_pump_weld_config.wmachine_conf_thres,
+                                                      .wlight_conf_thres            = _config->_pump_weld_config.wlight_conf_thres,
                                                       .candidate_box_width  = candidate_box_width,
                                                       .candidate_box_height = candidate_box_height}},
                     str);
