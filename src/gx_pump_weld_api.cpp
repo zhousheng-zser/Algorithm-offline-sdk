@@ -71,13 +71,13 @@ namespace glasssix {
     pump_weld_info gx_pump_weld_api::safe_production_pump_weld(
         const gx_img_api& mat, float candidate_box_width, float candidate_box_height) {
         try {
-            _config->_pump_weld_config.interval = 2;
-            _config->_pump_weld_config.batch    = 3;
-            if (_config->_pump_weld_config.interval <= 0)
+            int interval = 2;
+            int batch    = 3;
+            if (interval <= 0)
                 throw source_code_aware_runtime_error(U8("Error: The config/pump_weld.json : interval <= 0"));
-            if (_config->_pump_weld_config.batch <= 0)
+            if (batch <= 0)
                 throw source_code_aware_runtime_error(U8("Error: The config/pump_weld.json : batch <= 0"));
-            int temp_id = (impl_->cnt - 1 + _config->_pump_weld_config.batch) % _config->_pump_weld_config.batch;
+            int temp_id = (impl_->cnt - 1 + batch) % batch;
             if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
                 throw source_code_aware_runtime_error(
                     "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
@@ -86,20 +86,20 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(
                     "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
                     + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
-            if (impl_->mat_list.size() < _config->_pump_weld_config.batch - 1) {
+            if (impl_->mat_list.size() < batch - 1) {
                 impl_->mat_list.emplace_back(mat);
                 impl_->cnt++;
                 return pump_weld_info{};
-            } else if (impl_->mat_list.size() == _config->_pump_weld_config.batch - 1) {
+            } else if (impl_->mat_list.size() == batch - 1) {
                 impl_->mat_list.emplace_back(mat);
                 impl_->cnt++;
             } else {
-                impl_->mat_list[impl_->cnt % _config->_pump_weld_config.batch] =
+                impl_->mat_list[impl_->cnt % batch] =
                     mat; // 覆盖之后原本的gx_img_api会自动析构
                 impl_->cnt++;
             }
-            int val = (impl_->cnt - _config->_pump_weld_config.batch) % _config->_pump_weld_config.interval;
-            if ((impl_->cnt - _config->_pump_weld_config.batch) % _config->_pump_weld_config.interval)
+            int val = (impl_->cnt - batch) % interval;
+            if ((impl_->cnt - batch) % interval)
                 return pump_weld_info{};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -109,10 +109,10 @@ namespace glasssix {
                 auto ptr = all_thread_algo_ptr[id_];
                 pump_weld_info ans;
                 std::vector<char> imgBatchDataArr(
-                    _config->_pump_weld_config.batch * mat.get_data_len()); // push batch img to array
-                for (int i = impl_->cnt, j = 0; j < _config->_pump_weld_config.batch; ++i, ++j) {
+                    batch * mat.get_data_len()); // push batch img to array
+                for (int i = impl_->cnt, j = 0; j < batch; ++i, ++j) {
                     //   构造图片数组
-                    int id = i % _config->_pump_weld_config.batch;
+                    int id = i % batch;
                     std::memcpy(imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len(),
                         impl_->mat_list[id].get_data(), impl_->mat_list[id].get_data_len());
                 }
@@ -122,7 +122,7 @@ namespace glasssix {
                         .format                           = _config->_pump_weld_config.format,
                         .height                           = mat.get_rows(),
                         .width                            = mat.get_cols(),
-                        .batch                            = _config->_pump_weld_config.batch,
+                        .batch                            = batch,
                         .params                           = pump_weld_detect_param::confidence_params{.conf_thres =
                                                                                 _config->_pump_weld_config.conf_thres,
                                                       .nms_thres            = _config->_pump_weld_config.nms_thres,

@@ -70,13 +70,13 @@ namespace glasssix {
     //  打架检测
     fighting_info gx_fighting_api::safe_production_fighting(const gx_img_api& mat) {
         try {
-            _config->_fighting_config.interval = 5;
-            _config->_fighting_config.batch    = 10;
-            if (_config->_fighting_config.interval <= 0)
+            int interval = 5;
+            int batch    = 10;
+            if (interval <= 0)
                 throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : interval <= 0"));
-            if (_config->_fighting_config.batch <= 0)
+            if (batch <= 0)
                 throw source_code_aware_runtime_error(U8("Error: The config/fighting.json : batch <= 0"));
-            int temp_id = (impl_->cnt - 1 + _config->_fighting_config.batch) % _config->_fighting_config.batch;
+            int temp_id = (impl_->cnt - 1 + batch) % batch;
             if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
                 throw source_code_aware_runtime_error(
                     "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
@@ -85,19 +85,19 @@ namespace glasssix {
                 throw source_code_aware_runtime_error(
                     "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
                     + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
-            if (impl_->mat_list.size() < _config->_fighting_config.batch - 1) {
+            if (impl_->mat_list.size() < batch - 1) {
                 impl_->mat_list.emplace_back(mat);
                 impl_->cnt++;
                 return fighting_info{.score = 0, .category = 0};
-            } else if (impl_->mat_list.size() == _config->_fighting_config.batch - 1) {
+            } else if (impl_->mat_list.size() == batch - 1) {
                 impl_->mat_list.emplace_back(mat);
                 impl_->cnt++;
             } else {
-                impl_->mat_list[impl_->cnt % _config->_fighting_config.batch] =
+                impl_->mat_list[impl_->cnt % batch] =
                     mat; // 覆盖之后原本的gx_img_api会自动析构
                 impl_->cnt++;
             }
-            if (impl_->cnt % _config->_fighting_config.interval)
+            if (impl_->cnt % interval)
                 return fighting_info{.score = 0, .category = 0};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -107,10 +107,10 @@ namespace glasssix {
                 auto ptr = all_thread_algo_ptr[id_];
                 fighting_info ans;
                 std::vector<char> imgBatchDataArr(
-                    _config->_fighting_config.batch * mat.get_data_len()); // push batch img to array
-                for (int i = impl_->cnt, j = 0; j < _config->_fighting_config.batch; ++i, ++j) {
+                    batch * mat.get_data_len()); // push batch img to array
+                for (int i = impl_->cnt, j = 0; j < batch; ++i, ++j) {
                     //   构造图片数组
-                    int id = i % _config->_fighting_config.batch;
+                    int id = i % batch;
                     std::memcpy(imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len(),
                         impl_->mat_list[id].get_data(), impl_->mat_list[id].get_data_len());
                 }
