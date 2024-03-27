@@ -12,6 +12,8 @@
 namespace glasssix {
     struct pump_light_new_param {
         GX_BEGIN_FIELDS(pump_light_new_param);
+        GX_FIELD(std::int32_t, device);
+        GX_FIELD(std::string, models_directory);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -29,6 +31,7 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y3);
             GX_FIELD(std::int32_t, x4);
             GX_FIELD(std::int32_t, y4);
+            GX_FIELD(float, conf_thres);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
