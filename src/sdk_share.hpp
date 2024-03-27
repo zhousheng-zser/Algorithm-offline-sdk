@@ -267,6 +267,11 @@ namespace glasssix {
                     .model_type                                                 = _config->_detect_config.model_type,
                     .algo_type                                                  = _config->_detect_config.algo_type,
                     .models_directory = _config->_configure_directory.models_directory});
+            longinus_handle_library =
+                protocol_ptr.make_instance<longinus>(longinus_new_param{.device = _config->_detect_config.device,
+                    .model_type                                                 = _config->_detect_config.model_type,
+                    .algo_type        = _config->_detect_config.library_algo_type,
+                    .models_directory = _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_romancia() {
             _config->set_blur(_config->_path);
@@ -348,6 +353,7 @@ namespace glasssix {
         nessus_protocol protocol_ptr;
         face_attributes face_attributes_handle;
         damocles damocles_handle;
+        longinus longinus_handle_library;
         longinus longinus_handle;
         romancia romancia_handle;
         selene selene_handle;

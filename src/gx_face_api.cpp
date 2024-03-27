@@ -391,6 +391,77 @@ namespace glasssix {
         return result_pool.get();
     }
 
+    
+    // 特征提取融合
+    faces_feature gx_face_api::face_feature_library(const gx_img_api& mat, bool is_clip) {
+        faces_feature ans;
+
+        auto result_pool = pool->enqueue([&] {
+            std::thread::id id_ = std::this_thread::get_id();
+            if (all_thread_algo_ptr[id_] == nullptr) {
+                all_thread_algo_ptr[id_] = new algo_ptr();
+            }
+
+            auto ptr = all_thread_algo_ptr[id_];
+            
+            abi::vector<face_info> faces;
+            std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+            auto result = ptr->protocol_ptr.invoke<longinus::detect>(ptr->longinus_handle_library,
+                longinus_detect_param{.instance_guid = "",
+                    .format                          = _config->_detect_config.format,
+                    .height                          = mat.get_rows(),
+                    .width                           = mat.get_cols(),
+                    .min_size                        = _config->_detect_config.min_size,
+                    .threshold                       = _config->_detect_config.threshold,
+                    .do_attributing                  = _config->_detect_config.do_attributing},
+                str);
+            faces       = result.facerectwithfaceinfo_list;
+            for (int i = 0; i < faces.size(); ++i) {
+                if (faces[i].height * faces[i].width
+                    < _config->_detect_config.min_face
+                          * _config->_detect_config.min_face) // 不处理小于min_face * min_face的人脸
+                {
+                    faces.erase(faces.begin() + i, faces.end());
+                    break;
+                }
+            }
+            if (faces.size() == 0)
+                return ans;
+            faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
+
+            auto romancia_result = ptr->protocol_ptr.invoke<romancia::alignFace>(ptr->romancia_handle,
+                romancia_align_face_param{.instance_guid = "",
+                    .format                              = _config->_feature_config.format,
+                    .height                              = mat.get_rows(),
+                    .width                               = mat.get_cols(),
+                    .facerectwithfaceinfo_list           = faces},
+                str);
+            if (romancia_result.aligned_images.size() == 0)
+                return ans;
+            std::array<char, 0> arr{};
+            faces_feature ans_temp;
+            auto selene_result                 = ptr->protocol_ptr.invoke<selene::forward>(ptr->selene_handle,
+                selene_forward_param{.instance_guid = "",
+                                    .aligned_images                 = romancia_result.aligned_images,
+                                    .format                         = romancia_result.format},
+                std::span<char>{arr});
+            ans_temp.features                  = selene_result.features;
+            ans_temp.facerectwithfaceinfo_list = faces;
+            int y1, x1, y2, x2;
+            y1 = faces[0].y - faces[0].height * 2 / 10;
+            x1 = faces[0].x - faces[0].width * 2 / 10;
+            y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
+            x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
+            if (is_clip)
+                ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
+            else
+                ans_temp.img_buffer.clear();
+            ans = std::move(ans_temp);
+            return ans;
+        });
+        return result_pool.get();
+    }
+
     // 特征值库加载
     bool gx_face_api::user_load() {
         auto result_pool = pool_irisviel.enqueue([&] {
@@ -496,7 +567,7 @@ namespace glasssix {
                 ans[i].facerectwithfaceinfo = std::nullopt;
                 continue;
             }
-            faces_feature temp = face_feature(mat[i], is_clip);
+            faces_feature temp = face_feature_library(mat[i], is_clip);
             if (temp.features.size() == 0) {
                 ans[i].key     = keys[i];
                 ans[i].success = -2;
