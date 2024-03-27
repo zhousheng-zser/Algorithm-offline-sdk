@@ -9,9 +9,7 @@ namespace glasssix {
     // 定制灯光信息
     struct pump_light_info {
         GX_BEGIN_FIELDS(pump_light_info);
-        GX_FIELD(float, red_ratio); // 红色比例
-        GX_FIELD(float, white_ratio); // 白色比例
-        GX_FIELD(float, orange_ratio); // 橘色比例
+        GX_FIELD(float, score); // 置信度
         GX_FIELD(bool, light_status); // true 开灯  false 关灯
         GX_END_FIELDS;
 

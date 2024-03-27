@@ -37,7 +37,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_LIGHT_V1.1.2";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_PUMP_LIGHT_V2.0.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -79,7 +79,8 @@ namespace glasssix {
                             .x3                                                  = quadrangle[2].x,
                             .y3                                                  = quadrangle[2].y,
                             .x4                                                  = quadrangle[3].x,
-                            .y4                                                  = quadrangle[3].y
+                            .y4                                                  = quadrangle[3].y,
+                            .conf_thres                                          = _config->_pump_light_config.conf_thres
                     }},
                     str);
 
