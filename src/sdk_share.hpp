@@ -187,7 +187,7 @@ namespace glasssix {
         void set_protocols_handl_fighting() {
             _config->set_fighting(_config->_path);
             fighting_handle = protocol_ptr.make_instance<fighting>(fighting_new_param{_config->_fighting_config.device,
-                _config->_configure_directory.models_directory, 8});
+                _config->_configure_directory.models_directory, 10});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
