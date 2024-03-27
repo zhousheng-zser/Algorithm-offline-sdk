@@ -13,11 +13,17 @@ namespace glasssix {
     class gx_pumptop_helmet_api::impl {
     public:
         void init() {
-            empower_key = get_empower_key(_config->_configure_directory.license_directory);
-            empower.set_serial_number(_config->_configure_directory.empower_serial_number);
-            empower.set_algorithm_id(empower_algorithm_id);
-            empower.set_license(empower_key.c_str());
-            empower.evaluate_license(empower_Callback, nullptr);
+            try {
+                empower_key = get_empower_key(_config->_configure_directory.license_directory);
+                empower.set_serial_number(_config->_configure_directory.empower_serial_number);
+                empower.set_algorithm_id(empower_algorithm_id);
+                empower.set_license(empower_key.c_str());
+                empower.evaluate_license(empower_Callback, nullptr);
+                
+            } catch (const std::exception& ex) {
+                throw source_code_aware_runtime_error {
+                    ex.what() + std::string{": empower_key install error"}};
+            }
         }
         impl() {
             if (_config == nullptr) {
@@ -39,7 +45,7 @@ namespace glasssix {
         secret_key_empower empower;
         std::string empower_key = "";
         std::string empower_algorithm_id =
-            share_platform_name + "_" + share_empower_language + "_PUMPTOP_HELMET_V1.0.5";
+            share_platform_name + "_" + share_empower_language + "_PUMPTOP_HELMET_V1.0.6";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {

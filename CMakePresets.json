@@ -311,7 +311,7 @@
             "name": "rk3588-debug",
             "configurePreset": "rk3588-debug",
             "configuration": "Debug",
-            "jobs": 4
+            "jobs": 2
         },
         {
             "name": "sophon",

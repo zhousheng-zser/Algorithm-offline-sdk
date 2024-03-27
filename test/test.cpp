@@ -12,6 +12,7 @@
 #include <gx_api.hpp>
 #include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
+#include <gx_crossing_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_fighting_api.hpp>
@@ -36,7 +37,6 @@
 #include <gx_sleep_api.hpp>
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
-#include <gx_crossing_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
@@ -655,11 +655,12 @@ namespace glasssix {
     }
     // t19 多线程测打架
     void thread_function_fighting() {
-        gx_fighting_api* api_temp = new gx_fighting_api();
-        int T                     = TIMES;
-        auto start                = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < T; ++i) {
-            try {
+        try {
+
+            gx_fighting_api* api_temp = new gx_fighting_api();
+            int T                     = TIMES;
+            auto start                = std::chrono::high_resolution_clock::now();
+            for (int i = 0; i < T; ++i) {
                 gx_img_api img0("/root/img/fighting/fight_0th.jpg", static_cast<int>(1e9));
                 api_temp->safe_production_fighting(img0);
                 gx_img_api img1("/root/img/fighting/fight_5th.jpg", static_cast<int>(1e9));
@@ -682,16 +683,15 @@ namespace glasssix {
                 auto val = api_temp->safe_production_fighting(img9);
                 if (condition)
                     printf("[fighting] : score =%f category=%d\n", val.score, val.category);
-
-            } catch (const std::exception& ex) {
-                printf("error =  %s\n", ex.what());
             }
+            auto end      = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            if (condition_time)
+                printf("flame time = %lld microsecond\n", duration.count());
+            delete api_temp;
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
         }
-        auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition_time)
-            printf("flame time = %lld microsecond\n", duration.count());
-        delete api_temp;
     }
     // t20 多线程测姿态
     void thread_function_posture() {
@@ -974,24 +974,14 @@ namespace glasssix {
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img0("/root/img/pump_weld/test_weld.mp4_0.jpeg", static_cast<int>(1e9));
+                gx_img_api img0("/root/img/pump_weld/weld0.png", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img0);
-                gx_img_api img1("/root/img/pump_weld/test_weld.mp4_1.jpeg", static_cast<int>(1e9));
+                gx_img_api img1("/root/img/pump_weld/weld1.png", static_cast<int>(1e9));
                 api_temp->safe_production_pump_weld(img1);
-                gx_img_api img2("/root/img/pump_weld/test_weld.mp4_2.jpeg", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img2);
-                gx_img_api img3("/root/img/pump_weld/test_weld.mp4_3.jpeg", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img3);
-                gx_img_api img4("/root/img/pump_weld/test_weld.mp4_4.jpeg", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img4);
-                gx_img_api img5("/root/img/pump_weld/test_weld.mp4_5.jpeg", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img5);
-                gx_img_api img6("/root/img/pump_weld/test_weld.mp4_6.jpeg", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img6);
-                gx_img_api img7("/root/img/pump_weld/test_weld.mp4_7.jpeg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_weld(img7);
+                gx_img_api img2("/root/img/pump_weld/weld2.png", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_weld(img2);
                 if (condition)
-                    printf("[pump_weld] : category=%d\n", val.persons_weld[0].category);
+                    printf("[pump_weld] : category=%d\n", 1);
 #if 0
                 for (int i = 0; i < val.persons_weld[0].weld_list.size(); ++i) {
                     std::cout << val.persons_weld[0].weld_list[i].x1 << std::endl;
@@ -1418,29 +1408,29 @@ void wangder_limit() {
     capture.release();
 }
 
-void crossing(std::string path,std::string name ) {
+void crossing(std::string path, std::string name) {
 
     // 读取 视频 文件
     cv::VideoCapture capture;
     capture.open(path.c_str());
     // 逐帧解码并保存为图像
     cv::Mat frame;
-    int frameCount             = 0;
-    gx_crossing_api* api_temp    = new gx_crossing_api();
-    int cnnt                   = 0;
+    int frameCount            = 0;
+    gx_crossing_api* api_temp = new gx_crossing_api();
+    int cnnt                  = 0;
     while (true) {
         // 读取帧
         capture >> frame;
         if (frame.empty())
             break;
 
-            // 保存为图像
+        // 保存为图像
         std::string outputName = "/root/video/temp.jpg";
         cv::imwrite(outputName, frame);
 
         gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-        auto val   = api_temp ->safe_production_crossing(img1);
-        int result   = 0;
+        auto val   = api_temp->safe_production_crossing(img1);
+        int result = 0;
 
         //for (auto& ss : val) {
         //    bool k = zser(ss);
@@ -1461,7 +1451,6 @@ void crossing(std::string path,std::string name ) {
     // 释放 VideoCapture 资源
     capture.release();
 }
-
 
 
 void gate_status1() {

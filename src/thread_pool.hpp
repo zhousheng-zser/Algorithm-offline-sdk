@@ -11,7 +11,10 @@
 #include <stdexcept>
 #include <thread>
 #include <vector>
-
+/*
+    该 线程池 源码来自 https://github.com/progschj/ThreadPool
+    理解代码可以看博客  https://blog.csdn.net/seiyaaa/article/details/130833401
+*/
 class thread_pool {
 public:
     thread_pool(size_t);
