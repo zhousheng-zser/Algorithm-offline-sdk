@@ -69,7 +69,7 @@ namespace glasssix {
 
     //  泵业定制化焊接检测
     pump_weld_info gx_pump_weld_api::safe_production_pump_weld(
-        const gx_img_api& mat, float candidate_box_width, float candidate_box_height) {
+        const gx_img_api& mat,float light_conf_thres, float candidate_box_width, float candidate_box_height) {
         try {
             int interval = 2;
             int batch    = 3;
@@ -127,7 +127,7 @@ namespace glasssix {
                                                                                 _config->_pump_weld_config.conf_thres,
                                                       .nms_thres            = _config->_pump_weld_config.nms_thres,
                                                       .wmachine_conf_thres            = _config->_pump_weld_config.wmachine_conf_thres,
-                                                      .wlight_conf_thres            = _config->_pump_weld_config.wlight_conf_thres,
+                                                      .wlight_conf_thres            = light_conf_thres,
                                                       .candidate_box_width  = candidate_box_width,
                                                       .candidate_box_height = candidate_box_height}},
                     str);
