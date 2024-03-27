@@ -12,11 +12,17 @@ namespace glasssix {
     class gx_pedestrian_api::impl {
     public:
         void init() {
-            empower_key = get_empower_key(_config->_configure_directory.license_directory);
-            empower.set_serial_number(_config->_configure_directory.empower_serial_number);
-            empower.set_algorithm_id(empower_algorithm_id);
-            empower.set_license(empower_key.c_str());
-            empower.evaluate_license(empower_Callback, nullptr);
+            try {
+                empower_key = get_empower_key(_config->_configure_directory.license_directory);
+                empower.set_serial_number(_config->_configure_directory.empower_serial_number);
+                empower.set_algorithm_id(empower_algorithm_id);
+                empower.set_license(empower_key.c_str());
+                empower.evaluate_license(empower_Callback, nullptr);
+                
+            } catch (const std::exception& ex) {
+                throw source_code_aware_runtime_error {
+                    ex.what() + std::string{": empower_key install error"}};
+            }
         }
         impl() {
             if (_config == nullptr) {
