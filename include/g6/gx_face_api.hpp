@@ -28,6 +28,8 @@ namespace glasssix {
         faces_spoofing face_spoofing_live(const gx_img_api& mat);
         // 特征提取融合
         faces_feature face_feature(const gx_img_api& mat, bool is_clip);
+        // 特征提取融合 人脸入库使用
+        faces_feature face_feature_library(const gx_img_api& mat, bool is_clip);
         // 1:1特征值对比接口
         double feature_comparison(const gx_img_api& mat_A, const gx_img_api& mat_B);
         // 特征值库加载

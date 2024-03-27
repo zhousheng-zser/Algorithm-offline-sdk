@@ -2,6 +2,7 @@
     "device": -1,
     "model_type": 1,
     "algo_type": 1,
+    "library_algo_type": 0,
     "min_size": 16,
     "min_face": 64,
     "threshold": 0.5,

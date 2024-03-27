@@ -24,6 +24,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, model_type);
         GX_FIELD(int, algo_type);
+        GX_FIELD(int, library_algo_type);
         GX_FIELD(int, min_size);
         GX_FIELD(int, min_face);
         GX_FIELD(float, threshold);

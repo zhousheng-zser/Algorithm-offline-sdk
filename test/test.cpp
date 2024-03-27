@@ -1529,10 +1529,10 @@ int main(int argc, char** argv) {
         // yuv_test();
         // gif_test();
         // wangder_limit();
-        // crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
-        // crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
-        // crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
-        // crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
+        //crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
+        //crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
+        //crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
+        //crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
         // gate_status1();
         // gate_status2();
 
