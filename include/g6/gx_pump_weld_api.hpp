@@ -14,7 +14,7 @@ namespace glasssix {
 
         //  安全生产 泵业定制化焊接检测
         pump_weld_info safe_production_pump_weld(
-            const gx_img_api& mat,float wlight_conf_thres, float candidate_box_width=500, float candidate_box_height=500);
+            const gx_img_api& mat,float wlight_conf_thres = 0.5, float candidate_box_width=500, float candidate_box_height=500);
         //  安全生产 清空数据
         void safe_production_clear();
     private:
