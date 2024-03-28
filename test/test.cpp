@@ -1429,7 +1429,7 @@ void crossing(std::string path, std::string name) {
         cv::imwrite(outputName, frame);
 
         gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-        auto val   = api_temp->safe_production_crossing(img1);
+        auto val   = api_temp->safe_production_crossing(img1,{});
         int result = 0;
 
         //for (auto& ss : val) {
