@@ -26,5 +26,10 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    // 翻越区域点
+    struct crossing_point {
+        std::int32_t x; // 坐标x
+        std::int32_t y; // 坐标y
+    };
 
 } // namespace glasssix
