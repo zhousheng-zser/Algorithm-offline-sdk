@@ -981,7 +981,12 @@ namespace glasssix {
                 gx_img_api img2("/root/img/pump_weld/weld2.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_weld(img2);
                 if (condition)
-                    printf("[pump_weld] : category=%d\n", 1);
+                {
+                    if (val.persons_weld.size() > 0)
+                        printf("[pump_weld] : category=%d\n", val.persons_weld[0].category);
+                    else
+                        printf("[pump_weld] : category=%d\n", 10);
+                }
 #if 0
                 for (int i = 0; i < val.persons_weld[0].weld_list.size(); ++i) {
                     std::cout << val.persons_weld[0].weld_list[i].x1 << std::endl;
