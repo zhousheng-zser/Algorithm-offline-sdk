@@ -2,6 +2,8 @@
 
 #include "sdk_share.hpp"
 
+#include <opencv2/opencv.hpp>
+
 namespace glasssix {
 
     gx_crossing_api::gx_crossing_api() : impl_{std::make_unique<impl>()} {}
@@ -21,10 +23,9 @@ namespace glasssix {
                 empower.set_algorithm_id(empower_algorithm_id);
                 empower.set_license(empower_key.c_str());
                 empower.evaluate_license(empower_Callback, nullptr);
-                
+
             } catch (const std::exception& ex) {
-                throw source_code_aware_runtime_error {
-                    ex.what() + std::string{": empower_key install error"}};
+                throw source_code_aware_runtime_error{ex.what() + std::string{": empower_key install error"}};
             }
         }
         impl() {
@@ -47,7 +48,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.0.0";
+        std::string empower_algorithm_id = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.1.0";
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -73,7 +74,7 @@ namespace glasssix {
         int height_diff_2 = int(abs(val.key_points[14].y - val.key_points[6].y));
         int diff_limit    = 0.4 * person_height;
 
-        if ((height_diff_1 < diff_limit || height_diff_2 < diff_limit) && (condition2 > 0.08 * person_height)) {
+        if ((height_diff_1 < diff_limit || height_diff_2 < diff_limit) && (condition2 > 0.12 * person_height)) {
             return true;
         } else {
             return false;
@@ -81,15 +82,25 @@ namespace glasssix {
     }
 
     //  翻越检测
-    crossing_info gx_crossing_api::safe_production_crossing(const abi::vector<posture_info>& posture_info_list) {
+    crossing_info gx_crossing_api::safe_production_crossing(
+        const abi::vector<posture_info>& posture_info_list, const abi::vector<crossing_point>& quadrangle) {
+        if (quadrangle.size() < 3)
+            throw source_code_aware_runtime_error("Error: Invalid quadrangle: quadrangle.size < 3.");
         crossing_info ans;
         abi::vector<posture_info> posture_list_temp;
         for (int i = 0; i < posture_info_list.size(); i++) {
             if (posture_info_list[i].score >= 0.7)
                 posture_list_temp.emplace_back(posture_info_list[i]);
         }
+        std::vector<cv::Point2f> vec;
+        for (auto& temp : quadrangle)
+            vec.emplace_back(cv::Point2f{temp.x, temp.y});
         for (auto& ss : posture_list_temp) {
             if (check(ss)) {
+                int key15 = cv::pointPolygonTest(vec, cv::Point2f{ss.key_points[15].x, ss.key_points[15].y}, false);
+                int key16 = cv::pointPolygonTest(vec, cv::Point2f{ss.key_points[16].x, ss.key_points[16].y}, false);
+                if (key15 < 0 || key16 < 0)
+                    continue;
                 ans.crossing_list.push_back(crossing_info::boxes{.score = ss.score,
                     .x1                                                 = ss.location.x1,
                     .y1                                                 = ss.location.y1,
@@ -99,9 +110,12 @@ namespace glasssix {
         }
         return ans;
     }
-    crossing_info gx_crossing_api::safe_production_crossing(const gx_img_api& mat) {
+    crossing_info gx_crossing_api::safe_production_crossing(
+        const gx_img_api& mat, const abi::vector<crossing_point>& quadrangle) {
+        if (quadrangle.size() < 3)
+            throw source_code_aware_runtime_error("Error: Invalid quadrangle: quadrangle.size < 3.");
         auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
-        return safe_production_crossing(posture_info_list);
+        return safe_production_crossing(posture_info_list, quadrangle);
     }
 
 } // namespace glasssix
