@@ -70,7 +70,17 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 tumble_info ans;
+#if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+#else
+                std::vector<uchar> img_data(mat.get_cols() * mat.get_rows() * 3);
+                for (int i = 0; i < mat.get_rows(); i++) {
+                    auto row_ptr = mat.get_row_ptr(i);
+                    std::copy(row_ptr, row_ptr + mat.get_cols() * 3, img_data.data() + i * mat.get_cols() * 3);
+                }
+                std::span<char> str{
+                    reinterpret_cast<char*>(const_cast<uchar*>(img_data.data())), mat.get_cols() * mat.get_rows() * 3};
+#endif
                 auto result = ptr->protocol_ptr.invoke<tumble::detect>(ptr->tumble_handle,
                     tumble_detect_param{.instance_guid = "",
                         .format                        = _config->_tumble_config.format,
