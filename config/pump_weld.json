@@ -4,5 +4,6 @@
     "conf_thres": 0.3,
     "nms_thres": 0.45,
     "wmachine_conf_thres": 0.1,
-    "wlight_conf_thres": 0.5
+    "wlight_conf_thres": 0.5,
+    "batch": 3
 }

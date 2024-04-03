@@ -14,8 +14,6 @@ namespace glasssix {
     class gx_pump_weld_api::impl {
     public:
         void init() {
-            mat_list.clear();
-            cnt         = 0;
             try {
                 empower_key = get_empower_key(_config->_configure_directory.license_directory);
                 empower.set_serial_number(_config->_configure_directory.empower_serial_number);
@@ -44,9 +42,6 @@ namespace glasssix {
         }
         ~impl() {}
 
-        std::vector<gx_img_api> mat_list;
-        std::int64_t cnt;
-
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
@@ -68,61 +63,33 @@ namespace glasssix {
     };
 
     //  泵业定制化焊接检测
-    pump_weld_info gx_pump_weld_api::safe_production_pump_weld(
-        const gx_img_api& mat,float light_conf_thres, float candidate_box_width, float candidate_box_height) {
+    pump_weld_info gx_pump_weld_api::safe_production_pump_weld(const abi::vector<gx_img_api>& mat_list,
+        float light_conf_thres, float candidate_box_width, float candidate_box_height) {
         try {
-            int interval = 2;
-            int batch    = 3;
-            if (interval <= 0)
-                throw source_code_aware_runtime_error(U8("Error: The config/pump_weld.json : interval <= 0"));
-            if (batch <= 0)
-                throw source_code_aware_runtime_error(U8("Error: The config/pump_weld.json : batch <= 0"));
-            int temp_id = (impl_->cnt - 1 + batch) % batch;
-            if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
-                throw source_code_aware_runtime_error(
-                    "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
-                    + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_cols()));
-            if (impl_->cnt && mat.get_rows() != impl_->mat_list[temp_id].get_rows()) // 高和之前的图片不一样
-                throw source_code_aware_runtime_error(
-                    "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
-                    + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
-            if (impl_->mat_list.size() < batch - 1) {
-                impl_->mat_list.emplace_back(mat);
-                impl_->cnt++;
-                return pump_weld_info{};
-            } else if (impl_->mat_list.size() == batch - 1) {
-                impl_->mat_list.emplace_back(mat);
-                impl_->cnt++;
-            } else {
-                impl_->mat_list[impl_->cnt % batch] =
-                    mat; // 覆盖之后原本的gx_img_api会自动析构
-                impl_->cnt++;
-            }
-            int val = (impl_->cnt - batch) % interval;
-            if ((impl_->cnt - batch) % interval)
-                return pump_weld_info{};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
+                if (_config->_pump_weld_config.batch != mat_list.size())
+                    throw source_code_aware_runtime_error(
+                        U8("Error: The config/pump_weld.json : batch != mat_list.size()"));
                 pump_weld_info ans;
                 std::vector<char> imgBatchDataArr(
-                    batch * mat.get_data_len()); // push batch img to array
-                for (int i = impl_->cnt, j = 0; j < batch; ++i, ++j) {
+                    _config->_pump_weld_config.batch * mat_list[0].get_data_len()); // push batch img to array
+                for (int j = 0; j < _config->_pump_weld_config.batch; ++j) {
                     //   构造图片数组
-                    int id = i % batch;
-                    std::memcpy(imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len(),
-                        impl_->mat_list[id].get_data(), impl_->mat_list[id].get_data_len());
+                    std::memcpy(imgBatchDataArr.data() + j * mat_list[j].get_data_len(), mat_list[j].get_data(),
+                        mat_list[j].get_data_len());
                 }
                 std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
                 auto result = ptr->protocol_ptr.invoke<pump_weld::detect>(ptr->pump_weld_handle,
                     pump_weld_detect_param{.instance_guid = "",
                         .format                           = _config->_pump_weld_config.format,
-                        .height                           = mat.get_rows(),
-                        .width                            = mat.get_cols(),
-                        .batch                            = batch,
+                        .height                           = mat_list[0].get_rows(),
+                        .width                            = mat_list[0].get_cols(),
+                        .batch                            = _config->_pump_weld_config.batch,
                         .params                           = pump_weld_detect_param::confidence_params{.conf_thres =
                                                                                 _config->_pump_weld_config.conf_thres,
                                                       .nms_thres            = _config->_pump_weld_config.nms_thres,
@@ -137,16 +104,12 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_pump_weld_dump.jpg");
+            bool flag = 1;
+            for (int i = 0; i < _config->_pump_weld_config.batch && flag; i++)
+                flag = write_dump_img(mat_list[i], "_pump_weld_dump_" + std::to_string(i) + ".jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
-    }
-
-    //  安全生产 清空数据
-    void gx_pump_weld_api::safe_production_clear() {
-        impl_->cnt = 0;
-        impl_->mat_list.clear();
     }
 
 } // namespace glasssix
