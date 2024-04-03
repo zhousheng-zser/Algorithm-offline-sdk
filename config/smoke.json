@@ -4,5 +4,5 @@
         "conf_thres":0.35,
         "nms_thres":0.45,
         "little_target_conf_thres":0.15,
-        "smoke_conf_thres":0.8
+        "smoke_conf_thres":0.7
 }
