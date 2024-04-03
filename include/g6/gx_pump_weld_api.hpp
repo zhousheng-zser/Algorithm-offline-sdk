@@ -13,10 +13,8 @@ namespace glasssix {
         gx_pump_weld_api& operator=(gx_pump_weld_api&&) noexcept;
 
         //  安全生产 泵业定制化焊接检测
-        pump_weld_info safe_production_pump_weld(
-            const gx_img_api& mat,float wlight_conf_thres = 0.5, float candidate_box_width=500, float candidate_box_height=500);
-        //  安全生产 清空数据
-        void safe_production_clear();
+        pump_weld_info safe_production_pump_weld(const abi::vector<gx_img_api>& mat_list, float wlight_conf_thres = 0.5,
+            float candidate_box_width = 500, float candidate_box_height = 500);
     private:
         class impl;
         std::unique_ptr<impl> impl_;

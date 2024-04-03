@@ -13,9 +13,7 @@ namespace glasssix {
         gx_batterypilferers_api& operator=(gx_batterypilferers_api&&) noexcept;
 
         //  安全生产 偷电瓶检测
-        batterypilferers_info safe_production_batterypilferers(const gx_img_api& mat);
-        //  安全生产 清空数据
-        void safe_production_clear();
+        batterypilferers_info safe_production_batterypilferers(const abi::vector<gx_img_api>& mat_list);
     private:
         class impl;
         std::unique_ptr<impl> impl_;
