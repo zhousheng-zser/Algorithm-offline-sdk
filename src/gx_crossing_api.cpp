@@ -74,7 +74,7 @@ namespace glasssix {
         int height_diff_2 = int(abs(val.key_points[14].y - val.key_points[6].y));
         int diff_limit    = 0.4 * person_height;
 
-        if ((height_diff_1 < diff_limit || height_diff_2 < diff_limit) && (condition2 > 0.12 * person_height)) {
+        if ((height_diff_1 < diff_limit || height_diff_2 < diff_limit) && (condition2 > 0.08 * person_height)) {
             return true;
         } else {
             return false;

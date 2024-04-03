@@ -15,8 +15,6 @@ namespace glasssix {
     class gx_batterypilferers_api::impl {
     public:
         void init() {
-            mat_list.clear();
-            cnt         = 0;
             try {
                 empower_key = get_empower_key(_config->_configure_directory.license_directory);
                 empower.set_serial_number(_config->_configure_directory.empower_serial_number);
@@ -45,8 +43,6 @@ namespace glasssix {
         }
         ~impl() {}
 
-        std::vector<gx_img_api> mat_list;
-        std::int64_t cnt;
 
     private:
         secret_key_empower empower;
@@ -70,63 +66,34 @@ namespace glasssix {
     };
 
     //  偷电瓶检测
-    batterypilferers_info gx_batterypilferers_api::safe_production_batterypilferers(const gx_img_api& mat) {
+    batterypilferers_info gx_batterypilferers_api::safe_production_batterypilferers(const abi::vector<gx_img_api>& mat_list) {
         try {
-            int interval = 4;
-            int batch = 8;
-            if (interval <= 0)
-                throw source_code_aware_runtime_error(U8("Error: The config/batterypilferers.json : interval <= 0"));
-            if (batch <= 0)
-                throw source_code_aware_runtime_error(U8("Error: The config/batterypilferers.json : batch <= 0"));
-            int temp_id =
-                (impl_->cnt - 1 + batch) % batch;
-            if (impl_->cnt && mat.get_cols() != impl_->mat_list[temp_id].get_cols()) // 宽和之前的图片不一样
-                throw source_code_aware_runtime_error(
-                    "Error: gx_img_api get_cols: " + std::to_string(mat.get_cols())
-                    + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_cols()));
-            if (impl_->cnt && mat.get_rows() != impl_->mat_list[temp_id].get_rows()) // 高和之前的图片不一样
-                throw source_code_aware_runtime_error(
-                    "Error: gx_img_api get_rows: " + std::to_string(mat.get_rows())
-                    + " !=  before gx_img_api: " + std::to_string(impl_->mat_list[temp_id].get_rows()));
-            if (impl_->mat_list.size() < batch - 1) {
-                impl_->mat_list.emplace_back(mat);
-                impl_->cnt++;
-                return batterypilferers_info{.score = 0, .category = 0};
-            } else if (impl_->mat_list.size() == batch - 1) {
-                impl_->mat_list.emplace_back(mat);
-                impl_->cnt++;
-            } else {
-                impl_->mat_list[impl_->cnt % batch] =
-                    mat; // 覆盖之后原本的gx_img_api会自动析构
-                impl_->cnt++;
-            }
-            if (impl_->cnt % interval)
-                return batterypilferers_info{.score = 0, .category = 0};
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
+                if (_config->_batterypilferers_config.batch != mat_list.size())
+                    throw source_code_aware_runtime_error(U8("Error: The config/batterypilferers.json : batch != mat_list.size()"));
                 batterypilferers_info ans;
                 std::vector<char> imgBatchDataArr(
-                    batch * mat.get_data_len()); // push batch img to array
-                for (int i = impl_->cnt, j = 0; j < batch; ++i, ++j) {
+                    _config->_batterypilferers_config.batch * mat_list[0].get_data_len()); // push batch img to array
+                for (int j = 0; j < _config->_batterypilferers_config.batch; ++j) {
                     //   构造图片数组
-                    int id = i % batch;
-                    std::memcpy(imgBatchDataArr.data() + j * impl_->mat_list[id].get_data_len(),
-                        impl_->mat_list[id].get_data(), impl_->mat_list[id].get_data_len());
+                    std::memcpy(imgBatchDataArr.data() + j * mat_list[j].get_data_len(),
+                        mat_list[j].get_data(), mat_list[j].get_data_len());
                 }
                 std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
                 auto result = ptr->protocol_ptr.invoke<batterypilferers::detect>(ptr->batterypilferers_handle,
                     batterypilferers_detect_param{.instance_guid = "",
                         .format                                  = _config->_batterypilferers_config.format,
-                        .height                                  = mat.get_rows(),
-                        .width                                   = mat.get_cols(),
+                        .height                                  = mat_list[0].get_rows(),
+                        .width                                   = mat_list[0].get_cols(),
                         .roi_x                                   = 0,
                         .roi_y                                   = 0,
-                        .roi_width                               = mat.get_cols(),
-                        .roi_height                              = mat.get_rows(),
+                        .roi_width                               = mat_list[0].get_cols(),
+                        .roi_height                              = mat_list[0].get_rows(),
                         .params =
                             batterypilferers_detect_param::confidence_params{
                                 .conf_thres = _config->_batterypilferers_config.conf_thres,
@@ -138,17 +105,11 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_batterypilferers_dump.jpg");
+            bool flag = 1;
+            for (int i = 0; i < _config->_batterypilferers_config.batch && flag; i++)
+                flag =write_dump_img(mat_list[i], "_batterypilferers_dump_" + std::to_string(i) + ".jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
     }
-
-    //  安全生产 清空数据
-    void gx_batterypilferers_api::safe_production_clear() {
-        impl_->cnt = 0;
-        impl_->mat_list.clear();
-    }
-
-
 } // namespace glasssix

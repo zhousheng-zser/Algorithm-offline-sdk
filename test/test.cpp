@@ -622,24 +622,19 @@ namespace glasssix {
         gx_batterypilferers_api* api_temp = new gx_batterypilferers_api();
         int T                             = TIMES;
         auto start                        = std::chrono::high_resolution_clock::now();
+        abi::vector<gx_img_api> img_list;
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_2.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_3.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_4.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_5.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_6.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_7.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_8.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/batterypilferers/batterypilferers_9.jpg", static_cast<int>(1e9)));
+
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img0("/root/img/batterypilferers/batterypilferers_2.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img0);
-                gx_img_api img1("/root/img/batterypilferers/batterypilferers_3.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img1);
-                gx_img_api img2("/root/img/batterypilferers/batterypilferers_4.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img2);
-                gx_img_api img3("/root/img/batterypilferers/batterypilferers_5.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img3);
-                gx_img_api img4("/root/img/batterypilferers/batterypilferers_6.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img4);
-                gx_img_api img5("/root/img/batterypilferers/batterypilferers_7.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img5);
-                gx_img_api img6("/root/img/batterypilferers/batterypilferers_8.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_batterypilferers(img6);
-                gx_img_api img7("/root/img/batterypilferers/batterypilferers_9.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_batterypilferers(img7);
+                auto val = api_temp->safe_production_batterypilferers(img_list);
                 if (condition)
                     printf("[batterypilferers] : score =%f category=%d\n", val.score, val.category);
 
@@ -660,27 +655,19 @@ namespace glasssix {
             gx_fighting_api* api_temp = new gx_fighting_api();
             int T                     = TIMES;
             auto start                = std::chrono::high_resolution_clock::now();
+            abi::vector<gx_img_api> img_list;
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_0th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_5th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_10th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_15th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_20th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_25th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_30th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_35th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9)));
             for (int i = 0; i < T; ++i) {
-                gx_img_api img0("/root/img/fighting/fight_0th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img0);
-                gx_img_api img1("/root/img/fighting/fight_5th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img1);
-                gx_img_api img2("/root/img/fighting/fight_10th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img2);
-                gx_img_api img3("/root/img/fighting/fight_15th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img3);
-                gx_img_api img4("/root/img/fighting/fight_20th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img4);
-                gx_img_api img5("/root/img/fighting/fight_25th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img5);
-                gx_img_api img6("/root/img/fighting/fight_30th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img6);
-                gx_img_api img7("/root/img/fighting/fight_35th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img7);
-                gx_img_api img8("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9));
-                api_temp->safe_production_fighting(img8);
-                gx_img_api img9("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_fighting(img9);
+                auto val = api_temp->safe_production_fighting(img_list);
                 if (condition)
                     printf("[fighting] : score =%f category=%d\n", val.score, val.category);
             }
@@ -728,21 +715,21 @@ namespace glasssix {
                         img, abi::vector<pump_light_point>{pump_light_point{1269, 154}, pump_light_point{1385, 154},
                                  pump_light_point{1385, 225}, pump_light_point{1269, 225}});
                     if (condition)
-                        printf("[pump_light] : score =%f light_status=%d\n",val.score, val.light_status);
+                        printf("[pump_light] : score =%f light_status=%d\n", val.score, val.light_status);
                 }
                 {
                     gx_img_api img("/root/img/pump_light/3.jpg", static_cast<int>(1e9));
                     auto val = api_temp->safe_production_pump_light(
-                        img, abi::vector<pump_light_point>{pump_light_point{726,186}, pump_light_point{798,186},
-                                 pump_light_point{798,247}, pump_light_point{726,247}});
+                        img, abi::vector<pump_light_point>{pump_light_point{726, 186}, pump_light_point{798, 186},
+                                 pump_light_point{798, 247}, pump_light_point{726, 247}});
                     if (condition)
                         printf("[pump_light] : score =%f light_status=%d\n", val.score, val.light_status);
                 }
                 {
                     gx_img_api img("/root/img/pump_light/3_on.jpg", static_cast<int>(1e9));
                     auto val = api_temp->safe_production_pump_light(
-                        img, abi::vector<pump_light_point>{pump_light_point{726,186}, pump_light_point{798,186},
-                                 pump_light_point{798,247}, pump_light_point{726,247}});
+                        img, abi::vector<pump_light_point>{pump_light_point{726, 186}, pump_light_point{798, 186},
+                                 pump_light_point{798, 247}, pump_light_point{726, 247}});
                     if (condition)
                         printf("[pump_light] : score =%f light_status=%d\n", val.score, val.light_status);
                 }
@@ -972,24 +959,16 @@ namespace glasssix {
         gx_pump_weld_api* api_temp = new gx_pump_weld_api();
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
+
+        abi::vector<gx_img_api> img_list;
+        img_list.emplace_back(gx_img_api("/root/img/pump_weld/weld0.png", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/pump_weld/weld1.png", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api("/root/img/pump_weld/weld2.png", static_cast<int>(1e9)));
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img0("/root/img/pump_weld/weld0.png", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img0);
-                gx_img_api img1("/root/img/pump_weld/weld1.png", static_cast<int>(1e9));
-                api_temp->safe_production_pump_weld(img1);
-                gx_img_api img2("/root/img/pump_weld/weld2.png", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_weld(img2);
+                auto val = api_temp->safe_production_pump_weld(img_list);
                 if (condition)
                     printf("[pump_weld] : category=%d\n", 1);
-#if 0
-                for (int i = 0; i < val.persons_weld[0].weld_list.size(); ++i) {
-                    std::cout << val.persons_weld[0].weld_list[i].x1 << std::endl;
-                    std::cout << val.persons_weld[0].weld_list[i].y1 << std::endl;
-                    std::cout << val.persons_weld[0].weld_list[i].x2 << std::endl;
-                    std::cout << val.persons_weld[0].weld_list[i].y2 << std::endl;
-                }
-#endif
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1048,6 +1027,43 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("pump_work_status time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t34 多线程测翻越
+    void thread_function_crossing() {
+        gx_crossing_api* api_temp              = new gx_crossing_api();
+        gx_posture_api* api_posture            = new gx_posture_api();
+        int T                                  = TIMES;
+        abi::vector<crossing_point> quadrangle = {
+            crossing_point{400, 278}, crossing_point{551, 278}, crossing_point{551, 570}, crossing_point{400, 570}};
+
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img("/root/img/15s.jpg", static_cast<int>(1e9));
+                cv::Mat frame = cv::imread("/root/img/15s.jpg");
+
+                auto pos = api_posture->safe_production_posture(img);
+                auto val = api_temp->safe_production_crossing(pos, quadrangle);
+                // for(auto& ss : val.crossing_list)
+                //{
+                //     rectangle(frame, cv::Point(ss.x1, ss.y1),
+                //         cv::Point(ss.x2, ss.y2), RED, 6);
+                // }
+                // for (auto& ss : pos) {
+                //      for (int i = 0; i < ss.key_points.size(); i++)
+                //          cv::circle(frame, cv::Point{ss.key_points[i].x, ss.key_points[i].y}, 10, cv::Scalar{0, 255,
+                //          0}, -1);
+                // }
+                // cv::imwrite("test.jpg", frame);
+
+                if (condition)
+                    printf("[pump_work_status] : %llu \n", val.crossing_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+
         delete api_temp;
     }
 } // namespace glasssix
@@ -1429,18 +1445,19 @@ void crossing(std::string path, std::string name) {
         cv::imwrite(outputName, frame);
 
         gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-        auto val   = api_temp->safe_production_crossing(img1,{});
+        auto val   = api_temp->safe_production_crossing(img1, {});
         int result = 0;
 
-        //for (auto& ss : val) {
-        //    bool k = zser(ss);
-        //    if (k) {
-        //    for (int i = 0; i < ss.key_points.size(); i++)
-        //        cv::circle(frame, cv::Point{ss.key_points[i].x, ss.key_points[i].y}, 10, cv::Scalar{0, 255, 0}, -1);
-        //    rectangle(frame, cv::Point(ss.location.x1, ss.location.y1), cv::Point(ss.location.x2, ss.location.y2), RED, 6);
-        //    }
-        //    result += k;
-        //}
+        // for (auto& ss : val) {
+        //     bool k = zser(ss);
+        //     if (k) {
+        //     for (int i = 0; i < ss.key_points.size(); i++)
+        //         cv::circle(frame, cv::Point{ss.key_points[i].x, ss.key_points[i].y}, 10, cv::Scalar{0, 255, 0}, -1);
+        //     rectangle(frame, cv::Point(ss.location.x1, ss.location.y1), cv::Point(ss.location.x2, ss.location.y2),
+        //     RED, 6);
+        //     }
+        //     result += k;
+        // }
         if (result) {
             cv::imwrite("/root/video/ans/" + name + std::to_string(cnnt) + ".jpg", frame);
             cnnt++;
@@ -1529,10 +1546,10 @@ int main(int argc, char** argv) {
         // yuv_test();
         // gif_test();
         // wangder_limit();
-        //crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
-        //crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
-        //crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
-        //crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
+        // crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
+        // crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
+        // crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
+        // crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
         // gate_status1();
         // gate_status2();
 
@@ -1573,6 +1590,7 @@ int main(int argc, char** argv) {
         t[31] = std::thread(thread_function_pump_weld);
         t[32] = std::thread(thread_function_face_attributes);
         t[33] = std::thread(thread_function_pump_work_status);
+        t[34] = std::thread(thread_function_crossing);
 
         t[0].join();
         t[1].join();
@@ -1608,6 +1626,7 @@ int main(int argc, char** argv) {
         t[31].join();
         t[32].join();
         t[33].join();
+        t[34].join();
 
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
