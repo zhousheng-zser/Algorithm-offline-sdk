@@ -968,7 +968,20 @@ namespace glasssix {
             try {
                 auto val = api_temp->safe_production_pump_weld(img_list);
                 if (condition)
-                    printf("[pump_weld] : category=%d\n", 1);
+                {
+                    if (val.persons_weld.size() > 0)
+                        printf("[pump_weld] : category=%d\n", val.persons_weld[0].category);
+                    else
+                        printf("[pump_weld] : category=%d\n", 10);
+                }
+#if 0
+                for (int i = 0; i < val.persons_weld[0].weld_list.size(); ++i) {
+                    std::cout << val.persons_weld[0].weld_list[i].x1 << std::endl;
+                    std::cout << val.persons_weld[0].weld_list[i].y1 << std::endl;
+                    std::cout << val.persons_weld[0].weld_list[i].x2 << std::endl;
+                    std::cout << val.persons_weld[0].weld_list[i].y2 << std::endl;
+                }
+#endif
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
