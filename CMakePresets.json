@@ -229,8 +229,8 @@
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient",
-                "CMAKE_C_COMPILER": "gcc-11",
-                "CMAKE_CXX_COMPILER": "g++-11"
+                "CMAKE_C_COMPILER": "/root/install/gcc-11.3.0/bin/gcc",
+                "CMAKE_CXX_COMPILER": "/root/install/gcc-11.3.0/bin/g++"
             },
             "condition": {
                 "type": "equals",
