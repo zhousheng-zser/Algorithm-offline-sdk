@@ -1,4 +1,4 @@
-﻿#include "gx_smoke_api.hpp"
+#include "gx_smoke_api.hpp"
 
 #include "sdk_share.hpp"
 
@@ -49,7 +49,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_SMOKE_V3.0.7";
+        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_SMOKE_V4.0.0";
         std::vector<std::string> empower_algorithm_id_list = {"3"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
