@@ -47,16 +47,18 @@ namespace glasssix {
     class gx_pump_gate_status_api::impl {
     public:
         void init() {
-            try {
-                empower_key = get_empower_key(_config->_configure_directory.license_directory);
-                empower.set_serial_number(_config->_configure_directory.empower_serial_number);
-                empower.set_algorithm_id(empower_algorithm_id);
-                empower.set_license(empower_key.c_str());
-                empower.evaluate_license(empower_Callback, nullptr);
-                
-            } catch (const std::exception& ex) {
-                throw source_code_aware_runtime_error {
-                    ex.what() + std::string{": empower_key install error"}};
+            for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
+                try {
+                    empower_key = get_empower_key(_config->_configure_directory.license_directory);
+                    empower.set_serial_number(_config->_configure_directory.empower_serial_number);
+                    empower.set_algorithm_id(empower_algorithm_id_list[i]);
+                    empower.set_license(empower_key.c_str());
+                    empower.evaluate_license(empower_Callback, nullptr);
+                    break; // 不崩就直接跳出去
+                } catch (const std::exception& ex) {
+                    if (i == empower_algorithm_id_list.size() - 1) // 最后一个都崩就抛异常
+                        throw source_code_aware_runtime_error{ex.what() + std::string{": empower_key install error"}};
+                }
             }
         }
         impl() {
@@ -78,8 +80,9 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key = "";
-        std::string empower_algorithm_id =
+        std::string empower_algorithm_version =
             share_platform_name + "_" + share_empower_language + "_PUMP_GATE_STATUS_V1.5.1";
+        std::vector<std::string> empower_algorithm_id_list = {"29"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
