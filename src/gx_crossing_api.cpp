@@ -1,4 +1,4 @@
-﻿#include "gx_crossing_api.hpp"
+#include "gx_crossing_api.hpp"
 
 #include "sdk_share.hpp"
 
@@ -51,7 +51,7 @@ namespace glasssix {
     private:
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.1.0";
+        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.1.1";
         std::vector<std::string> empower_algorithm_id_list = {"35"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
