@@ -892,9 +892,12 @@ namespace glasssix {
             try {
                 gx_img_api img("/root/img/pump_mak.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_mask(img);
-                if (condition)
-                    printf("[pump_mask] : category = %d score = %.2f  \n", val.pump_head_list[0].category,
-                        val.pump_head_list[0].score);
+                if (condition) {
+                    if (val.pump_head_list.size() > 0)
+                        printf("[pump_mask] : category=%d\n", val.pump_head_list[0].category);
+                    else
+                        printf("[pump_mask] : category=%d\n", 10);
+                }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
