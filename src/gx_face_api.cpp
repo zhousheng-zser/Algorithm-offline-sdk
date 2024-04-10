@@ -391,7 +391,7 @@ namespace glasssix {
             y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
             x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
             if (is_clip)
-                ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
+                ans_temp.img_buffer = mat.cropped( std::max(x1, 0), x2,std::max(y1, 0), y2);
             else
                 ans_temp.img_buffer.clear();
             ans = std::move(ans_temp);
@@ -462,7 +462,7 @@ namespace glasssix {
             y2 = std::min(mat.get_rows(), y1 + faces[0].height * 14 / 10);
             x2 = std::min(mat.get_cols(), x1 + faces[0].width * 14 / 10);
             if (is_clip)
-                ans_temp.img_buffer = mat.cropped(std::max(y1, 0), y2, std::max(x1, 0), x2);
+                ans_temp.img_buffer = mat.cropped(std::max(x1, 0), x2, std::max(y1, 0), y2);
             else
                 ans_temp.img_buffer.clear();
             ans = std::move(ans_temp);

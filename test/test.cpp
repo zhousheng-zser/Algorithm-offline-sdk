@@ -1545,6 +1545,34 @@ void gate_status2() {
     capture.release();
 }
 
+void face_test() {
+    gx_face_api* api_temp = new gx_face_api();
+    api_temp->user_load();
+    int T      = 5;
+    const gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
+    for (int i = 0; i < 100000; i++)
+    {
+        abi::string name(std::to_string(i));
+        api_temp->user_add_records(abi::vector<abi::string>{name}, abi::vector<gx_img_api>{img}, false, false);
+        if (i % 1000 == 0)
+            std::cout << api_temp->user_record_count() << "-------\n";
+    }
+    auto start = std::chrono::high_resolution_clock::now();
+    while (T--) {
+        try {
+            auto val = api_temp->user_search(gx_img_api{"/root/img/action_live_5.jpg", static_cast<int>(1e9)}, 1, 0.5);
+            if (condition)
+                printf("[search] : similarity =%.3f\n", val.result.size() > 0 ? val.result[0].similarity : 0.0);
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
+        }
+    }
+    auto end      = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    if (condition_time)
+        printf("search time = %lld microsecond\n", duration.count()/ 5 );
+    delete api_temp;
+}
 
 int main(int argc, char** argv) {
     /* C++ 接口测试*/
@@ -1565,6 +1593,7 @@ int main(int argc, char** argv) {
         // crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
         // gate_status1();
         // gate_status2();
+        // face_test();
 
         /* 多线程测性能测试 */
         std::thread t[50];

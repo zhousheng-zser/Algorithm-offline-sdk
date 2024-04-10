@@ -46,7 +46,7 @@ namespace glasssix {
         secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_version =
-            share_platform_name + "_" + share_empower_language + "_PUMP_mask_V1.0.0";
+            share_platform_name + "_" + share_empower_language + "_PUMP_MASK_V1.0.0";
         std::vector<std::string> empower_algorithm_id_list = {"25", "37"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);

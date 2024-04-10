@@ -11,10 +11,14 @@
 
 #include <gx_api.hpp>
 #include <gx_flame_api.hpp>
+#include <gx_head_api.hpp>
+#include <gx_helmet_api.hpp>
+#include <gx_tumble_api.hpp>
+#include <gx_vehicle_api.hpp>
 // #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
-#define TIMES 1000
+#define TIMES 5
 
 namespace glasssix {
 
@@ -47,45 +51,89 @@ namespace glasssix {
 
     // t1 多线程测火焰
     void thread_function_flame() {
-        gx_flame_api* api_temp = new gx_flame_api("/opt/glasssix/edgebox/cpp/ai-sdk/config");
-        // api_temp->user_load();
-        auto start                    = std::chrono::high_resolution_clock::now();
-        std::vector<std::string> temp = find_file_test("/data/zser/img/");
-        int T                         = TIMES;
-        for (int i = 0; i < temp.size(); i++) {
+        gx_flame_api* api_temp        = new gx_flame_api("/data/zser/glasssix-offline-sdk/config");
+        std::vector<abi::string> list = find_file("/data/zser/img/");
+        std::cout << "thread_function_flame  --------------------------------------------------\n";
+        for (int i = 0; i < list.size(); i++) {
             try {
-                auto val = api_temp->safe_production_flame(gx_img_api{abi::string{temp[i]}, 1 << 28});
+                auto val = api_temp->safe_production_flame(gx_img_api{list[i], 1 << 28});
                 for (auto temp : val.fire_list)
-                    std::cout << temp.x1 << " " << temp.x2 << " " << temp.y1 << " " << temp.y2 << "\n";
+                    std::cout << "thread_function_flame  " << temp.x1 << " " << temp.x2 << " " << temp.y1 << " "
+                              << temp.y2 << "\n";
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
         }
-        auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        printf("integration time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    void thread_function_tumble() {
+        gx_tumble_api* api_temp       = new gx_tumble_api("/data/zser/glasssix-offline-sdk/config");
+        std::vector<abi::string> list = find_file("/data/zser/img/");
+        std::cout << "thread_function_tumble  --------------------------------------------------\n";
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                auto val = api_temp->safe_production_tumble(gx_img_api{list[i], 1 << 28});
+                for (auto temp : val.tumble_list)
+                    std::cout << "thread_function_tumble  " << temp.x1 << " " << temp.x2 << " " << temp.y1 << " "
+                              << temp.y2 << "\n";
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        delete api_temp;
+    }
+    void thread_function_helmet() {
+        gx_helmet_api* api_temp       = new gx_helmet_api("/data/zser/glasssix-offline-sdk/config");
+        std::vector<abi::string> list = find_file("/data/zser/img/");
+        std::cout << "thread_function_helmet  --------------------------------------------------\n";
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                auto val = api_temp->safe_production_helmet(gx_img_api{list[i], 1 << 28});
+                for (auto temp : val.with_helmet_list)
+                    std::cout << "thread_function_helmet  " << temp.x1 << " " << temp.x2 << " " << temp.y1 << " "
+                              << temp.y2 << "\n";
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        delete api_temp;
+    }
+    void thread_function_vehicle() {
+        gx_vehicle_api* api_temp      = new gx_vehicle_api("/data/zser/glasssix-offline-sdk/config");
+        std::vector<abi::string> list = find_file("/data/zser/img/");
+        std::cout << "thread_function_vehicle  --------------------------------------------------\n";
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                auto val = api_temp->safe_production_vehicle(gx_img_api{list[i], 1 << 28});
+                for (auto temp : val.vehicle_list)
+                    std::cout << "thread_function_vehicle  " << temp.x1 << " " << temp.x2 << " " << temp.y1 << " "
+                              << temp.y2 << "\n";
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
         delete api_temp;
     }
     //// t4 多线程测融合搜索
-    //void thread_function_integration() {
-    //    gx_face_api* api_temp = new gx_face_api("/data/zser/glasssix-offline-sdk/config");
-    //    // api_temp->user_load();
-    //    auto start                    = std::chrono::high_resolution_clock::now();
-    //    std::vector<std::string> temp = find_file_test("/data/zser/img/");
-    //    int T                         = TIMES;
-    //    for (int i = 0; i < temp.size(); i++) {
-    //        try {
-    //            auto val = api_temp->detect(gx_img_api{abi::string{temp[i]}, 1 << 28});
-    //            std::cout << val.size() << "   \n";
-    //        } catch (const std::exception& ex) {
-    //            printf("error =  %s\n", ex.what());
-    //        }
-    //    }
-    //    auto end      = std::chrono::high_resolution_clock::now();
-    //    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    //    printf("integration time = %lld microsecond\n", duration.count());
-    //    delete api_temp;
-    //}
+    // void thread_function_integration() {
+    //     gx_face_api* api_temp = new gx_face_api("/data/zser/glasssix-offline-sdk/config");
+    //     // api_temp->user_load();
+    //     auto start                    = std::chrono::high_resolution_clock::now();
+    //     std::vector<std::string> temp = find_file("/data/zser/img/");
+    //     int T                         = TIMES;
+    //     for (int i = 0; i < temp.size(); i++) {
+    //         try {
+    //             auto val = api_temp->detect(gx_img_api{abi::string{temp[i]}, 1 << 28});
+    //             std::cout << val.size() << "   \n";
+    //         } catch (const std::exception& ex) {
+    //             printf("error =  %s\n", ex.what());
+    //         }
+    //     }
+    //     auto end      = std::chrono::high_resolution_clock::now();
+    //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //     printf("integration time = %lld microsecond\n", duration.count());
+    //     delete api_temp;
+    // }
     //// t13 多线程测 配合活体 与 质量检测
     // void thread_function_Action_live_Blur() {
     //     gx_face_api* api_temp = new gx_face_api();
@@ -133,11 +181,16 @@ int main(int argc, char** argv) {
         /* 多线程测性能测试 */
         std::thread t[30];
 
+        printf("????\n");
+        thread_function_flame();
+        thread_function_helmet();
+        thread_function_vehicle();
+        thread_function_tumble();
         // t[0]  = std::thread(thread_function_helmet);
-         t[1]  = std::thread(thread_function_flame);
+        // t[1]  = std::thread(thread_function_flame);
         // t[2]  = std::thread(thread_function_refvest);
         // t[3]  = std::thread(thread_function_search);
-        //t[4] = std::thread(thread_function_integration);
+        // t[4] = std::thread(thread_function_integration);
         // t[5]  = std::thread(thread_function_leavepost);
         // t[6]  = std::thread(thread_function_sleep);
         // t[7]  = std::thread(thread_function_smoke);
@@ -159,10 +212,10 @@ int main(int argc, char** argv) {
         // t[23] = std::thread(thread_function_batterypilferers);
 
         // t[0].join();
-         t[1].join();
+        // t[1].join();
         // t[2].join();
         // t[3].join();
-        //t[4].join();
+        // t[4].join();
         // t[5].join();
         // t[6].join();
         // t[7].join();
