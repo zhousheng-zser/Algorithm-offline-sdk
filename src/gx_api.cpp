@@ -183,11 +183,18 @@ namespace glasssix {
         impl_->data_len = 1llu * impl_->img.channels() * impl_->img.cols * impl_->img.rows;
         return true;
     }
-    abi::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) const {
-        cv::Mat cropped_face = impl_->img(cv::Range(x1, x2), cv::Range(y1, y2)).clone();
-        std::vector<uchar> buffer(1024 * 1024);
+    std::vector<uchar> gx_img_api::cropped(int x1, int x2, int y1, int y2) const {
+
+        x1 = std::max(0, x1);
+        y1 = std::max(0, y1);
+        x2 = std::min(impl_->img.cols, x2);
+        y2 = std::min(impl_->img.rows, y2);
+        cv::Mat cropped_face =
+            impl_->img(cv::Range(std::min(y1, y2), std::max(y1, y2)), cv::Range(std::min(x1, x2), std::max(x1, x2)))
+                .clone();
+        std::vector<uchar> buffer(3LL * cropped_face.cols * cropped_face.rows);
         cv::imencode(".jpg", cropped_face, buffer);
-        abi::vector<uchar> ans(buffer.begin(), buffer.end());
+        std::vector<uchar> ans(buffer.begin(), buffer.end());
         return ans;
     }
     bool gx_img_api::write(const std::string& path) const {
