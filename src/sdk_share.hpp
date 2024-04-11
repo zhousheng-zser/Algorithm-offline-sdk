@@ -28,6 +28,7 @@
 #include "../src/nessus/protocols/romancia.hpp"
 #include "../src/nessus/protocols/face_attributes.hpp"
 #include "../src/nessus/protocols/selene.hpp"
+#include "../src/nessus/protocols/cassius.hpp"
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
@@ -157,6 +158,7 @@ namespace glasssix {
             Function["head"]                = &algo_ptr::set_protocols_handl_head;
             Function["helmet"]              = &algo_ptr::set_protocols_handl_helmet;
             Function["selene"]              = &algo_ptr::set_protocols_handl_selene;
+            Function["cassius"]             = &algo_ptr::set_protocols_handl_cassius;
             Function["longinus"]            = &algo_ptr::set_protocols_handl_longinus;
             Function["romancia"]            = &algo_ptr::set_protocols_handl_romancia;
             Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
@@ -255,8 +257,18 @@ namespace glasssix {
         }
         void set_protocols_handl_selene() {
             _config->set_feature(_config->_path);
+            if (_config->_feature_config.dimension != 256)
+                return;
             selene_handle = protocol_ptr.make_instance<selene>(
                 selene_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
+                    _config->_feature_config.model_type, _config->_feature_config.use_int8});
+        }
+        void set_protocols_handl_cassius() {
+            _config->set_feature(_config->_path);
+            if (_config->_feature_config.dimension != 512)
+                return;
+            cassius_handle = protocol_ptr.make_instance<cassius>(
+                cassius_new_param{_config->_feature_config.device, _config->_configure_directory.models_directory,
                     _config->_feature_config.model_type, _config->_feature_config.use_int8});
         }
         void set_protocols_handl_longinus() {
@@ -357,6 +369,7 @@ namespace glasssix {
         longinus longinus_handle;
         romancia romancia_handle;
         selene selene_handle;
+        cassius cassius_handle;
         refvest refvest_handle;
         climb climb_handle;
         batterypilferers batterypilferers_handle;

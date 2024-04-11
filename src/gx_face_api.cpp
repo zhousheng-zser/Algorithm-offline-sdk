@@ -378,12 +378,27 @@ namespace glasssix {
                 return ans;
             std::array<char, 0> arr{};
             faces_feature ans_temp;
-            auto selene_result                 = ptr->protocol_ptr.invoke<selene::forward>(ptr->selene_handle,
-                selene_forward_param{.instance_guid = "",
-                                    .aligned_images                 = romancia_result.aligned_images,
-                                    .format                         = romancia_result.format},
-                std::span<char>{arr});
-            ans_temp.features                  = selene_result.features;
+            
+            abi::vector<feature_info> features;
+            if (_config->_feature_config.dimension == 256) {
+                features = ptr->protocol_ptr
+                               .invoke<selene::forward>(ptr->selene_handle,
+                                   selene_forward_param{.instance_guid = "",
+                                       .aligned_images                 = romancia_result.aligned_images,
+                                       .format                         = romancia_result.format},
+                                   std::span<char>{arr})
+                               .features;
+            } else if (_config->_feature_config.dimension == 512) {
+                features = ptr->protocol_ptr
+                               .invoke<cassius::forward>(ptr->cassius_handle,
+                                   cassius_forward_param{.instance_guid = "",
+                                       .aligned_images                  = romancia_result.aligned_images,
+                                       .format                          = romancia_result.format},
+                                   std::span<char>{arr})
+                               .features;
+            }
+
+            ans_temp.features                  = features;
             ans_temp.facerectwithfaceinfo_list = faces;
             int y1, x1, y2, x2;
             y1 = faces[0].y - faces[0].height * 2 / 10;
@@ -410,9 +425,7 @@ namespace glasssix {
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
             }
-
             auto ptr = all_thread_algo_ptr[id_];
-            
             abi::vector<face_info> faces;
             std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
             auto result = ptr->protocol_ptr.invoke<longinus::detect>(ptr->longinus_handle_library,
@@ -449,12 +462,26 @@ namespace glasssix {
                 return ans;
             std::array<char, 0> arr{};
             faces_feature ans_temp;
-            auto selene_result                 = ptr->protocol_ptr.invoke<selene::forward>(ptr->selene_handle,
-                selene_forward_param{.instance_guid = "",
-                                    .aligned_images                 = romancia_result.aligned_images,
-                                    .format                         = romancia_result.format},
-                std::span<char>{arr});
-            ans_temp.features                  = selene_result.features;
+
+            abi::vector<feature_info> features;
+            if (_config->_feature_config.dimension == 256) {
+                features = ptr->protocol_ptr
+                               .invoke<selene::forward>(ptr->selene_handle,
+                                   selene_forward_param{.instance_guid = "",
+                                       .aligned_images                 = romancia_result.aligned_images,
+                                       .format                         = romancia_result.format},
+                                   std::span<char>{arr})
+                               .features;
+            } else if (_config->_feature_config.dimension == 512) {
+                features = ptr->protocol_ptr
+                               .invoke<cassius::forward>(ptr->cassius_handle,
+                                   cassius_forward_param{.instance_guid = "",
+                                       .aligned_images                  = romancia_result.aligned_images,
+                                       .format                          = romancia_result.format},
+                                   std::span<char>{arr})
+                               .features;
+            }
+            ans_temp.features                  = features;
             ans_temp.facerectwithfaceinfo_list = faces;
             int y1, x1, y2, x2;
             y1 = faces[0].y - faces[0].height * 2 / 10;
@@ -782,23 +809,35 @@ namespace glasssix {
             // 特征提取
             std::array<char, 0> arr{};
             faces_feature ans_temp;
-            auto selene_result = ptr->protocol_ptr.invoke<selene::forward>(ptr->selene_handle,
-                selene_forward_param{.instance_guid = "",
-                    .aligned_images                 = romancia_result.aligned_images,
-                    .format                         = romancia_result.format},
-                std::span<char>{arr});
-
+            abi::vector<feature_info> features;
+            if (_config->_feature_config.dimension == 256) {
+                features = ptr->protocol_ptr
+                               .invoke<selene::forward>(ptr->selene_handle,
+                                   selene_forward_param{.instance_guid = "",
+                                       .aligned_images                 = romancia_result.aligned_images,
+                                       .format                         = romancia_result.format},
+                                   std::span<char>{arr})
+                               .features;
+            } else if (_config->_feature_config.dimension == 512) {
+                    features = ptr->protocol_ptr
+                                   .invoke<cassius::forward>(ptr->cassius_handle,
+                                       cassius_forward_param{.instance_guid = "",
+                                           .aligned_images                 = romancia_result.aligned_images,
+                                           .format                         = romancia_result.format},
+                                       std::span<char>{arr})
+                                   .features;
+            }
             auto result_pool_irisviel = pool_irisviel.enqueue([&] {
                 if (thread_algo_irisviel_ptr == nullptr) {
                     thread_algo_irisviel_ptr = new algo_irisviel_ptr();
                 }
                 auto ptr_ = thread_algo_irisviel_ptr;
                 // 多人脸搜索
-                for (int i = 0; i < selene_result.features.size(); i++) {
+                for (int i = 0; i < features.size(); i++) {
                     auto result = ptr_->protocol_ptr.invoke<irisviel::search_nf>(ptr_->irisivel_handle,
                         irisviel_search_nf_param{
                             .instance_guid  = "",
-                            .feature        = selene_result.features[i].feature,
+                            .feature        = features[i].feature,
                             .top            = 1,
                             .min_similarity = min_similarity,
                         },
