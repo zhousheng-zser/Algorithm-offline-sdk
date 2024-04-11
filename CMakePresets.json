@@ -314,6 +314,12 @@
             "jobs": 2
         },
         {
+            "name": "rv1109",
+            "configurePreset": "rv1109",
+            "configuration": "Release",
+            "jobs": 4
+        },
+        {
             "name": "sophon",
             "configurePreset": "sophon",
             "configuration": "Release",

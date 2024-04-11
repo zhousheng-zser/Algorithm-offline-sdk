@@ -50,7 +50,7 @@ namespace glasssix {
 
     private:
         secret_key_empower empower;
-        std::string empower_key          = "";
+        std::string empower_key               = "";
         std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.1.1";
         std::vector<std::string> empower_algorithm_id_list = {"35"};
         std::string get_empower_key(std::string& path) {
@@ -98,11 +98,15 @@ namespace glasssix {
         }
         std::vector<cv::Point2f> vec;
         for (auto& temp : quadrangle)
-            vec.emplace_back(cv::Point2f{temp.x, temp.y});
+            vec.emplace_back(cv::Point2f{static_cast<float>(temp.x), static_cast<float>(temp.y)});
         for (auto& ss : posture_list_temp) {
             if (check(ss)) {
-                int key15 = cv::pointPolygonTest(vec, cv::Point2f{ss.key_points[15].x, ss.key_points[15].y}, false);
-                int key16 = cv::pointPolygonTest(vec, cv::Point2f{ss.key_points[16].x, ss.key_points[16].y}, false);
+                int key15 = cv::pointPolygonTest(vec,
+                    cv::Point2f{static_cast<float>(ss.key_points[15].x), static_cast<float>(ss.key_points[15].y)},
+                    false);
+                int key16 = cv::pointPolygonTest(vec,
+                    cv::Point2f{static_cast<float>(ss.key_points[16].x), static_cast<float>(ss.key_points[16].y)},
+                    false);
                 if (key15 < 0 || key16 < 0)
                     continue;
                 ans.crossing_list.push_back(crossing_info::boxes{.score = ss.score,
