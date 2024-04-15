@@ -1074,7 +1074,7 @@ namespace glasssix {
                 // cv::imwrite("test.jpg", frame);
 
                 if (condition)
-                    printf("[pump_work_status] : %llu \n", val.crossing_list.size());
+                    printf("[crossing] : %llu \n", val.crossing_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
