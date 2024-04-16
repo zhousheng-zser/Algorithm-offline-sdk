@@ -7,36 +7,26 @@
 #include <string>
 #include <vector>
 
-#include <g6/json_extensions.hpp>
-
 namespace glasssix {
     struct fighting_new_param {
-        GX_BEGIN_FIELDS(fighting_new_param);
-        GX_FIELD(std::int32_t, device);
-        GX_FIELD(std::string, models_directory);
-        GX_FIELD(std::int32_t, batch);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::int32_t device{};
+        std::string models_directory{};
+        std::int32_t batch{};
+        enum class json_serialization { snake_case };
     };
 
     struct fighting_detect_param {
-        GX_BEGIN_FIELDS(fighting_detect_param);
-        GX_FIELD(std::string, instance_guid);
-        GX_FIELD(std::int32_t, format);
-        GX_FIELD(std::int32_t, height);
-        GX_FIELD(std::int32_t, width);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::string instance_guid{};
+        std::int32_t format{};
+        std::int32_t height{};
+        std::int32_t width{};
+        enum class json_serialization { snake_case };
     };
 
     struct fighting_detect_result {
-        GX_BEGIN_FIELDS(fighting_detect_result);
-        GX_FIELD(parser_result_status, status);
-        GX_FIELD(fighting_info, detect_info);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        parser_result_status status{};
+        fighting_info detect_info{};
+        enum class json_serialization { snake_case };
     };
 
     struct fighting : protocol_object {

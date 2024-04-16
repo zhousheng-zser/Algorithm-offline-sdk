@@ -7,53 +7,36 @@
 #include <string>
 #include <vector>
 
-#include <g6/json_extensions.hpp>
-
 namespace glasssix {
     struct pump_light_new_param {
-        GX_BEGIN_FIELDS(pump_light_new_param);
-        GX_FIELD(std::int32_t, device);
-        GX_FIELD(std::string, models_directory);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::int32_t device{};
+        std::string models_directory{};
+        enum class json_serialization { snake_case };
     };
-
     struct pump_light_detect_param {
-
         struct confidence_params {
-            GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::int32_t, x1);
-            GX_FIELD(std::int32_t, y1);
-            GX_FIELD(std::int32_t, x2);
-            GX_FIELD(std::int32_t, y2);
-            GX_FIELD(std::int32_t, x3);
-            GX_FIELD(std::int32_t, y3);
-            GX_FIELD(std::int32_t, x4);
-            GX_FIELD(std::int32_t, y4);
-            GX_FIELD(float, conf_thres);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            std::int32_t x1{};
+            std::int32_t y1{};
+            std::int32_t x2{};
+            std::int32_t y2{};
+            std::int32_t x3{};
+            std::int32_t y3{};
+            std::int32_t x4{};
+            std::int32_t y4{};
+            float conf_thres{};
+            enum class json_serialization { snake_case };
         };
-
-        GX_BEGIN_FIELDS(pump_light_detect_param);
-        GX_FIELD(std::string, instance_guid);
-        GX_FIELD(std::int32_t, format);
-        GX_FIELD(std::int32_t, height);
-        GX_FIELD(std::int32_t, width);
-        GX_FIELD(confidence_params, params);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::string instance_guid{};
+        std::int32_t format{};
+        std::int32_t height{};
+        std::int32_t width{};
+        confidence_params params{};
+        enum class json_serialization { snake_case };
     };
-
     struct pump_light_detect_result {
-        GX_BEGIN_FIELDS(pump_light_detect_result);
-        GX_FIELD(parser_result_status, status);
-        GX_FIELD(pump_light_info, detect_info);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        parser_result_status status{};
+        pump_light_info detect_info{};
+        enum class json_serialization { snake_case };
     };
 
     struct pump_light : protocol_object {

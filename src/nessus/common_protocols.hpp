@@ -1,30 +1,30 @@
 #pragma once
 
+#include <concepts>
 #include <string_view>
 #include <type_traits>
 #include <utility>
 
-#include <g6/json_extensions.hpp>
-#include <g6/meta_string.hpp>
-#include <g6/reflection.hpp>
+#include <g6/json_compat.hpp>
+#include <g6/meta/literal_string.hpp>
+#include <g6/meta/identifier.hpp>
 
-#include <concepts/concepts.hpp>
 
 namespace glasssix {
     struct parser_result_status {
-        GX_BEGIN_FIELDS(parser_result_status);
-        GX_FIELD(std::int32_t, code);
-        GX_FIELD(std::string, message);
-        GX_END_FIELDS;
 
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::int32_t code{};
+        std::string message{};
+
+
+        enum class json_serialization { snake_case };
 
         void ensure() const;
     };
 
     template <typename T>
     concept parser_status_result = requires(T obj) {
-                                       { obj.status } -> concepts::same_as<parser_result_status&>;
+        { obj.status } -> std::same_as<parser_result_status&>;
                                    };
 
     template <json_serializable In, json_serializable Out>
@@ -44,7 +44,7 @@ namespace glasssix {
 
     template <parser_inout_prototype T>
     inline constexpr auto parser_text_v = [] {
-        constexpr std::string_view text{meta::name_of_v<T>};
+        constexpr std::string_view text{meta::get_literal_string_t<T, {.shortened = true}>()};
 
         return text.substr(text.rfind(U8("::")) + 1);
     }();

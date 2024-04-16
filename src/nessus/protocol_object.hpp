@@ -3,13 +3,13 @@
 #include <memory>
 #include <type_traits>
 
-#include <concepts/concepts.hpp>
+#include <concepts>
 
 namespace glasssix {
     struct protocol_object {
         std::shared_ptr<void> opaque;
 
-        template <concepts::derived_from<protocol_object> T>
+        template <std::derived_from<protocol_object> T>
             requires std::is_aggregate_v<T>
         explicit operator T() const {
             return T{{opaque}};
@@ -17,5 +17,5 @@ namespace glasssix {
     };
 
     template <typename T>
-    concept concrete_protocol_object = concepts::derived_from<T, protocol_object> && std::is_aggregate_v<T>;
+    concept concrete_protocol_object = std::derived_from<T, protocol_object> && std::is_aggregate_v<T>;
 } // namespace glasssix

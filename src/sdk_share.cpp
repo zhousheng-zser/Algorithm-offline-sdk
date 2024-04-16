@@ -31,6 +31,8 @@ namespace glasssix {
         constexpr glasssix::zstring_view alg{U8("sm4-cbc")};
         std::string_view key{timestampStr.data(), timestampStr.length()};
         constexpr std::string_view iv{U8("0000000000000000")};
+        glasssix::crypto::symmetric_cipher_provider encryptor{
+            alg, glasssix::crypto::cipher_padding_mode::pkcs7, key, iv};
         glasssix::crypto::symmetric_cipher_provider decryptor{
             alg, glasssix::crypto::cipher_padding_mode::pkcs7, key, iv, false};
         auto plaintext      = decryptor.string_from_base64(encode_str);

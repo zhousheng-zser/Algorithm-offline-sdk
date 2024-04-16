@@ -7,50 +7,34 @@
 #include <string>
 #include <vector>
 
-#include <g6/json_extensions.hpp>
-
 namespace glasssix {
     struct crowd_new_param {
-        GX_BEGIN_FIELDS(crowd_new_param);
-        GX_FIELD(std::int32_t, device);
-        GX_FIELD(std::string, models_directory);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::int32_t device{};
+        std::string models_directory{};
+        enum class json_serialization { snake_case };
     };
-
     struct crowd_detect_param {
-
         struct confidence_params {
-            GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::optional<float>,area_threshold);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            std::optional<float> area_threshold{};
+            enum class json_serialization { snake_case };
         };
-
-        GX_BEGIN_FIELDS(crowd_detect_param);
-        GX_FIELD(std::string, instance_guid);
-        GX_FIELD(std::int32_t, format);
-        GX_FIELD(std::int32_t, height);
-        GX_FIELD(std::int32_t, width);
-        GX_FIELD(std::int32_t, roi_x);
-        GX_FIELD(std::int32_t, roi_y);
-        GX_FIELD(std::int32_t, roi_width);
-        GX_FIELD(std::int32_t, roi_height);
-        GX_FIELD(std::int32_t, min_cluster_size);
-        GX_FIELD(confidence_params, params);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::string instance_guid{};
+        std::int32_t format{};
+        std::int32_t height{};
+        std::int32_t width{};
+        std::int32_t roi_x{};
+        std::int32_t roi_y{};
+        std::int32_t roi_width{};
+        std::int32_t roi_height{};
+        std::int32_t min_cluster_size{};
+        confidence_params params{};
+        enum class json_serialization { snake_case };
     };
 
     struct crowd_detect_result {
-        GX_BEGIN_FIELDS(crowd_detect_result);
-        GX_FIELD(parser_result_status, status);
-        GX_FIELD(crowd_info, detect_info);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        parser_result_status status{};
+        crowd_info detect_info{};
+        enum class json_serialization { snake_case };
     };
 
     struct crowd : protocol_object {

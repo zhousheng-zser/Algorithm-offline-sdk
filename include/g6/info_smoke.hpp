@@ -2,39 +2,29 @@
 
 #include <cstdint>
 
-#include <g6/json_extensions.hpp>
+#include <g6/abi/string.hpp>
+#include <g6/abi/vector.hpp>
 typedef unsigned char uchar;
-
 namespace glasssix {
     // 抽烟信息
     struct smoke_info {
         struct key_point {
-            GX_BEGIN_FIELDS(key_point);
-            GX_FIELD(float, point_score); // 关键点的置信度
-            GX_FIELD(std::int32_t, x1);   // 关键点的坐标x
-            GX_FIELD(std::int32_t, y1);   // 关键点的坐标y
-            GX_END_FIELDS;
- 
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            float point_score{}; // 关键点的置信度
+            std::int32_t x1{};   // 关键点的坐标x
+            std::int32_t y1{};   // 关键点的坐标y
+            enum class json_serialization { snake_case };
         };
         struct boxes {
-            GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score); // 置信度
-            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
-            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
-            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
-            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
-            GX_FIELD(abi::vector<key_point>, key_points);//关键点数组
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            float score{}; // 置信度
+            std::int32_t x1{}; // 检出框体左上坐标x
+            std::int32_t y1{}; // 检出框体左上坐标y
+            std::int32_t x2{}; // 检出框体右下坐标x
+            std::int32_t y2{}; // 检出框体右下坐标y
+            abi::vector<key_point> key_points{};//关键点数组
+            enum class json_serialization { snake_case };
         };
-        GX_BEGIN_FIELDS(smoke_info);
-
-        GX_FIELD(abi::vector<boxes>, norm_list); // 不抽烟的
-        GX_FIELD(abi::vector<boxes>, smoke_list); // 抽烟的
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        abi::vector<boxes> norm_list{}; // 不抽烟的
+        abi::vector<boxes> smoke_list{}; // 抽烟的
+        enum class json_serialization { snake_case };
     };
 } // namespace glasssix
