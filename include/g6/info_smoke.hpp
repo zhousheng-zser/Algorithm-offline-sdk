@@ -8,12 +8,19 @@ typedef unsigned char uchar;
 namespace glasssix {
     // 抽烟信息
     struct smoke_info {
+        struct key_point {
+            float point_score{}; // 关键点的置信度
+            std::int32_t x1{};   // 关键点的坐标x
+            std::int32_t y1{};   // 关键点的坐标y
+            enum class json_serialization { snake_case };
+        };
         struct boxes {
             float score{}; // 置信度
             std::int32_t x1{}; // 检出框体左上坐标x
             std::int32_t y1{}; // 检出框体左上坐标y
             std::int32_t x2{}; // 检出框体右下坐标x
             std::int32_t y2{}; // 检出框体右下坐标y
+            abi::vector<key_point> key_points{};//关键点数组
             enum class json_serialization { snake_case };
         };
         abi::vector<boxes> norm_list{}; // 不抽烟的
