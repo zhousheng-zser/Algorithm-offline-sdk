@@ -1,369 +1,369 @@
 #pragma once
 #include <g6/format_remediation.hpp>
 #include <g6/json_compat.hpp>
-#include <g6/json_extensions.hpp>
+
 #include <g6/logger.hpp>
 
 
 namespace glasssix {
     struct configure_directory {
-        GX_BEGIN_FIELDS(configure_directory);
-        GX_FIELD(std::string, models_directory);
-        GX_FIELD(std::string, directory);
-        GX_FIELD(std::string, license_directory);
-        GX_FIELD(std::string, empower_serial_number);
-        GX_FIELD(int, thread_pool_num);
-        GX_FIELD(std::string, dump_img_directory);
-        GX_END_FIELDS;
 
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::string  models_directory{};
+        std::string  directory{};
+        std::string  license_directory{};
+        std::string  empower_serial_number{};
+        int  thread_pool_num{};
+        std::string  dump_img_directory{};
+
+
+        enum class json_serialization { snake_case };
     };
 
     struct detect_config {
-        GX_BEGIN_FIELDS(detect_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, model_type);
-        GX_FIELD(int, algo_type);
-        GX_FIELD(int, library_algo_type);
-        GX_FIELD(int, min_size);
-        GX_FIELD(int, min_face);
-        GX_FIELD(float, threshold);
-        GX_FIELD(int, format);
-        GX_FIELD(bool, do_attributing);
-        GX_END_FIELDS;
 
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        int  device{};
+        int  model_type{};
+        int  algo_type{};
+        int  library_algo_type{};
+        int  min_size{};
+        int  min_face{};
+        float  threshold{};
+        int  format{};
+        bool  do_attributing{};
+
+
+        enum class json_serialization { snake_case };
     };
     struct track_config {
-        GX_BEGIN_FIELDS(track_config);
-        GX_FIELD(int, detect_intv_before_track);
-        GX_FIELD(int, detect_intv_during_track);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  detect_intv_before_track{};
+        int  detect_intv_during_track{};
+
+        enum class json_serialization { snake_case };
     };
     struct blur_config {
-        GX_BEGIN_FIELDS(blur_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+
+        enum class json_serialization { snake_case };
     };
     struct attributes_config {
-        GX_BEGIN_FIELDS(attributes_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+
+        enum class json_serialization { snake_case };
     };
     struct action_live_config {
-        GX_BEGIN_FIELDS(action_live_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, model_type);
-        GX_FIELD(int, format);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  model_type{};
+        int  format{};
+
+        enum class json_serialization { snake_case };
     };
     struct feature_config {
-        GX_BEGIN_FIELDS(feature_config);
-        GX_FIELD(int, device);
-        GX_FIELD(bool, use_int8);
-        GX_FIELD(int, format);
-        GX_FIELD(int, model_type);
-        GX_FIELD(int, dimension);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        bool  use_int8{};
+        int  format{};
+        int  model_type{};
+        int  dimension{};
+
+        enum class json_serialization { snake_case };
     };
     struct face_user_config {
-        GX_BEGIN_FIELDS(face_user_config);
-        GX_FIELD(std::string, working_directory);
-        GX_FIELD(int, dimension);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        std::string  working_directory{};
+        int  dimension{};
+
+        enum class json_serialization { snake_case };
     };
     struct climb_config {
-        GX_BEGIN_FIELDS(climb_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(float, little_target_conf_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        float  little_target_conf_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct crowd_config {
-        GX_BEGIN_FIELDS(crowd_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, area_threshold);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  area_threshold{};
+
+        enum class json_serialization { snake_case };
     };
     struct batterypilferers_config {
-        GX_BEGIN_FIELDS(batterypilferers_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(int, batch);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        int  batch{};
+
+        enum class json_serialization { snake_case };
     };
     struct fighting_config {
-        GX_BEGIN_FIELDS(fighting_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(int, batch);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        int  batch{};
+
+        enum class json_serialization { snake_case };
     };
     struct flame_config {
-        GX_BEGIN_FIELDS(flame_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_mask_config {
-        GX_BEGIN_FIELDS(pump_mask_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_weld_config {
-        GX_BEGIN_FIELDS(pump_weld_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(float, wmachine_conf_thres);
-        GX_FIELD(float, wlight_conf_thres);
-        GX_FIELD(int, batch);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        float  wmachine_conf_thres{};
+        float  wlight_conf_thres{};
+        int  batch{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_hoisting_config {
-        GX_BEGIN_FIELDS(pump_hoisting_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(float, move_threshold);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        float  move_threshold{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_vesthelmet_config {
-        GX_BEGIN_FIELDS(pump_vesthelmet_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, posture_conf_thres);
-        GX_FIELD(float, head_min_h_thres);
-        GX_FIELD(float, head_min_w_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  posture_conf_thres{};
+        float  head_min_h_thres{};
+        float  head_min_w_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct pumptop_helmet_config {
-        GX_BEGIN_FIELDS(pumptop_helmet_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, pump_conf_thres);
-        GX_FIELD(float, people_conf_thres);
-        GX_FIELD(float, head_conf_thres);
-        GX_FIELD(float, head_score_conf_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  pump_conf_thres{};
+        float  people_conf_thres{};
+        float  head_conf_thres{};
+        float  head_score_conf_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_gate_status_config {
-        GX_BEGIN_FIELDS(pump_gate_status_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_light_config {
-        GX_BEGIN_FIELDS(pump_light_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_work_status_config {
-        GX_BEGIN_FIELDS(pump_work_status_config);
-        GX_FIELD(int, format);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  format{};
+
+        enum class json_serialization { snake_case };
     };
     struct smog_config {
-        GX_BEGIN_FIELDS(smog_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct helmet_config {
-        GX_BEGIN_FIELDS(helmet_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(int, min_size);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        int  min_size{};
+
+        enum class json_serialization { snake_case };
     };
     struct refvest_config {
-        GX_BEGIN_FIELDS(refvest_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct sleep_config {
-        GX_BEGIN_FIELDS(sleep_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(int, frame_count_thres);
+
+        int  device{};
+        int  format{};
+        int  frame_count_thres{};
         // GX_FIELD(int, device_id);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct smoke_config {
-        GX_BEGIN_FIELDS(smoke_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(float, little_target_conf_thres);
-        GX_FIELD(float, smoke_conf_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        float  little_target_conf_thres{};
+        float  smoke_conf_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct tumble_config {
-        GX_BEGIN_FIELDS(tumble_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct vehicle_config {
-        GX_BEGIN_FIELDS(vehicle_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct pump_pumptop_person_config {
-        GX_BEGIN_FIELDS(pump_pumptop_person_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, person_area_ratio_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  person_area_ratio_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct wander_config {
-        GX_BEGIN_FIELDS(wander_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(int, feature_table_size);
-        GX_FIELD(double, feature_match_threshold);
-        GX_FIELD(double, person_conf);
-        GX_FIELD(std::int64_t, interval);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        int  feature_table_size{};
+        double  feature_match_threshold{};
+        double  person_conf{};
+        std::int64_t  interval{};
+
+        enum class json_serialization { snake_case };
     };
     struct wander_limit_config {
-        GX_BEGIN_FIELDS(wander_limit_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(int, feature_table_size);
-        GX_FIELD(double, feature_match_threshold);
-        GX_FIELD(double, person_conf);
-        GX_FIELD(std::int64_t, interval);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        int  feature_table_size{};
+        double  feature_match_threshold{};
+        double  person_conf{};
+        std::int64_t  interval{};
+
+        enum class json_serialization { snake_case };
     };
     struct leavepost_config {
-        GX_BEGIN_FIELDS(leavepost_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct playphone_config {
-        GX_BEGIN_FIELDS(playphone_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, head_conf_thres);
-        GX_FIELD(float, head_nms_thres);
-        GX_FIELD(float, phone_conf_thres);
-        GX_FIELD(float, phone_nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  head_conf_thres{};
+        float  head_nms_thres{};
+        float  phone_conf_thres{};
+        float  phone_nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct onphone_config {
-        GX_BEGIN_FIELDS(onphone_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, head_conf_thres);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(float, phone_distance_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  head_conf_thres{};
+        float  conf_thres{};
+        float  nms_thres{};
+        float  phone_distance_thres{};
+
+        enum class json_serialization { snake_case };
     };
     struct workcloth_config {
 
         struct confidence_color_hsv_cfg {
-            GX_BEGIN_FIELDS(confidence_color_hsv_cfg);
-            GX_FIELD(std::vector<int>, black);
-            GX_FIELD(std::vector<int>, grey);
-            GX_FIELD(std::vector<int>, white);
-            GX_FIELD(std::vector<int>, red);
-            GX_FIELD(std::vector<int>, orange);
-            GX_FIELD(std::vector<int>, yellow);
-            GX_FIELD(std::vector<int>, green);
-            GX_FIELD(std::vector<int>, cyan);
-            GX_FIELD(std::vector<int>, blue);
-            GX_FIELD(std::vector<int>, purple);
-            GX_END_FIELDS;
 
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            std::vector<int>  black{};
+            std::vector<int>  grey{};
+            std::vector<int>  white{};
+            std::vector<int>  red{};
+            std::vector<int>  orange{};
+            std::vector<int>  yellow{};
+            std::vector<int>  green{};
+            std::vector<int>  cyan{};
+            std::vector<int>  blue{};
+            std::vector<int>  purple{};
+
+
+            enum class json_serialization { snake_case };
         };
-        GX_BEGIN_FIELDS(workcloth_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_FIELD(std::vector<confidence_color_hsv_cfg>, color_hsv_list);
 
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+        std::vector<confidence_color_hsv_cfg>  color_hsv_list{};
+
+
+        enum class json_serialization { snake_case };
     };
     struct pedestrian_config {
-        GX_BEGIN_FIELDS(pedestrian_config);
-        GX_FIELD(int, device);
-        GX_FIELD(int, format);
-        GX_FIELD(float, conf_thres);
-        GX_FIELD(float, nms_thres);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+
+        int  device{};
+        int  format{};
+        float  conf_thres{};
+        float  nms_thres{};
+
+        enum class json_serialization { snake_case };
     };
 
     class config {
@@ -371,7 +371,7 @@ namespace glasssix {
         config();
         config(const abi::string& path);
         abi::string _path;
-        nlohmann::json protocols_list;
+        json protocols_list;
         configure_directory _configure_directory;
         detect_config _detect_config;
         track_config _track_config;

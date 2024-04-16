@@ -41,6 +41,7 @@
 #include "glass6/secret_key_empower.hpp"
 #include "gx_api.hpp"
 #include "thread_pool.hpp"
+#include <fstream>
 
 #include <chrono>
 #include <mutex>

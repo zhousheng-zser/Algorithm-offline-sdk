@@ -7,7 +7,7 @@
 #include <random>
 #include <thread>
 
-#include <g6/json_extensions.hpp>
+#include <g6/json_compat.hpp>
 
 #include <gx_api.hpp>
 #include <gx_batterypilferers_api.hpp>

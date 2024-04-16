@@ -2,30 +2,24 @@
 
 #include <cstdint>
 
-#include <g6/json_extensions.hpp>
+#include <g6/abi/string.hpp>
+#include <g6/abi/vector.hpp>
 typedef unsigned char uchar;
 
 namespace glasssix {
     // 泵顶安全帽信息信息
     struct pumptop_helmet_info {
         struct boxes {
-            GX_BEGIN_FIELDS(boxes);
-            GX_FIELD(float, score); // 人头置信度
-            GX_FIELD(float, helmet_score); // 安全帽分类置信度
-            GX_FIELD(std::int32_t, category); // 类型   0人头 1戴了安全帽 2不是人头
-            GX_FIELD(std::int32_t, x1); // 检出框体左上坐标x
-            GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
-            GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
-            GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            float score{}; // 人头置信度
+            float helmet_score{}; // 安全帽分类置信度
+            std::int32_t category{}; // 类型   0人头 1戴了安全帽 2不是人头
+            std::int32_t x1{}; // 检出框体左上坐标x
+            std::int32_t y1{}; // 检出框体左上坐标y
+            std::int32_t x2{}; // 检出框体右下坐标x
+            std::int32_t y2{}; // 检出框体右下坐标y
+            enum class json_serialization { snake_case };
         };
-        GX_BEGIN_FIELDS(pumptop_helmet_info);
-
-        GX_FIELD(abi::vector<boxes>, person_list); // 安全帽信息的人
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        abi::vector<boxes> person_list{}; // 安全帽信息的人
+        enum class json_serialization { snake_case };
     };
 } // namespace glasssix

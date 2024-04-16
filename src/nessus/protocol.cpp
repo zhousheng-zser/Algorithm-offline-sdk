@@ -8,8 +8,7 @@
 #include <g6/exception.hpp>
 #include <g6/format_remediation.hpp>
 #include <g6/functional.hpp>
-#include <g6/json_extensions.hpp>
-#include <g6/reflection.hpp>
+#include <g6/json_compat.hpp>
 
 #include <parser_c.hpp>
 static std::mutex nessus_protocol_mtx;
@@ -18,40 +17,26 @@ namespace glasssix {
     namespace {
         template <typename T>
         using nessus_resource = std::unique_ptr<T, decltype([](T* inner) { parser_free(inner); })>;
-
         struct parser_delete_param {
-            GX_BEGIN_FIELDS(parser_delete_param);
-            GX_FIELD(std::string, instance_guid);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE_DEFAULT;
+            std::string instance_guid;
+            enum class json_serialization { snake_case };
         };
 
         struct parser_init_plugin_result {
-            GX_BEGIN_FIELDS(parser_init_plugin_result);
-            GX_FIELD(parser_result_status, status);
-            GX_FIELD(std::string, nessus_version);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            parser_result_status status;
+            std::string nessus_version;
+            enum class json_serialization { snake_case };
         };
-
         struct parser_new_result {
-            GX_BEGIN_FIELDS(parser_new_result);
-            GX_FIELD(parser_result_status, status);
-            GX_FIELD(std::string, instance_guid);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            parser_result_status status;
+            std::string instance_guid;
+            enum class json_serialization { snake_case };
         };
-
         struct protocol_object_data {
             std::string instance_uuid;
             std::function<void()> deleter;
-
             protocol_object_data(std::string_view instance_uuid, const std::function<void()>& deleter)
                 : instance_uuid{instance_uuid}, deleter{deleter} {}
-
             ~protocol_object_data() {
                 invoke_optional(deleter);
             }
@@ -69,7 +54,6 @@ namespace glasssix {
         T parse_raw_result(char* raw_result) {
             if (nessus_resource<char> scoped_raw_result{raw_result}) {
                 auto json_value = json::parse(scoped_raw_result.get(), nullptr, true, true);
-
                 if (json_value.is_discarded()) {
                     throw source_code_aware_runtime_error(U8("Failed to parse the result as a JSON."));
                 }
@@ -138,13 +122,13 @@ namespace glasssix {
                 param[U8("instance_guid")] = instance_uuid;
             }
             void* instanc = instance_.get();
-            //printf("%s\n", full_name.data());
+             //printf("%s\n", full_name.data());
             //printf("%s\n", param.dump().c_str());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", full_name.data());
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", param.dump().c_str());
             char* ss = parser_parse(instance_.get(), full_name.data(), param.is_null() ? "" : param.dump().c_str(),
-                    data.data(), data.size(), nullptr, 0);
-            //printf("%s\n", ss);
+                data.data(), data.size(), nullptr, 0);
+             //printf("%s\n", ss);
             //__android_log_print(ANDROID_LOG_INFO, "c++ log", "%s\n", ss);
             return parse_raw_result(ss);
         }

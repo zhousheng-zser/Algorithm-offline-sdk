@@ -8,54 +8,35 @@
 #include <string>
 #include <vector>
 
-#include <g6/json_extensions.hpp>
-
 namespace glasssix {
     struct refvest_new_param {
-        GX_BEGIN_FIELDS(refvest_new_param);
-        GX_FIELD(std::int32_t, device);
-        GX_FIELD(std::string, models_directory);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::int32_t device{};
+        std::string models_directory{};
+        enum class json_serialization { snake_case };
     };
-
     struct refvest_detect_param {
-
         struct confidence_params {
-            GX_BEGIN_FIELDS(confidence_params);
-            GX_FIELD(std::optional<float>, conf_thres);
-            GX_FIELD(std::optional<float>, nms_thres);
-            GX_END_FIELDS;
-
-            GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+            std::optional<float> conf_thres{};
+            std::optional<float> nms_thres{};
+            enum class json_serialization { snake_case };
         };
-
-        GX_BEGIN_FIELDS(refvest_detect_param);
-        GX_FIELD(std::string, instance_guid);
-        GX_FIELD(std::int32_t, height);
-        GX_FIELD(std::int32_t, width);
-        GX_FIELD(std::int32_t, roi_x);
-        GX_FIELD(std::int32_t, roi_y);
-        GX_FIELD(std::int32_t, roi_width);
-        GX_FIELD(std::int32_t, roi_height);
-        GX_FIELD(std::int32_t, format);
-        GX_FIELD(abi::vector<posture_info>, posture_info_list);
-        GX_FIELD(confidence_params, params);
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        std::string instance_guid{};
+        std::int32_t height{};
+        std::int32_t width{};
+        std::int32_t roi_x{};
+        std::int32_t roi_y{};
+        std::int32_t roi_width{};
+        std::int32_t roi_height{};
+        std::int32_t format{};
+        abi::vector<posture_info> posture_info_list{};
+        confidence_params params{};
+        enum class json_serialization { snake_case };
     };
-
     struct refvest_detect_result {
-        GX_BEGIN_FIELDS(refvest_detect_result);
-        GX_FIELD(parser_result_status, status);
-        GX_FIELD(refvest_info, detect_info);
-        GX_END_FIELDS;
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        parser_result_status status{};
+        refvest_info detect_info{};
+        enum class json_serialization { snake_case };
     };
-
-
     struct refvest : protocol_object {
         struct detect : parser_inout<refvest_detect_param, refvest_detect_result> {};
     };

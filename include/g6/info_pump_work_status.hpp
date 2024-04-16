@@ -2,21 +2,16 @@
 
 #include <cstdint>
 
-#include <g6/json_extensions.hpp>
+#include <g6/abi/string.hpp>
+#include <g6/abi/vector.hpp>
 typedef unsigned char uchar;
 
 namespace glasssix {
     // 工作状态信息
     struct pump_work_status_info {
-        GX_BEGIN_FIELDS(pump_work_status_info);
-
-        // GX_FIELD(abi::string, security_status); // working:工作中   vacancy:空置
-        GX_END_FIELDS;
-
-        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+        // abi::string  security_status(); // working:工作中   vacancy:空置
+        enum class json_serialization { snake_case };
     };
-
-    
     // 工作区域点
     struct pump_work_status_point {
         std::int32_t x; // 坐标x

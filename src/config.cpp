@@ -1,4 +1,5 @@
 #include "config.hpp"
+#include <fstream>
 
 namespace glasssix {
     config::config() {
@@ -8,7 +9,7 @@ namespace glasssix {
         if (!configure.is_open())
             throw source_code_aware_runtime_error(
                 U8("Error: _configure_directory = ") + _configure_directory.directory);
-        protocols_list = nlohmann::json::parse(configure);
+        protocols_list = json::parse(configure);
     }
     config::config(const abi::string& path) {
         _path = path;
@@ -17,7 +18,7 @@ namespace glasssix {
         if (!configure.is_open())
             throw source_code_aware_runtime_error(
                 U8("Error: _configure_directory = ") + _configure_directory.directory);
-        protocols_list = nlohmann::json::parse(configure);
+        protocols_list = json::parse(configure);
     }
 
     glasssix::json config::read_json_file(const abi::string& path) {
@@ -31,8 +32,8 @@ namespace glasssix {
             temp = read_json_file(path + "/configure_directory.json");
             temp.get_to(_configure_directory);
             configure_directory_is_load = true;
-        } catch (...) {
-            throw source_code_aware_runtime_error(U8("Error: path = ") + path + U8("/configure_directory.json"));
+        } catch (const std::exception &ex) {
+            throw source_code_aware_runtime_error(U8("Error: path = ") + path + U8("/configure_directory.json ")  + ex.what());
         }
     }
     void config::set_detect(const abi::string& path) {

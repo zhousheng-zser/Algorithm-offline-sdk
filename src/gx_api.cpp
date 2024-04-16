@@ -209,42 +209,42 @@ namespace glasssix {
         impl() {}
         ~impl() {}
 
-        nlohmann::json init() {
-            nlohmann::json name_config;
-            name_config["action_live.json"]         = _config->_action_live_config;
-            name_config["attributes.json"]          = _config->_attributes_config;
-            name_config["blur.json"]                = _config->_blur_config;
-            name_config["configure_directory.json"] = _config->_configure_directory;
-            name_config["detect.json"]              = _config->_detect_config;
-            name_config["face_user.json"]           = _config->_face_user_config;
-            name_config["feature.json"]             = _config->_feature_config;
-            name_config["climb.json"]               = _config->_climb_config;
-            name_config["crowd.json"]               = _config->_crowd_config;
-            name_config["batterypilferers.json"]    = _config->_batterypilferers_config;
-            name_config["fighting.json"]            = _config->_fighting_config;
-            name_config["flame.json"]               = _config->_flame_config;
-            name_config["smog.json"]                = _config->_smog_config;
-            name_config["helmet.json"]              = _config->_helmet_config;
-            name_config["refvest.json"]             = _config->_refvest_config;
-            name_config["track.json"]               = _config->_track_config;
-            name_config["sleep.json"]               = _config->_sleep_config;
-            name_config["smoke.json"]               = _config->_smoke_config;
-            name_config["tumble.json"]              = _config->_tumble_config;
-            name_config["vehicle.json"]             = _config->_vehicle_config;
-            name_config["wander.json"]              = _config->_wander_config;
-            name_config["wander_limit.json"]        = _config->_wander_limit_config;
-            name_config["pump_pumptop_person.json"] = _config->_pump_pumptop_person_config;
-            name_config["pump_vesthelmet.json"]     = _config->_pump_vesthelmet_config;
-            name_config["pump_mask.json"]           = _config->_pump_mask_config;
-            name_config["pump_weld.json"]           = _config->_pump_weld_config;
-            name_config["pump_hoisting.json"]       = _config->_pump_hoisting_config;
-            name_config["pump_light.json"]          = _config->_pump_light_config;
-            name_config["pump_work_status.json"]    = _config->_pump_work_status_config;
-            name_config["leavepost.json"]           = _config->_leavepost_config;
-            name_config["playphone.json"]           = _config->_playphone_config;
-            name_config["onphone.json"]             = _config->_onphone_config;
-            name_config["workcloth.json"]           = _config->_workcloth_config;
-            name_config["pedestrian.json"]          = _config->_pedestrian_config;
+        json init() {
+            json name_config;
+            name_config["action_live.json"]         = json(_config->_action_live_config);
+            name_config["attributes.json"]          = json(_config->_attributes_config);
+            name_config["blur.json"]                = json(_config->_blur_config);
+            name_config["configure_directory.json"] = json(_config->_configure_directory);
+            name_config["detect.json"]              = json(_config->_detect_config);
+            name_config["face_user.json"]           = json(_config->_face_user_config);
+            name_config["feature.json"]             = json(_config->_feature_config);
+            name_config["climb.json"]               = json(_config->_climb_config);
+            name_config["crowd.json"]               = json(_config->_crowd_config);
+            name_config["batterypilferers.json"]    = json(_config->_batterypilferers_config);
+            name_config["fighting.json"]            = json(_config->_fighting_config);
+            name_config["flame.json"]               = json(_config->_flame_config);
+            name_config["smog.json"]                = json(_config->_smog_config);
+            name_config["helmet.json"]              = json(_config->_helmet_config);
+            name_config["refvest.json"]             = json(_config->_refvest_config);
+            name_config["track.json"]               = json(_config->_track_config);
+            name_config["sleep.json"]               = json(_config->_sleep_config);
+            name_config["smoke.json"]               = json(_config->_smoke_config);
+            name_config["tumble.json"]              = json(_config->_tumble_config);
+            name_config["vehicle.json"]             = json(_config->_vehicle_config);
+            name_config["wander.json"]              = json(_config->_wander_config);
+            name_config["wander_limit.json"]        = json(_config->_wander_limit_config);
+            name_config["pump_pumptop_person.json"] = json(_config->_pump_pumptop_person_config);
+            name_config["pump_vesthelmet.json"]     = json(_config->_pump_vesthelmet_config);
+            name_config["pump_mask.json"]           = json(_config->_pump_mask_config);
+            name_config["pump_weld.json"]           = json(_config->_pump_weld_config);
+            name_config["pump_hoisting.json"]       = json(_config->_pump_hoisting_config);
+            name_config["pump_light.json"]          = json(_config->_pump_light_config);
+            name_config["pump_work_status.json"]    = json(_config->_pump_work_status_config);
+            name_config["leavepost.json"]           = json(_config->_leavepost_config);
+            name_config["playphone.json"]           = json(_config->_playphone_config);
+            name_config["onphone.json"]             = json(_config->_onphone_config);
+            name_config["workcloth.json"]           = json(_config->_workcloth_config);
+            name_config["pedestrian.json"]          = json(_config->_pedestrian_config);
             return name_config;
         }
 
@@ -253,8 +253,8 @@ namespace glasssix {
         int update_config(const abi::string& name, const abi::string& key, T value) {
             std::scoped_lock lock{mutex_};
             try {
-                nlohmann::json temp;
-                nlohmann::json name_config;
+                json temp;
+                json name_config;
                 // 没有config指针就报错
                 // 有config指针没这个文件也报错(没有这个文件或者没有这个算法对象或者没有这个键值),这个文件不属于项目
                 if (_config == nullptr)

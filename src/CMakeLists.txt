@@ -41,7 +41,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=8)
-	set(target_version 1.2.1)
+	set(target_version 1.2.2)
 endif()
 message("EMPOWER_LANGUAGE  = ${GX_TOOLHAIN_TARGET_NAME}" )
 
