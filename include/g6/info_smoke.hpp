@@ -10,8 +10,8 @@ namespace glasssix {
     struct smoke_info {
         struct key_point {
             float point_score{}; // 关键点的置信度
-            std::int32_t x1{};   // 关键点的坐标x
-            std::int32_t y1{};   // 关键点的坐标y
+            std::int32_t x{};   // 关键点的坐标x
+            std::int32_t y{};   // 关键点的坐标y
             enum class json_serialization { snake_case };
         };
         struct boxes {
