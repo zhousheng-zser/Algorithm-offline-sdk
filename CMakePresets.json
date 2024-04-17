@@ -154,7 +154,7 @@
                 "GX_TOOLHAIN_TARGET_NAME": "UBUNTU",
                 "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0-ubuntu",
                 "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_beta",
-                "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-ubuntu",
+                "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-ubuntu-new",
                 "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-ubuntu",
                 "GX_STATIC_RUNTIME": "OFF"
             }

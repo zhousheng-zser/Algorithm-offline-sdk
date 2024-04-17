@@ -14,10 +14,8 @@ namespace glasssix {
             std::int32_t y1{}; // 检出框体左上坐标y
             std::int32_t x2{}; // 检出框体右下坐标x
             std::int32_t y2{}; // 检出框体右下坐标y
-            enum class json_serialization { snake_case };
         };
         abi::vector<boxes> crossing_list{}; // 翻越的人
-        enum class json_serialization { snake_case };
     };
 
     // 翻越区域点

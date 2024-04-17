@@ -66,13 +66,13 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU" )
     HINTS ${GX_MISCELLANEOUS_ROOT}
     NO_DEFAULT_PATH
     )
-    find_package(
-    LicenseClient
-    REQUIRED
-    NO_DEFAULT_PATH
-    HINTS
-    ${GX_LICENSECLIENT_ROOT}
-    )
+    #find_package(
+    #LicenseClient
+    #REQUIRED
+    #NO_DEFAULT_PATH
+    #HINTS
+    #${GX_LICENSECLIENT_ROOT}
+    #)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIBS opencv_world.so.407)
