@@ -86,8 +86,16 @@ target_link_libraries(
 	${OpenCV_LIBS}
 	${GX_CV_SDK_LIBS}
 	GXMiscellaneous::gx-miscellaneous
+)
+
+#这个平台暂时不做鉴权
+if(NOT (GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU") )
+target_link_libraries(
+	${target_name}
+	PRIVATE
 	LicenseClient::license_client
 )
+endif()
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")
     target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)

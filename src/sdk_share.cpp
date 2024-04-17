@@ -1,4 +1,5 @@
 #include "sdk_share.hpp"
+#include <g6/meta/runtime/json_serializer.hpp>
 namespace glasssix {
     config* _config                             = nullptr;
     bool empower_warning_flag                   = false;
@@ -81,4 +82,48 @@ namespace glasssix {
         const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
         return mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + key);
     }
+
+    template struct meta::runtime::json_serializer<batterypilferers_info>;
+    template struct meta::runtime::json_serializer<climb_info>;
+    template struct meta::runtime::json_serializer<crowd_info>;
+    template struct meta::runtime::json_serializer<attributes_info>;
+    template struct meta::runtime::json_serializer<face_info>;
+    template struct meta::runtime::json_serializer<face_trace_info>;
+    template struct meta::runtime::json_serializer<faces_blur>;
+    template struct meta::runtime::json_serializer<attributes>;
+    template struct meta::runtime::json_serializer<spoofing_probability>;
+    template struct meta::runtime::json_serializer<faces_spoofing>;
+    template struct meta::runtime::json_serializer<feature_info>;
+    template struct meta::runtime::json_serializer<faces_feature>;
+    template struct meta::runtime::json_serializer<faces_search_data>;
+    template struct meta::runtime::json_serializer<faces_search_info>;
+    template struct meta::runtime::json_serializer<faces_integration_search_info>;
+    template struct meta::runtime::json_serializer<faces_search_one_info>;
+    template struct meta::runtime::json_serializer<face_user_result>;
+    template struct meta::runtime::json_serializer<fighting_info>;
+    template struct meta::runtime::json_serializer<flame_info>;
+    template struct meta::runtime::json_serializer<head_info>;
+    template struct meta::runtime::json_serializer<helmet_info>;
+    template struct meta::runtime::json_serializer<leavepost_info>;
+    template struct meta::runtime::json_serializer<onphone_info>;
+    template struct meta::runtime::json_serializer<pedestrian_info>;
+    template struct meta::runtime::json_serializer<playphone_info>;
+    template struct meta::runtime::json_serializer<posture_info>;
+    template struct meta::runtime::json_serializer<pumptop_helmet_info>;
+    template struct meta::runtime::json_serializer<pump_hoisting_info>;
+    template struct meta::runtime::json_serializer<pump_light_info>;
+    template struct meta::runtime::json_serializer<pump_mask_info>;
+    template struct meta::runtime::json_serializer<pump_pumptop_person_info>;
+    template struct meta::runtime::json_serializer<pump_vesthelmet_info>;
+    template struct meta::runtime::json_serializer<pump_weld_info>;
+    template struct meta::runtime::json_serializer<pump_work_status_info>;
+    template struct meta::runtime::json_serializer<refvest_info>;
+    template struct meta::runtime::json_serializer<sleep_info>;
+    template struct meta::runtime::json_serializer<smog_info>;
+    template struct meta::runtime::json_serializer<smoke_info>;
+    template struct meta::runtime::json_serializer<tumble_info>;
+    template struct meta::runtime::json_serializer<vehicle_info>;
+    template struct meta::runtime::json_serializer<wander_info>;
+    template struct meta::runtime::json_serializer<wander_limit_info>;
+    template struct meta::runtime::json_serializer<workcloth_info>;
 } // namespace glasssix
