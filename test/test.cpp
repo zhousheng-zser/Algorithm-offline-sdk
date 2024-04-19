@@ -1638,6 +1638,7 @@ int main(int argc, char** argv) {
             t[32] = std::thread(thread_function_face_attributes);
             t[33] = std::thread(thread_function_pump_work_status);
             t[34] = std::thread(thread_function_crossing);
+
             t[0].join();
             t[1].join();
             t[2].join();
