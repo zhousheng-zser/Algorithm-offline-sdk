@@ -76,6 +76,19 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU" )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIBS opencv_world.so.407)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU" )
+    find_package(
+    GXMiscellaneous
+    REQUIRED
+    HINTS ${GX_MISCELLANEOUS_ROOT}
+    NO_DEFAULT_PATH
+    )
+    find_package(OpenCV
+    REQUIRED 
+    NO_DEFAULT_PATH 
+    HINTS 
+    ${GX_OPENCV_ROOT}/lib/cmake/opencv4
+    )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "CENTOS" )
     find_package(
     GXMiscellaneous
@@ -173,6 +186,9 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     set(GX_CV_SDK_LIBS parser primitives)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON" )
     set(cvsdk_lib_relative_path "/lib/sophon/aarch64-linux-gnu/release")
+    set(GX_CV_SDK_LIBS parser primitives)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON_UBUNTU" )
+    set(cvsdk_lib_relative_path "/lib/ubuntu/x64/release")
     set(GX_CV_SDK_LIBS parser primitives)
 endif()
 

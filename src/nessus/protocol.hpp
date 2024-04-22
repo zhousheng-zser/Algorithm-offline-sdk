@@ -15,27 +15,19 @@
 #if (GX_PLATFORM_NAME == 8)
 #include <g6/meta/literal_string.hpp>
 #endif
-#include <g6/meta/struct.hpp>
 #include <g6/meta/literal_string.hpp>
 #include <g6/meta/naming_convention.hpp>
+#include <g6/meta/struct.hpp>
 
 namespace glasssix {
     namespace detail {
         template <typename T>
 
-#if(GX_PLATFORM_NAME == 8)
-        struct protocol_family {
-            inline static constexpr meta::literal_string value{
-                meta::convert_naming_convention_v<meta::name_of_v<T>, naming_convention::lower_case_with_underscores>,
-                meta::literal_string{"."}};
-        };
-#else
         struct protocol_family {
             inline static const auto value = meta::convert_naming_convention(
                 meta::get_literal_string_t<T, {.shortened = true}>(), meta::naming_convention::snake_case)
-                    .append(U8("."));
+                                                 .append(U8("."));
         };
-#endif
         std::string make_procotol_full_name(std::string_view family, std::string_view name);
     } // namespace detail
 

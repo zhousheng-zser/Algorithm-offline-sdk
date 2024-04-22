@@ -38,7 +38,7 @@
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
-#if (GX_PLATFORM_NAME != 6)
+#if (GX_EMPOWER_FLAG)
 #include "glass6/secret_key_empower.hpp"
 #endif
 #include "gx_api.hpp"
@@ -70,7 +70,6 @@ namespace glasssix {
         std::string share_platform_name = "RV1106";
 #elif (GX_PLATFORM_NAME == 8)
         std::string share_platform_name = "SOPHON";
-#endif
 
 #if (EMPOWER_LANGUAGE == 0)
         std::string share_empower_language = "C++";

@@ -15,7 +15,7 @@ namespace glasssix {
             if (api_temp == nullptr) {
                 api_temp = new gx_head_api();
             }
-#if (GX_PLATFORM_NAME != 6)  
+#if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
                     empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -49,7 +49,7 @@ namespace glasssix {
         gx_head_api* api_temp = nullptr;
 
     private:
-#if (GX_PLATFORM_NAME != 6) 
+#if (GX_EMPOWER_FLAG) 
         secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_HELMET_V3.2.2";
