@@ -11,7 +11,7 @@ namespace glasssix {
     class gx_head_api::impl {
     public:
         void init() {
-#if (GX_PLATFORM_NAME != 6)  
+#if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
                     empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -44,7 +44,7 @@ namespace glasssix {
         ~impl() {}
 
     private:
-#if (GX_PLATFORM_NAME != 6) 
+#if (GX_EMPOWER_FLAG) 
         secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_HEAD_V3.1.0";

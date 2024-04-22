@@ -33,6 +33,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "CENTOS" )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=6)
+	set(GX_EMPOWER OFF)
 	set(target_version 1.0.0)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
@@ -42,8 +43,20 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=8)
 	set(target_version 1.2.2)
+elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON_UBUNTU" )
+    target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
+    target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=8)
+	set(GX_EMPOWER OFF)
+	set(target_version 1.0.0)
+endif()
+
+if(GX_EMPOWER)
+    target_compile_definitions(${target_name} PRIVATE GX_EMPOWER_FLAG=true)
+else()
+    target_compile_definitions(${target_name} PRIVATE GX_EMPOWER_FLAG=false)
 endif()
 message("EMPOWER_LANGUAGE  = ${GX_TOOLHAIN_TARGET_NAME}" )
+message("GX_EMPOWER_FLAG   = ${GX_EMPOWER}" )
 
 file(
 	GLOB private_sources
@@ -88,8 +101,8 @@ target_link_libraries(
 	GXMiscellaneous::gx-miscellaneous
 )
 
-#这个平台暂时不做鉴权
-if(NOT (GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU") )
+#不做鉴权的平台
+if(GX_EMPOWER )
 target_link_libraries(
 	${target_name}
 	PRIVATE
@@ -97,7 +110,7 @@ target_link_libraries(
 )
 endif()
 
-if(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
     target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
     target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
     target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
