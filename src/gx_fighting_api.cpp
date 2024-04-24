@@ -14,6 +14,7 @@ namespace glasssix {
     class gx_fighting_api::impl {
     public:
         void init() {
+#if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
                     empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -27,6 +28,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error{ex.what() + std::string{": empower_key install error"}};
                 }
             }
+#endif
         }
         impl() {
             if (_config == nullptr) {
@@ -45,6 +47,7 @@ namespace glasssix {
         ~impl() {}
 
     private:
+#if (GX_EMPOWER_FLAG) 
         secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_FIGHTING_V2.1.0";
@@ -63,6 +66,7 @@ namespace glasssix {
             key >> ans;
             return ans;
         }
+#endif
     };
 
     //  打架检测

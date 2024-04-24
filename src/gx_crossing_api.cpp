@@ -17,6 +17,7 @@ namespace glasssix {
             if (api_temp == nullptr) {
                 api_temp = new gx_posture_api();
             }
+#if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
                     empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -30,6 +31,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error{ex.what() + std::string{": empower_key install error"}};
                 }
             }
+#endif
         }
         impl() {
             if (_config == nullptr) {
@@ -49,6 +51,7 @@ namespace glasssix {
         gx_posture_api* api_temp = nullptr;
 
     private:
+#if (GX_EMPOWER_FLAG)
         secret_key_empower empower;
         std::string empower_key               = "";
         std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.1.1";
@@ -67,6 +70,7 @@ namespace glasssix {
             key >> ans;
             return ans;
         }
+#endif
     };
 
 

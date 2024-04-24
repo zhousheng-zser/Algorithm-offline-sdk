@@ -2,6 +2,7 @@
 
 project(gx-offline-recognition CXX)
 
+option(GX_EMPOWER "Use LicenseClient" ON)
 option(GX_STATIC_RUNTIME "Whether to link C/C++ runtime statically." ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
