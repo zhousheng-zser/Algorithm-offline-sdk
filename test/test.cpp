@@ -1715,46 +1715,7 @@ int main(int argc, char** argv) {
             thread_function_pump_work_status();
             thread_function_crossing();
         }
-
-        }
-        else
-        {
-            thread_function_helmet();
-            thread_function_flame();
-            thread_function_refvest();
-            thread_function_search();
-            thread_function_integration();
-            thread_function_leavepost();
-            thread_function_sleep();
-            thread_function_smoke();
-            thread_function_playphone();
-            thread_function_onphone();
-            thread_function_workcloth();
-            thread_function_vehicle();
-            thread_function_pedestrian();
-            thread_function_Action_live_Blur();
-            thread_function_smog();
-            thread_function_tumble();
-            thread_function_climb();
-            thread_function_crowd();
-            thread_function_wander();
-            thread_function_fighting();
-            thread_function_posture();
-            thread_function_wander_limit();
-            thread_function_head();
-            thread_function_batterypilferers();
-            thread_function_pump_light();
-            thread_function_pump_vesthelmet();
-            thread_function_pump_gate_status();
-            thread_function_pump_pumptop_person();
-            thread_function_pump_mask();
-            thread_function_pumptop_helmet();
-            thread_function_pump_hoisting();
-            thread_function_pump_weld();
-            thread_function_face_attributes();
-            thread_function_pump_work_status();
-            thread_function_crossing();
-        }
+        
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
         printf("[ ] : the test all cost time : %d seconds\n", duration);
