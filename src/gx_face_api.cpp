@@ -2,12 +2,12 @@
 
 #include "distance/distance.hpp"
 #include "sdk_share.hpp"
+#include <g6/json_compat.hpp>
 
 #include <cmath>
 #include <fstream>
 #include <random>
 
-#include <g6/json_extensions.hpp>
 
 namespace glasssix {
 
@@ -57,6 +57,7 @@ namespace glasssix {
     class gx_face_api::impl {
     public:
         void init() {
+#if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
                     empower_key = get_empower_key(_config->_configure_directory.license_directory);
@@ -70,6 +71,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error{ex.what() + std::string{": empower_key install error"}};
                 }
             }
+#endif
             cache.index = 0;
             cache.track_history.clear();
             cache.track_history_id.clear();
@@ -110,6 +112,7 @@ namespace glasssix {
         } cache;
 
     private:
+#if (GX_EMPOWER_FLAG) 
         secret_key_empower empower;
         std::string empower_key          = "";
         std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_FACE_V1.2.0";
@@ -128,6 +131,7 @@ namespace glasssix {
             key >> ans;
             return ans;
         }
+#endif
     };
 
     // 人脸检测

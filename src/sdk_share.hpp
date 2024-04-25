@@ -38,7 +38,9 @@
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
+#if (GX_EMPOWER_FLAG)
 #include "glass6/secret_key_empower.hpp"
+#endif
 #include "gx_api.hpp"
 #include "thread_pool.hpp"
 
