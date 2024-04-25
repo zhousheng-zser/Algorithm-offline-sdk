@@ -212,7 +212,7 @@
                     "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
                 }
             }
-        },       
+        },
         {
             "name": "rk3588",
             "displayName": "Linux Release",
@@ -270,7 +270,6 @@
                 }
             }
         },
-
         {
             "name": "rk3588-debug",
             "displayName": "Linux Release",
@@ -305,13 +304,13 @@
             "name": "rk3588",
             "configurePreset": "rk3588",
             "configuration": "Release",
-            "jobs": 3
+            "jobs": 7
         },
         {
             "name": "rk3588-debug",
             "configurePreset": "rk3588-debug",
             "configuration": "Debug",
-            "jobs": 2
+            "jobs": 7
         },
         {
             "name": "rv1109",
