@@ -1,8 +1,8 @@
 {
     "license_directory": "/opt/glasssix/edgebox/cpp/ai-sdk/configure_file/empower_file.txt",
     "empower_serial_number": "DrnX-usIt-oSy9-21o3",
-    "models_directory": "/root/install/glasssix-offline-sdk/models/rk3588",
-    "directory": "/root/Glasssix_CV_SDK_beta/configure_file/plugin_configure.json",
+    "models_directory": "models/rk3588",
+    "directory": "configure_file/plugin_configure.json",
     "thread_pool_num": 1,
-    "dump_img_directory": "/opt/glasssix/edgebox/storage/abnormal"
+    "dump_img_directory": "dump_img"
 }

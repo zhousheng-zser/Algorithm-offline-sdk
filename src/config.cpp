@@ -4,20 +4,10 @@ namespace glasssix {
     config::config() {
         _path = "./config";
         set_configure_directory(_path);
-        std::ifstream configure(_configure_directory.directory);
-        if (!configure.is_open())
-            throw source_code_aware_runtime_error(
-                U8("Error: _configure_directory = ") + _configure_directory.directory);
-        protocols_list = nlohmann::json::parse(configure);
     }
     config::config(const abi::string& path) {
         _path = path;
         set_configure_directory(_path);
-        std::ifstream configure(_configure_directory.directory);
-        if (!configure.is_open())
-            throw source_code_aware_runtime_error(
-                U8("Error: _configure_directory = ") + _configure_directory.directory);
-        protocols_list = nlohmann::json::parse(configure);
     }
 
     glasssix::json config::read_json_file(const abi::string& path) {
@@ -25,15 +15,35 @@ namespace glasssix {
         std::ifstream(path.c_str()) >> temp;
         return temp;
     }
-    void config::set_configure_directory(const abi::string& path) {
-        try {
-            glasssix::json temp;
-            temp = read_json_file(path + "/configure_directory.json");
-            temp.get_to(_configure_directory);
-            configure_directory_is_load = true;
-        } catch (...) {
-            throw source_code_aware_runtime_error(U8("Error: path = ") + path + U8("/configure_directory.json"));
-        }
+    void config::set_configure_directory(abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/configure_directory.json");
+        temp.get_to(_configure_directory);
+        std::ifstream lic_dir(_configure_directory.license_directory.c_str());
+        if (!lic_dir.is_open())
+            throw source_code_aware_runtime_error(
+                U8("Error: configure_directory.json:license_directory =") + _configure_directory.license_directory);
+
+        _configure_directory.models_directory = path + "/../" + _configure_directory.models_directory;
+        std::ifstream mod_dir(_configure_directory.models_directory.c_str());
+        if (!mod_dir.is_open())
+            throw source_code_aware_runtime_error(
+                U8("Error: configure_directory.json:models_directory =") + _configure_directory.models_directory);
+
+        _configure_directory.directory = path + "/../" + _configure_directory.directory;
+        std::ifstream dir(_configure_directory.directory.c_str());
+        if (!dir.is_open())
+            throw source_code_aware_runtime_error(
+                U8("Error: configure_directory.json:directory =") + _configure_directory.directory);
+        protocols_list = nlohmann::json::parse(dir);
+
+        _configure_directory.dump_img_directory = path + "/../" + _configure_directory.dump_img_directory;
+        std::ifstream dump_dir(_configure_directory.dump_img_directory.c_str());
+        if (!dump_dir.is_open())
+            throw source_code_aware_runtime_error(
+                U8("Error: configure_directory.json:dump_img_directory =") + _configure_directory.dump_img_directory);
+
+        configure_directory_is_load = true;
     }
     void config::set_detect(const abi::string& path) {
         glasssix::json temp;
@@ -75,6 +85,7 @@ namespace glasssix {
         glasssix::json temp;
         temp = read_json_file(path + "/face_user.json");
         temp.get_to(_face_user_config);
+        _face_user_config.working_directory = path + "/../" + _face_user_config.working_directory;
         face_user_is_load = true;
     }
     void config::set_climb(const abi::string& path) {
