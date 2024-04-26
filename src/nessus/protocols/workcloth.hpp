@@ -15,7 +15,7 @@ namespace glasssix {
     struct workcloth_new_param {
         GX_BEGIN_FIELDS(workcloth_new_param);
         GX_FIELD(std::int32_t, device);
-        GX_FIELD(std::string, models_directory);
+        GX_FIELD(abi::string, models_directory);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

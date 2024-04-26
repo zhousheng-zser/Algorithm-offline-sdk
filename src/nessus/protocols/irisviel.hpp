@@ -24,7 +24,7 @@ namespace glasssix {
     struct irisviel_new_param {
         GX_BEGIN_FIELDS(irisviel_new_param);
         GX_FIELD(std::int32_t, dimension);
-        GX_FIELD(std::string, working_directory);
+        GX_FIELD(abi::string, working_directory);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
