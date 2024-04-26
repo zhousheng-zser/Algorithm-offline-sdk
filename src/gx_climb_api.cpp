@@ -73,10 +73,7 @@ namespace glasssix {
     };
 
     //  安全生产 攀爬检测
-    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle,
-        const abi::vector<posture_info>& posture_info_list) {
-        if (quadrangle.size() != 4)
-            throw source_code_aware_runtime_error(U8("Error: climb quadrangle.size()  != 4"));
+    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -85,12 +82,6 @@ namespace glasssix {
                 }
                 auto ptr = all_thread_algo_ptr[id_];
                 climb_info ans;
-                // 过滤掉姿态置信度小于0.5的
-                abi::vector<posture_info> posture_list_temp;
-                for (int i = 0; i < posture_info_list.size(); i++) {
-                    if (posture_info_list[i].score >= 0.5)
-                        posture_list_temp.emplace_back(posture_info_list[i]);
-                }
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
 #else
@@ -111,20 +102,9 @@ namespace glasssix {
                         .roi_y                        = 0,
                         .roi_width                    = mat.get_cols(),
                         .roi_height                   = mat.get_rows(),
-                        .posture_info_list            = posture_list_temp,
                         .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
                             .nms_thres                                              = _config->_climb_config.nms_thres,
-                            .little_target_conf_thres = _config->_climb_config.little_target_conf_thres,
-                            .x1                       = quadrangle[0].x,
-                            .y1                       = quadrangle[0].y,
-                            .x2                       = quadrangle[1].x,
-                            .y2                       = quadrangle[1].y,
-                            .x3                       = quadrangle[2].x,
-                            .y3                       = quadrangle[2].y,
-                            .x4                       = quadrangle[3].x,
-                            .y4                       = quadrangle[3].y
-
-
+                            .little_target_conf_thres = _config->_climb_config.little_target_conf_thres
                         }},
                     str);
 
@@ -138,9 +118,6 @@ namespace glasssix {
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
     }
-    climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle) {
-        auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
-        return safe_production_climb(mat, quadrangle, posture_info_list);
-    }
+
 
 } // namespace glasssix

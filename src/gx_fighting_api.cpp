@@ -69,8 +69,8 @@ namespace glasssix {
 #endif
     };
 
-    //  打架检测
-    fighting_info gx_fighting_api::safe_production_fighting(const abi::vector<gx_img_api>& mat_list) {
+    //  打架斗殴检测
+    fighting_info gx_fighting_api::safe_production_fighting(const abi::vector<gx_img_api>& mat_list, const fighting_roi& roi) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -94,7 +94,12 @@ namespace glasssix {
                     fighting_detect_param{.instance_guid = "",
                         .format                          = _config->_fighting_config.format,
                         .height                          = mat_list[0].get_rows(),
-                        .width                           = mat_list[0].get_cols()},
+                        .width                           = mat_list[0].get_cols(),
+                        .roi_x                           = roi.x,
+                        .roi_y                           = roi.y,
+                        .roi_width                       = roi.w,
+                        .roi_height                      = roi.h
+                    },
                     str);
 
                 ans = std::move(result.detect_info);

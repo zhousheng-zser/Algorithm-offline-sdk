@@ -579,9 +579,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/climb.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_climb(
-                    img, abi::vector<climb_point>{
-                             climb_point{0, 0}, climb_point{1080, 0}, climb_point{1920, 1080}, climb_point{0, 1920}});
+                auto val = api_temp->safe_production_climb(img);
                 if (condition)
                     printf(
                         "[climb] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
@@ -648,7 +646,7 @@ namespace glasssix {
             printf("batterypilferers time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t19 多线程测打架
+    // t19 多线程测打架斗殴
     void thread_function_fighting() {
         try {
 
@@ -667,9 +665,9 @@ namespace glasssix {
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9)));
             for (int i = 0; i < T; ++i) {
-                auto val = api_temp->safe_production_fighting(img_list);
+                auto val = api_temp->safe_production_fighting(img_list, {0,0,1920,1080});
                 if (condition)
-                    printf("[fighting] : score =%f category=%d\n", val.score, val.category);
+                    printf("[fighting] : fight_list =%d normal_list =%d\n", val.fight_list.size(),val.normal_list.size());
             }
             auto end      = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
