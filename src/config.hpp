@@ -8,12 +8,12 @@
 namespace glasssix {
     struct configure_directory {
         GX_BEGIN_FIELDS(configure_directory);
-        GX_FIELD(std::string, models_directory);
-        GX_FIELD(std::string, directory);
-        GX_FIELD(std::string, license_directory);
-        GX_FIELD(std::string, empower_serial_number);
+        GX_FIELD(abi::string, models_directory);
+        GX_FIELD(abi::string, directory);
+        GX_FIELD(abi::string, license_directory);
+        GX_FIELD(abi::string, empower_serial_number);
         GX_FIELD(int, thread_pool_num);
-        GX_FIELD(std::string, dump_img_directory);
+        GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -75,7 +75,7 @@ namespace glasssix {
     };
     struct face_user_config {
         GX_BEGIN_FIELDS(face_user_config);
-        GX_FIELD(std::string, working_directory);
+        GX_FIELD(abi::string, working_directory);
         GX_FIELD(int, dimension);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -408,7 +408,7 @@ namespace glasssix {
         onphone_config _onphone_config;
         workcloth_config _workcloth_config;
         pedestrian_config _pedestrian_config;
-        void set_configure_directory(const abi::string& path);
+        void set_configure_directory(abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
         void set_blur(const abi::string& path);

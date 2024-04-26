@@ -13,7 +13,7 @@ namespace glasssix {
     struct fighting_new_param {
         GX_BEGIN_FIELDS(fighting_new_param);
         GX_FIELD(std::int32_t, device);
-        GX_FIELD(std::string, models_directory);
+        GX_FIELD(abi::string, models_directory);
         GX_FIELD(std::int32_t, batch);
         GX_END_FIELDS;
 

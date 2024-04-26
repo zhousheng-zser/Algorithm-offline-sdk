@@ -44,7 +44,8 @@
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time = false;
-bool condition      = true;
+bool condition                       = true;
+static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk-test/config";
 #define TIMES 1000
 
 namespace glasssix {
@@ -81,7 +82,7 @@ namespace glasssix {
 namespace glasssix {
     // t0 多线程测安全帽
     void thread_function_helmet() {
-        gx_helmet_api* api_temp = new gx_helmet_api();
+        gx_helmet_api* api_temp = new gx_helmet_api(CONFIG_PATH);
         int T                   = TIMES;
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -104,7 +105,7 @@ namespace glasssix {
     }
     // t22 多线程测人头
     void thread_function_head() {
-        gx_head_api* api_temp = new gx_head_api();
+        gx_head_api* api_temp = new gx_head_api(CONFIG_PATH);
         int T                 = TIMES;
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -126,7 +127,7 @@ namespace glasssix {
     }
     // t1 多线程测火焰
     void thread_function_flame() {
-        gx_flame_api* api_temp = new gx_flame_api();
+        gx_flame_api* api_temp = new gx_flame_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -148,7 +149,7 @@ namespace glasssix {
     }
     // t14 多线程测烟雾
     void thread_function_smog() {
-        gx_smog_api* api_temp = new gx_smog_api();
+        gx_smog_api* api_temp = new gx_smog_api(CONFIG_PATH);
         int T                 = TIMES;
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -169,7 +170,7 @@ namespace glasssix {
     }
     // t2 多线程测反光衣
     void thread_function_refvest() {
-        gx_refvest_api* api_temp = new gx_refvest_api();
+        gx_refvest_api* api_temp = new gx_refvest_api(CONFIG_PATH);
         int T                    = TIMES;
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -191,7 +192,7 @@ namespace glasssix {
     }
     // t3 多线程测搜索
     void thread_function_search() {
-        gx_face_api* api_temp = new gx_face_api();
+        gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         api_temp->user_load();
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
@@ -211,11 +212,12 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("search time = %lld microsecond\n", duration.count());
+        api_temp->user_remove_all();
         delete api_temp;
     }
     // t4 多线程测融合搜索
     void thread_function_integration() {
-        gx_face_api* api_temp = new gx_face_api();
+        gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         api_temp->user_load();
         auto start = std::chrono::high_resolution_clock::now();
         int T      = TIMES;
@@ -230,6 +232,7 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
+        api_temp->user_remove_all();
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
@@ -238,7 +241,7 @@ namespace glasssix {
     }
     // t13 多线程测 配合活体 与 质量检测
     void thread_function_Action_live_Blur() {
-        gx_face_api* api_temp = new gx_face_api();
+        gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         auto start            = std::chrono::high_resolution_clock::now();
 
         abi::vector<gx_img_api> img;
@@ -279,7 +282,7 @@ namespace glasssix {
     }
     // t6 多线程测睡岗
     void thread_function_sleep() {
-        gx_sleep_api* api_temp = new gx_sleep_api();
+        gx_sleep_api* api_temp = new gx_sleep_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -300,7 +303,7 @@ namespace glasssix {
     }
     // t7 多线程测抽烟
     void thread_function_smoke() {
-        gx_smoke_api* api_temp = new gx_smoke_api();
+        gx_smoke_api* api_temp = new gx_smoke_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -327,7 +330,7 @@ namespace glasssix {
     }
     // t15 多线程测跌倒
     void thread_function_tumble() {
-        gx_tumble_api* api_temp = new gx_tumble_api();
+        gx_tumble_api* api_temp = new gx_tumble_api(CONFIG_PATH);
         int T                   = TIMES;
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -349,7 +352,7 @@ namespace glasssix {
     }
     // t11 多线程测车辆
     void thread_function_vehicle() {
-        gx_vehicle_api* api_temp = new gx_vehicle_api();
+        gx_vehicle_api* api_temp = new gx_vehicle_api(CONFIG_PATH);
         int T                    = TIMES;
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -371,7 +374,7 @@ namespace glasssix {
     }
     // t18 多线程测徘徊
     void thread_function_wander() {
-        gx_wander_api* api_temp = new gx_wander_api();
+        gx_wander_api* api_temp = new gx_wander_api(CONFIG_PATH);
         int T                   = TIMES;
         auto start              = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -395,8 +398,8 @@ namespace glasssix {
     }
     // t21 多线程测越界
     void thread_function_wander_limit() {
-        gx_wander_api* api_temp                = new gx_wander_api();
-        gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api();
+        gx_wander_api* api_temp                = new gx_wander_api(CONFIG_PATH);
+        gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api(CONFIG_PATH);
         int T                                  = TIMES;
         auto start                             = std::chrono::high_resolution_clock::now();
         const gx_img_api img1("/root/img/wander_limit1.png", static_cast<int>(1e9));
@@ -431,7 +434,7 @@ namespace glasssix {
     }
     // t5 多线程测离岗
     void thread_function_leavepost() {
-        gx_leavepost_api* api_temp = new gx_leavepost_api();
+        gx_leavepost_api* api_temp = new gx_leavepost_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -452,7 +455,7 @@ namespace glasssix {
     }
     // t8 多线程测玩手机
     void thread_function_playphone() {
-        gx_playphone_api* api_temp = new gx_playphone_api();
+        gx_playphone_api* api_temp = new gx_playphone_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
 #if 1 // 这里必须要有表达式,不能省略
@@ -501,9 +504,9 @@ namespace glasssix {
     }
     // t9 多线程测打电话
     void thread_function_onphone() {
-        gx_onphone_api* api_temp         = new gx_onphone_api();
-        gx_head_api* api_head_temp       = new gx_head_api();
-        gx_posture_api* api_posture_temp = new gx_posture_api();
+        gx_onphone_api* api_temp         = new gx_onphone_api(CONFIG_PATH);
+        gx_head_api* api_head_temp       = new gx_head_api(CONFIG_PATH);
+        gx_posture_api* api_posture_temp = new gx_posture_api(CONFIG_PATH);
         const gx_img_api img("/root/img/onphone.png", static_cast<int>(1e9));
         auto val_head    = api_head_temp->safe_production_head(img);
         auto val_posture = api_posture_temp->safe_production_posture(img);
@@ -531,7 +534,7 @@ namespace glasssix {
     }
     // t10 多线程测工服检测
     void thread_function_workcloth() {
-        gx_workcloth_api* api_temp = new gx_workcloth_api();
+        gx_workcloth_api* api_temp = new gx_workcloth_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -552,7 +555,7 @@ namespace glasssix {
     }
     // t12 多线程测行人检测
     void thread_function_pedestrian() {
-        gx_pedestrian_api* api_temp = new gx_pedestrian_api();
+        gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
         int T                       = TIMES;
         auto start                  = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -573,7 +576,7 @@ namespace glasssix {
     }
     // t16 多线程测攀爬
     void thread_function_climb() {
-        gx_climb_api* api_temp = new gx_climb_api();
+        gx_climb_api* api_temp = new gx_climb_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -595,7 +598,7 @@ namespace glasssix {
     }
     // t17 多线程测聚众
     void thread_function_crowd() {
-        gx_crowd_api* api_temp = new gx_crowd_api();
+        gx_crowd_api* api_temp = new gx_crowd_api(CONFIG_PATH);
         int T                  = TIMES;
         for (int i = 0; i < T; ++i) {
             auto start = std::chrono::high_resolution_clock::now();
@@ -617,7 +620,7 @@ namespace glasssix {
     }
     // t23 多线程测偷电瓶
     void thread_function_batterypilferers() {
-        gx_batterypilferers_api* api_temp = new gx_batterypilferers_api();
+        gx_batterypilferers_api* api_temp = new gx_batterypilferers_api(CONFIG_PATH);
         int T                             = TIMES;
         auto start                        = std::chrono::high_resolution_clock::now();
         abi::vector<gx_img_api> img_list;
@@ -650,7 +653,7 @@ namespace glasssix {
     void thread_function_fighting() {
         try {
 
-            gx_fighting_api* api_temp = new gx_fighting_api();
+            gx_fighting_api* api_temp = new gx_fighting_api(CONFIG_PATH);
             int T                     = TIMES;
             auto start                = std::chrono::high_resolution_clock::now();
             abi::vector<gx_img_api> img_list;
@@ -680,7 +683,7 @@ namespace glasssix {
     }
     // t20 多线程测姿态
     void thread_function_posture() {
-        gx_posture_api* api_temp = new gx_posture_api();
+        gx_posture_api* api_temp = new gx_posture_api(CONFIG_PATH);
         int T                    = TIMES;
         auto start               = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -702,7 +705,7 @@ namespace glasssix {
     }
     // t24 多线程测定制灯光
     void thread_function_pump_light() {
-        gx_pump_light_api* api_temp = new gx_pump_light_api();
+        gx_pump_light_api* api_temp = new gx_pump_light_api(CONFIG_PATH);
         int T                       = TIMES;
         auto start                  = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -776,7 +779,7 @@ namespace glasssix {
     }
     // t25 多线程测定制天车工（反光衣安全帽）
     void thread_function_pump_vesthelmet() {
-        gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api();
+        gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api(CONFIG_PATH);
         int T                            = TIMES;
         auto start                       = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -798,7 +801,7 @@ namespace glasssix {
     }
     // t26 多线程测定制大门状态
     void thread_function_pump_gate_status() {
-        gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+        gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
         int T                             = TIMES;
         auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -860,7 +863,7 @@ namespace glasssix {
     }
     // t27 多线程测定制泵顶行人
     void thread_function_pump_pumptop_person() {
-        gx_pump_pumptop_person_api* api_temp = new gx_pump_pumptop_person_api();
+        gx_pump_pumptop_person_api* api_temp = new gx_pump_pumptop_person_api(CONFIG_PATH);
         int T                                = TIMES;
         auto start                           = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -883,7 +886,7 @@ namespace glasssix {
     }
     // t28 多线程测定制防护面罩
     void thread_function_pump_mask() {
-        gx_pump_mask_api* api_temp = new gx_pump_mask_api();
+        gx_pump_mask_api* api_temp = new gx_pump_mask_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -908,7 +911,7 @@ namespace glasssix {
     }
     // t29 多线程测定制泵顶安全帽
     void thread_function_pumptop_helmet() {
-        gx_pumptop_helmet_api* api_temp = new gx_pumptop_helmet_api();
+        gx_pumptop_helmet_api* api_temp = new gx_pumptop_helmet_api(CONFIG_PATH);
         int T                           = TIMES;
         auto start                      = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -934,7 +937,7 @@ namespace glasssix {
     }
     // t30 多线程测定制泵业狭小空间（天车工吊装）
     void thread_function_pump_hoisting() {
-        gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api();
+        gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api(CONFIG_PATH);
         int T                          = TIMES;
         auto start                     = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -957,7 +960,7 @@ namespace glasssix {
     }
     // t31 多线程测定制泵业焊接
     void thread_function_pump_weld() {
-        gx_pump_weld_api* api_temp = new gx_pump_weld_api();
+        gx_pump_weld_api* api_temp = new gx_pump_weld_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
 
@@ -995,7 +998,7 @@ namespace glasssix {
     }
     // t32 多线程测人脸属性
     void thread_function_face_attributes() {
-        gx_face_api* api_temp = new gx_face_api();
+        gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         int T                 = TIMES;
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -1018,7 +1021,7 @@ namespace glasssix {
 
     // t33 多线程测定制工作状态
     void thread_function_pump_work_status() {
-        gx_pump_work_status_api* api_temp = new gx_pump_work_status_api();
+        gx_pump_work_status_api* api_temp = new gx_pump_work_status_api(CONFIG_PATH);
         int T                             = TIMES;
         auto start                        = std::chrono::high_resolution_clock::now();
         abi::vector<pump_work_status_point> polygon;
@@ -1046,8 +1049,8 @@ namespace glasssix {
 
     // t34 多线程测翻越
     void thread_function_crossing() {
-        gx_crossing_api* api_temp              = new gx_crossing_api();
-        gx_posture_api* api_posture            = new gx_posture_api();
+        gx_crossing_api* api_temp              = new gx_crossing_api(CONFIG_PATH);
+        gx_posture_api* api_posture            = new gx_posture_api(CONFIG_PATH);
         int T                                  = TIMES;
         abi::vector<crossing_point> quadrangle = {
             crossing_point{400, 278}, crossing_point{551, 278}, crossing_point{551, 570}, crossing_point{400, 570}};
@@ -1137,7 +1140,7 @@ namespace glasssix {
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_smoke_api* api_temp = new gx_smoke_api();
+        gx_smoke_api* api_temp = new gx_smoke_api(CONFIG_PATH);
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1300,7 +1303,7 @@ void yuv_test() {
 
     const gx_img_api img_new("/root/img/NULL.jpg", static_cast<int>(1e9));
     const gx_img_api img("/root/img/action_live_5.jpg", static_cast<int>(1e9));
-    gx_face_api* temp_api = new gx_face_api();
+    gx_face_api* temp_api = new gx_face_api(CONFIG_PATH);
     temp_api->detect(img_new);
 
     printf("face_feature    ------\n");
@@ -1386,8 +1389,8 @@ void wangder_limit() {
     // 逐帧解码并保存为图像
     cv::Mat frame;
     int frameCount             = 0;
-    gx_wander_api* api_temp    = new gx_wander_api();
-    gx_pedestrian_api* api_ped = new gx_pedestrian_api();
+    gx_wander_api* api_temp    = new gx_wander_api(CONFIG_PATH);
+    gx_pedestrian_api* api_ped = new gx_pedestrian_api(CONFIG_PATH);
     int cnnt                   = 0;
     while (true) {
         // 读取帧
@@ -1446,7 +1449,7 @@ void crossing(std::string path, std::string name) {
     // 逐帧解码并保存为图像
     cv::Mat frame;
     int frameCount            = 0;
-    gx_crossing_api* api_temp = new gx_crossing_api();
+    gx_crossing_api* api_temp = new gx_crossing_api(CONFIG_PATH);
     int cnnt                  = 0;
     while (true) {
         // 读取帧
@@ -1493,7 +1496,7 @@ void gate_status1() {
     // 逐帧解码并保存为图像
     cv::Mat frame;
     int frameCount                    = 0;
-    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
     int cnnt                          = 0;
     while (true) {
         // 读取帧
@@ -1501,10 +1504,10 @@ void gate_status1() {
         if (frame.empty())
             break;
 
-        std::string outputName = "/root/video/temp.jpg";
-        cv::imwrite(outputName, frame);
+            std::string outputName = "/root/video/temp.jpg";
+            cv::imwrite(outputName, frame);
 
-        gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+            gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
         auto val = api_temp->safe_production_pump_gate_status(img1, 12);
         if (val == "dangerous")
             cv::imwrite("/root/video/gate_ans/" + std::to_string(frameCount) + "_192.jpg", frame);
@@ -1524,7 +1527,7 @@ void gate_status2() {
     // 逐帧解码并保存为图像
     cv::Mat frame;
     int frameCount                    = 0;
-    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api();
+    gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
     int cnnt                          = 0;
     while (true) {
         // 读取帧
@@ -1547,7 +1550,7 @@ void gate_status2() {
 }
 
 void face_test() {
-    gx_face_api* api_temp = new gx_face_api();
+    gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
     api_temp->user_load();
     int T      = 5;
     const gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
