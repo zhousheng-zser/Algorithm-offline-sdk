@@ -45,7 +45,7 @@
 using namespace glasssix;
 bool condition_time = false;
 bool condition                       = true;
-static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk-test/config";
+static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #define TIMES 1000
 
 namespace glasssix {
@@ -1003,7 +1003,7 @@ namespace glasssix {
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/face_attributes.jpg", static_cast<int>(1e9));
                 auto val = api_temp->face_attributes(img);
                 if (condition && val.size())
                     printf("[faceattributes] : age=%d gender=%d glass=%d mask=%d\n", val[0].age, val[0].gender,
