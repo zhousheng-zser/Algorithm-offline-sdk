@@ -27,7 +27,7 @@ namespace glasssix {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
-    // 打架区域点
+    // 打架区域点(roi区域)
     typedef struct fighting_roi {
         std::int32_t x; // 坐标x
         std::int32_t y; // 坐标y

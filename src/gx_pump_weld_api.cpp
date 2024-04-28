@@ -88,8 +88,17 @@ namespace glasssix {
                     _config->_pump_weld_config.batch * mat_list[0].get_data_len()); // push batch img to array
                 for (int j = 0; j < _config->_pump_weld_config.batch; ++j) {
                     //   构造图片数组
+#if (GX_PLATFORM_NAME != 8)
                     std::memcpy(imgBatchDataArr.data() + j * mat_list[j].get_data_len(), mat_list[j].get_data(),
                         mat_list[j].get_data_len());
+#else
+                    // std::vector<uchar> img_data(mat_list[j].get_cols() * get_rows() * 3);
+                    for (size_t i = 0; i < mat_list[j].get_rows(); i++) {
+                        auto row_ptr = mat_list[j].get_row_ptr(i);
+                        std::copy(row_ptr, row_ptr + mat_list[j].get_cols() * 3,
+                            imgBatchDataArr.data() + j * mat_list[0].get_data_len() + i * mat_list[j].get_cols() * 3);
+                    }
+#endif
                 }
                 std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
                 auto result = ptr->protocol_ptr.invoke<pump_weld::detect>(ptr->pump_weld_handle,
