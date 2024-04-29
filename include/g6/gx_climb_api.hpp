@@ -14,11 +14,7 @@ namespace glasssix {
         gx_climb_api& operator=(gx_climb_api&&) noexcept;
 
         //  安全生产 攀爬检测
-        climb_info safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle);
-
-        //  安全生产 攀爬检测
-        climb_info safe_production_climb(const gx_img_api& mat, const abi::vector<climb_point>& quadrangle,
-            const abi::vector<posture_info>& posture_info_list);
+        climb_info safe_production_climb(const gx_img_api& mat);
 
     private:
         class impl;

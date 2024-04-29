@@ -45,7 +45,7 @@
 using namespace glasssix;
 bool condition_time = false;
 bool condition                       = true;
-static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk-test/config";
+static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #define TIMES 1000
 
 namespace glasssix {
@@ -582,9 +582,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img("/root/img/climb.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_climb(
-                    img, abi::vector<climb_point>{
-                             climb_point{0, 0}, climb_point{1080, 0}, climb_point{1920, 1080}, climb_point{0, 1920}});
+                auto val = api_temp->safe_production_climb(img);
                 if (condition)
                     printf(
                         "[climb] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
@@ -651,7 +649,7 @@ namespace glasssix {
             printf("batterypilferers time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t19 多线程测打架
+    // t19 多线程测打架斗殴
     void thread_function_fighting() {
         try {
 
@@ -670,9 +668,9 @@ namespace glasssix {
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9)));
             for (int i = 0; i < T; ++i) {
-                auto val = api_temp->safe_production_fighting(img_list);
+                auto val = api_temp->safe_production_fighting(img_list, {0,0,1920,1080});
                 if (condition)
-                    printf("[fighting] : score =%f category=%d\n", val.score, val.category);
+                    printf("[fighting] : fight_list =%d normal_list =%d\n", val.fight_list.size(),val.normal_list.size());
             }
             auto end      = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -1005,7 +1003,7 @@ namespace glasssix {
         auto start            = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/action_live_0.jpg", static_cast<int>(1e9));
+                gx_img_api img("/root/img/face_attributes.jpg", static_cast<int>(1e9));
                 auto val = api_temp->face_attributes(img);
                 if (condition && val.size())
                     printf("[faceattributes] : age=%d gender=%d glass=%d mask=%d\n", val[0].age, val[0].gender,
@@ -1606,81 +1604,82 @@ int main(int argc, char** argv) {
         if(TIMES > 1)
         {
 
-        t[0]  = std::thread(thread_function_helmet);
-        t[1]  = std::thread(thread_function_flame);
-        t[2]  = std::thread(thread_function_refvest);
-        t[3]  = std::thread(thread_function_search);
-        t[4]  = std::thread(thread_function_integration);
-        t[5]  = std::thread(thread_function_leavepost);
-        t[6]  = std::thread(thread_function_sleep);
-        t[7]  = std::thread(thread_function_smoke);
-        t[8]  = std::thread(thread_function_playphone);
-        t[9]  = std::thread(thread_function_onphone);
-        t[10] = std::thread(thread_function_workcloth);
-        t[11] = std::thread(thread_function_vehicle);
-        t[12] = std::thread(thread_function_pedestrian);
-        t[13] = std::thread(thread_function_Action_live_Blur);
-        t[14] = std::thread(thread_function_smog);
-        t[15] = std::thread(thread_function_tumble);
-        t[16] = std::thread(thread_function_climb);
-        t[17] = std::thread(thread_function_crowd);
-        t[18] = std::thread(thread_function_wander);
-        t[19] = std::thread(thread_function_fighting);
-        t[20] = std::thread(thread_function_posture);
-        t[21] = std::thread(thread_function_wander_limit);
-        t[22] = std::thread(thread_function_head);
-        t[23] = std::thread(thread_function_batterypilferers);
-        t[24] = std::thread(thread_function_pump_light);
-        t[25] = std::thread(thread_function_pump_vesthelmet);
-        t[26] = std::thread(thread_function_pump_gate_status);
-        t[27] = std::thread(thread_function_pump_pumptop_person);
-        t[28] = std::thread(thread_function_pump_mask);
-        t[29] = std::thread(thread_function_pumptop_helmet);
-        t[30] = std::thread(thread_function_pump_hoisting);
-        t[31] = std::thread(thread_function_pump_weld);
-        t[32] = std::thread(thread_function_face_attributes);
-        t[33] = std::thread(thread_function_pump_work_status);
-        t[34] = std::thread(thread_function_crossing);
+            t[0]  = std::thread(thread_function_helmet);
+            t[1]  = std::thread(thread_function_flame);
+            t[2]  = std::thread(thread_function_refvest);
+            t[3]  = std::thread(thread_function_search);
+            t[4]  = std::thread(thread_function_integration);
+            t[5]  = std::thread(thread_function_leavepost);
+            t[6]  = std::thread(thread_function_sleep);
+            t[7]  = std::thread(thread_function_smoke);
+            t[8]  = std::thread(thread_function_playphone);
+            t[9]  = std::thread(thread_function_onphone);
+            t[10] = std::thread(thread_function_workcloth);
+            t[11] = std::thread(thread_function_vehicle);
+            t[12] = std::thread(thread_function_pedestrian);
+            t[13] = std::thread(thread_function_Action_live_Blur);
+            t[14] = std::thread(thread_function_smog);
+            t[15] = std::thread(thread_function_tumble);
+            t[16] = std::thread(thread_function_climb);
+            t[17] = std::thread(thread_function_crowd);
+            t[18] = std::thread(thread_function_wander);
+            t[19] = std::thread(thread_function_fighting);
+            t[20] = std::thread(thread_function_posture);
+            t[21] = std::thread(thread_function_wander_limit);
+            t[22] = std::thread(thread_function_head);
+            t[23] = std::thread(thread_function_batterypilferers);
+            t[24] = std::thread(thread_function_pump_light);
+            t[25] = std::thread(thread_function_pump_vesthelmet);
+            t[26] = std::thread(thread_function_pump_gate_status);
+            t[27] = std::thread(thread_function_pump_pumptop_person);
+            t[28] = std::thread(thread_function_pump_mask);
+            t[29] = std::thread(thread_function_pumptop_helmet);
+            t[30] = std::thread(thread_function_pump_hoisting);
+            t[31] = std::thread(thread_function_pump_weld);
+            t[32] = std::thread(thread_function_face_attributes);
+            t[33] = std::thread(thread_function_pump_work_status);
+            t[34] = std::thread(thread_function_crossing);
 
-        t[0].join();
-        t[1].join();
-        t[2].join();
-        t[3].join();
-        t[4].join();
-        t[5].join();
-        t[6].join();
-        t[7].join();
-        t[8].join();
-        t[9].join();
-        t[10].join();
-        t[11].join();
-        t[12].join();
-        t[13].join();
-        t[14].join();
-        t[15].join();
-        t[16].join();
-        t[17].join();
-        t[18].join();
-        t[19].join();
-        t[20].join();
-        t[21].join();
-        t[22].join();
-        t[23].join();
-        t[24].join();
-        t[25].join();
-        t[26].join();
-        t[27].join();
-        t[28].join();
-        t[29].join();
-        t[30].join();
-        t[31].join();
-        t[32].join();
-        t[33].join();
-        t[34].join();
+            t[0].join();
+            t[1].join();
+            t[2].join();
+            t[3].join();
+            t[4].join();
+            t[5].join();
+            t[6].join();
+            t[7].join();
+            t[8].join();
+            t[9].join();
+            t[10].join();
+            t[11].join();
+            t[12].join();
+            t[13].join();
+            t[14].join();
+            t[15].join();
+            t[16].join();
+            t[17].join();
+            t[18].join();
+            t[19].join();
+            t[20].join();
+            t[21].join();
+            t[22].join();
+            t[23].join();
+            t[24].join();
+            t[25].join();
+            t[26].join();
+            t[27].join();
+            t[28].join();
+            t[29].join();
+            t[30].join();
+            t[31].join();
+            t[32].join();
+            t[33].join();
+            t[34].join();
 
         }
         else
         {
+            //当循环次数为1,进行单线程跑
             thread_function_helmet();
             thread_function_flame();
             thread_function_refvest();
@@ -1717,6 +1716,7 @@ int main(int argc, char** argv) {
             thread_function_pump_work_status();
             thread_function_crossing();
         }
+        
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
         printf("[ ] : the test all cost time : %d seconds\n", duration);
