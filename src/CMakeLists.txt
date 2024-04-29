@@ -61,6 +61,7 @@ message("GX_EMPOWER_FLAG   = ${GX_EMPOWER}" )
 file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
+	${GX_CONFIG_DIR}/*.json
 	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
 	nessus/*.hpp
 	nessus/*.cpp
