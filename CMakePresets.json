@@ -276,16 +276,16 @@
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
-          "cacheVariables": {
-            "GX_TOOLCHAIN_PREFIX": "/home/jianzhang/sophon_arm64/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-",
-            "CMAKE_BUILD_TYPE": "Release",
-            "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
-            "GX_OPENCV_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/opencv-4.7.0",
-            "GX_CV_SDK_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/Glasssix_CV_SDK_beta",
-            "GX_MISCELLANEOUS_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/miscellaneous-debian/",
-            "GX_LICENSECLIENT_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/LicenseClient-sophon",
-            "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
-          },
+            "cacheVariables": {
+                "GX_TOOLCHAIN_PREFIX": "/home/jianzhang/3rdparty/6.Glasssix/toolchain-aarch64-g6-linux-gnu/bin/aarch64-g6-linux-gnu-",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
+                "GX_OPENCV_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/opencv-4.7.0-sophon",
+                "GX_CV_SDK_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/Glasssix_CV_SDK_beta",
+                "GX_MISCELLANEOUS_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/miscellaneous-sophon",
+                "GX_LICENSECLIENT_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/LicenseClient-sophon",
+                "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
+            },
             "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
