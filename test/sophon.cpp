@@ -15,9 +15,13 @@
 #include <gx_helmet_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
+#include <gx_climb_api.hpp>
+#include <gx_fighting_api.hpp>
 // #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
+bool condition_time = true;
+abi::string config_path = "/home/linaro/jianzhang/glasssix-offline-sdk/config";
 #define TIMES 5
 
 namespace glasssix {
@@ -51,7 +55,7 @@ namespace glasssix {
 
     // t1 多线程测火焰
     void thread_function_flame() {
-        gx_flame_api* api_temp        = new gx_flame_api("/data/zser/glasssix-offline-sdk/config");
+        gx_flame_api* api_temp        = new gx_flame_api(config_path);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_flame  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -67,7 +71,7 @@ namespace glasssix {
         delete api_temp;
     }
     void thread_function_tumble() {
-        gx_tumble_api* api_temp       = new gx_tumble_api("/data/zser/glasssix-offline-sdk/config");
+        gx_tumble_api* api_temp       = new gx_tumble_api(config_path);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_tumble  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -83,7 +87,7 @@ namespace glasssix {
         delete api_temp;
     }
     void thread_function_helmet() {
-        gx_helmet_api* api_temp       = new gx_helmet_api("/data/zser/glasssix-offline-sdk/config");
+        gx_helmet_api* api_temp       = new gx_helmet_api(config_path);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_helmet  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -99,7 +103,7 @@ namespace glasssix {
         delete api_temp;
     }
     void thread_function_vehicle() {
-        gx_vehicle_api* api_temp      = new gx_vehicle_api("/data/zser/glasssix-offline-sdk/config");
+        gx_vehicle_api* api_temp      = new gx_vehicle_api(config_path);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_vehicle  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -114,9 +118,65 @@ namespace glasssix {
         }
         delete api_temp;
     }
+
+    void thread_function_climb() {
+        gx_climb_api* api_temp = new gx_climb_api(config_path);
+        int T                  = TIMES;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/data/zser/img/climb.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_climb(img);
+                if (condition)
+                    printf(
+                        "[climb] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("climb time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+        // t19 多线程测打架斗殴
+    void thread_function_fighting() {
+        try {
+
+            gx_fighting_api* api_temp = new gx_fighting_api(config_path);
+            int T                     = TIMES;
+            auto start                = std::chrono::high_resolution_clock::now();
+            abi::vector<gx_img_api> img_list;
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_0th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_5th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_10th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_15th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_20th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_25th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_30th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_35th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_40th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api("/data/zser/img/fight_45th.jpg", static_cast<int>(1e9)));
+            for (int i = 0; i < T; ++i) {
+                auto val = api_temp->safe_production_fighting(img_list, {0, 0, 1920, 1080});
+                if (condition)
+                    printf(
+                        "[fighting] : fight_list =%d normal_list =%d\n", val.fight_list.size(), val.normal_list.size());
+            }
+            auto end      = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            if (condition_time)
+                printf("flame time = %lld microsecond\n", duration.count());
+            delete api_temp;
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
+        }
+    }
     //// t4 多线程测融合搜索
     // void thread_function_integration() {
-    //     gx_face_api* api_temp = new gx_face_api("/data/zser/glasssix-offline-sdk/config");
+    //     gx_face_api* api_temp = new gx_face_api(config_path);
     //     // api_temp->user_load();
     //     auto start                    = std::chrono::high_resolution_clock::now();
     //     std::vector<std::string> temp = find_file("/data/zser/img/");
@@ -182,10 +242,12 @@ int main(int argc, char** argv) {
         std::thread t[30];
 
         printf("????\n");
-        thread_function_flame();
-        thread_function_helmet();
-        thread_function_vehicle();
-        thread_function_tumble();
+        //thread_function_flame();
+        //thread_function_helmet();
+        //thread_function_vehicle();
+        //thread_function_tumble();
+        thread_function_climb();
+        //thread_function_fighting();
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
         // t[2]  = std::thread(thread_function_refvest);
