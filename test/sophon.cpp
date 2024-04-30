@@ -247,7 +247,7 @@ int main(int argc, char** argv) {
         //thread_function_vehicle();
         //thread_function_tumble();
         thread_function_climb();
-        //thread_function_fighting();
+        thread_function_fighting();
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
         // t[2]  = std::thread(thread_function_refvest);
