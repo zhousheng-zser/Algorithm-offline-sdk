@@ -22,7 +22,7 @@ using namespace glasssix;
 bool condition = true;
 bool condition_time = true;
 abi::string config_path = "/home/linaro/jianzhang/glasssix-offline-sdk/config";
-#define TIMES 5
+#define TIMES 1
 
 namespace glasssix {
 
@@ -242,10 +242,10 @@ int main(int argc, char** argv) {
         std::thread t[30];
 
         printf("????\n");
-        //thread_function_flame();
-        //thread_function_helmet();
-        //thread_function_vehicle();
-        //thread_function_tumble();
+        thread_function_flame();
+        thread_function_helmet();
+        thread_function_vehicle();
+        thread_function_tumble();
         thread_function_climb();
         thread_function_fighting();
         // t[0]  = std::thread(thread_function_helmet);
