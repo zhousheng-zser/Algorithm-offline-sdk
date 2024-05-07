@@ -355,7 +355,7 @@
             "name": "sophon-gmake",
             "configurePreset": "sophon",
             "configuration": "Release",
-            "jobs": 7
+            "jobs": 16
         },
         {
             "name": "ubuntu",

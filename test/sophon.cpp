@@ -17,11 +17,14 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_climb_api.hpp>
 #include <gx_fighting_api.hpp>
+#include <gx_crowd_api.hpp>
+#include <gx_sleep_api.hpp>
 // #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
 bool condition_time = true;
-abi::string config_path = "/home/linaro/jianzhang/glasssix-offline-sdk/config";
+abi::string CONFIG_PATH = "/home/linaro/jianzhang/glasssix-offline-sdk/config";
+abi::string image_dir   = "/data/zser/img/";
 #define TIMES 1
 
 namespace glasssix {
@@ -55,7 +58,7 @@ namespace glasssix {
 
     // t1 多线程测火焰
     void thread_function_flame() {
-        gx_flame_api* api_temp        = new gx_flame_api(config_path);
+        gx_flame_api* api_temp        = new gx_flame_api(CONFIG_PATH);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_flame  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -71,7 +74,7 @@ namespace glasssix {
         delete api_temp;
     }
     void thread_function_tumble() {
-        gx_tumble_api* api_temp       = new gx_tumble_api(config_path);
+        gx_tumble_api* api_temp       = new gx_tumble_api(CONFIG_PATH);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_tumble  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -87,7 +90,7 @@ namespace glasssix {
         delete api_temp;
     }
     void thread_function_helmet() {
-        gx_helmet_api* api_temp       = new gx_helmet_api(config_path);
+        gx_helmet_api* api_temp       = new gx_helmet_api(CONFIG_PATH);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_helmet  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -103,7 +106,7 @@ namespace glasssix {
         delete api_temp;
     }
     void thread_function_vehicle() {
-        gx_vehicle_api* api_temp      = new gx_vehicle_api(config_path);
+        gx_vehicle_api* api_temp      = new gx_vehicle_api(CONFIG_PATH);
         std::vector<abi::string> list = find_file("/data/zser/img/");
         std::cout << "thread_function_vehicle  --------------------------------------------------\n";
         for (int i = 0; i < list.size(); i++) {
@@ -120,7 +123,7 @@ namespace glasssix {
     }
 
     void thread_function_climb() {
-        gx_climb_api* api_temp = new gx_climb_api(config_path);
+        gx_climb_api* api_temp = new gx_climb_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
@@ -145,7 +148,7 @@ namespace glasssix {
     void thread_function_fighting() {
         try {
 
-            gx_fighting_api* api_temp = new gx_fighting_api(config_path);
+            gx_fighting_api* api_temp = new gx_fighting_api(CONFIG_PATH);
             int T                     = TIMES;
             auto start                = std::chrono::high_resolution_clock::now();
             abi::vector<gx_img_api> img_list;
@@ -174,9 +177,52 @@ namespace glasssix {
             printf("error =  %s\n", ex.what());
         }
     }
+
+        // t6 多线程测睡岗
+    void thread_function_sleep() {
+        gx_sleep_api* api_temp = new gx_sleep_api(CONFIG_PATH);
+        int T                  = TIMES;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(image_dir + "sleep1.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_sleep(img);
+                if (condition)
+                    printf("[sleep] : lying_list = %d work_list = %d\n", val.lying_list.size(), val.work_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("sleep time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t17 多线程测聚众
+    void thread_function_crowd() {
+        gx_crowd_api* api_temp = new gx_crowd_api(CONFIG_PATH);
+        int T                  = TIMES;
+        for (int i = 0; i < T; ++i) {
+            auto start = std::chrono::high_resolution_clock::now();
+            try {
+                const gx_img_api img(image_dir + "crowd.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_crowd(img, 5);
+                if (condition)
+                    printf("[crowd] : head_list = %d\n", val.head_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+            auto end      = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            if (condition_time)
+                printf("crowd time = %lld microsecond\n", duration.count());
+        }
+        delete api_temp;
+    }
     //// t4 多线程测融合搜索
     // void thread_function_integration() {
-    //     gx_face_api* api_temp = new gx_face_api(config_path);
+    //     gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
     //     // api_temp->user_load();
     //     auto start                    = std::chrono::high_resolution_clock::now();
     //     std::vector<std::string> temp = find_file("/data/zser/img/");
@@ -242,12 +288,14 @@ int main(int argc, char** argv) {
         std::thread t[30];
 
         printf("????\n");
-        thread_function_flame();
-        thread_function_helmet();
-        thread_function_vehicle();
-        thread_function_tumble();
-        thread_function_climb();
-        thread_function_fighting();
+        //thread_function_flame();
+        //thread_function_helmet();
+        //thread_function_vehicle();
+        //thread_function_tumble();
+        //thread_function_climb();
+        //thread_function_fighting();
+        //thread_function_sleep();
+        thread_function_crowd();
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
         // t[2]  = std::thread(thread_function_refvest);
