@@ -271,6 +271,33 @@
             }
         },
         {
+            "name": "sophon-gmake",
+            "displayName": "Linux Release",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+          "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release",
+            "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
+            "GX_TOOLCHAIN_PREFIX": "/home/jianzhang/3rdparty/toolchain-aarch64-g6-linux-gnu/bin/aarch64-g6-linux-gnu-",
+            "GX_OPENCV_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/opencv-4.7.0-sophon",
+            "GX_CV_SDK_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/Glasssix_CV_SDK_beta",
+            "GX_MISCELLANEOUS_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/miscellaneous-sophon",
+            "GX_LICENSECLIENT_ROOT": "/home/jianzhang/3rdparty/6.Glasssix/LicenseClient-sophon",
+            "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
+          },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
             "name": "rk3588-debug",
             "displayName": "Linux Release",
             "inherits": "rk3588",
@@ -323,6 +350,12 @@
             "configurePreset": "sophon",
             "configuration": "Release",
             "jobs": 4
+        },
+        {
+            "name": "sophon-gmake",
+            "configurePreset": "sophon",
+            "configuration": "Release",
+            "jobs": 16
         },
         {
             "name": "ubuntu",
