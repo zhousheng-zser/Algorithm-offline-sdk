@@ -75,7 +75,7 @@ namespace glasssix {
     pump_vesthelmet_info gx_pump_vesthelmet_api::safe_production_pump_vesthelmet(
         const gx_img_api& mat, float head_conf_thres) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();

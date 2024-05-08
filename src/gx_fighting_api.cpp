@@ -74,7 +74,7 @@ namespace glasssix {
     //  打架斗殴检测
     fighting_info gx_fighting_api::safe_production_fighting(const abi::vector<gx_img_api>& mat_list, const fighting_roi& roi) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();

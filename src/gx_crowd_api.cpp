@@ -74,7 +74,7 @@ namespace glasssix {
             if (min_cluster_size < 4)
                 throw source_code_aware_runtime_error(U8("Error: The min_cluster_size < 4!!"));
 
-            auto result_pool = pool_crowd.enqueue([&] {
+            auto result_pool = pool_crowd.enqueue(0,[&] {
                 if (thread_algo_crowd_ptr == nullptr) {
                     thread_algo_crowd_ptr = new algo_crowd_ptr();
                 }

@@ -15,18 +15,25 @@
     该 线程池 源码来自 https://github.com/progschj/ThreadPool
     理解代码可以看博客  https://blog.csdn.net/seiyaaa/article/details/130833401
 */
+struct function_value{
+    std::function<void()> function;
+    int value;
+    bool operator<(const function_value& a) const {
+        return value <= a.value;
+    }
+};
 class thread_pool {
 public:
     thread_pool(size_t);
     template <class F, class... Args>
-    auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
+    auto enqueue(int value, F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
     ~thread_pool();
 
 private:
     // need to keep track of threads so we can join them
     std::vector<std::thread> workers;
     // the task queue
-    std::queue<std::function<void()>> tasks;
+    std::priority_queue<function_value> tasks;
 
     // synchronization
     std::mutex queue_mutex;
@@ -46,7 +53,7 @@ inline thread_pool::thread_pool(size_t threads) : stop(false) {
                     this->condition.wait(lock, [this] { return this->stop || !this->tasks.empty(); });
                     if (this->stop && this->tasks.empty())
                         return;
-                    task = std::move(this->tasks.front());
+                    task = std::move(this->tasks.top().function);
                     this->tasks.pop();
                 }
 
@@ -57,7 +64,7 @@ inline thread_pool::thread_pool(size_t threads) : stop(false) {
 
 // add new work item to the pool
 template <class F, class... Args>
-auto thread_pool::enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type> {
+auto thread_pool::enqueue(int value ,F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type> {
     using return_type = typename std::result_of<F(Args...)>::type;
 
     auto task =
@@ -71,7 +78,7 @@ auto thread_pool::enqueue(F&& f, Args&&... args) -> std::future<typename std::re
         if (stop)
             throw std::runtime_error("enqueue on stopped thread_pool");
 
-        tasks.emplace([task]() { (*task)(); });
+        tasks.emplace(function_value{.function = [task]() { (*task)(); }, .value = value});
     }
     condition.notify_one();
     return res;

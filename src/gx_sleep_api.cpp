@@ -72,7 +72,7 @@ namespace glasssix {
     //  睡岗检测
     sleep_info gx_sleep_api::safe_production_sleep(const gx_img_api& mat) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
@@ -120,7 +120,7 @@ namespace glasssix {
     //  睡岗检测
     sleep_info gx_sleep_api::safe_production_sleep(const gx_img_api& mat, int device_id) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
