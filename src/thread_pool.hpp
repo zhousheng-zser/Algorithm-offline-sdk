@@ -19,7 +19,7 @@ struct function_value{
     std::function<void()> function;
     int value;
     bool operator<(const function_value& a) const {
-        return value <= a.value;
+        return value < a.value;
     }
 };
 class thread_pool {
