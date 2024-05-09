@@ -70,6 +70,7 @@ namespace glasssix {
         std::string share_platform_name = "RV1106";
 #elif (GX_PLATFORM_NAME == 8)
         std::string share_platform_name = "SOPHON";
+#endif
 
 #if (EMPOWER_LANGUAGE == 0)
         std::string share_empower_language = "C++";
