@@ -288,13 +288,13 @@ int main(int argc, char** argv) {
         std::thread t[30];
 
         printf("????\n");
-        //thread_function_flame();
-        //thread_function_helmet();
-        //thread_function_vehicle();
-        //thread_function_tumble();
-        //thread_function_climb();
-        //thread_function_fighting();
-        //thread_function_sleep();
+        thread_function_flame();
+        thread_function_helmet();
+        thread_function_vehicle();
+        thread_function_tumble();
+        thread_function_climb();
+        thread_function_fighting();
+        thread_function_sleep();
         thread_function_crowd();
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
@@ -302,7 +302,7 @@ int main(int argc, char** argv) {
         // t[3]  = std::thread(thread_function_search);
         // t[4] = std::thread(thread_function_integration);
         // t[5]  = std::thread(thread_function_leavepost);
-        // t[6]  = std::thread(thread_function_sleep);
+        // t[6]  = std::thread(thread_function_sleep);n
         // t[7]  = std::thread(thread_function_smoke);
         // t[8]  = std::thread(thread_function_playphone);
         // t[9]  = std::thread(thread_function_onphone);
