@@ -1214,8 +1214,8 @@ namespace glasssix {
 
     void todo_video(
         const std::string& name, const std::string& save_path, const std::string& ans_path, video_data data_) {
-        try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用//! 目前报错,暂不使用
-        //video_test(save_path, ans_path, data_);
+        //try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用
+        video_test(save_path, ans_path, data_);
     }
 
 } // namespace glasssix
@@ -1584,9 +1584,9 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
 
-        // printf("start run video\n");
-        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        //todo_video("/root/video/fighting.mp4", "/root/video/fighting0506/", "/root/video/fighting0506/ans/", data_);
+        //printf("start run video\n");
+        //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
+        //todo_video("/root/video/fighting.mp4", "/root/video/smk/", "/root/video/smk/ans/", data_);
 
         // yuv_test();
         // gif_test();
