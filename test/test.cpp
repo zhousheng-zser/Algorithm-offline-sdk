@@ -383,7 +383,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_wander(img, i, 1);
                 if (condition) {
                     printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
-                    printf("[wander] : wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
+                    //printf("[wander] : wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
                 }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -872,8 +872,13 @@ namespace glasssix {
                 gx_img_api img("/root/img/pump_pumptop_person.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_pumptop_person(img);
                 if (condition)
-                    printf("[pump_pumptop_person] : category = %d score = %.2f  \n", val.persons_in_pumptop[0].category,
-                        val.persons_in_pumptop[0].score);
+                    if (val.persons_in_pumptop.size() > 0) {
+                        printf("[pump_pumptop_person] : category = %d score = %.2f  \n",
+                            val.persons_in_pumptop[0].category, val.persons_in_pumptop[0].score);
+                    } else {
+                        printf("[pump_pumptop_person] : category = %d score = %.2f  \n",
+                            10, 10);
+                    }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
