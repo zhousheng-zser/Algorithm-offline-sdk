@@ -221,6 +221,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(refvest_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float, posture_conf_thres);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
         GX_END_FIELDS;
@@ -245,6 +246,7 @@ namespace glasssix {
         GX_FIELD(float, nms_thres);
         GX_FIELD(float, little_target_conf_thres);
         GX_FIELD(float, smoke_conf_thres);
+        GX_FIELD(float, posture_conf_thres);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
@@ -310,6 +312,7 @@ namespace glasssix {
         GX_BEGIN_FIELDS(playphone_config);
         GX_FIELD(int, device);
         GX_FIELD(int, format);
+        GX_FIELD(float, posture_conf_thres);
         GX_FIELD(float, head_conf_thres);
         GX_FIELD(float, head_nms_thres);
         GX_FIELD(float, phone_conf_thres);
@@ -322,6 +325,7 @@ namespace glasssix {
         GX_FIELD(int, device);
         GX_FIELD(int, format);
         GX_FIELD(float, head_conf_thres);
+        GX_FIELD(float, posture_conf_thres);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
         GX_FIELD(float, phone_distance_thres);
@@ -351,6 +355,7 @@ namespace glasssix {
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_FIELD(float, nms_thres);
+        GX_FIELD(float, posture_conf_thres);
         GX_FIELD(std::vector<confidence_color_hsv_cfg>, color_hsv_list);
 
         GX_END_FIELDS;

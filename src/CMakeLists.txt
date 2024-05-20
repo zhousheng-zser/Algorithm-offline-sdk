@@ -61,7 +61,6 @@ message("GX_EMPOWER_FLAG   = ${GX_EMPOWER}" )
 file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
-	${GX_CONFIG_DIR}/*.json
 	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
 	nessus/*.hpp
 	nessus/*.cpp
@@ -110,7 +109,7 @@ target_link_libraries(
 )
 endif()
 
-if(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
     target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
     target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
     target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)

@@ -107,6 +107,8 @@ namespace glasssix {
                         .params = climb_detect_param::confidence_params{.conf_thres = _config->_climb_config.conf_thres,
                             .nms_thres                                              = _config->_climb_config.nms_thres,
                             .little_target_conf_thres = _config->_climb_config.little_target_conf_thres
+
+
                         }},
                     str);
 
