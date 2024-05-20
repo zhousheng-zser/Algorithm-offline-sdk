@@ -383,7 +383,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_wander(img, i, 1);
                 if (condition) {
                     printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
-                    printf("[wander] : wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
+                    //printf("[wander] : wander_remove_id ans =%d\n", api_temp->wander_remove_id(val.person_info[0].id));
                 }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -872,8 +872,13 @@ namespace glasssix {
                 gx_img_api img("/root/img/pump_pumptop_person.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_pumptop_person(img);
                 if (condition)
-                    printf("[pump_pumptop_person] : category = %d score = %.2f  \n", val.persons_in_pumptop[0].category,
-                        val.persons_in_pumptop[0].score);
+                    if (val.persons_in_pumptop.size() > 0) {
+                        printf("[pump_pumptop_person] : category = %d score = %.2f  \n",
+                            val.persons_in_pumptop[0].category, val.persons_in_pumptop[0].score);
+                    } else {
+                        printf("[pump_pumptop_person] : category = %d score = %.2f  \n",
+                            10, 10);
+                    }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1214,8 +1219,8 @@ namespace glasssix {
 
     void todo_video(
         const std::string& name, const std::string& save_path, const std::string& ans_path, video_data data_) {
-        try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用//! 目前报错,暂不使用
-        //video_test(save_path, ans_path, data_);
+        //try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用
+        video_test(save_path, ans_path, data_);
     }
 
 } // namespace glasssix
@@ -1584,9 +1589,9 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
 
-        // printf("start run video\n");
-        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        //todo_video("/root/video/fighting.mp4", "/root/video/fighting0506/", "/root/video/fighting0506/ans/", data_);
+        //printf("start run video\n");
+        //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
+        //todo_video("/root/video/fighting.mp4", "/root/video/smk/", "/root/video/smk/ans/", data_);
 
         // yuv_test();
         // gif_test();
