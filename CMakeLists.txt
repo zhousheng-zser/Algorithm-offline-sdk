@@ -11,11 +11,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(GX_PUBLIC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(GX_CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/config)
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
-#include(CTest)
+include(CTest)
 include(Dependencies.cmake)
 
 list(APPEND CMAKE_MODULE_PATH ${GX_MISCELLANEOUS_ROOT}/cmake)

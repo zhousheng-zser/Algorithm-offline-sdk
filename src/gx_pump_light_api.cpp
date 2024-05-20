@@ -74,7 +74,7 @@ namespace glasssix {
     pump_light_info gx_pump_light_api::safe_production_pump_light(
         const gx_img_api& mat, const abi::vector<pump_light_point>& quadrangle ) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();

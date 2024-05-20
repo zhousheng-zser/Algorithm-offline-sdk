@@ -4,7 +4,6 @@
 file(
 	GLOB private_sources
     CONFIGURE_DEPENDS
-    ${GX_CONFIG_DIR}/*.json
     #sophon.cpp
     test.cpp
     #nessus.cpp

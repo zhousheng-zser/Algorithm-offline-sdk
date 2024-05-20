@@ -138,7 +138,7 @@ namespace glasssix {
 
     // 人脸检测
     abi::vector<face_info> gx_face_api::detect(const gx_img_api& mat) {
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -173,7 +173,7 @@ namespace glasssix {
     // 人脸追踪
     abi::vector<face_trace_info> gx_face_api::track(const gx_img_api& mat) {
         abi::vector<face_trace_info> ans;
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -255,7 +255,7 @@ namespace glasssix {
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -282,7 +282,7 @@ namespace glasssix {
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -310,7 +310,7 @@ namespace glasssix {
         if (faces.size() == 0)
             return ans;
         ans              = faces[0];
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -337,7 +337,7 @@ namespace glasssix {
         abi::vector<face_info> faces = detect(mat);
         if (faces.size() == 0)
             return ans;
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -366,7 +366,7 @@ namespace glasssix {
         if (faces.size() == 0)
             return ans;
         faces.erase(faces.begin() + 1, faces.end()); // 只保留最大人脸
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -426,7 +426,7 @@ namespace glasssix {
     faces_feature gx_face_api::face_feature_library(const gx_img_api& mat, bool is_clip) {
         faces_feature ans;
 
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -506,7 +506,7 @@ namespace glasssix {
 
     // 特征值库加载
     bool gx_face_api::user_load() {
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -533,7 +533,7 @@ namespace glasssix {
         if (faces.facerectwithfaceinfo_list.size() == 0 || faces.features.size() == 0)
             return ans;
         std::array<char, 0> arr{};
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -554,7 +554,7 @@ namespace glasssix {
 
     // 特征值库清空
     bool gx_face_api::user_remove_all() {
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -569,7 +569,7 @@ namespace glasssix {
 
     // 特征值库批量删除
     abi::vector<face_user_result> gx_face_api::user_remove_records(const abi::vector<abi::string>& keys) {
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -636,7 +636,7 @@ namespace glasssix {
             }
             // 批量入库就可以释放掉gx_img_api
         }
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -694,7 +694,7 @@ namespace glasssix {
         }
         std::array<char, 0> arr{};
 
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -719,7 +719,7 @@ namespace glasssix {
 
     // 特征值库键值查询
     bool gx_face_api::user_contains_key(const abi::string& key) {
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -734,7 +734,7 @@ namespace glasssix {
 
     // 特征值库记录总和
     std::uint64_t gx_face_api::user_record_count() {
-        auto result_pool = pool_irisviel.enqueue([&] {
+        auto result_pool = pool_irisviel.enqueue(0,[&] {
             if (thread_algo_irisviel_ptr == nullptr) {
                 thread_algo_irisviel_ptr = new algo_irisviel_ptr();
             }
@@ -792,7 +792,7 @@ namespace glasssix {
                 ans.emplace_back(temp);
             }
         }
-        auto result_pool = pool->enqueue([&] {
+        auto result_pool = pool->enqueue(0,[&] {
             std::thread::id id_ = std::this_thread::get_id();
 
             if (all_thread_algo_ptr[id_] == nullptr) {
@@ -833,7 +833,7 @@ namespace glasssix {
                                        std::span<char>{arr})
                                    .features;
             }
-            auto result_pool_irisviel = pool_irisviel.enqueue([&] {
+            auto result_pool_irisviel = pool_irisviel.enqueue(0,[&] {
                 if (thread_algo_irisviel_ptr == nullptr) {
                     thread_algo_irisviel_ptr = new algo_irisviel_ptr();
                 }

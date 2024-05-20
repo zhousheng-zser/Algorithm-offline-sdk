@@ -72,7 +72,7 @@ namespace glasssix {
     //  安全生产 烟雾检测
     smog_info gx_smog_api::safe_production_smog(const gx_img_api& mat) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
