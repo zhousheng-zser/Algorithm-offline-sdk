@@ -22,10 +22,5 @@ namespace glasssix {
         enum class json_serialization { snake_case };
     };
 
-    // 攀爬区域点
-    struct climb_point {
-        std::int32_t x; // 坐标x
-        std::int32_t y; // 坐标y
-    };
 
 } // namespace glasssix

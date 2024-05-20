@@ -17,8 +17,10 @@ namespace glasssix {
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
-                    empower_key = get_empower_key(_config->_configure_directory.license_directory);
-                    empower.set_serial_number(_config->_configure_directory.empower_serial_number);
+                    auto license = abi::from_abi_string(_config->_configure_directory.license_directory);
+                    empower_key  = get_empower_key(license);
+                    auto number = abi::from_abi_string(_config->_configure_directory.empower_serial_number);
+                    empower.set_serial_number(number);
                     empower.set_algorithm_id(empower_algorithm_id_list[i]);
                     empower.set_license(empower_key.c_str());
                     empower.evaluate_license(empower_Callback, nullptr);
@@ -74,7 +76,7 @@ namespace glasssix {
     pump_weld_info gx_pump_weld_api::safe_production_pump_weld(const abi::vector<gx_img_api>& mat_list,
         float light_conf_thres, float candidate_box_width, float candidate_box_height) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
@@ -88,8 +90,16 @@ namespace glasssix {
                     _config->_pump_weld_config.batch * mat_list[0].get_data_len()); // push batch img to array
                 for (int j = 0; j < _config->_pump_weld_config.batch; ++j) {
                     //   构造图片数组
+#if (GX_PLATFORM_NAME != 8)
                     std::memcpy(imgBatchDataArr.data() + j * mat_list[j].get_data_len(), mat_list[j].get_data(),
                         mat_list[j].get_data_len());
+#else
+                    for (size_t i = 0; i < mat_list[j].get_rows(); i++) {
+                        auto row_ptr = mat_list[j].get_row_ptr(i);
+                        std::copy(row_ptr, row_ptr + mat_list[j].get_cols() * 3,
+                            imgBatchDataArr.data() + j * mat_list[0].get_data_len() + i * mat_list[j].get_cols() * 3);
+                    }
+#endif
                 }
                 std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
                 auto result = ptr->protocol_ptr.invoke<pump_weld::detect>(ptr->pump_weld_handle,

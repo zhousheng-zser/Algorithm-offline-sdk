@@ -17,8 +17,10 @@ namespace glasssix {
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
-                    empower_key = get_empower_key(_config->_configure_directory.license_directory);
-                    empower.set_serial_number(_config->_configure_directory.empower_serial_number);
+                    auto license = abi::from_abi_string(_config->_configure_directory.license_directory);
+                    empower_key  = get_empower_key(license);
+                    auto number = abi::from_abi_string(_config->_configure_directory.empower_serial_number);
+                    empower.set_serial_number(number);
                     empower.set_algorithm_id(empower_algorithm_id_list[i]);
                     empower.set_license(empower_key.c_str());
                     empower.evaluate_license(empower_Callback, nullptr);
@@ -70,9 +72,9 @@ namespace glasssix {
     };
 
     //  打架检测
-    fighting_info gx_fighting_api::safe_production_fighting(const abi::vector<gx_img_api>& mat_list) {
+    fighting_info gx_fighting_api::safe_production_fighting(const abi::vector<gx_img_api>& mat_list, const fighting_roi& roi) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
@@ -86,15 +88,28 @@ namespace glasssix {
                     _config->_fighting_config.batch * mat_list[0].get_data_len()); // push batch img to array
                 for (int j = 0; j < _config->_fighting_config.batch; ++j) {
                     //   构造图片数组
+#if (GX_PLATFORM_NAME != 8)
                     std::memcpy(imgBatchDataArr.data() + j * mat_list[j].get_data_len(), mat_list[j].get_data(),
                         mat_list[j].get_data_len());
+#else
+                    for (size_t i = 0; i < mat_list[j].get_rows(); i++) {
+                        auto row_ptr = mat_list[j].get_row_ptr(i);
+                        std::copy(row_ptr, row_ptr + mat_list[j].get_cols() * 3,
+                            imgBatchDataArr.data() + j * mat_list[0].get_data_len() + i * mat_list[j].get_cols() * 3);
+                    }
+#endif
                 }
                 std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
                 auto result = ptr->protocol_ptr.invoke<fighting::detect>(ptr->fighting_handle,
                     fighting_detect_param{.instance_guid = "",
                         .format                          = _config->_fighting_config.format,
                         .height                          = mat_list[0].get_rows(),
-                        .width                           = mat_list[0].get_cols()},
+                        .width                           = mat_list[0].get_cols(),
+                        .roi_x                           = roi.x,
+                        .roi_y                           = roi.y,
+                        .roi_width                       = roi.w,
+                        .roi_height                      = roi.h
+                    },
                     str);
 
                 ans = std::move(result.detect_info);

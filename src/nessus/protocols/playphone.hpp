@@ -11,7 +11,7 @@
 namespace glasssix {
     struct playphone_new_param {
         std::int32_t device{};
-        std::string models_directory{};
+        abi::string models_directory{};
         enum class json_serialization { snake_case };
     };
     struct playphone_detect_param {

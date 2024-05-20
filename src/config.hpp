@@ -8,12 +8,12 @@
 namespace glasssix {
     struct configure_directory {
 
-        std::string  models_directory{};
-        std::string  directory{};
-        std::string  license_directory{};
-        std::string  empower_serial_number{};
+        abi::string  models_directory{};
+        abi::string  directory{};
+        abi::string  license_directory{};
+        abi::string  empower_serial_number{};
         int  thread_pool_num{};
-        std::string  dump_img_directory{};
+        abi::string  dump_img_directory{};
 
 
         enum class json_serialization { snake_case };
@@ -75,7 +75,7 @@ namespace glasssix {
     };
     struct face_user_config {
 
-        std::string  working_directory{};
+        abi::string  working_directory{};
         int  dimension{};
 
         enum class json_serialization { snake_case };
@@ -221,6 +221,7 @@ namespace glasssix {
 
         int  device{};
         int  format{};
+        float posture_conf_thres{};
         float  conf_thres{};
         float  nms_thres{};
 
@@ -244,7 +245,8 @@ namespace glasssix {
         float  conf_thres{};
         float  nms_thres{};
         float  little_target_conf_thres{};
-        float  smoke_conf_thres{};
+        float smoke_conf_thres{};
+        float posture_conf_thres{};
 
         enum class json_serialization { snake_case };
     };
@@ -310,6 +312,7 @@ namespace glasssix {
 
         int  device{};
         int  format{};
+        float posture_conf_thres{};
         float  head_conf_thres{};
         float  head_nms_thres{};
         float  phone_conf_thres{};
@@ -321,7 +324,8 @@ namespace glasssix {
 
         int  device{};
         int  format{};
-        float  head_conf_thres{};
+        float head_conf_thres{};
+        float posture_conf_thres{};
         float  conf_thres{};
         float  nms_thres{};
         float  phone_distance_thres{};
@@ -351,6 +355,7 @@ namespace glasssix {
         int  format{};
         float  conf_thres{};
         float  nms_thres{};
+        float posture_conf_thres{};
         std::vector<confidence_color_hsv_cfg>  color_hsv_list{};
 
 
@@ -408,7 +413,7 @@ namespace glasssix {
         onphone_config _onphone_config;
         workcloth_config _workcloth_config;
         pedestrian_config _pedestrian_config;
-        void set_configure_directory(const abi::string& path);
+        void set_configure_directory(abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
         void set_blur(const abi::string& path);

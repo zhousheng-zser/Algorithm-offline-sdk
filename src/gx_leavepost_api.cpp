@@ -15,8 +15,10 @@ namespace glasssix {
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
-                    empower_key = get_empower_key(_config->_configure_directory.license_directory);
-                    empower.set_serial_number(_config->_configure_directory.empower_serial_number);
+                    auto license = abi::from_abi_string(_config->_configure_directory.license_directory);
+                    empower_key  = get_empower_key(license);
+                    auto number = abi::from_abi_string(_config->_configure_directory.empower_serial_number);
+                    empower.set_serial_number(number);
                     empower.set_algorithm_id(empower_algorithm_id_list[i]);
                     empower.set_license(empower_key.c_str());
                     empower.evaluate_license(empower_Callback, nullptr);
@@ -71,7 +73,7 @@ namespace glasssix {
     //  离岗检测
     leavepost_info gx_leavepost_api::safe_production_leavepost(const gx_img_api& mat) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool->enqueue(0,[&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
