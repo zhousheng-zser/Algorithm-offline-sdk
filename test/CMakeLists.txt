@@ -41,13 +41,13 @@ target_link_libraries(
 )
 
 
-if(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
     target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
     target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
     target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
 endif()
 
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") )
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109")OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU") )
     target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
     target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
     target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})

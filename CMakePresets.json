@@ -160,6 +160,28 @@
             }
         },
         {
+            "name": "sophon-ubutu",
+            "displayName": "Linux Release",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "/opt/gcc11.3/bin/gcc",
+                "CMAKE_CXX_COMPILER": "/opt/gcc11.3/bin/g++",
+                "CMAKE_BUILD_TYPE": "Release",
+                "GX_TOOLHAIN_TARGET_NAME": "SOPHON_UBUNTU",
+                "GX_OPENCV_ROOT": "/root/cw/install/sophon/opt/sophon/opencv-all",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta",
+                "GX_MISCELLANEOUS_ROOT": "/root/cw/install/gx-miscellaneous-1.2.0-jdk-8-x86_64-linux",
+                "GX_LICENSECLIENT_ROOT": "/root/zx/zser/LicenseClient-ubuntu",
+                "GX_STATIC_RUNTIME": "OFF"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
             "name": "rv1109",
             "displayName": "Linux Release",
             "generator": "Ninja",
@@ -229,7 +251,7 @@
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-debian-old",
                 "GX_TOOLHAIN_TARGET_NAME": "RK3588",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient-old",
-                //"CMAKE_C_COMPILER": "/usr/bin/gcc",
+                "CMAKE_C_COMPILER": "/root/install/gcc-11.3.0/bin/gcc",
                 "CMAKE_CXX_COMPILER": "/root/install/gcc-11.3.0/bin/g++"
             },
             "condition": {

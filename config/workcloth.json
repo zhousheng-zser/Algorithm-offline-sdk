@@ -3,6 +3,7 @@
     "format": 1,
     "conf_thres": 0.2,
     "nms_thres": 0.5,
+    "posture_conf_thres": 0.7,
     "color_hsv_list": [
         {
             "black":  [ 0, 0, 0, 180, 255, 45 ],

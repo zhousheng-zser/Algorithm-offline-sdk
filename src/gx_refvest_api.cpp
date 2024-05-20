@@ -88,7 +88,7 @@ namespace glasssix {
                 // 过滤掉姿态置信度小于0.65的
                 abi::vector<posture_info> posture_list_temp;
                 for (int i = 0; i < posture_info_list.size(); i++) {
-                    if (posture_info_list[i].score >= 0.65)
+                    if (posture_info_list[i].score >= _config->_refvest_config.posture_conf_thres)
                         posture_list_temp.emplace_back(posture_info_list[i]);
                 }
 #if (GX_PLATFORM_NAME != 8)
