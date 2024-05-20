@@ -9,7 +9,7 @@
 namespace glasssix {
     struct cassius_new_param {
         std::int32_t device{};
-        std::string models_directory{};
+        abi::string models_directory{};
         std::int32_t model_type{};
         bool use_int8{};
         enum class json_serialization { snake_case };

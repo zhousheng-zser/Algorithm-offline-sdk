@@ -11,7 +11,7 @@
 namespace glasssix {
     struct climb_new_param {
         std::int32_t device{};
-        std::string models_directory{};
+        abi::string models_directory{};
         enum class json_serialization { snake_case };
     };
 
@@ -20,14 +20,6 @@ namespace glasssix {
             std::optional<float> conf_thres{};
             std::optional<float> nms_thres{};
             std::optional<float> little_target_conf_thres{};
-            std::int32_t x1{};
-            std::int32_t y1{};
-            std::int32_t x2{};
-            std::int32_t y2{};
-            std::int32_t x3{};
-            std::int32_t y3{};
-            std::int32_t x4{};
-            std::int32_t y4{};
             enum class json_serialization { snake_case };
         };
         std::string instance_guid{};

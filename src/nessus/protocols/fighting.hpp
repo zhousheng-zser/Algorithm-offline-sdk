@@ -10,7 +10,7 @@
 namespace glasssix {
     struct fighting_new_param {
         std::int32_t device{};
-        std::string models_directory{};
+        abi::string models_directory{};
         std::int32_t batch{};
         enum class json_serialization { snake_case };
     };
@@ -20,6 +20,10 @@ namespace glasssix {
         std::int32_t format{};
         std::int32_t height{};
         std::int32_t width{};
+        std::int32_t roi_x{};
+        std::int32_t roi_y{};
+        std::int32_t roi_width{};
+        std::int32_t roi_height{};
         enum class json_serialization { snake_case };
     };
 

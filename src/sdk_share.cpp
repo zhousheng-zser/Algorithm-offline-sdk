@@ -70,17 +70,18 @@ namespace glasssix {
     bool write_dump_img(const gx_img_api& mat, std::string key) {
         const auto timestamp               = date_time::now();
         std::filesystem::path folder_path  = _config->_configure_directory.dump_img_directory;
+        std::string dump_path(_config->_configure_directory.dump_img_directory);
         std::vector<std::string> file_list = find_file(folder_path);
         for (int i = 0; i < file_list.size(); i++) {
             if (file_list[i].find(key) == 17) {
                 try {
-                    std::filesystem::remove(_config->_configure_directory.dump_img_directory + "/" + file_list[i]);
+                    std::filesystem::remove(dump_path + "/" + file_list[i]);
                 } catch (...) {
                 }
             }
         }
         const std::string time_str = timestamp.to_string("yyyyMMddhhmmsszzz");
-        return mat.write(_config->_configure_directory.dump_img_directory + "/" + time_str + key);
+        return mat.write(dump_path + "/" + time_str + key);
     }
 
     template struct meta::runtime::json_serializer<batterypilferers_info>;

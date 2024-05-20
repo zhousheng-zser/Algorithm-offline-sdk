@@ -13,7 +13,7 @@ namespace glasssix {
         std::int32_t device{};
         std::int32_t model_type{};
         std::int32_t algo_type{};
-        std::string models_directory{};
+        abi::string models_directory{};
         enum class json_serialization { snake_case };
     };
     struct longinus_detect_param {

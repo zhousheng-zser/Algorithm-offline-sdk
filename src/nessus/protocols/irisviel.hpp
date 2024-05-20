@@ -17,7 +17,7 @@ namespace glasssix {
 
     struct irisviel_new_param {
         std::int32_t dimension{};
-        std::string working_directory{};
+        abi::string working_directory{};
         enum class json_serialization { snake_case };
     };
     struct irisviel_load_databases_param {
