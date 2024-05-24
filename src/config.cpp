@@ -253,4 +253,10 @@ namespace glasssix {
         temp.get_to(_pedestrian_config);
         pedestrian_is_load = true;
     }
+    void config::set_pedestrian_min(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pedestrian_min.json");
+        temp.get_to(_pedestrian_min_config);
+        pedestrian_min_is_load = true;
+    }
 } // namespace glasssix

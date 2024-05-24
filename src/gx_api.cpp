@@ -245,6 +245,7 @@ namespace glasssix {
             name_config["onphone.json"]             = json(_config->_onphone_config);
             name_config["workcloth.json"]           = json(_config->_workcloth_config);
             name_config["pedestrian.json"]          = json(_config->_pedestrian_config);
+            name_config["pedestrian_min.json"]          = json(_config->_pedestrian_min_config);
             return name_config;
         }
 
@@ -378,6 +379,9 @@ namespace glasssix {
                 } else if (name == "pedestrian.json" && _config->pedestrian_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_pedestrian_config);
+                } else if (name == "pedestrian_min.json" && _config->pedestrian_min_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pedestrian_min_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例 _config指针为空
                 }
