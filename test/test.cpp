@@ -22,6 +22,7 @@
 #include <gx_leavepost_api.hpp>
 #include <gx_onphone_api.hpp>
 #include <gx_pedestrian_api.hpp>
+#include <gx_pedestrian_min_api.hpp>
 #include <gx_playphone_api.hpp>
 #include <gx_posture_api.hpp>
 #include <gx_pump_gate_status_api.hpp>
@@ -1088,6 +1089,28 @@ namespace glasssix {
 
         delete api_temp;
     }
+
+    // t35 多线程测行人min检测
+    void thread_function_pedestrian_min() {
+        gx_pedestrian_min_api* api_temp = new gx_pedestrian_min_api(CONFIG_PATH);
+        int T                       = TIMES;
+        auto start                  = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img("/root/img/pedestrian_min.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pedestrian_min(img);
+                if (condition)
+                    printf("[pedestrian_min] : pedestrian_min_list = %d\n", val.person_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pedestrian_min time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 } // namespace glasssix
 
 // 处理视频的
@@ -1643,7 +1666,7 @@ int main(int argc, char** argv) {
             t[32] = std::jthread(thread_function_face_attributes);
             t[33] = std::jthread(thread_function_pump_work_status);
             t[34] = std::jthread(thread_function_crossing);
-
+            t[35] = std::jthread(thread_function_pedestrian_min);
 
         }
         else
@@ -1662,6 +1685,7 @@ int main(int argc, char** argv) {
             thread_function_workcloth();
             thread_function_vehicle();
             thread_function_pedestrian();
+            thread_function_pedestrian_min();
             thread_function_Action_live_Blur();
             thread_function_smog();
             thread_function_tumble();
