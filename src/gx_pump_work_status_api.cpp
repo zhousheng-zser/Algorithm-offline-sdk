@@ -78,7 +78,7 @@ namespace glasssix {
         if (big_paint_room != 1 && big_paint_room !=0)
             throw source_code_aware_runtime_error("Error: Invalid big_paint_room: big_paint_room != 1 && big_paint_room !=0.");
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();

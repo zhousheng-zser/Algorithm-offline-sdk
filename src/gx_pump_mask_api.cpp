@@ -73,7 +73,7 @@ namespace glasssix {
     //  安全生产 防护面罩检测
     pump_mask_info gx_pump_mask_api::safe_production_pump_mask(const gx_img_api& mat) {
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
