@@ -81,7 +81,7 @@ namespace glasssix {
     workcloth_info gx_workcloth_api::safe_production_workcloth(
         const gx_img_api& mat, int color_hsv_list_id, const abi::vector<posture_info>& posture_info_list) {
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
