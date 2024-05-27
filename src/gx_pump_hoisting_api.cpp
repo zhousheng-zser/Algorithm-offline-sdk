@@ -79,7 +79,7 @@ namespace glasssix {
             throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
                                                   + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();

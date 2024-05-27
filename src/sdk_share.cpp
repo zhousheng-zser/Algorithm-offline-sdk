@@ -108,6 +108,7 @@ namespace glasssix {
     template struct meta::runtime::json_serializer<leavepost_info>;
     template struct meta::runtime::json_serializer<onphone_info>;
     template struct meta::runtime::json_serializer<pedestrian_info>;
+    template struct meta::runtime::json_serializer<pedestrian_min_info>;
     template struct meta::runtime::json_serializer<playphone_info>;
     template struct meta::runtime::json_serializer<posture_info>;
     template struct meta::runtime::json_serializer<pumptop_helmet_info>;

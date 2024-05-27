@@ -121,7 +121,7 @@ namespace glasssix {
                 posture_list_temp.emplace_back(person_list[i]);
         }
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
@@ -220,7 +220,7 @@ namespace glasssix {
                 posture_list_temp.emplace_back(person_list[i]);
         }
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();
@@ -291,7 +291,7 @@ namespace glasssix {
         if (impl_->camera_id == 0)
             return true;
 
-        auto result_pool = pool->enqueue(0,[&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();
@@ -314,7 +314,7 @@ namespace glasssix {
         if (impl_->camera_id == 0)
             return true;
 
-        auto result_pool = pool->enqueue(0,[&] {
+        auto result_pool = pool->enqueue([&] {
             std::thread::id id_ = std::this_thread::get_id();
             if (all_thread_algo_ptr[id_] == nullptr) {
                 all_thread_algo_ptr[id_] = new algo_ptr();

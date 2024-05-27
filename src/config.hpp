@@ -370,6 +370,15 @@ namespace glasssix {
 
         enum class json_serialization { snake_case };
     };
+    struct pedestrian_min_config {
+
+        int device{};
+        int format{};
+        float conf_thres{};
+        float nms_thres{};
+
+        enum class json_serialization { snake_case };
+    };
 
     class config {
     public:
@@ -413,6 +422,7 @@ namespace glasssix {
         onphone_config _onphone_config;
         workcloth_config _workcloth_config;
         pedestrian_config _pedestrian_config;
+        pedestrian_min_config _pedestrian_min_config;
         void set_configure_directory(abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
@@ -449,6 +459,7 @@ namespace glasssix {
         void set_onphone(const abi::string& path);
         void set_workcloth(const abi::string& path);
         void set_pedestrian(const abi::string& path);
+        void set_pedestrian_min(const abi::string& path);
 
         bool configure_directory_is_load = false;
         bool detect_is_load              = false;
@@ -486,6 +497,7 @@ namespace glasssix {
         bool onphone_is_load             = false;
         bool workcloth_is_load           = false;
         bool pedestrian_is_load          = false;
+        bool pedestrian_min_is_load          = false;
 
     private:
         glasssix::json read_json_file(const abi::string& path);

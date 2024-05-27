@@ -1,15 +1,15 @@
-#include "gx_smoke_api.hpp"
+﻿#include "gx_pedestrian_min_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    gx_smoke_api::gx_smoke_api() : impl_{std::make_unique<impl>()} {}
-    gx_smoke_api::gx_smoke_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_smoke_api::~gx_smoke_api() {}
-    gx_smoke_api::gx_smoke_api(gx_smoke_api&&) noexcept            = default;
-    gx_smoke_api& gx_smoke_api::operator=(gx_smoke_api&&) noexcept = default;
-    class gx_smoke_api::impl {
+    gx_pedestrian_min_api::gx_pedestrian_min_api() : impl_{std::make_unique<impl>()} {}
+    gx_pedestrian_min_api::gx_pedestrian_min_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pedestrian_min_api::~gx_pedestrian_min_api() {}
+    gx_pedestrian_min_api::gx_pedestrian_min_api(gx_pedestrian_min_api&&) noexcept            = default;
+    gx_pedestrian_min_api& gx_pedestrian_min_api::operator=(gx_pedestrian_min_api&&) noexcept = default;
+    class gx_pedestrian_min_api::impl {
     public:
         void init() {
 #if (GX_EMPOWER_FLAG)  
@@ -35,9 +35,6 @@ namespace glasssix {
                 _config = new config();
                 pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
-            if (api_temp == nullptr) {
-                api_temp = new gx_posture_api();
-            }
             init();
         }
         impl(const abi::string& config_path) {
@@ -45,20 +42,17 @@ namespace glasssix {
                 _config = new config(config_path);
                 pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
-            if (api_temp == nullptr) {
-                api_temp = new gx_posture_api(config_path);
-            }
             init();
         }
         ~impl() {}
-        gx_posture_api* api_temp = nullptr;
 
     private:
 #if (GX_EMPOWER_FLAG) 
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_SMOKE_V4.0.0";
-        std::vector<std::string> empower_algorithm_id_list = {"3"};
+        std::string empower_algorithm_version =
+            share_platform_name + "_" + share_empower_language + "_PEDESTRIAN_MIN_V1.0.0";
+        std::vector<std::string> empower_algorithm_id_list = {"13", "23", "33", "34"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
             if (!key.is_open()) {
@@ -76,9 +70,8 @@ namespace glasssix {
 #endif
     };
 
-    //  抽烟检测
-    smoke_info gx_smoke_api::safe_production_smoke(
-        const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
+    //  行人检测
+    pedestrian_min_info gx_pedestrian_min_api::safe_production_pedestrian_min(const gx_img_api& mat) {
         try {
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -86,13 +79,7 @@ namespace glasssix {
                     all_thread_algo_ptr[id_] = new algo_ptr();
                 }
                 auto ptr = all_thread_algo_ptr[id_];
-                smoke_info ans;
-                // 过滤掉姿态置信度小于0.6的
-                abi::vector<posture_info> posture_list_temp;
-                for (int i = 0; i < posture_info_list.size(); i++) {
-                    if (posture_info_list[i].score >= _config->_smoke_config.posture_conf_thres)
-                        posture_list_temp.emplace_back(posture_info_list[i]);
-                }
+                pedestrian_min_info ans;
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
 #else
@@ -104,20 +91,18 @@ namespace glasssix {
                 std::span<char> str{
                     reinterpret_cast<char*>(const_cast<uchar*>(img_data.data())), mat.get_cols() * mat.get_rows() * 3};
 #endif
-                auto result = ptr->protocol_ptr.invoke<smoke::detect>(ptr->smoke_handle,
-                    smoke_detect_param{.instance_guid = "",
-                        .format                       = _config->_smoke_config.format,
-                        .height                       = mat.get_rows(),
-                        .width                        = mat.get_cols(),
-                        .roi_x                        = 0,
-                        .roi_y                        = 0,
-                        .roi_width                    = mat.get_cols(),
-                        .roi_height                   = mat.get_rows(),
-                        .posture_info_list            = posture_list_temp,
-                        .params = smoke_detect_param::confidence_params{.conf_thres = _config->_smoke_config.conf_thres,
-                            .nms_thres                                              = _config->_smoke_config.nms_thres,
-                            .little_target_conf_thres = _config->_smoke_config.little_target_conf_thres,
-                            .smoke_conf_thres         = _config->_smoke_config.smoke_conf_thres}},
+                auto result = ptr->protocol_ptr.invoke<pedestrian_min::detect>(ptr->pedestrian_min_handle,
+                    pedestrian_min_detect_param{.instance_guid = "",
+                        .format                            = _config->_pedestrian_min_config.format,
+                        .height                            = mat.get_rows(),
+                        .width                             = mat.get_cols(),
+                        .roi_x                             = 0,
+                        .roi_y                             = 0,
+                        .roi_width                         = mat.get_cols(),
+                        .roi_height                        = mat.get_rows(),
+                        .params                            = pedestrian_min_detect_param::confidence_params{.conf_thres =
+                                                                                 _config->_pedestrian_min_config.conf_thres,
+                                                       .nms_thres = _config->_pedestrian_min_config.nms_thres}},
                     str);
 
                 ans = std::move(result.detect_info);
@@ -125,15 +110,10 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_smoke_dump.jpg");
+            bool flag = write_dump_img(mat, "_pedestrian_min_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
-    }
-    //  抽烟检测
-    smoke_info gx_smoke_api::safe_production_smoke(const gx_img_api& mat) {
-        auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
-        return safe_production_smoke(mat, posture_info_list);
     }
 
 } // namespace glasssix

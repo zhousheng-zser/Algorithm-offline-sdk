@@ -81,7 +81,7 @@ namespace glasssix {
     helmet_info gx_helmet_api::safe_production_helmet(
         const gx_img_api& mat, const abi::vector<head_info>& head_info_list) {
         try {
-            auto result_pool = pool->enqueue(0,[&] {
+            auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (all_thread_algo_ptr[id_] == nullptr) {
                     all_thread_algo_ptr[id_] = new algo_ptr();

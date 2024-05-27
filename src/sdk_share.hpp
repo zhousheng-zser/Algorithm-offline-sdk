@@ -13,6 +13,7 @@
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
+#include "../src/nessus/protocols/pedestrian_min.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
 #include "../src/nessus/protocols/posture.hpp"
 #include "../src/nessus/protocols/pump_gate_status.hpp"
@@ -176,6 +177,7 @@ namespace glasssix {
             Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
             Function["workcloth"]           = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian"]          = &algo_ptr::set_protocols_handl_pedestrian;
+            Function["pedestrian_min"]      = &algo_ptr::set_protocols_handl_pedestrian_min;
             Function["posture"]             = &algo_ptr::set_protocols_handl_posture;
         }
         void set_protocols_handl_climb() {
@@ -360,6 +362,11 @@ namespace glasssix {
             pedestrian_handle = protocol_ptr.make_instance<pedestrian>(pedestrian_new_param{
                 _config->_pedestrian_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pedestrian_min() {
+            _config->set_pedestrian_min(_config->_path);
+            pedestrian_min_handle = protocol_ptr.make_instance<pedestrian_min>(pedestrian_min_new_param{
+                _config->_pedestrian_min_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_posture() {
             posture_handle = protocol_ptr.make_instance<posture>(posture_new_param{
                 .device = -1, .models_directory = _config->_configure_directory.models_directory, .model_type = 1});
@@ -400,6 +407,7 @@ namespace glasssix {
         onphone onphone_handle;
         workcloth workcloth_handle;
         pedestrian pedestrian_handle;
+        pedestrian_min pedestrian_min_handle;
         posture posture_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
