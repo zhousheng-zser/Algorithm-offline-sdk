@@ -347,13 +347,13 @@ int main(int argc, char** argv) {
         std::thread t[30];
 
         printf("????\n");
-        //thread_function_flame();
-        //thread_function_helmet();
-        //thread_function_vehicle();
+        thread_function_flame();
+        thread_function_helmet();
+        thread_function_vehicle();
         thread_function_tumble();
         thread_function_climb();
         thread_function_fighting();
-        //thread_function_sleep();
+        thread_function_sleep();
         thread_function_crowd();
         thread_function_wander();
         thread_function_batterypilferers();
