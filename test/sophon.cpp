@@ -344,19 +344,20 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
         /* 多线程测性能测试 */
-        std::thread t[30];
+        std::jthread t[30];
 
         printf("????\n");
-        thread_function_flame();
-        thread_function_helmet();
-        thread_function_vehicle();
-        thread_function_tumble();
-        thread_function_climb();
-        thread_function_fighting();
-        thread_function_sleep();
-        thread_function_crowd();
-        thread_function_wander();
-        thread_function_batterypilferers();
+        //t[0] = std::thread(thread_function_flame);
+        //t[1] = std::thread(thread_function_helmet);
+        //t[2] = std::thread(thread_function_vehicle);
+        t[3] = std::jthread(thread_function_tumble);
+        t[4] = std::jthread(thread_function_climb);
+        t[5] = std::jthread(thread_function_fighting);
+        //t[6] = std::thread(thread_function_sleep);
+        t[7] = std::jthread(thread_function_crowd);
+        t[8] = std::jthread(thread_function_wander);
+        t[9] = std::jthread(thread_function_batterypilferers);
+        
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
         // t[2]  = std::thread(thread_function_refvest);
