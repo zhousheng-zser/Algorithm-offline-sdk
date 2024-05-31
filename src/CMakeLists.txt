@@ -63,6 +63,7 @@ file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
 	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
