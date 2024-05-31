@@ -272,13 +272,11 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
-                "GX_TOOLCHAIN_PREFIX": "/home/zser/toolchain-aarch64-g6-linux-gnu/bin/aarch64-g6-linux-gnu-",
                 "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
-                "GX_OPENCV_ROOT": "/home/zser/Code/opencv-4.7.0-sophon",
-                "GX_CV_SDK_ROOT": "/home/zser/Code/Glasssix_CV_SDK_beta",
-                "GX_MISCELLANEOUS_ROOT": "/home/zser/install/miscellaneous-sophon",
-                "GX_LICENSECLIENT_ROOT": "/home/zser/install/LicenseClient-sophon",
+                "GX_OPENCV_ROOT": "/root/install/opencv-sophon",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta",
+                "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-sophon",
+                "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient-sophon",
                 "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
             },
             "condition": {
