@@ -19,11 +19,13 @@
 #include <gx_fighting_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_sleep_api.hpp>
+#include <gx_wander_api.hpp>
+#include <gx_batterypilferers_api.hpp>
 // #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition = true;
 bool condition_time = true;
-abi::string CONFIG_PATH = "/home/linaro/jianzhang/glasssix-offline-sdk/config";
+abi::string CONFIG_PATH = "config";
 abi::string image_dir   = "/data/zser/img/";
 #define TIMES 1
 
@@ -220,6 +222,63 @@ namespace glasssix {
         }
         delete api_temp;
     }
+    // t18 多线程测徘徊
+    void thread_function_wander() {
+        gx_wander_api* api_temp = new gx_wander_api(CONFIG_PATH);
+        int T                   = TIMES;
+        auto start              = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(image_dir + "wander.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_wander(img, i, 1);
+                if (condition) {
+                    printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
+                    // printf("[wander] : wander_remove_id ans =%d\n",
+                    // api_temp->wander_remove_id(val.person_info[0].id));
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        api_temp->wander_remove_library();
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("wander time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t23 多线程测偷电瓶
+    void thread_function_batterypilferers() {
+        gx_batterypilferers_api* api_temp = new gx_batterypilferers_api(CONFIG_PATH);
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
+        abi::vector<gx_img_api> img_list;
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_2.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_3.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_4.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_5.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_6.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_7.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_8.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(image_dir + "batterypilferers_9.jpg", static_cast<int>(1e9)));
+
+        for (int i = 0; i < T; ++i) {
+            try {
+                auto val = api_temp->safe_production_batterypilferers(img_list);
+                if (condition)
+                    printf("[batterypilferers] : score =%f category=%d\n", val.score, val.category);
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("batterypilferers time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
     //// t4 多线程测融合搜索
     // void thread_function_integration() {
     //     gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
@@ -285,17 +344,20 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
         /* 多线程测性能测试 */
-        std::thread t[30];
+        std::jthread t[30];
 
         printf("????\n");
-        thread_function_flame();
-        thread_function_helmet();
-        thread_function_vehicle();
-        thread_function_tumble();
-        thread_function_climb();
-        thread_function_fighting();
-        thread_function_sleep();
-        thread_function_crowd();
+        //t[0] = std::thread(thread_function_flame);
+        //t[1] = std::thread(thread_function_helmet);
+        //t[2] = std::thread(thread_function_vehicle);
+        t[3] = std::jthread(thread_function_tumble);
+        t[4] = std::jthread(thread_function_climb);
+        t[5] = std::jthread(thread_function_fighting);
+        //t[6] = std::thread(thread_function_sleep);
+        t[7] = std::jthread(thread_function_crowd);
+        t[8] = std::jthread(thread_function_wander);
+        t[9] = std::jthread(thread_function_batterypilferers);
+        
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
         // t[2]  = std::thread(thread_function_refvest);
