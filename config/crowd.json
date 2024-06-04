@@ -1,5 +1,5 @@
 {
         "device":-1,
         "format": 1,
-        "area_threshold":5
+        "area_threshold":30
 }

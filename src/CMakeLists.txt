@@ -1,4 +1,4 @@
-﻿set(target_name gx-offline-recognition)
+set(target_name gx-offline-recognition)
 set(package_name GxOfflineRecognition)
 
 add_library(${target_name} SHARED)
@@ -44,6 +44,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON" )
 	set(GX_EMPOWER OFF)
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=8)
+	set(GX_EMPOWER OFF)
 	set(target_version 1.5.3)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON_UBUNTU" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
