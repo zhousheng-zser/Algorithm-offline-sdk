@@ -27,7 +27,7 @@ bool condition = true;
 bool condition_time = true;
 abi::string CONFIG_PATH = "config";
 abi::string image_dir   = "/data/zser/img/";
-#define TIMES 1
+#define TIMES 3
 
 namespace glasssix {
 
@@ -162,8 +162,6 @@ namespace glasssix {
             img_list.emplace_back(gx_img_api("/data/zser/img/fight_25th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api("/data/zser/img/fight_30th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api("/data/zser/img/fight_35th.jpg", static_cast<int>(1e9)));
-            img_list.emplace_back(gx_img_api("/data/zser/img/fight_40th.jpg", static_cast<int>(1e9)));
-            img_list.emplace_back(gx_img_api("/data/zser/img/fight_45th.jpg", static_cast<int>(1e9)));
             for (int i = 0; i < T; ++i) {
                 auto val = api_temp->safe_production_fighting(img_list, {0, 0, 1920, 1080});
                 if (condition)
