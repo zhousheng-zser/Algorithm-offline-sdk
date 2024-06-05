@@ -27,7 +27,7 @@ bool condition = true;
 bool condition_time = true;
 abi::string CONFIG_PATH = "config";
 abi::string image_dir   = "/data/zser/img/";
-#define TIMES 1
+#define TIMES 3
 
 namespace glasssix {
 
