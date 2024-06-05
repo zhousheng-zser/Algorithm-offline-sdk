@@ -14,9 +14,6 @@ namespace glasssix {
     class gx_crossing_api::impl {
     public:
         void init() {
-            if (api_temp == nullptr) {
-                api_temp = new gx_posture_api();
-            }
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
@@ -50,13 +47,12 @@ namespace glasssix {
             init();
         }
         ~impl() {}
-        gx_posture_api* api_temp = nullptr;
 
     private:
 #if (GX_EMPOWER_FLAG)
         secret_key_empower empower;
         std::string empower_key               = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROSSING_V1.1.1";
+        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROSSING_V2.0.0";
         std::vector<std::string> empower_algorithm_id_list = {"35"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
@@ -92,44 +88,48 @@ namespace glasssix {
     }
 
     //  翻越检测
-    crossing_info gx_crossing_api::safe_production_crossing(
-        const abi::vector<posture_info>& posture_info_list, const abi::vector<crossing_point>& quadrangle) {
-        if (quadrangle.size() < 3)
-            throw source_code_aware_runtime_error("Error: Invalid quadrangle: quadrangle.size < 3.");
-        crossing_info ans;
-        abi::vector<posture_info> posture_list_temp;
-        for (int i = 0; i < posture_info_list.size(); i++) {
-            if (posture_info_list[i].score >= 0.7)
-                posture_list_temp.emplace_back(posture_info_list[i]);
+    crossing_info gx_crossing_api::safe_production_crossing(const gx_img_api& mat) {
+        try {
+            auto result_pool = pool->enqueue([&] {
+                std::thread::id id_ = std::this_thread::get_id();
+                if (all_thread_algo_ptr[id_] == nullptr) {
+                    all_thread_algo_ptr[id_] = new algo_ptr();
+                }
+                auto ptr = all_thread_algo_ptr[id_];
+                crossing_info ans;
+#if (GX_PLATFORM_NAME != 8)
+                std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
+#else
+                std::vector<uchar> img_data(mat.get_cols() * mat.get_rows() * 3);
+                for (int i = 0; i < mat.get_rows(); i++) {
+                    auto row_ptr = mat.get_row_ptr(i);
+                    std::copy(row_ptr, row_ptr + mat.get_cols() * 3, img_data.data() + i * mat.get_cols() * 3);
+                }
+                std::span<char> str{
+                    reinterpret_cast<char*>(const_cast<uchar*>(img_data.data())), mat.get_cols() * mat.get_rows() * 3};
+#endif
+                auto result = ptr->protocol_ptr.invoke<crossing::detect>(ptr->crossing_handle,
+                    crossing_detect_param{.instance_guid = "",
+                        .format                       = _config->_crossing_config.format,
+                        .height                       = mat.get_rows(),
+                        .width                        = mat.get_cols(),
+                        .roi_x                        = 0,
+                        .roi_y                        = 0,
+                        .roi_width                    = mat.get_cols(),
+                        .roi_height                   = mat.get_rows(),
+                        .params = crossing_detect_param::confidence_params{.conf_thres = _config->_crossing_config.conf_thres,
+                            .nms_thres = _config->_crossing_config.nms_thres}},
+                    str);
+
+                ans = std::move(result.detect_info);
+                return ans;
+            });
+            return result_pool.get();
+        } catch (const std::exception& ex) {
+            bool flag = write_dump_img(mat, "_crossing_dump.jpg");
+            throw source_code_aware_runtime_error{
+                ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }
-        std::vector<cv::Point2f> vec;
-        for (auto& temp : quadrangle)
-            vec.emplace_back(cv::Point2f{static_cast<float>(temp.x), static_cast<float>(temp.y)});
-        for (auto& ss : posture_list_temp) {
-            if (check(ss)) {
-                int key15 = cv::pointPolygonTest(vec,
-                    cv::Point2f{static_cast<float>(ss.key_points[15].x), static_cast<float>(ss.key_points[15].y)},
-                    false);
-                int key16 = cv::pointPolygonTest(vec,
-                    cv::Point2f{static_cast<float>(ss.key_points[16].x), static_cast<float>(ss.key_points[16].y)},
-                    false);
-                if (key15 < 0 || key16 < 0)
-                    continue;
-                ans.crossing_list.push_back(crossing_info::boxes{.score = ss.score,
-                    .x1                                                 = ss.location.x1,
-                    .y1                                                 = ss.location.y1,
-                    .x2                                                 = ss.location.x2,
-                    .y2                                                 = ss.location.y2});
-            }
-        }
-        return ans;
-    }
-    crossing_info gx_crossing_api::safe_production_crossing(
-        const gx_img_api& mat, const abi::vector<crossing_point>& quadrangle) {
-        if (quadrangle.size() < 3)
-            throw source_code_aware_runtime_error("Error: Invalid quadrangle: quadrangle.size < 3.");
-        auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
-        return safe_production_crossing(posture_info_list, quadrangle);
     }
 
 } // namespace glasssix

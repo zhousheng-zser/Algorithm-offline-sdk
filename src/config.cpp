@@ -100,6 +100,12 @@ namespace glasssix {
         temp.get_to(_crowd_config);
         crowd_is_load = true;
     }
+    void config::set_crossing(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/crossing.json");
+        temp.get_to(_crossing_config);
+        crossing_is_load = true;
+    }
     void config::set_batterypilferers(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/batterypilferers.json");

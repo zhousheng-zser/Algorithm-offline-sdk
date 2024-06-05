@@ -98,6 +98,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct crossing_config {
+        GX_BEGIN_FIELDS(crossing_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct batterypilferers_config {
         GX_BEGIN_FIELDS(batterypilferers_config);
         GX_FIELD(int, device);
@@ -396,6 +405,7 @@ namespace glasssix {
         face_user_config _face_user_config;
         climb_config _climb_config;
         crowd_config _crowd_config;
+        crossing_config _crossing_config;
         batterypilferers_config _batterypilferers_config;
         fighting_config _fighting_config;
         flame_config _flame_config;
@@ -433,6 +443,7 @@ namespace glasssix {
         void set_face_user(const abi::string& path);
         void set_climb(const abi::string& path);
         void set_crowd(const abi::string& path);
+        void set_crossing(const abi::string& path);
         void set_batterypilferers(const abi::string& path);
         void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
@@ -471,6 +482,7 @@ namespace glasssix {
         bool face_user_is_load           = false;
         bool climb_is_load               = false;
         bool crowd_is_load               = false;
+        bool crossing_is_load            = false;
         bool batterypilferers_is_load    = false;
         bool fighting_is_load            = false;
         bool flame_is_load               = false;

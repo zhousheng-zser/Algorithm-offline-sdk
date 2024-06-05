@@ -2,6 +2,7 @@
 
 #include "../common_protocols.hpp"
 #include "../protocol_object.hpp"
+#include "../../../include/g6/info_face.hpp"
 
 #include <cstdint>
 #include <string>
