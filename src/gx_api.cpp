@@ -220,6 +220,7 @@ namespace glasssix {
             name_config["feature.json"]             = _config->_feature_config;
             name_config["climb.json"]               = _config->_climb_config;
             name_config["crowd.json"]               = _config->_crowd_config;
+            name_config["crossing.json"]            = _config->_crossing_config;
             name_config["batterypilferers.json"]    = _config->_batterypilferers_config;
             name_config["fighting.json"]            = _config->_fighting_config;
             name_config["flame.json"]               = _config->_flame_config;
@@ -301,6 +302,9 @@ namespace glasssix {
                 } else if (name == "crowd.json" && _config->crowd_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_crowd_config);
+                } else if (name == "crossing.json" && _config->crossing_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_crossing_config);
                 } else if (name == "batterypilferers.json" && _config->batterypilferers_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_batterypilferers_config);

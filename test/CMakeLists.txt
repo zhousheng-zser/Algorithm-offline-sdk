@@ -30,7 +30,6 @@ target_include_directories(
 		${OpenCV_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${target_name} PRIVATE GX_IS_FACE_IMPL=1)
 target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 target_link_libraries(
     ${target_name}

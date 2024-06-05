@@ -1,6 +1,5 @@
 #pragma once
 #include "gx_api.hpp"
-#include "gx_posture_api.hpp"
 #include "info_crossing.hpp"
 
 namespace glasssix {
@@ -14,11 +13,7 @@ namespace glasssix {
         gx_crossing_api& operator=(gx_crossing_api&&) noexcept;
 
         //  翻越检测
-        crossing_info safe_production_crossing(const gx_img_api& mat, const abi::vector<crossing_point>& quadrangle);
-
-        //  翻越检测
-        crossing_info safe_production_crossing(
-            const abi::vector<posture_info>& posture_info_list, const abi::vector<crossing_point>& quadrangle);
+        crossing_info safe_production_crossing(const gx_img_api& mat);
 
     private:
         class impl;

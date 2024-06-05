@@ -1,9 +1,12 @@
 #pragma once
 #include "../src/nessus/protocol.hpp"
 #include "../src/nessus/protocols/batterypilferers.hpp"
+#include "../src/nessus/protocols/cassius.hpp"
 #include "../src/nessus/protocols/climb.hpp"
+#include "../src/nessus/protocols/crossing.hpp"
 #include "../src/nessus/protocols/crowd.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
+#include "../src/nessus/protocols/face_attributes.hpp"
 #include "../src/nessus/protocols/fighting.hpp"
 #include "../src/nessus/protocols/flame.hpp"
 #include "../src/nessus/protocols/head.hpp"
@@ -19,17 +22,15 @@
 #include "../src/nessus/protocols/pump_gate_status.hpp"
 #include "../src/nessus/protocols/pump_hoisting.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
-#include "../src/nessus/protocols/pump_work_status.hpp"
 #include "../src/nessus/protocols/pump_mask.hpp"
 #include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/pump_weld.hpp"
+#include "../src/nessus/protocols/pump_work_status.hpp"
 #include "../src/nessus/protocols/pumptop_helmet.hpp"
 #include "../src/nessus/protocols/refvest.hpp"
 #include "../src/nessus/protocols/romancia.hpp"
-#include "../src/nessus/protocols/face_attributes.hpp"
 #include "../src/nessus/protocols/selene.hpp"
-#include "../src/nessus/protocols/cassius.hpp"
 #include "../src/nessus/protocols/sleep.hpp"
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
@@ -55,7 +56,7 @@ namespace glasssix {
 #if (GX_PLATFORM_NAME == 0)
         std::string share_platform_name = "WINDOWS";
 #elif (GX_PLATFORM_NAME == 1)
-        std::string share_platform_name    = "RK3588";
+        std::string share_platform_name = "RK3588";
 #elif (GX_PLATFORM_NAME == 2)
         std::string share_platform_name = "RK3399";
 #elif (GX_PLATFORM_NAME == 3)
@@ -145,6 +146,7 @@ namespace glasssix {
         void set_Function() {
             Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
             Function["climb"]               = &algo_ptr::set_protocols_handl_climb;
+            Function["crossing"]            = &algo_ptr::set_protocols_handl_crossing;
             Function["batterypilferers"]    = &algo_ptr::set_protocols_handl_batterypilferers;
             Function["fighting"]            = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
@@ -176,7 +178,7 @@ namespace glasssix {
             Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
             Function["workcloth"]           = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian"]          = &algo_ptr::set_protocols_handl_pedestrian;
-            Function["pedestrian_min"]          = &algo_ptr::set_protocols_handl_pedestrian_min;
+            Function["pedestrian_min"]      = &algo_ptr::set_protocols_handl_pedestrian_min;
             Function["posture"]             = &algo_ptr::set_protocols_handl_posture;
         }
         void set_protocols_handl_climb() {
@@ -184,16 +186,20 @@ namespace glasssix {
             climb_handle = protocol_ptr.make_instance<climb>(
                 climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_crossing() {
+            _config->set_crossing(_config->_path);
+            crossing_handle = protocol_ptr.make_instance<crossing>(
+                crossing_new_param{_config->_crossing_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_batterypilferers() {
             _config->set_batterypilferers(_config->_path);
-            batterypilferers_handle = protocol_ptr.make_instance<batterypilferers>(
-                batterypilferers_new_param{_config->_batterypilferers_config.device,
-                    _config->_configure_directory.models_directory, 3});
+            batterypilferers_handle = protocol_ptr.make_instance<batterypilferers>(batterypilferers_new_param{
+                _config->_batterypilferers_config.device, _config->_configure_directory.models_directory, 3});
         }
         void set_protocols_handl_fighting() {
             _config->set_fighting(_config->_path);
-            fighting_handle = protocol_ptr.make_instance<fighting>(fighting_new_param{_config->_fighting_config.device,
-                _config->_configure_directory.models_directory, 8});
+            fighting_handle = protocol_ptr.make_instance<fighting>(fighting_new_param{
+                _config->_fighting_config.device, _config->_configure_directory.models_directory, 10});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -207,9 +213,8 @@ namespace glasssix {
         }
         void set_protocols_handl_pump_weld() {
             _config->set_pump_weld(_config->_path);
-            pump_weld_handle =
-                protocol_ptr.make_instance<pump_weld>(pump_weld_new_param{_config->_pump_weld_config.device,
-                    _config->_configure_directory.models_directory});
+            pump_weld_handle = protocol_ptr.make_instance<pump_weld>(
+                pump_weld_new_param{_config->_pump_weld_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_hoisting() {
             _config->set_pump_hoisting(_config->_path);
@@ -381,6 +386,7 @@ namespace glasssix {
         cassius cassius_handle;
         refvest refvest_handle;
         climb climb_handle;
+        crossing crossing_handle;
         batterypilferers batterypilferers_handle;
         fighting fighting_handle;
         flame flame_handle;
