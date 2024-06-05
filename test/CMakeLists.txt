@@ -4,6 +4,7 @@
 file(
 	GLOB private_sources
     CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
     #sophon.cpp
     test.cpp
     #nessus.cpp
