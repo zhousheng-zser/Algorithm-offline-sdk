@@ -1055,31 +1055,12 @@ namespace glasssix {
 
     // t34 多线程测翻越
     void thread_function_crossing() {
-        gx_crossing_api* api_temp              = new gx_crossing_api(CONFIG_PATH);
-        gx_posture_api* api_posture            = new gx_posture_api(CONFIG_PATH);
-        int T                                  = TIMES;
-        abi::vector<crossing_point> quadrangle = {
-            crossing_point{400, 278}, crossing_point{551, 278}, crossing_point{551, 570}, crossing_point{400, 570}};
-
+        gx_crossing_api* api_temp = new gx_crossing_api(CONFIG_PATH);
+        int T                     = TIMES;
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img("/root/img/15s.jpg", static_cast<int>(1e9));
-                cv::Mat frame = cv::imread("/root/img/15s.jpg");
-
-                auto pos = api_posture->safe_production_posture(img);
-                auto val = api_temp->safe_production_crossing(pos, quadrangle);
-                // for(auto& ss : val.crossing_list)
-                //{
-                //     rectangle(frame, cv::Point(ss.x1, ss.y1),
-                //         cv::Point(ss.x2, ss.y2), RED, 6);
-                // }
-                // for (auto& ss : pos) {
-                //      for (int i = 0; i < ss.key_points.size(); i++)
-                //          cv::circle(frame, cv::Point{ss.key_points[i].x, ss.key_points[i].y}, 10, cv::Scalar{0, 255,
-                //          0}, -1);
-                // }
-                // cv::imwrite("test.jpg", frame);
-
+                auto val = api_temp->safe_production_crossing(img);
                 if (condition)
                     printf("[crossing] : %llu \n", val.crossing_list.size());
             } catch (const std::exception& ex) {
