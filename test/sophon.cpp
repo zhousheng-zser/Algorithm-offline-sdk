@@ -27,7 +27,7 @@ bool condition = true;
 bool condition_time = true;
 abi::string CONFIG_PATH = "config";
 abi::string image_dir   = "/data/zser/img/";
-#define TIMES 3
+#define TIMES 1
 
 namespace glasssix {
 
@@ -348,13 +348,13 @@ int main(int argc, char** argv) {
         //t[0] = std::thread(thread_function_flame);
         //t[1] = std::thread(thread_function_helmet);
         //t[2] = std::thread(thread_function_vehicle);
-        t[3] = std::jthread(thread_function_tumble);
-        t[4] = std::jthread(thread_function_climb);
+        //t[3] = std::jthread(thread_function_tumble);
+        //t[4] = std::jthread(thread_function_climb);
         t[5] = std::jthread(thread_function_fighting);
         //t[6] = std::thread(thread_function_sleep);
-        t[7] = std::jthread(thread_function_crowd);
-        t[8] = std::jthread(thread_function_wander);
-        t[9] = std::jthread(thread_function_batterypilferers);
+        //t[7] = std::jthread(thread_function_crowd);
+        //t[8] = std::jthread(thread_function_wander);
+        //t[9] = std::jthread(thread_function_batterypilferers);
         
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
