@@ -326,6 +326,14 @@
             }
         },
         {
+            "name": "sophon-gmake-Debug",
+            "displayName": "Linux Debug",
+            "inherits": "sophon-gmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
             "name": "macos-debug",
             "displayName": "macOS Debug",
             "generator": "Ninja",
