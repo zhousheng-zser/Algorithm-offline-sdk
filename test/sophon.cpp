@@ -78,8 +78,8 @@ namespace glasssix {
     void thread_function_tumble() {
         gx_tumble_api* api_temp       = new gx_tumble_api(CONFIG_PATH);
         std::vector<abi::string> list = find_file("/data/zser/img/");
-        std::cout << "thread_function_tumble  --------------------------------------------------\n";
-        for (int i = 0; i < list.size(); i++) {
+        int T                         = TIMES;
+        for (int i = 0; i < T; ++i) {
             try {
                 auto val = api_temp->safe_production_tumble(gx_img_api{list[i], 1 << 28});
                 for (auto temp : val.tumble_list)
@@ -348,13 +348,13 @@ int main(int argc, char** argv) {
         //t[0] = std::thread(thread_function_flame);
         //t[1] = std::thread(thread_function_helmet);
         //t[2] = std::thread(thread_function_vehicle);
-        //t[3] = std::jthread(thread_function_tumble);
-        //t[4] = std::jthread(thread_function_climb);
-        t[5] = std::jthread(thread_function_fighting);
         //t[6] = std::thread(thread_function_sleep);
-        //t[7] = std::jthread(thread_function_crowd);
-        //t[8] = std::jthread(thread_function_wander);
-        //t[9] = std::jthread(thread_function_batterypilferers);
+        t[3] = std::jthread(thread_function_tumble);
+        t[4] = std::jthread(thread_function_climb);
+        t[5] = std::jthread(thread_function_fighting);
+        t[7] = std::jthread(thread_function_crowd);
+        t[8] = std::jthread(thread_function_wander);
+        t[9] = std::jthread(thread_function_batterypilferers);
         
         // t[0]  = std::thread(thread_function_helmet);
         // t[1]  = std::thread(thread_function_flame);
