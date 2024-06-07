@@ -1093,10 +1093,27 @@ namespace glasssix {
         int T                     = TIMES;
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img("/root/img/15s.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_crossing(img);
-                if (condition)
-                    printf("[crossing] : %llu \n", val.crossing_list.size());
+                {
+                    gx_img_api img("/root/img/crossing1.jpg",
+                        static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_crossing(img);
+                    if (condition)
+                        printf("[crossing1] : %llu \n", val.crossing_list.size());
+                }
+                {
+                    gx_img_api img("/root/img/crossing2.jpg",
+                        static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_crossing(img);
+                    if (condition)
+                        printf("[crossing2] : %llu \n", val.crossing_list.size());
+                }
+                {
+                    gx_img_api img("/root/img/crossing3.jpg",
+                        static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_crossing(img);
+                    if (condition)
+                        printf("[crossing3] : %llu \n", val.crossing_list.size());
+                }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1505,7 +1522,7 @@ void crossing(std::string path, std::string name) {
         cv::imwrite(outputName, frame);
 
         gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-        auto val   = api_temp->safe_production_crossing(img1, {});
+        auto val   = api_temp->safe_production_crossing(img1);
         int result = 0;
 
         // for (auto& ss : val) {
