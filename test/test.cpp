@@ -601,21 +601,55 @@ namespace glasssix {
     void thread_function_crowd() {
         gx_crowd_api* api_temp = new gx_crowd_api(CONFIG_PATH);
         int T                  = TIMES;
-        for (int i = 0; i < T; ++i) {
+        for (int i = 0; i < 7; ++i) {
             auto start = std::chrono::high_resolution_clock::now();
             try {
-                const gx_img_api img("/root/img/crowd.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/11 - frame at 1m38s.jpg", static_cast<int>(1e9));
                 // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_crowd(img, 5);
+                //cv::Mat fram = cv::imread("/root/img/11 - frame at 1m38s.jpg");
+                //for (auto ss : val.head_list) {
+                //    cv::circle(fram, cv::Point{ss.x1 + ss.x2 >> 1, ss.y1 + ss.y2 >> 1}, 3, cv::Scalar(0, 0, 255), -1);
+                //}
+
+                //for (auto ss : val.cluster_list) {
+                //    cv::rectangle(fram, cv::Point{ss.x1, ss.y1}, cv::Point{ss.x2, ss.y2}, cv::Scalar(0, 255, 0), 3);
+                //}
+                //cv::imwrite("/root/img/ans.jpg", fram);
                 if (condition)
                     printf("[crowd] : head_list = %d\n", val.head_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
-            auto end      = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            if (condition_time)
-                printf("crowd time = %lld microsecond\n", duration.count());
+            //auto end      = std::chrono::high_resolution_clock::now();
+            //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            //if (condition_time)
+            //    printf("crowd time = %lld microsecond\n", duration.count());
+        }
+        for (int i = 0; i < 20; ++i) {
+            auto start = std::chrono::high_resolution_clock::now();
+            try {
+                const gx_img_api img("/root/img/10 - frame at 1m57s.jpg", static_cast<int>(1e9));
+                // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
+                auto val     = api_temp->safe_production_crowd(img, 5);
+                cv::Mat fram = cv::imread("/root/img/10 - frame at 1m57s.jpg");
+                for (auto ss : val.head_list) {
+                    cv::circle(fram, cv::Point{ss.x1 + ss.x2 >> 1, ss.y1 + ss.y2 >> 1}, 3, cv::Scalar(0, 0, 255), -1);
+                }
+
+                for (auto ss : val.cluster_list) {
+                    cv::rectangle(fram, cv::Point{ss.x1, ss.y1}, cv::Point{ss.x2, ss.y2}, cv::Scalar(0, 255, 0), 3);
+                }
+                cv::imwrite("/root/img/ans.jpg", fram);
+                if (condition)
+                    printf("[crowd] : head_list = %d\n", val.head_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+            // auto end      = std::chrono::high_resolution_clock::now();
+            // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            // if (condition_time)
+            //     printf("crowd time = %lld microsecond\n", duration.count());
         }
         delete api_temp;
     }
