@@ -601,21 +601,36 @@ namespace glasssix {
     void thread_function_crowd() {
         gx_crowd_api* api_temp = new gx_crowd_api(CONFIG_PATH);
         int T                  = TIMES;
-        for (int i = 0; i < T; ++i) {
-            auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < 7; ++i) {
             try {
-                const gx_img_api img("/root/img/crowd.jpg", static_cast<int>(1e9));
+                const gx_img_api img("/root/img/11 - frame at 1m38s.jpg", static_cast<int>(1e9));
                 // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_crowd(img, 5);
+                auto val = api_temp->safe_production_crowd(img, 5,30, 0);
                 if (condition)
                     printf("[crowd] : head_list = %d\n", val.head_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
-            auto end      = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            if (condition_time)
-                printf("crowd time = %lld microsecond\n", duration.count());
+            //auto end      = std::chrono::high_resolution_clock::now();
+            //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            //if (condition_time)
+            //    printf("crowd time = %lld microsecond\n", duration.count());
+        }
+        for (int i = 0; i < 20; ++i) {
+            auto start = std::chrono::high_resolution_clock::now();
+            try {
+                const gx_img_api img("/root/img/10 - frame at 1m57s.jpg", static_cast<int>(1e9));
+                // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
+                auto val     = api_temp->safe_production_crowd(img, 5,30,0);
+                if (condition)
+                    printf("[crowd] : head_list = %d\n", val.head_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+            // auto end      = std::chrono::high_resolution_clock::now();
+            // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            // if (condition_time)
+            //     printf("crowd time = %lld microsecond\n", duration.count());
         }
         delete api_temp;
     }
@@ -666,8 +681,8 @@ namespace glasssix {
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_25th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_30th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api("/root/img/fighting/fight_35th.jpg", static_cast<int>(1e9)));
-            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9)));
-            img_list.emplace_back(gx_img_api("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9)));
+            //img_list.emplace_back(gx_img_api("/root/img/fighting/fight_40th.jpg", static_cast<int>(1e9)));
+            //img_list.emplace_back(gx_img_api("/root/img/fighting/fight_45th.jpg", static_cast<int>(1e9)));
             for (int i = 0; i < T; ++i) {
                 auto val = api_temp->safe_production_fighting(img_list, {0,0,1920,1080});
                 if (condition)

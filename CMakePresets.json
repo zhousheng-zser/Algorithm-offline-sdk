@@ -277,7 +277,9 @@
                 "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta",
                 "GX_MISCELLANEOUS_ROOT": "/root/install/miscellaneous-sophon",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient-sophon",
-                "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
+                "GX_TOOLHAIN_TARGET_NAME": "SOPHON",
+                "CMAKE_C_COMPILER": "gcc-11",
+                "CMAKE_CXX_COMPILER": "g++-11"
             },
             "condition": {
                 "type": "equals",

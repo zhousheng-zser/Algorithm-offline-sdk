@@ -13,7 +13,7 @@ namespace glasssix {
         gx_crowd_api& operator=(gx_crowd_api&&) noexcept;
 
         //  安全生产 聚众检测
-        crowd_info safe_production_crowd(const gx_img_api& mat, int min_cluster_size);
+        crowd_info safe_production_crowd(const gx_img_api& mat, int min_cluster_size, int trigger_delay, int device_id);
 
     private:
         class impl;
