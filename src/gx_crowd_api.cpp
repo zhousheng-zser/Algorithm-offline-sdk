@@ -13,12 +13,12 @@ namespace glasssix {
     class gx_crowd_api::impl {
     public:
         void init() {
-#if (GX_EMPOWER_FLAG)  
+#if (GX_EMPOWER_FLAG)
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
                     auto license = abi::from_abi_string(_config->_configure_directory.license_directory);
                     empower_key  = get_empower_key(license);
-                    auto number = abi::from_abi_string(_config->_configure_directory.empower_serial_number);
+                    auto number  = abi::from_abi_string(_config->_configure_directory.empower_serial_number);
                     empower.set_serial_number(number);
                     empower.set_algorithm_id(empower_algorithm_id_list[i]);
                     empower.set_license(empower_key.c_str());
@@ -46,10 +46,10 @@ namespace glasssix {
         ~impl() {}
 
     private:
-#if (GX_EMPOWER_FLAG) 
+#if (GX_EMPOWER_FLAG)
         secret_key_empower empower;
-        std::string empower_key          = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROWD_V2.1.4";
+        std::string empower_key               = "";
+        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CROWD_V2.3.0";
         std::vector<std::string> empower_algorithm_id_list = {"19"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
@@ -69,7 +69,8 @@ namespace glasssix {
     };
 
     //  安全生产 聚众检测
-    crowd_info gx_crowd_api::safe_production_crowd(const gx_img_api& mat, int min_cluster_size) {
+    crowd_info gx_crowd_api::safe_production_crowd(
+        const gx_img_api& mat, int min_cluster_size, int trigger_delay, int device_id) {
         try {
             if (min_cluster_size < 4)
                 throw source_code_aware_runtime_error(U8("Error: The min_cluster_size < 4!!"));
@@ -103,7 +104,11 @@ namespace glasssix {
                         .roi_height       = mat.get_rows(),
                         .min_cluster_size = min_cluster_size,
                         .params           = crowd_detect_param::confidence_params{.area_threshold =
-                                                                            _config->_crowd_config.area_threshold},
+                                                                            _config->_crowd_config.area_threshold,
+                                      .max_area_list = _config->_crowd_config.max_area_list,
+                                      .nms_thres     = _config->_crowd_config.nms_thres,
+                                      .trigger_delay = trigger_delay,
+                                      .device_id     = device_id},
                     },
                     str);
 
