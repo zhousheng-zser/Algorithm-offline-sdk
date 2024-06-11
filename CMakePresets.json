@@ -293,7 +293,7 @@
             }
         },
         {
-            "name": "sophon-gmake",
+            "name": "sophon-gmake-Release",
             "displayName": "Linux Release",
             "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
@@ -330,7 +330,7 @@
         {
             "name": "sophon-gmake-Debug",
             "displayName": "Linux Debug",
-            "inherits": "sophon-gmake",
+            "inherits": "sophon-gmake-Release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
