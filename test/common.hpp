@@ -607,6 +607,7 @@ namespace glasssix {
     // t17 多线程测聚众
     void thread_function_crowd() {
         gx_crowd_api* api_temp = new gx_crowd_api(CONFIG_PATH);
+        auto start             = std::chrono::high_resolution_clock::now();
         int T                  = TIMES;
         for (int i = 0; i < T; ++i) {
             try {

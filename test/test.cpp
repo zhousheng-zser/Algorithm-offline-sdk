@@ -1,4 +1,7 @@
 #include "common.hpp"
+
+using namespace glasssix;
+
 int main(int argc, char** argv) {
     /* C++ 接口测试*/
     try {

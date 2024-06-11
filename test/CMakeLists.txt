@@ -6,8 +6,8 @@ file(
     CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
     common.hpp
-    sophon.cpp
-    #test.cpp
+    #sophon.cpp
+    test.cpp
     #nessus.cpp
     #face.cpp
 )
