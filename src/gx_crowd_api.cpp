@@ -72,8 +72,8 @@ namespace glasssix {
     crowd_info gx_crowd_api::safe_production_crowd(
         const gx_img_api& mat, int min_cluster_size, int trigger_delay, int device_id) {
         try {
-            if (min_cluster_size < 4)
-                throw source_code_aware_runtime_error(U8("Error: The min_cluster_size < 4!!"));
+            if (min_cluster_size < 3)
+                throw source_code_aware_runtime_error(U8("Error: The min_cluster_size < 3!!"));
 
             auto result_pool = pool_crowd.enqueue([&] {
                 if (thread_algo_crowd_ptr == nullptr) {
