@@ -611,8 +611,7 @@ namespace glasssix {
         int T                  = TIMES;
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img(abi::string(IMG_PATH) + "11 - frame at 1m38s.jpg", static_cast<int>(1e9));
-                // const gx_img_api img("/root/img/crowd.png", static_cast<int>(1e9));
+                const gx_img_api img(abi::string(IMG_PATH) + "crowd.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_crowd(img, 5, 30, 0);
                 if (condition)
                     printf("[crowd] : head_list = %d\n", val.head_list.size());
