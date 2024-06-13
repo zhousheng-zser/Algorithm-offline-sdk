@@ -246,7 +246,7 @@ namespace glasssix {
             printf("integration time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t13 多线程测 配合活体 与 质量检测
+    // t5 多线程测 配合活体 与 质量检测
     void thread_function_Action_live_Blur() {
         gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         auto start            = std::chrono::high_resolution_clock::now();
@@ -440,7 +440,7 @@ namespace glasssix {
         }
         delete api_temp;
     }
-    // t5 多线程测离岗
+    // t13 多线程测离岗
     void thread_function_leavepost() {
         gx_leavepost_api* api_temp = new gx_leavepost_api(CONFIG_PATH);
         int T                      = TIMES;
