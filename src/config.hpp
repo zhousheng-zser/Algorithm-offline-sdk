@@ -13,6 +13,10 @@ namespace glasssix {
         GX_FIELD(abi::string, license_directory);
         GX_FIELD(abi::string, empower_serial_number);
         GX_FIELD(int, thread_pool_num);
+        GX_FIELD(int, thread_pool_num_batterypilferers);
+        GX_FIELD(int, thread_pool_num_fighting);
+        GX_FIELD(int, thread_pool_num_tumble);
+        GX_FIELD(int, thread_pool_num_climb);
         GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
 

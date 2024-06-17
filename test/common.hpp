@@ -1412,7 +1412,7 @@ void wangder_limit() {
 
     // 读取 视频 文件
     cv::VideoCapture capture;
-    capture.open("/root/video/wander_limit/wander_limit.mp4");
+    capture.open("/root/video/wander_limit/DownLoad1 - Trim.mp4");
 
     // 逐帧解码并保存为图像
     cv::Mat frame;
@@ -1426,41 +1426,31 @@ void wangder_limit() {
         if (frame.empty())
             break;
 
-        if (frameCount % 20 == 0) {
+        if (frameCount % 10 == 0) {
             // 保存为图像
             std::string outputName = "/root/video/temp.jpg";
             cv::imwrite(outputName, frame);
 
             gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
             auto val_ped = api_ped->safe_production_pedestrian(img1);
-            auto val     = api_temp->safe_production_wander_limit(img1, frameCount / 26, 1, val_ped.person_list);
+            wander_info val = api_temp->safe_production_wander(img1, frameCount / 25, 1, val_ped.person_list);
             int result   = 0;
-            for (int i = 0; i < val.segment_info.size(); i++) {
-                int x1 = val.segment_info[i].x1;
-                int x2 = val.segment_info[i].x2;
-                int y1 = val.segment_info[i].y1;
-                int y2 = val.segment_info[i].y2;
+            for (int i = 0; i < val.person_info.size(); i++) {
+                int x1 = val.person_info[i].x1;
+                int x2 = val.person_info[i].x2;
+                int y1 = val.person_info[i].y1;
+                int y2 = val.person_info[i].y2;
 
-                result += segmentsIntersect(x1, y1, x2, y2, 991, 570, 1727, 580);
-                if (segmentsIntersect(x1, y1, x2, y2, 991, 570, 1727, 580)) {
-                    rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
-                        cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
-                }
-                rectangle(frame, cv::Point(val.person_info[i].x1, val.person_info[i].y1),
-                    cv::Point(val.person_info[i].x2, val.person_info[i].y2), RED, 6);
-
-                line(frame, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 0, 255), 3);
-                printf("%d %d %d %d\n", x1, y1, x2, y2);
-
-                line(frame, cv::Point(991, 570), cv::Point(1727, 580), cv::Scalar(0, 255, 0), 3);
-                putText(frame, std::to_string(val.person_info[i].id), cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1,
+                cv::putText(frame,
+                    std::to_string(val.person_info[i].id)
+                        + "  time:" + std::to_string(val.person_info[i].sum_time),
+                    cv::Point(x1, y1),
+                    cv::FONT_HERSHEY_SIMPLEX, 1,
                     WHITE, 2);
+                cv::rectangle(frame, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
             }
-            cv::imwrite("/root/video/temp_x.jpg", frame);
-            if (result) {
-                cnnt++;
-                printf("-------------------------------------------------\n");
-            }
+            std::string path_ = "/root/video/" + std::to_string(cnnt++) + ".jpg";
+            cv::imwrite(path_, frame);
         }
         frameCount++;
     }

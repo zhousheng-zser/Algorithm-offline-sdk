@@ -4,6 +4,8 @@
 
 namespace glasssix {
 
+    thread_pool* pool_climb = nullptr;
+    std::unordered_map<std::thread::id, algo_climb_ptr*> climb_thread_algo_ptr;
     gx_climb_api::gx_climb_api() : impl_{std::make_unique<impl>()} {}
     gx_climb_api::gx_climb_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_climb_api::~gx_climb_api() {}
@@ -12,10 +14,8 @@ namespace glasssix {
     class gx_climb_api::impl {
     public:
         void init() {
-            if (api_temp == nullptr) {
-                api_temp = new gx_posture_api();
-            }
-
+            if (pool_climb == nullptr)
+                pool_climb = new thread_pool(_config->_configure_directory.thread_pool_num_climb);
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
@@ -49,7 +49,6 @@ namespace glasssix {
             init();
         }
         ~impl() {}
-        gx_posture_api* api_temp = nullptr;
 
     private:
 #if (GX_EMPOWER_FLAG)
@@ -77,12 +76,12 @@ namespace glasssix {
     //  安全生产 攀爬检测
     climb_info gx_climb_api::safe_production_climb(const gx_img_api& mat) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_climb->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (climb_thread_algo_ptr[id_] == nullptr) {
+                    climb_thread_algo_ptr[id_] = new algo_climb_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = climb_thread_algo_ptr[id_];
                 climb_info ans;
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};

@@ -124,6 +124,88 @@ namespace glasssix {
         nessus_protocol protocol_ptr;
         crowd crowd_handle;
     };
+    class algo_batterypilferers_ptr {
+    public:
+        algo_batterypilferers_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "batterypilferers") {
+                    try {
+                        _config->set_batterypilferers(_config->_path);
+                        batterypilferers_handle = protocol_ptr.make_instance<batterypilferers>(
+                            batterypilferers_new_param{_config->_batterypilferers_config.device,
+                                _config->_configure_directory.models_directory, 3});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        batterypilferers batterypilferers_handle;
+    };
+    class algo_fighting_ptr {
+    public:
+        algo_fighting_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "fighting") {
+                    try {
+                        _config->set_fighting(_config->_path);
+                        fighting_handle =
+                            protocol_ptr.make_instance<fighting>(fighting_new_param{_config->_fighting_config.device,
+                                _config->_configure_directory.models_directory, _config->_fighting_config.batch});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        fighting fighting_handle;
+    };
+    class algo_tumble_ptr {
+    public:
+        algo_tumble_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "tumble") {
+                    try {
+                        _config->set_tumble(_config->_path);
+                        tumble_handle = protocol_ptr.make_instance<tumble>(tumble_new_param{
+                            _config->_tumble_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        tumble tumble_handle;
+    };
+    class algo_climb_ptr {
+    public:
+        algo_climb_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "climb") {
+                    try {
+                        _config->set_climb(_config->_path);
+                        climb_handle = protocol_ptr.make_instance<climb>(climb_new_param{
+                            _config->_climb_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        climb climb_handle;
+    };
     class algo_ptr {
     public:
         typedef void (algo_ptr::*set_protocols_handle)();
@@ -145,10 +227,7 @@ namespace glasssix {
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
             Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
-            Function["climb"]               = &algo_ptr::set_protocols_handl_climb;
             Function["crossing"]            = &algo_ptr::set_protocols_handl_crossing;
-            Function["batterypilferers"]    = &algo_ptr::set_protocols_handl_batterypilferers;
-            Function["fighting"]            = &algo_ptr::set_protocols_handl_fighting;
             Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
             Function["pump_weld"]           = &algo_ptr::set_protocols_handl_pump_weld;
@@ -169,7 +248,6 @@ namespace glasssix {
             Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
             Function["sleep"]               = &algo_ptr::set_protocols_handl_sleep;
             Function["smoke"]               = &algo_ptr::set_protocols_handl_smoke;
-            Function["tumble"]              = &algo_ptr::set_protocols_handl_tumble;
             Function["vehicle"]             = &algo_ptr::set_protocols_handl_vehicle;
             Function["wander"]              = &algo_ptr::set_protocols_handl_wander;
             Function["pump_pumptop_person"] = &algo_ptr::set_protocols_handl_pump_pumptop_person;
@@ -181,25 +259,10 @@ namespace glasssix {
             Function["pedestrian_min"]      = &algo_ptr::set_protocols_handl_pedestrian_min;
             Function["posture"]             = &algo_ptr::set_protocols_handl_posture;
         }
-        void set_protocols_handl_climb() {
-            _config->set_climb(_config->_path);
-            climb_handle = protocol_ptr.make_instance<climb>(
-                climb_new_param{_config->_climb_config.device, _config->_configure_directory.models_directory});
-        }
         void set_protocols_handl_crossing() {
             _config->set_crossing(_config->_path);
             crossing_handle = protocol_ptr.make_instance<crossing>(
                 crossing_new_param{_config->_crossing_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_batterypilferers() {
-            _config->set_batterypilferers(_config->_path);
-            batterypilferers_handle = protocol_ptr.make_instance<batterypilferers>(batterypilferers_new_param{
-                _config->_batterypilferers_config.device, _config->_configure_directory.models_directory, 3});
-        }
-        void set_protocols_handl_fighting() {
-            _config->set_fighting(_config->_path);
-            fighting_handle = protocol_ptr.make_instance<fighting>(fighting_new_param{_config->_fighting_config.device,
-                _config->_configure_directory.models_directory, _config->_fighting_config.batch});
         }
         void set_protocols_handl_flame() {
             _config->set_flame(_config->_path);
@@ -320,11 +383,6 @@ namespace glasssix {
             smoke_handle = protocol_ptr.make_instance<smoke>(
                 smoke_new_param{_config->_smoke_config.device, _config->_configure_directory.models_directory});
         }
-        void set_protocols_handl_tumble() {
-            _config->set_tumble(_config->_path);
-            tumble_handle = protocol_ptr.make_instance<tumble>(
-                tumble_new_param{_config->_tumble_config.device, _config->_configure_directory.models_directory});
-        }
         void set_protocols_handl_vehicle() {
             _config->set_vehicle(_config->_path);
             vehicle_handle = protocol_ptr.make_instance<vehicle>(
@@ -385,10 +443,7 @@ namespace glasssix {
         selene selene_handle;
         cassius cassius_handle;
         refvest refvest_handle;
-        climb climb_handle;
         crossing crossing_handle;
-        batterypilferers batterypilferers_handle;
-        fighting fighting_handle;
         flame flame_handle;
         pump_mask pump_mask_handle;
         pump_weld pump_weld_handle;
@@ -404,7 +459,6 @@ namespace glasssix {
         helmet helmet_handle;
         sleep sleep_handle;
         smoke smoke_handle;
-        tumble tumble_handle;
         vehicle vehicle_handle;
         wander wander_handle;
         leavepost leavepost_handle;
