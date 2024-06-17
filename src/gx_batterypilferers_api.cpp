@@ -5,7 +5,8 @@
 #include <queue>
 
 namespace glasssix {
-
+    thread_pool* pool_batterypilferers = nullptr;
+    std::unordered_map<std::thread::id, algo_batterypilferers_ptr*> batterypilferers_thread_algo_ptr;
     gx_batterypilferers_api::gx_batterypilferers_api() : impl_{std::make_unique<impl>()} {}
     gx_batterypilferers_api::gx_batterypilferers_api(const abi::string& config_path)
         : impl_{std::make_unique<impl>(config_path)} {}
@@ -15,6 +16,9 @@ namespace glasssix {
     class gx_batterypilferers_api::impl {
     public:
         void init() {
+            if (pool_batterypilferers == nullptr)
+                pool_batterypilferers = new thread_pool(_config->_configure_directory.thread_pool_num_batterypilferers);
+
 #if (GX_EMPOWER_FLAG) 
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
@@ -77,12 +81,12 @@ namespace glasssix {
     //  偷电瓶检测
     batterypilferers_info gx_batterypilferers_api::safe_production_batterypilferers(const abi::vector<gx_img_api>& mat_list) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_batterypilferers->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (batterypilferers_thread_algo_ptr[id_] == nullptr) {
+                    batterypilferers_thread_algo_ptr[id_] = new algo_batterypilferers_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = batterypilferers_thread_algo_ptr[id_];
                 if (_config->_batterypilferers_config.batch != mat_list.size())
                     throw source_code_aware_runtime_error(U8("Error: The config/batterypilferers.json : batch != mat_list.size()"));
                 batterypilferers_info ans;
