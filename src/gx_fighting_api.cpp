@@ -6,6 +6,8 @@
 
 namespace glasssix {
 
+    thread_pool* pool_fighting = nullptr;
+    std::unordered_map<std::thread::id, algo_fighting_ptr*> fighting_thread_algo_ptr;
     gx_fighting_api::gx_fighting_api() : impl_{std::make_unique<impl>()} {}
     gx_fighting_api::gx_fighting_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_fighting_api::~gx_fighting_api() {}
@@ -14,6 +16,8 @@ namespace glasssix {
     class gx_fighting_api::impl {
     public:
         void init() {
+            if (pool_fighting == nullptr)
+                pool_fighting = new thread_pool(_config->_configure_directory.thread_pool_num_fighting);
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
@@ -74,12 +78,12 @@ namespace glasssix {
     //  打架斗殴检测
     fighting_info gx_fighting_api::safe_production_fighting(const abi::vector<gx_img_api>& mat_list, const fighting_roi& roi) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_fighting->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (fighting_thread_algo_ptr[id_] == nullptr) {
+                    fighting_thread_algo_ptr[id_] = new algo_fighting_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = fighting_thread_algo_ptr[id_];
                 if (_config->_fighting_config.batch != mat_list.size())
                     throw source_code_aware_runtime_error(
                         U8("Error: The config/fighting.json : batch != mat_list.size()"));
