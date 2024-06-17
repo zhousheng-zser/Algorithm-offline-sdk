@@ -12,9 +12,6 @@ namespace glasssix {
     class gx_climb_api::impl {
     public:
         void init() {
-            if (api_temp == nullptr) {
-                api_temp = new gx_posture_api();
-            }
 
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
@@ -49,7 +46,6 @@ namespace glasssix {
             init();
         }
         ~impl() {}
-        gx_posture_api* api_temp = nullptr;
 
     private:
 #if (GX_EMPOWER_FLAG)
