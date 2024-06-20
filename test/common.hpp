@@ -48,11 +48,10 @@ bool condition_time                  = false;
 bool condition                       = true;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
-static std::string IMG_PATH = "/home/linaro/img/";
 #else
 static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
-static std::string IMG_PATH                = "/root/img/";
 #endif
+static std::string IMG_PATH = "/root/img/";
 #define TIMES 1000
 
 namespace glasssix {
