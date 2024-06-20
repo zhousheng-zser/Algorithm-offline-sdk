@@ -48,11 +48,10 @@ bool condition_time                  = false;
 bool condition                       = true;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
-static std::string IMG_PATH = "/home/linaro/img/";
 #else
 static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
-static std::string IMG_PATH                = "/root/img/";
 #endif
+static std::string IMG_PATH = "/root/img/";
 #define TIMES 1000
 
 namespace glasssix {
@@ -672,8 +671,8 @@ namespace glasssix {
             img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_25th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_30th.jpg", static_cast<int>(1e9)));
             img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_35th.jpg", static_cast<int>(1e9)));
-            // img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_40th.jpg", static_cast<int>(1e9)));
-            // img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_45th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_40th.jpg", static_cast<int>(1e9)));
+            img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "fighting/fight_45th.jpg", static_cast<int>(1e9)));
             for (int i = 0; i < T; ++i) {
                 auto val = api_temp->safe_production_fighting(img_list, {0, 0, 1920, 1080});
                 if (condition)
