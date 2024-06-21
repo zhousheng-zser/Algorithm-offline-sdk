@@ -52,7 +52,7 @@ static const abi::string CONFIG_PATH = "config";
 static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #endif
 static std::string IMG_PATH = "/root/img/";
-#define TIMES 1000
+#define TIMES 1100
 
 namespace glasssix {
 
