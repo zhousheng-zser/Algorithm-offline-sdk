@@ -46,6 +46,7 @@
 using namespace glasssix;
 bool condition_time                  = false;
 bool condition                       = true;
+bool is_out_json                     = true;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
@@ -53,7 +54,7 @@ static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/confi
 #endif
 static std::string IMG_PATH = "/root/img/";
 #define TIMES 1100
-
+namespace fs = std::filesystem;
 namespace glasssix {
 
     const cv::Scalar RED   = CV_RGB(250, 0, 0); // 红
@@ -1591,5 +1592,50 @@ void face_test() {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     if (condition_time)
         printf("search time = %lld microsecond\n", duration.count() / 5);
+    delete api_temp;
+}
+
+
+    // 多线程测人头(读取文件夹内容）
+void thread_function_head_from() {
+    gx_head_api* api_temp = new gx_head_api(CONFIG_PATH);
+    int T                 = 1;
+    const char* path                           = R"(/root/img/images/test/)";
+    std::vector<std::string> folder_file = find_file_test(path);
+    std::cout << " folder_file " << folder_file.size() << ";" << std::endl;
+    auto start            = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < T; ++i) {
+        try {
+            for (int i = 0; i < folder_file.size(); i++)
+            {
+                fs::path filePath(folder_file[i]);
+                std::string fileName = filePath.filename().string();//拿到图片名字
+                std::cout << "fileName : " << fileName << std::endl;
+                
+                const gx_img_api img(abi::string(path + fileName), static_cast<int>(1e9));
+                auto val = api_temp->safe_production_head(img);
+                if (condition)
+                    printf("[head] : head_list = %d\n", val.size());
+                if (is_out_json)
+                {
+                    for (int i = 0; i < val.size(); i++) {
+                        std::cout << "x1 : " << val[i].x1 << std::endl;
+                        std::cout << "x2 : " << val[i].x2 << std::endl;
+                        std::cout << "y1 : " << val[i].y1 << std::endl;
+                        std::cout << "y2 : " << val[i].y2 << std::endl;
+                        std::cout << "score : " << val[i].score << std::endl << std::endl;
+                    }
+                    std::cout << "*********\n";
+                }
+            }
+
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
+        }
+    }
+    auto end      = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    if (condition_time)
+        printf("head time = %lld microsecond\n", duration.count());
     delete api_temp;
 }
