@@ -2,7 +2,7 @@
     "device": -1,
     "format": 1,
     "feature_table_size": 1000,
-    "feature_match_threshold": 0.97,
+    "feature_match_threshold": 0.92,
     "person_conf": 0.6,
-    "interval": 10
+    "interval": 60
 }
