@@ -387,7 +387,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "wander.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_wander(img, i, 1);
+                auto val = api_temp->safe_production_wander(img, i, 1,60);
                 if (condition) {
                     printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
                     // printf("[wander] : wander_remove_id ans =%d\n",
@@ -1433,7 +1433,7 @@ void wangder_limit() {
 
             gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
             auto val_ped = api_ped->safe_production_pedestrian(img1);
-            wander_info val = api_temp->safe_production_wander(img1, frameCount / 25, 1, val_ped.person_list);
+            wander_info val = api_temp->safe_production_wander(img1, frameCount / 25, 1,60, val_ped.person_list);
             int result   = 0;
             for (int i = 0; i < val.person_info.size(); i++) {
                 int x1 = val.person_info[i].x1;
