@@ -14,11 +14,12 @@ namespace glasssix {
         gx_wander_api& operator=(gx_wander_api&&) noexcept;
 
         //  安全生产 徘徊检测
-        wander_info safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id);
+        wander_info safe_production_wander(
+            const gx_img_api& mat, std::int64_t current_time, int device_id, int interval);
 
         //  安全生产 徘徊检测
         wander_info safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id,
-            const abi::vector<pedestrian_info::boxes>& person_list);
+            int interval, const abi::vector<pedestrian_info::boxes>& person_list);
 
         //  安全生产 越界检测
         wander_limit_info safe_production_wander_limit(const gx_img_api& mat, std::int64_t current_time, int device_id,
