@@ -89,6 +89,7 @@ namespace glasssix {
     //  徘徊检测
     wander_info gx_wander_api::safe_production_wander(const gx_img_api& mat, std::int64_t current_time, int device_id,
         const abi::vector<pedestrian_info::boxes>& person_list) {
+        current_time %= 86400; //   一天86400秒
         if (!impl_->camera_id) {
             impl_->camera_id = device_id;
             impl_->category  = 1;
@@ -103,7 +104,7 @@ namespace glasssix {
         ///  超过interval秒没出现的人自动删
         std::vector<std::int32_t> v;
         for (auto& it : impl_->wander_map) {
-            if (current_time - it.second.last_time > _config->_wander_config.interval)
+            if ((current_time - it.second.last_time+86400)%86400 > _config->_wander_config.interval)
                 v.emplace_back(it.first);
         }
         for (int x : v) {
@@ -161,7 +162,7 @@ namespace glasssix {
                 if (impl_->wander_map.find(id_temp) == impl_->wander_map.end()) // 库里没有
                     impl_->wander_map[id_temp] = impl::person_cache{.sum_time = 0, .last_time = current_time};
                 else {
-                    impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time);
+                    impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time+86400)%86400;
                     impl_->wander_map[id_temp].last_time = current_time;
                 }
                 ans.person_info[i].sum_time = impl_->wander_map[id_temp].sum_time;
