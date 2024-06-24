@@ -46,6 +46,7 @@
 using namespace glasssix;
 bool condition_time                  = false;
 bool condition                       = true;
+bool is_out_json                     = true;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
@@ -53,7 +54,7 @@ static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/confi
 #endif
 static std::string IMG_PATH = "/root/img/";
 #define TIMES 1100
-
+namespace fs = std::filesystem;
 namespace glasssix {
 
     const cv::Scalar RED   = CV_RGB(250, 0, 0); // 红
@@ -1591,5 +1592,85 @@ void face_test() {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     if (condition_time)
         printf("search time = %lld microsecond\n", duration.count() / 5);
+    delete api_temp;
+}
+
+
+    // 多线程测人头(读取文件夹内容并写入json文件）
+void thread_function_head_from() {
+    gx_head_api* api_temp = new gx_head_api(CONFIG_PATH);
+    int T                 = 1;
+    const char* path                           = R"(/root/img/images/)";
+    std::vector<std::string> folder_file = find_file_test(path);
+    std::cout << " folder_file " << folder_file.size() << ";" << std::endl;
+    auto start            = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < T; ++i) {
+        try {
+            for (int i = 0; i < folder_file.size(); i++)
+            {
+                fs::path filePath(folder_file[i]);
+                std::string fileName = filePath.filename().string();//拿到图片名字(含后缀名)
+                std::string fileNamePre;
+                std::cout << "fileName : " << fileName << std::endl;
+                size_t lastDotPos = fileName.find_last_of(".");
+                //如果找到 点 ,则截取前面的部分作为文件名
+                if(lastDotPos != std::string::npos)
+                {
+                    fileNamePre = fileName.substr(0, lastDotPos);
+                    std::cout << "fileNamePre : " << fileNamePre << std::endl;
+                }
+                const gx_img_api img(abi::string(path + fileName), static_cast<int>(1e9));
+                auto val = api_temp->safe_production_head(img);
+                if (condition)
+                    printf("[head] : head_list = %d\n", val.size());
+                if (is_out_json)
+                {
+                    //std::cout << glasssix::json::parse(val).dump() << "+++++++++\n";
+                    for (int i = 0; i < val.size(); i++) {
+                        std::cout << "x1 : " << val[i].x1 << std::endl;
+                        std::cout << "x2 : " << val[i].x2 << std::endl;
+                        std::cout << "y1 : " << val[i].y1 << std::endl;
+                        std::cout << "y2 : " << val[i].y2 << std::endl;
+                        std::cout << "score : " << val[i].score << std::endl << std::endl;
+
+                        //写入json文件
+                        
+                        std::ofstream outputFile("./json/" + fileNamePre + ".json");
+                        if (outputFile.is_open()) {
+                            outputFile << "{\n";
+                            outputFile << "  \"head_info\": [\n";
+                            for (size_t i = 0; i < val.size(); ++i) {
+                                outputFile << "    {\n";
+                                outputFile << "      \"x1\": " << val[i].x1 << ",\n";
+                                outputFile << "      \"x2\": " << val[i].x2 << ",\n";
+                                outputFile << "      \"y1\": " << val[i].y1 << ",\n";
+                                outputFile << "      \"y2\": " << val[i].y2 << ",\n";
+                                outputFile << "      \"score\": " << val[i].score << "\n";
+                                if (i == val.size() - 1) {
+                                    outputFile << "    }\n";
+                                } else {
+                                    outputFile << "    },\n";
+                                }
+                            }
+                            outputFile << "  ]\n";
+                            outputFile << "}\n";
+                            outputFile.close();
+                            std::cout << "JSON output successfully written to file." << std::endl;
+                        } else {
+                            std::cerr << "Unable to open file for writing." << std::endl;
+                        }
+                    }
+                    std::cout << "*********\n";
+                }
+            }
+
+        } catch (const std::exception& ex) {
+            printf("error =  %s\n", ex.what());
+        }
+    }
+    auto end      = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    if (condition_time)
+        printf("head time = %lld microsecond\n", duration.count());
     delete api_temp;
 }
