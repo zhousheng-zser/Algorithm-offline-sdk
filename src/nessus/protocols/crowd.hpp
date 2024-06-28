@@ -57,7 +57,25 @@ namespace glasssix {
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
 
+    struct crowd_remove_library_param {
+        GX_BEGIN_FIELDS(crowd_remove_library_param);
+        GX_FIELD(std::string, instance_guid);
+        GX_FIELD(std::int32_t, id);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
+    struct crowd_remove_library_result {
+        GX_BEGIN_FIELDS(crowd_remove_library_result);
+        GX_FIELD(parser_result_status, status);
+        GX_FIELD(abi::string, delete_info);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     struct crowd : protocol_object {
         struct detect : parser_inout<crowd_detect_param, crowd_detect_result> {};
+        struct remove_library : parser_inout<crowd_remove_library_param, crowd_remove_library_result> {};
     };
 } // namespace glasssix

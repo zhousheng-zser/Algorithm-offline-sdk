@@ -15,6 +15,9 @@ namespace glasssix {
         //  安全生产 聚众检测
         crowd_info safe_production_crowd(const gx_img_api& mat, int min_cluster_size, int trigger_delay, int device_id);
 
+        //  清除摄像头徘徊缓存
+        bool crowd_remove_library(int device_id);
+
     private:
         class impl;
         std::unique_ptr<impl> impl_;
