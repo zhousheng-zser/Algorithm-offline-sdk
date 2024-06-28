@@ -125,4 +125,22 @@ namespace glasssix {
         }
     }
 
+    
+    bool gx_crowd_api::crowd_remove_library(int device_id) {
+        auto result_pool = pool->enqueue([&] {
+            if (thread_algo_crowd_ptr == nullptr) {
+                thread_algo_crowd_ptr = new algo_crowd_ptr();
+            }
+            auto ptr = thread_algo_crowd_ptr;
+            std::array<char, 0> arr{};
+            auto result = ptr->protocol_ptr.invoke<crowd::remove_library>(
+                ptr->crowd_handle, crowd_remove_library_param{.id = device_id}, std::span<char>{arr});
+            if (result.delete_info == "ok")
+                return true;
+            return false;
+        });
+
+        return result_pool.get();
+    }
+
 } // namespace glasssix
