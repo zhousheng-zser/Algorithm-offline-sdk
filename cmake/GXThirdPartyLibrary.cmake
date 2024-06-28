@@ -32,7 +32,15 @@ function(gx_make_install_third_party_library_impl name)
     set(cmake_args -DCMAKE_INSTALL_PREFIX=${install_dir})
 
     if(NOT ARG_NO_INHERIT_TOOLCHAIN_FILE AND NOT ARG_TOOLCHAIN_FILE)
-        list(APPEND cmake_args -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
+        if(CMAKE_TOOLCHAIN_FILE)
+            list(APPEND cmake_args -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
+        else()
+            list(
+                APPEND cmake_args
+                -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+            )
+        endif()
     elseif(ARG_TOOLCHAIN_FILE)
         list(APPEND cmake_args -DCMAKE_TOOLCHAIN_FILE=${ARG_TOOLCHAIN_FILE})
     endif()
@@ -45,20 +53,24 @@ function(gx_make_install_third_party_library_impl name)
         list(APPEND cmake_args -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
     endif()
     
-    if(ARG_STATIC_RUNTIME)
-        gx_make_c_cxx_runtime_flags(
-            STATIC_RUNTIME
-            RESULT_DEBUG_FLAGS debug_flags
-            RESULT_RELEASE_FLAGS release_flags
-        )
+    if(NOT EMSCRIPTEN)
+        if(ARG_STATIC_RUNTIME)
+            gx_make_c_cxx_runtime_flags(
+                STATIC_RUNTIME
+                RESULT_DEBUG_FLAGS debug_flags
+                RESULT_RELEASE_FLAGS release_flags
+                RESULT_MSVC_RUNTIME_LIBRARY msvc_runtime_library
+            )
 
-        list(
-            APPEND cmake_args
-            -DCMAKE_C_FLAGS_DEBUG=${debug_flags}
-            -DCMAKE_C_FLAGS_RELEASE=${release_flags}
-            -DCMAKE_CXX_FLAGS_DEBUG=${debug_flags}
-            -DCMAKE_CXX_FLAGS_RELEASE=${release_flags}
-        )
+            list(
+                APPEND cmake_args
+                -DCMAKE_C_FLAGS_DEBUG=${debug_flags}
+                -DCMAKE_C_FLAGS_RELEASE=${release_flags}
+                -DCMAKE_CXX_FLAGS_DEBUG=${debug_flags}
+                -DCMAKE_CXX_FLAGS_RELEASE=${release_flags}
+                -DCMAKE_MSVC_RUNTIME_LIBRARY=${msvc_runtime_library}
+            )
+        endif()
     endif()
 
     list(
@@ -69,19 +81,26 @@ function(gx_make_install_third_party_library_impl name)
 
     file(MAKE_DIRECTORY ${binary_dir})
 
+    if(WIN32)
+        set(env_vars "")
+    else()
+        set(env_vars PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH})
+    endif()
+
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][PKG_CONFIG_PATH] $ENV{PKG_CONFIG_PATH}")
+
     # (Re-)configure the project only when neccessary.
     if(NOT EXISTS ${binary_dir}/CMakeCache.txt)
         gx_execute_process(
             COMMAND ${CMAKE_COMMAND} ${cmake_args} ${ARG_CMAKE_ARGS} ${ARG_SOURCE_DIR}
             WORKING_DIRECTORY ${binary_dir}
+            ${env_vars}
         )
     endif()
 
     if(ARG_PARALLEL_BUILD)
-        include(ProcessorCount)
-        ProcessorCount(processor_count)
-
-        set(additional_args -j${processor_count})
+        gx_thread_pool_worker_count(worker_count)
+        set(additional_args -j${worker_count})
     else()
         set(additional_args "")
     endif()
@@ -89,6 +108,7 @@ function(gx_make_install_third_party_library_impl name)
     gx_execute_process(
         COMMAND ${CMAKE_COMMAND} --build . ${additional_args}
         WORKING_DIRECTORY ${binary_dir}
+        ${env_vars}
     )
 
     gx_execute_process(
@@ -105,13 +125,13 @@ function(gx_make_install_third_party_library_impl name)
     if(ARG_PACKAGE_CONFIG_DIR)
         set(package_config_dirs ${install_dir}/${ARG_PACKAGE_CONFIG_DIRS})
     else()
-        set(package_config_dirs ${install_dir}/lib/cmake ${install_dir}/lib64/cmake)
+        set(package_config_dirs ${install_dir})
     endif()
 
     if(ARG_REQUIRED)
         set(find_package_options REQUIRED)
     else()
-        set(find_package_options "")
+        set(find_package_options)
     endif()
 
     if(ARG_MODULE)
@@ -123,6 +143,7 @@ function(gx_make_install_third_party_library_impl name)
             APPEND find_package_options
             HINTS ${package_config_dirs}
             NO_DEFAULT_PATH
+            CMAKE_FIND_ROOT_PATH_BOTH
         )
     endif()
 
@@ -134,13 +155,24 @@ macro(gx_make_install_third_party_library name)
         name
         ${ARGN}
         RESULT_FIND_PACKAGE_OPTIONS gx_make_install_third_party_library_find_package_options
+        RESULT_INSTALL_DIR gx_make_install_third_party_library_install_dir
     )
 
     # https://cmake.org/cmake/help/latest/policy/CMP0074.html
     cmake_policy(PUSH)
     cmake_policy(SET CMP0074 NEW)
+    gx_push_root_path_policy()
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE NEVER)
     find_package(${name} ${gx_make_install_third_party_library_find_package_options})
+    gx_pop_root_path_policy()
     cmake_policy(POP)
 
+    if(NOT WIN32)
+        gx_pkg_config_add_path(${gx_make_install_third_party_library_install_dir}/lib/pkgconfig)
+    endif()
+
     unset(gx_make_install_third_party_library_find_package_options)
+    unset(gx_make_install_third_party_library_install_dir)
 endmacro()

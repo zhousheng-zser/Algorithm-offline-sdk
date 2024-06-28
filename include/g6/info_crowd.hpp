@@ -1,24 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
-#include <g6/abi/vector.hpp>
-typedef unsigned char uchar;
-
-namespace glasssix {
-    // 聚众信息
-    struct crowd_info {
-        struct boxes {
-            std::int32_t x1{}; // 检出框体左上坐标x
-            std::int32_t y1{}; // 检出框体左上坐标y
-            std::int32_t x2{}; // 检出框体右下坐标x
-            std::int32_t y2{}; // 检出框体右下坐标y
-            std::int32_t category{}; // 小团体分类
-            enum class json_serialization { snake_case };
-        };
-        abi::vector<boxes> head_list{}; // 人头坐标
-        abi::vector<boxes> cluster_list{}; // 小团体框
-        enum class json_serialization { snake_case };
+// 攀爬信息
+struct crowd_info {
+    struct boxes {
+        int category;
+        int  x1;
+        int  x2;
+        int  y1;
+        int  y2;
     };
-
-} // namespace glasssix
+    std::vector<boxes> head_list;// 人头坐标
+    std::vector<boxes> cluster_list;// 小团体框
+};

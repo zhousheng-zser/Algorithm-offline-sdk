@@ -4,10 +4,10 @@
 
 namespace glasssix {
 
-    class GX_API(GXOFFLINERECOGNITION) gx_tumble_api {
+    class GX_API(GXAPI) gx_tumble_api {
     public:
         gx_tumble_api();
-        gx_tumble_api(const abi::string& config_path);
+        gx_tumble_api(const std::string& config_path);
         ~gx_tumble_api();
         gx_tumble_api(gx_tumble_api&&) noexcept;
         gx_tumble_api& operator=(gx_tumble_api&&) noexcept;

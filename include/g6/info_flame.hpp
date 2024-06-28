@@ -2,22 +2,31 @@
 
 #include <cstdint>
 
-#include <g6/abi/vector.hpp>
-
+#include <struct_json.hpp>
 typedef unsigned char uchar;
 
 namespace glasssix {
-    // 火焰信息
+
     struct flame_info {
         struct boxes {
-            float score{}; // 置信度
-            std::int32_t x1{}; // 检出框体左上坐标x
-            std::int32_t y1{}; // 检出框体左上坐标y
-            std::int32_t x2{}; // 检出框体右下坐标x
-            std::int32_t y2{}; // 检出框体右下坐标y
-            enum class json_serialization { snake_case };
+            int x1;
+            int y1;
+            int x2;
+            int y2;
         };
-        abi::vector<boxes> fire_list{}; // 火
-        enum class json_serialization { snake_case };
+        std::vector<boxes> fire_list;
     };
+
+    DEFINE_STRUCT_SCHEMA(flame_info::boxes, 
+        DEFINE_STRUCT_FIELD(int ,x1),
+        DEFINE_STRUCT_FIELD(int ,y1),
+        DEFINE_STRUCT_FIELD(int ,x2),
+        DEFINE_STRUCT_FIELD(int ,y2)
+    );
+
+    DEFINE_STRUCT_SCHEMA(flame_info, 
+        DEFINE_STRUCT_FIELD(boxes, "boxes"), 
+        DEFINE_STRUCT_FIELD(fire_list, "fire_list")
+    );
+
 } // namespace glasssix

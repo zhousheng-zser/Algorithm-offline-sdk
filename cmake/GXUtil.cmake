@@ -141,14 +141,14 @@ function(gx_execute_process)
     cmake_parse_arguments(PARSE_ARGV 0 ARG "${options}" "${one_value_args}" "${multi_value_args}")
     gx_ensure_parameters(gx_execute_process ARG COMMAND WORKING_DIRECTORY)
     
-    message("[gx_execute_process][Command] ${ARG_COMMAND}")
-    message("[gx_execute_process][Working Directory] ${ARG_WORKING_DIRECTORY}")
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][Command] ${ARG_COMMAND}")
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][Working Directory] ${ARG_WORKING_DIRECTORY}")
 
     if(ARG_ENVIRONMENT_VARIABLES)
-        message("[gx_execute_process][Enviroment Variables] ${ARG_ENVIRONMENT_VARIABLES}")
+        message(STATUS "[${CMAKE_CURRENT_FUNCTION}][Enviroment Variables] ${ARG_ENVIRONMENT_VARIABLES}")
         set(additional_args COMMAND ${CMAKE_COMMAND} -E env ${ARG_ENVIRONMENT_VARIABLES} ${ARG_COMMAND})
     else()
-        set( additional_args COMMAND ${ARG_COMMAND} )
+        set( additional_args COMMAND ${ARG_COMMAND})
     endif()
 
     if(ARG_STDOUT_VARIABLE)
@@ -179,4 +179,92 @@ function(gx_find_nmake)
         WORKING_DIRECTORY ${_gx_util_absolute_current_dir}
         STDOUT_VARIABLE output_text
     )
+endfunction()
+
+function(gx_push_root_path_policy)
+    set(
+        local_list
+        ${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}
+        ${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}
+        ${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}
+        ${CMAKE_FIND_ROOT_PATH_MODE_PACKAGE}
+    )
+
+    set(${CMAKE_CURRENT_FUNCTION}_root_path_list ${local_list} PARENT_SCOPE)
+
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][PUSH LIST] ${local_list}")
+endfunction()
+
+function(gx_pop_root_path_policy_impl local_list)
+    if(${local_list})
+        list(POP_BACK ${local_list} CMAKE_FIND_ROOT_PATH_MODE_PACKAGE)
+        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ${CMAKE_FIND_ROOT_PATH_MODE_PACKAGE} PARENT_SCOPE)
+        message(STATUS "[${CMAKE_CURRENT_FUNCTION}][POP] ${CMAKE_FIND_ROOT_PATH_MODE_PACKAGE}")
+
+        list(POP_BACK ${local_list} CMAKE_FIND_ROOT_PATH_MODE_INCLUDE)
+        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE} PARENT_SCOPE)
+        message(STATUS "[${CMAKE_CURRENT_FUNCTION}][POP] ${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}")
+
+        list(POP_BACK ${local_list} CMAKE_FIND_ROOT_PATH_MODE_LIBRARY)
+        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY} PARENT_SCOPE)
+        message(STATUS "[${CMAKE_CURRENT_FUNCTION}][POP] ${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY}")
+
+        list(POP_BACK ${local_list} CMAKE_FIND_ROOT_PATH_MODE_PROGRAM)
+        set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM ${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM} PARENT_SCOPE)
+        message(STATUS "[${CMAKE_CURRENT_FUNCTION}][POP] ${CMAKE_FIND_ROOT_PATH_MODE_PROGRAM}")
+
+        unset(${local_list} PARENT_SCOPE)
+    endif()
+endfunction()
+
+macro(gx_pop_root_path_policy)
+    gx_pop_root_path_policy_impl(gx_push_root_path_policy_root_path_list)
+endmacro()
+
+macro(gx_find_package_no_root_path)
+    gx_push_root_path_policy()
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE NEVER)
+    find_package(${ARGN})
+    gx_pop_root_path_policy()
+endmacro()
+
+function(gx_dump_list)
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][Lists] ${ARGN}")
+    foreach(item IN LISTS ${ARGN})
+        message(STATUS [${CMAKE_CURRENT_FUNCTION}][Value] ${item})
+    endforeach()
+endfunction()
+
+function(gx_pkg_config_add_path)
+    set(pkg_config_path $ENV{PKG_CONFIG_PATH})
+    list(INSERT pkg_config_path 0 ${ARGN})
+    list(REMOVE_DUPLICATES pkg_config_path)
+    set(ENV{PKG_CONFIG_PATH} "${pkg_config_path}")
+
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][pkg_config_path] ${pkg_config_path}")
+endfunction()
+
+function(gx_thread_pool_worker_count result)
+    include(ProcessorCount)
+    ProcessorCount(processor_count)
+    math(EXPR worker_count "${processor_count} * 2 + 1")
+    set(${result} ${worker_count} PARENT_SCOPE)
+endfunction()
+
+function(gx_datetime result)
+    if(WIN32)
+        set(command cmd.exe /c "echo %date:~0,4%/%date:~5,2%/%date:~8,2% %time:~0,2%:%time:~3,2%:%time:~6,2%")
+    else()
+        set(command date)
+    endif()
+
+    execute_process(
+        COMMAND ${command}
+        OUTPUT_VARIABLE current_date
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
+    set(${result} ${current_date} PARENT_SCOPE)
 endfunction()

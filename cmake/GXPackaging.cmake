@@ -9,8 +9,16 @@ define_property(
 )
 
 function(gx_install_include_dirs target_name)
+	set(options REQUIRED)
+    set(one_value_args "")
+    set(multi_value_args "")
+    cmake_parse_arguments(PARSE_ARGV 1 ARG "${options}" "${one_value_args}" "${multi_value_args}")
+
 	get_target_property(target_include_dirs ${target_name} INTERFACE_INCLUDE_DIRECTORIES)
-	gx_ensure_parameters(gx_install_include_dirs "" target_include_dirs)
+
+	if(ARG_REQUIRED)
+		gx_ensure_parameters(gx_install_include_dirs "" target_include_dirs)
+	endif()
 
 	foreach(item IN LISTS target_include_dirs)
 		gx_split_generator_expression(${item} stage content)
@@ -83,8 +91,8 @@ function(gx_install_files target_name)
 endfunction()
 
 function(gx_make_install_package)
-	set(options INTERFACE)
-    set(one_value_args TARGET_NAME PACKAGE_NAME TARGET_VERSION)
+	set(options INTERFACE FILE_SET_HEADERS)
+    set(one_value_args TARGET_NAME PACKAGE_NAME TARGET_VERSION INCLUDE_DIR)
     set(multi_value_args PATH_VARS)
     cmake_parse_arguments(PARSE_ARGV 0 ARG "${options}" "${one_value_args}" "${multi_value_args}")
 	gx_ensure_parameters(gx_make_install_package ARG TARGET_NAME PACKAGE_NAME TARGET_VERSION)
@@ -96,8 +104,8 @@ function(gx_make_install_package)
 		message(FATAL_ERROR "Invalid TARGET_VERSION: ${ARG_TARGET_VERSION}")
 	endif()
 
-	message(STATUS "[gx_make_install_package][ARG_TARGET_VERSION] ${ARG_TARGET_VERSION}")
-	message(STATUS "[gx_make_install_package][so_version] ${so_version}")
+	message(STATUS "[${CMAKE_CURRENT_FUNCTION}][ARG_TARGET_VERSION] ${ARG_TARGET_VERSION}")
+	message(STATUS "[${CMAKE_CURRENT_FUNCTION}][so_version] ${so_version}")
 
 	if(NOT ARG_INTERFACE)
 		set_target_properties(${ARG_TARGET_NAME}
@@ -135,22 +143,38 @@ function(gx_make_install_package)
 	
 	set(package_targets ${ARG_PACKAGE_NAME}Targets)
 	
+	if(ARG_INCLUDE_DIR)
+		set(include_dir ${ARG_INCLUDE_DIR})
+	else()
+		set(include_dir include)
+	endif()
+
 	# Exports the target.
-	install(
-		TARGETS ${ARG_TARGET_NAME}
-		EXPORT ${package_targets}
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-		RUNTIME DESTINATION bin
-		INCLUDES DESTINATION include
-	)
+	if(ARG_FILE_SET_HEADERS)
+	    install(
+			TARGETS ${ARG_TARGET_NAME}
+			EXPORT ${package_targets}
+			FILE_SET HEADERS
+			DESTINATION ${include_dir}
+		)
+	else()
+	    install(
+	    	TARGETS ${ARG_TARGET_NAME}
+	    	EXPORT ${package_targets}
+	    	LIBRARY DESTINATION lib
+	    	ARCHIVE DESTINATION lib
+	    	RUNTIME DESTINATION bin
+	    	INCLUDES DESTINATION ${include_dir}
+	    )
+	    
+	    gx_install_include_dirs(${ARG_TARGET_NAME})
+	endif()
 	
-	gx_install_include_dirs(${ARG_TARGET_NAME})
 	gx_install_files(${ARG_TARGET_NAME} ${ARGN})
 
 	# Installs runtime dependencies if vcpkg is enabled.
 	if("${CMAKE_TOOLCHAIN_FILE}" MATCHES [=[vcpkg\.cmake$]=])
-		message("vcpkg is enabled; therefore use x_vcpkg_install_local_dependencies.")
+		message(STATUS "vcpkg is enabled; therefore use x_vcpkg_install_local_dependencies.")
 		x_vcpkg_install_local_dependencies(
 			TARGETS ${ARG_TARGET_NAME}
 			DESTINATION bin

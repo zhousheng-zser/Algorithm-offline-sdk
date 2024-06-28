@@ -4,10 +4,10 @@
 
 namespace glasssix {
 
-    class GX_API(GXOFFLINERECOGNITION) gx_flame_api {
+    class GX_API(GXAPI) gx_flame_api {
     public:
         gx_flame_api();
-        gx_flame_api(const abi::string& config_path);
+        gx_flame_api(const std::string& config_path);
         ~gx_flame_api();
         gx_flame_api(gx_flame_api&&) noexcept;
         gx_flame_api& operator=(gx_flame_api&&) noexcept;

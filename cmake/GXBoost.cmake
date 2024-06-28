@@ -10,7 +10,7 @@ function(gx_write_boost_user_config_file)
     gx_ensure_parameters(gx_write_boost_project_jam_file ARG TOOLSET FILE RESULT_TOOLSET_ABBREVIATION)
 
     get_filename_component(toolset_file_name ${ARG_TOOLSET} NAME_WE)
-    message("[gx_write_boost_user_config_file][toolset_file_name] ${toolset_file_name}")
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][toolset_file_name] ${toolset_file_name}")
 
     # arm-none-linux-gnueabihf-gcc --> gcc
     # arm-none-linux-gnueabihf-g++ --> g++
@@ -18,15 +18,36 @@ function(gx_write_boost_user_config_file)
         message(FATAL_ERROR "Invalid format of the toolset file name: ${toolset_file_name}.")
     endif()
 
+    set(map_cc gcc)
+    set(map_c++ gcc)
     set(map_g++ gcc)
+    set(map_clang++ clang)
     set(map_em++ emscripten)
 
-    if(NOT "${map_${CMAKE_MATCH_2}}" STREQUAL "")
-        set(toolset_name ${map_${CMAKE_MATCH_2}})
+    # For gcc-11, g++-11
+    set(map_g++- gcc)
+    set(map_gcc- gcc)
+
+    set(toolset_file_first_part ${CMAKE_MATCH_1})
+    set(toolset_file_second_part ${CMAKE_MATCH_2})
+
+    # Handles situlations like gcc-11 g++-11.
+    if(toolset_file_second_part MATCHES [=[[0-9]+]=])
+        set(toolset_key ${toolset_file_first_part})
     else()
-        set(toolset_name ${CMAKE_MATCH_2})
+        set(toolset_key ${toolset_file_second_part})
     endif()
-    # ${toolset_name}
+
+    set(toolset_map_key "map_${toolset_key}")
+
+    if(NOT "${${toolset_map_key}}" STREQUAL "")
+        set(toolset_name ${${toolset_map_key}})
+    else()
+        set(toolset_name ${toolset_key})
+    endif()
+    
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][toolset_name] ${toolset_name}")
+
     file(WRITE ${ARG_FILE} "using ${toolset_name} : : \"${ARG_TOOLSET}\" : ;")
     set(${ARG_RESULT_TOOLSET_ABBREVIATION} ${toolset_name} PARENT_SCOPE)
 endfunction()
@@ -57,8 +78,6 @@ function(gx_make_boost_impl)
         set(install_dir ${default_install_dir})
     endif()
 
-    gx_check_emscripten(use_emcc use_emxx emscripten_dir)
-
     # Replaces CMAKE_EXECUTABLE_SUFFIX with host_executable_suffix here to avoid .js when Emscripten designated.
     set(b2_program ${ARG_SOURCE_DIR}/b2${GX_HOST_EXECUTABLE_SUFFIX})
 
@@ -86,10 +105,8 @@ function(gx_make_boost_impl)
     endif()
     
     if(ARG_PARALLEL_BUILD)
-        include(ProcessorCount)
-        ProcessorCount(processor_count)
-
-        list(APPEND additional_args -j${processor_count})
+        gx_thread_pool_worker_count(worker_count)
+        list(APPEND additional_args -j${worker_count})
     endif()
 
     if(ARG_STATIC)
@@ -131,7 +148,7 @@ function(gx_make_boost_impl)
         list(APPEND additional_args target-os=${ARG_TARGET_OS})
     endif()
 
-    if(use_emxx)
+    if(EMSCRIPTEN)
         list(APPEND additional_args --disable-icu)
     endif()
 
@@ -157,10 +174,17 @@ macro(gx_make_boost)
         RESULT_FIND_PACKAGE_OPTIONS gx_make_boost_find_package_options
     )
 
+    message(STATUS "[gx_make_boost][Boost_USE_STATIC_RUNTIME] ${Boost_USE_STATIC_RUNTIME}")
+
     # https://cmake.org/cmake/help/latest/policy/CMP0074.html
     cmake_policy(PUSH)
     cmake_policy(SET CMP0074 NEW)
+    gx_push_root_path_policy()
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE NEVER)
     find_package(Boost ${gx_make_boost_find_package_options})
+    gx_pop_root_path_policy()
     cmake_policy(POP)
 
     unset(gx_make_openssl_find_package_options)

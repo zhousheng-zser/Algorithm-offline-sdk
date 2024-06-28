@@ -4,10 +4,10 @@
 
 namespace glasssix {
 
-    class GX_API(GXOFFLINERECOGNITION) gx_smog_api {
+    class GX_API(GXAPI) gx_smog_api {
     public:
         gx_smog_api();
-        gx_smog_api(const abi::string& config_path);
+        gx_smog_api(const std::string& config_path);
         ~gx_smog_api();
         gx_smog_api(gx_smog_api&&) noexcept;
         gx_smog_api& operator=(gx_smog_api&&) noexcept;

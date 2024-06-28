@@ -1,0 +1,24 @@
+{
+    "algo_list": [
+        {
+            "protocols": "smog",
+            "num": 1
+        },
+        {
+            "protocols": "posture",
+            "num": 1
+        },
+        {
+            "protocols": "playphone",
+            "num": 1
+        },
+        {
+            "protocols": "head",
+            "num": 1
+        },
+        {
+            "protocols": "pedestrian",
+            "num": 1
+        }
+    ]
+}

@@ -1,10 +1,10 @@
 include_guard()
 
 function(gx_check_emscripten c_result cxx_result root_dir)
-    string(TOLOWER ${CMAKE_C_COMPILER} lcase_c_compiler)
-    string(TOLOWER ${CMAKE_CXX_COMPILER} lcase_cxx_compiler)
-    get_filename_component(lcase_c_compiler_name ${lcase_c_compiler} NAME_WE)
-    get_filename_component(lcase_cxx_compiler_name ${lcase_cxx_compiler} NAME_WE)
+    string(TOLOWER "${CMAKE_C_COMPILER}" lcase_c_compiler)
+    string(TOLOWER "${CMAKE_CXX_COMPILER}" lcase_cxx_compiler)
+    get_filename_component(lcase_c_compiler_name "${lcase_c_compiler}" NAME_WE)
+    get_filename_component(lcase_cxx_compiler_name "${lcase_cxx_compiler}" NAME_WE)
 
     set(compiler_list "")
 
@@ -25,8 +25,8 @@ function(gx_check_emscripten c_result cxx_result root_dir)
     set(${c_result} ${use_emcc} PARENT_SCOPE)
     set(${cxx_result} ${use_emxx} PARENT_SCOPE)
 
-    message("[gx_check_emscripten][use_emcc] ${use_emcc}")
-    message("[gx_check_emscripten][use_emxx] ${use_emxx}")
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][use_emcc] ${use_emcc}")
+    message(STATUS "[${CMAKE_CURRENT_FUNCTION}][use_emxx] ${use_emxx}")
 
     foreach(item IN LISTS compiler_list)
         # Expands the CMAKE_CXX_COMPILER to its full path (e.g. em++ -> /path/to/em++).
@@ -35,7 +35,18 @@ function(gx_check_emscripten c_result cxx_result root_dir)
         if(compiler_full_path)
             get_filename_component(compiler_dir ${compiler_full_path} DIRECTORY)
             set(${root_dir} ${compiler_dir} PARENT_SCOPE)
+            message(STATUS "[${CMAKE_CURRENT_FUNCTION}][root_dir] ${compiler_dir}")
             break()
         endif()
     endforeach()
+endfunction()
+
+function(gx_has_emscripten result)
+    gx_check_emscripten(use_emcc use_emxx root_dir)
+
+    if(use_emcc OR use_emxx)
+        set(${result} TRUE PARENT_SCOPE)
+    else()
+        set(${result} FALSE PARENT_SCOPE)
+    endif()
 endfunction()

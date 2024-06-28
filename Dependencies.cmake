@@ -16,22 +16,10 @@ find_package(Threads REQUIRED)
 
 if(WIN32)
     find_package(OpenCV REQUIRED HINTS ${GX_OPENCV_ROOT} NO_DEFAULT_PATH)
-    find_package(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}
-    NO_DEFAULT_PATH
-    )
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/x64/vc16/bin)
     set(OpenCV_LIBS opencv_world470)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RV1109" )
-    find_package(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}/lib/cmake
-    NO_DEFAULT_PATH
-    )
     find_package(
     LicenseClient
     REQUIRED
@@ -44,12 +32,6 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RV1109" )
     set(OpenCV_LIBS opencv_world.so.407)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RV1106" )
     find_package(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}/lib/cmake
-    NO_DEFAULT_PATH
-    )
-    find_package(
     LicenseClient
     REQUIRED
     NO_DEFAULT_PATH
@@ -61,12 +43,6 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RV1106" )
     set(OpenCV_LIBS opencv_world.so.407)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU" )
     find_package(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}
-    NO_DEFAULT_PATH
-    )
-    find_package(
     LicenseClient
     REQUIRED
     NO_DEFAULT_PATH
@@ -77,12 +53,6 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "UBUNTU" )
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include/opencv4)
     set(OpenCV_LIBS opencv_world.so.407)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU" )
-    find_package(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}
-    NO_DEFAULT_PATH
-    )
     find_package(OpenCV
     REQUIRED 
     NO_DEFAULT_PATH 
@@ -90,23 +60,10 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU" )
     ${GX_OPENCV_ROOT}/lib/cmake/opencv4
     )
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "CENTOS" )
-    find_package(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}
-    NO_DEFAULT_PATH
-    )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib64)
     set(OpenCV_INCLUDE_DIRS ${GX_OPENCV_ROOT}/include)
     set(OpenCV_LIBS opencv_calib3d opencv_core opencv_dnn opencv_features2d opencv_flann opencv_highgui opencv_imgproc opencv_imgcodecs opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_videoio opencv_video opencv_videostab)
-elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3566" ))
-    include(${GX_MISCELLANEOUS_ROOT}/cmake/GXUtil.cmake)
-    gx_find_package_no_root_path(
-    GXMiscellaneous
-    REQUIRED
-    HINTS ${GX_MISCELLANEOUS_ROOT}
-    NO_DEFAULT_PATH
-    )
+elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3399" ) OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3566" ))
     gx_find_package_no_root_path(
     LicenseClient
     REQUIRED
@@ -119,13 +76,6 @@ elseif((GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3399" )OR(GX_TOOLHAIN_TARGET_NAME ST
     set(OpenCV_LIBS opencv_java4)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3588" )
     find_package(
-    GXMiscellaneous
-    REQUIRED
-    NO_DEFAULT_PATH
-    HINTS
-    ${GX_MISCELLANEOUS_ROOT}
-    )
-    find_package(
     LicenseClient
     REQUIRED
     NO_DEFAULT_PATH
@@ -137,13 +87,6 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3588" )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_LIBS opencv_world)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON" )
-    find_package(
-    GXMiscellaneous
-    REQUIRED
-    NO_DEFAULT_PATH
-    HINTS
-    ${GX_MISCELLANEOUS_ROOT}
-    )
     find_package(
     LicenseClient
     REQUIRED

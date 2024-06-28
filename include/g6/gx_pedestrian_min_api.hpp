@@ -4,10 +4,10 @@
 
 namespace glasssix {
 
-    class GX_API(GXOFFLINERECOGNITION) gx_pedestrian_min_api {
+    class GX_API(GXAPI) gx_pedestrian_min_api {
     public:
         gx_pedestrian_min_api();
-        gx_pedestrian_min_api(const abi::string& config_path);
+        gx_pedestrian_min_api(const std::string& config_path);
         ~gx_pedestrian_min_api();
         gx_pedestrian_min_api(gx_pedestrian_min_api&&) noexcept;
         gx_pedestrian_min_api& operator=(gx_pedestrian_min_api&&) noexcept;
