@@ -57,10 +57,10 @@ static std::string IMG_PATH = "/root/img/";
 namespace fs = std::filesystem;
 namespace glasssix {
 
-    const cv::Scalar RED   = CV_RGB(250, 0, 0); // ºì
-    const cv::Scalar GREEN = CV_RGB(0, 250, 0); // ÂÌ
-    const cv::Scalar WHITE = CV_RGB(255, 255, 255); // °×
-    // ·µ»ØµÄ¾ø¶ÔÂ·¾¶
+    const cv::Scalar RED   = CV_RGB(250, 0, 0); // çº¢
+    const cv::Scalar GREEN = CV_RGB(0, 250, 0); // ç»¿
+    const cv::Scalar WHITE = CV_RGB(255, 255, 255); // ç™½
+    // è¿”å›çš„ç»å¯¹è·¯å¾„
     std::vector<abi::string> find_file(std::filesystem::path folder_path) {
         std::vector<abi::string> ans_list;
         for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
@@ -85,9 +85,9 @@ namespace glasssix {
 } // namespace glasssix
 
 
-// µ÷ÊÔ´úÂë
+// è°ƒè¯•ä»£ç 
 namespace glasssix {
-    // t0 ¶àÏß³Ì²â°²È«Ã±
+    // t0 å¤šçº¿ç¨‹æµ‹å®‰å…¨å¸½
     void thread_function_helmet() {
         gx_helmet_api* api_temp = new gx_helmet_api(CONFIG_PATH);
         int T                   = TIMES;
@@ -110,7 +110,7 @@ namespace glasssix {
             printf("helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t22 ¶àÏß³Ì²âÈËÍ·
+    // t22 å¤šçº¿ç¨‹æµ‹äººå¤´
     void thread_function_head() {
         gx_head_api* api_temp = new gx_head_api(CONFIG_PATH);
         int T                 = TIMES;
@@ -132,7 +132,7 @@ namespace glasssix {
             printf("head time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t1 ¶àÏß³Ì²â»ğÑæ
+    // t1 å¤šçº¿ç¨‹æµ‹ç«ç„°
     void thread_function_flame() {
         gx_flame_api* api_temp = new gx_flame_api(CONFIG_PATH);
         int T                  = TIMES;
@@ -154,7 +154,7 @@ namespace glasssix {
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t14 ¶àÏß³Ì²âÑÌÎí
+    // t14 å¤šçº¿ç¨‹æµ‹çƒŸé›¾
     void thread_function_smog() {
         gx_smog_api* api_temp = new gx_smog_api(CONFIG_PATH);
         int T                 = TIMES;
@@ -175,7 +175,7 @@ namespace glasssix {
             printf("smog time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t2 ¶àÏß³Ì²â·´¹âÒÂ
+    // t2 å¤šçº¿ç¨‹æµ‹åå…‰è¡£
     void thread_function_refvest() {
         gx_refvest_api* api_temp = new gx_refvest_api(CONFIG_PATH);
         int T                    = TIMES;
@@ -197,7 +197,7 @@ namespace glasssix {
             printf("refvest time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t3 ¶àÏß³Ì²âËÑË÷
+    // t3 å¤šçº¿ç¨‹æµ‹æœç´¢
     void thread_function_search() {
         gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         api_temp->user_load();
@@ -222,7 +222,7 @@ namespace glasssix {
         api_temp->user_remove_all();
         delete api_temp;
     }
-    // t4 ¶àÏß³Ì²âÈÚºÏËÑË÷
+    // t4 å¤šçº¿ç¨‹æµ‹èåˆæœç´¢
     void thread_function_integration() {
         gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         api_temp->user_load();
@@ -246,7 +246,7 @@ namespace glasssix {
             printf("integration time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t5 ¶àÏß³Ì²â ÅäºÏ»îÌå Óë ÖÊÁ¿¼ì²â
+    // t5 å¤šçº¿ç¨‹æµ‹ é…åˆæ´»ä½“ ä¸ è´¨é‡æ£€æµ‹
     void thread_function_Action_live_Blur() {
         gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         auto start            = std::chrono::high_resolution_clock::now();
@@ -287,7 +287,7 @@ namespace glasssix {
             printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t6 ¶àÏß³Ì²âË¯¸Ú
+    // t6 å¤šçº¿ç¨‹æµ‹ç¡å²—
     void thread_function_sleep() {
         gx_sleep_api* api_temp = new gx_sleep_api(CONFIG_PATH);
         int T                  = TIMES;
@@ -308,7 +308,7 @@ namespace glasssix {
             printf("sleep time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t7 ¶àÏß³Ì²â³éÑÌ
+    // t7 å¤šçº¿ç¨‹æµ‹æŠ½çƒŸ
     void thread_function_smoke() {
         gx_smoke_api* api_temp = new gx_smoke_api(CONFIG_PATH);
         int T                  = TIMES;
@@ -335,7 +335,7 @@ namespace glasssix {
             printf("smoke time = %lld microsecond\n", duration);
         delete api_temp;
     }
-    // t15 ¶àÏß³Ì²âµøµ¹
+    // t15 å¤šçº¿ç¨‹æµ‹è·Œå€’
     void thread_function_tumble() {
         gx_tumble_api* api_temp = new gx_tumble_api(CONFIG_PATH);
         int T                   = TIMES;
@@ -357,7 +357,7 @@ namespace glasssix {
             printf("tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t11 ¶àÏß³Ì²â³µÁ¾
+    // t11 å¤šçº¿ç¨‹æµ‹è½¦è¾†
     void thread_function_vehicle() {
         gx_vehicle_api* api_temp = new gx_vehicle_api(CONFIG_PATH);
         int T                    = TIMES;
@@ -379,7 +379,7 @@ namespace glasssix {
             printf("vehicle time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t18 ¶àÏß³Ì²âÅÇ»²
+    // t18 å¤šçº¿ç¨‹æµ‹å¾˜å¾Š
     void thread_function_wander() {
         gx_wander_api* api_temp = new gx_wander_api(CONFIG_PATH);
         int T                   = TIMES;
@@ -404,7 +404,7 @@ namespace glasssix {
             printf("wander time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t21 ¶àÏß³Ì²âÔ½½ç
+    // t21 å¤šçº¿ç¨‹æµ‹è¶Šç•Œ
     void thread_function_wander_limit() {
         gx_wander_api* api_temp                = new gx_wander_api(CONFIG_PATH);
         gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api(CONFIG_PATH);
@@ -440,7 +440,7 @@ namespace glasssix {
         }
         delete api_temp;
     }
-    // t13 ¶àÏß³Ì²âÀë¸Ú
+    // t13 å¤šçº¿ç¨‹æµ‹ç¦»å²—
     void thread_function_leavepost() {
         gx_leavepost_api* api_temp = new gx_leavepost_api(CONFIG_PATH);
         int T                      = TIMES;
@@ -461,12 +461,12 @@ namespace glasssix {
             printf("leavepost time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t8 ¶àÏß³Ì²âÍæÊÖ»ú
+    // t8 å¤šçº¿ç¨‹æµ‹ç©æ‰‹æœº
     void thread_function_playphone() {
         gx_playphone_api* api_temp = new gx_playphone_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
-#if 1 // ÕâÀï±ØĞëÒªÓĞ±í´ïÊ½,²»ÄÜÊ¡ÂÔ
+#if 1 // è¿™é‡Œå¿…é¡»è¦æœ‰è¡¨è¾¾å¼,ä¸èƒ½çœç•¥
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "wsj_13.jpg", static_cast<int>(1e9));
@@ -478,7 +478,7 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
-#else // ²âÊÔÒªÇó½øĞĞ¶àÍ¼Æ¬¼ì²â
+#else // æµ‹è¯•è¦æ±‚è¿›è¡Œå¤šå›¾ç‰‡æ£€æµ‹
         try {
             std::vector<std::string> v_img;
             for (auto enter : std::filesystem::directory_iterator(abi::string(IMG_PATH) + "playphone/")) {
@@ -510,7 +510,7 @@ namespace glasssix {
             printf("playphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t9 ¶àÏß³Ì²â´òµç»°
+    // t9 å¤šçº¿ç¨‹æµ‹æ‰“ç”µè¯
     void thread_function_onphone() {
         gx_onphone_api* api_temp         = new gx_onphone_api(CONFIG_PATH);
         gx_head_api* api_head_temp       = new gx_head_api(CONFIG_PATH);
@@ -540,7 +540,7 @@ namespace glasssix {
             printf("onphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t10 ¶àÏß³Ì²â¹¤·ş¼ì²â
+    // t10 å¤šçº¿ç¨‹æµ‹å·¥æœæ£€æµ‹
     void thread_function_workcloth() {
         gx_workcloth_api* api_temp = new gx_workcloth_api(CONFIG_PATH);
         int T                      = TIMES;
@@ -561,7 +561,7 @@ namespace glasssix {
             printf("workcloth time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t12 ¶àÏß³Ì²âĞĞÈË¼ì²â
+    // t12 å¤šçº¿ç¨‹æµ‹è¡Œäººæ£€æµ‹
     void thread_function_pedestrian() {
         gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
         int T                       = TIMES;
@@ -582,7 +582,7 @@ namespace glasssix {
             printf("pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t16 ¶àÏß³Ì²âÅÊÅÀ
+    // t16 å¤šçº¿ç¨‹æµ‹æ”€çˆ¬
     void thread_function_climb() {
         gx_climb_api* api_temp = new gx_climb_api(CONFIG_PATH);
         int T                  = TIMES;
@@ -604,7 +604,7 @@ namespace glasssix {
             printf("climb time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t17 ¶àÏß³Ì²â¾ÛÖÚ
+    // t17 å¤šçº¿ç¨‹æµ‹èšä¼—
     void thread_function_crowd() {
         gx_crowd_api* api_temp = new gx_crowd_api(CONFIG_PATH);
         auto start             = std::chrono::high_resolution_clock::now();
@@ -625,7 +625,7 @@ namespace glasssix {
         }
         delete api_temp;
     }
-    // t23 ¶àÏß³Ì²âÍµµçÆ¿
+    // t23 å¤šçº¿ç¨‹æµ‹å·ç”µç“¶
     void thread_function_batterypilferers() {
         gx_batterypilferers_api* api_temp = new gx_batterypilferers_api(CONFIG_PATH);
         int T                             = TIMES;
@@ -656,7 +656,7 @@ namespace glasssix {
             printf("batterypilferers time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t19 ¶àÏß³Ì²â´ò¼Ü¶·Å¹
+    // t19 å¤šçº¿ç¨‹æµ‹æ‰“æ¶æ–—æ®´
     void thread_function_fighting() {
         try {
 
@@ -689,7 +689,7 @@ namespace glasssix {
             printf("error =  %s\n", ex.what());
         }
     }
-    // t20 ¶àÏß³Ì²â×ËÌ¬
+    // t20 å¤šçº¿ç¨‹æµ‹å§¿æ€
     void thread_function_posture() {
         gx_posture_api* api_temp = new gx_posture_api(CONFIG_PATH);
         int T                    = TIMES;
@@ -711,7 +711,7 @@ namespace glasssix {
             printf("flame time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t24 ¶àÏß³Ì²â¶¨ÖÆµÆ¹â
+    // t24 å¤šçº¿ç¨‹æµ‹å®šåˆ¶ç¯å…‰
     void thread_function_pump_light() {
         gx_pump_light_api* api_temp = new gx_pump_light_api(CONFIG_PATH);
         int T                       = TIMES;
@@ -785,7 +785,7 @@ namespace glasssix {
             printf("pump_light time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t25 ¶àÏß³Ì²â¶¨ÖÆÌì³µ¹¤£¨·´¹âÒÂ°²È«Ã±£©
+    // t25 å¤šçº¿ç¨‹æµ‹å®šåˆ¶å¤©è½¦å·¥ï¼ˆåå…‰è¡£å®‰å…¨å¸½ï¼‰
     void thread_function_pump_vesthelmet() {
         gx_pump_vesthelmet_api* api_temp = new gx_pump_vesthelmet_api(CONFIG_PATH);
         int T                            = TIMES;
@@ -807,7 +807,7 @@ namespace glasssix {
             printf("pump_vesthelmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t26 ¶àÏß³Ì²â¶¨ÖÆ´óÃÅ×´Ì¬
+    // t26 å¤šçº¿ç¨‹æµ‹å®šåˆ¶å¤§é—¨çŠ¶æ€
     void thread_function_pump_gate_status() {
         gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
         int T                             = TIMES;
@@ -869,7 +869,7 @@ namespace glasssix {
             printf("pump_gate_status time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t27 ¶àÏß³Ì²â¶¨ÖÆ±Ã¶¥ĞĞÈË
+    // t27 å¤šçº¿ç¨‹æµ‹å®šåˆ¶æ³µé¡¶è¡Œäºº
     void thread_function_pump_pumptop_person() {
         gx_pump_pumptop_person_api* api_temp = new gx_pump_pumptop_person_api(CONFIG_PATH);
         int T                                = TIMES;
@@ -896,7 +896,7 @@ namespace glasssix {
             printf("pump_pumptop_person time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t28 ¶àÏß³Ì²â¶¨ÖÆ·À»¤ÃæÕÖ
+    // t28 å¤šçº¿ç¨‹æµ‹å®šåˆ¶é˜²æŠ¤é¢ç½©
     void thread_function_pump_mask() {
         gx_pump_mask_api* api_temp = new gx_pump_mask_api(CONFIG_PATH);
         int T                      = TIMES;
@@ -921,7 +921,7 @@ namespace glasssix {
             printf("pump_mask time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t29 ¶àÏß³Ì²â¶¨ÖÆ±Ã¶¥°²È«Ã±
+    // t29 å¤šçº¿ç¨‹æµ‹å®šåˆ¶æ³µé¡¶å®‰å…¨å¸½
     void thread_function_pumptop_helmet() {
         gx_pumptop_helmet_api* api_temp = new gx_pumptop_helmet_api(CONFIG_PATH);
         int T                           = TIMES;
@@ -947,7 +947,7 @@ namespace glasssix {
             printf("pumptop_helmet time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t30 ¶àÏß³Ì²â¶¨ÖÆ±ÃÒµÏÁĞ¡¿Õ¼ä£¨Ìì³µ¹¤µõ×°£©
+    // t30 å¤šçº¿ç¨‹æµ‹å®šåˆ¶æ³µä¸šç‹­å°ç©ºé—´ï¼ˆå¤©è½¦å·¥åŠè£…ï¼‰
     void thread_function_pump_hoisting() {
         gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api(CONFIG_PATH);
         int T                          = TIMES;
@@ -970,7 +970,7 @@ namespace glasssix {
             printf("pump_hoisting time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t31 ¶àÏß³Ì²â¶¨ÖÆ±ÃÒµº¸½Ó
+    // t31 å¤šçº¿ç¨‹æµ‹å®šåˆ¶æ³µä¸šç„Šæ¥
     void thread_function_pump_weld() {
         gx_pump_weld_api* api_temp = new gx_pump_weld_api(CONFIG_PATH);
         int T                      = TIMES;
@@ -1007,7 +1007,7 @@ namespace glasssix {
             printf("pump_weld time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
-    // t32 ¶àÏß³Ì²âÈËÁ³ÊôĞÔ
+    // t32 å¤šçº¿ç¨‹æµ‹äººè„¸å±æ€§
     void thread_function_face_attributes() {
         gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         int T                 = TIMES;
@@ -1030,7 +1030,7 @@ namespace glasssix {
         delete api_temp;
     }
 
-    // t33 ¶àÏß³Ì²â¶¨ÖÆ¹¤×÷×´Ì¬
+    // t33 å¤šçº¿ç¨‹æµ‹å®šåˆ¶å·¥ä½œçŠ¶æ€
     void thread_function_pump_work_status() {
         gx_pump_work_status_api* api_temp = new gx_pump_work_status_api(CONFIG_PATH);
         int T                             = TIMES;
@@ -1058,7 +1058,7 @@ namespace glasssix {
         delete api_temp;
     }
 
-    // t34 ¶àÏß³Ì²â·­Ô½
+    // t34 å¤šçº¿ç¨‹æµ‹ç¿»è¶Š
     void thread_function_crossing() {
         gx_crossing_api* api_temp = new gx_crossing_api(CONFIG_PATH);
         int T                     = TIMES;
@@ -1090,7 +1090,7 @@ namespace glasssix {
         delete api_temp;
     }
 
-    // t35 ¶àÏß³Ì²âĞĞÈËmin¼ì²â
+    // t35 å¤šçº¿ç¨‹æµ‹è¡Œäººminæ£€æµ‹
     void thread_function_pedestrian_min() {
         gx_pedestrian_min_api* api_temp = new gx_pedestrian_min_api(CONFIG_PATH);
         int T                           = TIMES;
@@ -1113,7 +1113,7 @@ namespace glasssix {
     }
 } // namespace glasssix
 
-// ´¦ÀíÊÓÆµµÄ
+// å¤„ç†è§†é¢‘çš„
 namespace glasssix {
     struct video_data {
         int be_x, be_y;
@@ -1123,22 +1123,22 @@ namespace glasssix {
     void try_a_try(const std::string& name, const std::string& save_path, video_data data_) {
         cv::VideoCapture capture;
         capture.open(name);
-        // ²âÊÔÒªÇóÃ¿ÕÅÍ¼Æ¬Ğ´ÉÏ¶ÔÓ¦Ê±¼äÓëÖ¡ÂÊ
+        // æµ‹è¯•è¦æ±‚æ¯å¼ å›¾ç‰‡å†™ä¸Šå¯¹åº”æ—¶é—´ä¸å¸§ç‡
         std::string image_name;
 
         int x = data_.be_x;
         int y = data_.be_y;
-        int z = 0; // ÊÓÆµ´ÓµÚÒ»Ö¡¿ªÊ¼
-        for (int i = 0; i < (data_.ed_x * 60 + data_.ed_y) * data_.fps; i++) { // ½áÊøÊ±¼ä
+        int z = 0; // è§†é¢‘ä»ç¬¬ä¸€å¸§å¼€å§‹
+        for (int i = 0; i < (data_.ed_x * 60 + data_.ed_y) * data_.fps; i++) { // ç»“æŸæ—¶é—´
             cv::Mat img;
             capture >> img;
             if (img.empty())
                 break;
-            if (i >= ((data_.be_x * 60 + data_.be_y) * data_.fps)) // ¿ªÊ¼Ê±¼ä
+            if (i >= ((data_.be_x * 60 + data_.be_y) * data_.fps)) // å¼€å§‹æ—¶é—´
             {
                 // cv::imwrite(save_path + "/" + std::to_string(i) + ":" std::to_string() + ".jpg", img);
-                // Ä¬ÈÏÊÓÆµ²»³¬¹ıÒ»¸öĞ¡Ê±
-                z++; // !ÌìÉ±µÄ,ÉÙÁËÕâ¸ö
+                // é»˜è®¤è§†é¢‘ä¸è¶…è¿‡ä¸€ä¸ªå°æ—¶
+                z++; // !å¤©æ€çš„,å°‘äº†è¿™ä¸ª
 
                 if (z > data_.fps) {
                     y++;
@@ -1164,7 +1164,7 @@ namespace glasssix {
             relative_path.push_back(std::filesystem::relative(file, save_path).string());
             std::cout << " " << file << std::endl;
         }
-        std::cout << "Ïà¶ÔÂ·¾¶: " << std::endl;
+        std::cout << "ç›¸å¯¹è·¯å¾„: " << std::endl;
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
@@ -1181,7 +1181,7 @@ namespace glasssix {
         int F      = 1;
         while (F--) {
             for (int i = 0; i < temp.size(); i++) {
-                // std::cout << "for Ñ­»· : " << i << std::endl;
+                // std::cout << "for å¾ªç¯ : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
                 auto val             = api_temp->safe_production_climb(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
@@ -1202,13 +1202,13 @@ namespace glasssix {
                             cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                         putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
                     }
-                    // cvÖ®Ç°ÒªÏÈ´´½¨Â·¾¶
+                    // cvä¹‹å‰è¦å…ˆåˆ›å»ºè·¯å¾„
                     std::filesystem::create_directories(ans_path);
                     // std::cout << "return path: " << ans_path << std::endl;
                     cv::imwrite(ans_path + relative, img);
                 }
 #else
-                // ans_path += "2";//³£Á¿,²»ÔÊĞí×Ô¼Ó
+                // ans_path += "2";//å¸¸é‡,ä¸å…è®¸è‡ªåŠ 
                 // std::string new_path = ans_path + "2/";
                 // if (val.norm_list.size() > 0) {
                 //     std::cout << " I am here: " << std::endl;
@@ -1226,7 +1226,7 @@ namespace glasssix {
                 //             cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
                 //         putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
                 //     }
-                //     //cvÖ®Ç°ÒªÏÈ´´½¨Â·¾¶
+                //     //cvä¹‹å‰è¦å…ˆåˆ›å»ºè·¯å¾„
                 //     std::filesystem::create_directories(new_path);
                 //     std::cout << "return path: " << new_path << std::endl;
                 //     cv::imwrite(
@@ -1242,7 +1242,7 @@ namespace glasssix {
 
     void todo_video(
         const std::string& name, const std::string& save_path, const std::string& ans_path, video_data data_) {
-        // try_a_try(name, save_path, data_);//·Ö¸îÊÓÆµµÄ,²âÊÔÄ¿Â¼Í¼Æ¬Ê±,¿ÉÒÔ²»Ê¹ÓÃ
+        // try_a_try(name, save_path, data_);//åˆ†å‰²è§†é¢‘çš„,æµ‹è¯•ç›®å½•å›¾ç‰‡æ—¶,å¯ä»¥ä¸ä½¿ç”¨
         video_test(save_path, ans_path, data_);
     }
 
@@ -1250,7 +1250,7 @@ namespace glasssix {
 
 
 // 3566
-//// ¶àÏß³Ì²âËÑË÷
+//// å¤šçº¿ç¨‹æµ‹æœç´¢
 // void thread_function_search() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
 //     api_temp->user_load();
@@ -1270,7 +1270,7 @@ namespace glasssix {
 //     printf("search time = %lld microsecond\n", duration.count());
 //     delete api_temp;
 // }
-//// ¶àÏß³Ì²âÈÚºÏËÑË÷
+//// å¤šçº¿ç¨‹æµ‹èåˆæœç´¢
 // void thread_function_integration() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
 //     api_temp->user_load();
@@ -1292,7 +1292,7 @@ namespace glasssix {
 //     printf("integration time = %lld microsecond\n", duration.count());
 //     delete api_temp;
 // }
-//// ¶àÏß³Ì²â ÅäºÏ»îÌå Óë ÖÊÁ¿¼ì²â
+//// å¤šçº¿ç¨‹æµ‹ é…åˆæ´»ä½“ ä¸ è´¨é‡æ£€æµ‹
 // void thread_function_Action_live_Blur() {
 //     gx_face_api* api_temp = new gx_face_api("/sdcard/glasssix-offline-sdk/config");
 //     auto start            = std::chrono::high_resolution_clock::now();
@@ -1344,33 +1344,33 @@ void yuv_test() {
 }
 
 void gif_test() {
-    // ¶ÁÈ¡ GIF ÎÄ¼ş
+    // è¯»å– GIF æ–‡ä»¶
     cv::VideoCapture capture(IMG_PATH + "111.gif");
 
     if (!capture.isOpened()) {
-        std::cout << "ÎŞ·¨´ò¿ª GIF ÎÄ¼ş" << std::endl;
+        std::cout << "æ— æ³•æ‰“å¼€ GIF æ–‡ä»¶" << std::endl;
         return;
     }
 
-    // ÖğÖ¡½âÂë²¢±£´æÎªÍ¼Ïñ
+    // é€å¸§è§£ç å¹¶ä¿å­˜ä¸ºå›¾åƒ
     cv::Mat frame;
     int frameCount = 0;
     while (true) {
-        // ¶ÁÈ¡Ö¡
+        // è¯»å–å¸§
         if (!capture.read(frame))
             break;
 
-        // ±£´æÎªÍ¼Ïñ
+        // ä¿å­˜ä¸ºå›¾åƒ
         std::string outputName = IMG_PATH + std::to_string(frameCount) + ".jpeg";
         cv::imwrite(outputName, frame);
 
         frameCount++;
     }
 
-    // ÊÍ·Å VideoCapture ×ÊÔ´
+    // é‡Šæ”¾ VideoCapture èµ„æº
     capture.release();
 
-    std::cout << "³É¹¦½âÂë GIF ÎÄ¼ş£¬¹²Éú³ÉÁË " << frameCount << " ÕÅÍ¼Ïñ" << std::endl;
+    std::cout << "æˆåŠŸè§£ç  GIF æ–‡ä»¶ï¼Œå…±ç”Ÿæˆäº† " << frameCount << " å¼ å›¾åƒ" << std::endl;
 
     return;
 }
@@ -1410,24 +1410,24 @@ bool segmentsIntersect(double x1, double y1, double x2, double y2, double x3, do
 
 void wangder_limit() {
 
-    // ¶ÁÈ¡ ÊÓÆµ ÎÄ¼ş
+    // è¯»å– è§†é¢‘ æ–‡ä»¶
     cv::VideoCapture capture;
     capture.open("/root/video/wander_limit/DownLoad1 - Trim.mp4");
 
-    // ÖğÖ¡½âÂë²¢±£´æÎªÍ¼Ïñ
+    // é€å¸§è§£ç å¹¶ä¿å­˜ä¸ºå›¾åƒ
     cv::Mat frame;
     int frameCount             = 0;
     gx_wander_api* api_temp    = new gx_wander_api(CONFIG_PATH);
     gx_pedestrian_api* api_ped = new gx_pedestrian_api(CONFIG_PATH);
     int cnnt                   = 0;
     while (true) {
-        // ¶ÁÈ¡Ö¡
+        // è¯»å–å¸§
         capture >> frame;
         if (frame.empty())
             break;
 
         if (frameCount % 10 == 0) {
-            // ±£´æÎªÍ¼Ïñ
+            // ä¿å­˜ä¸ºå›¾åƒ
             std::string outputName = "/root/video/temp.jpg";
             cv::imwrite(outputName, frame);
 
@@ -1455,27 +1455,27 @@ void wangder_limit() {
         frameCount++;
     }
 
-    // ÊÍ·Å VideoCapture ×ÊÔ´
+    // é‡Šæ”¾ VideoCapture èµ„æº
     capture.release();
 }
 
 void crossing(std::string path, std::string name) {
 
-    // ¶ÁÈ¡ ÊÓÆµ ÎÄ¼ş
+    // è¯»å– è§†é¢‘ æ–‡ä»¶
     cv::VideoCapture capture;
     capture.open(path.c_str());
-    // ÖğÖ¡½âÂë²¢±£´æÎªÍ¼Ïñ
+    // é€å¸§è§£ç å¹¶ä¿å­˜ä¸ºå›¾åƒ
     cv::Mat frame;
     int frameCount            = 0;
     gx_crossing_api* api_temp = new gx_crossing_api(CONFIG_PATH);
     int cnnt                  = 0;
     while (true) {
-        // ¶ÁÈ¡Ö¡
+        // è¯»å–å¸§
         capture >> frame;
         if (frame.empty())
             break;
 
-        // ±£´æÎªÍ¼Ïñ
+        // ä¿å­˜ä¸ºå›¾åƒ
         std::string outputName = "/root/video/temp.jpg";
         cv::imwrite(outputName, frame);
 
@@ -1500,24 +1500,24 @@ void crossing(std::string path, std::string name) {
         }
     }
 
-    // ÊÍ·Å VideoCapture ×ÊÔ´
+    // é‡Šæ”¾ VideoCapture èµ„æº
     capture.release();
 }
 
 
 void gate_status1() {
 
-    // ¶ÁÈ¡ ÊÓÆµ ÎÄ¼ş
+    // è¯»å– è§†é¢‘ æ–‡ä»¶
     cv::VideoCapture capture;
     capture.open("/root/video/pump_gate_status/192.168.116.240_12_20240306162533192.mp4");
 
-    // ÖğÖ¡½âÂë²¢±£´æÎªÍ¼Ïñ
+    // é€å¸§è§£ç å¹¶ä¿å­˜ä¸ºå›¾åƒ
     cv::Mat frame;
     int frameCount                    = 0;
     gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
     int cnnt                          = 0;
     while (true) {
-        // ¶ÁÈ¡Ö¡
+        // è¯»å–å¸§
         capture >> frame;
         if (frame.empty())
             break;
@@ -1532,23 +1532,23 @@ void gate_status1() {
         frameCount++;
     }
 
-    // ÊÍ·Å VideoCapture ×ÊÔ´
+    // é‡Šæ”¾ VideoCapture èµ„æº
     capture.release();
 }
 
 void gate_status2() {
 
-    // ¶ÁÈ¡ ÊÓÆµ ÎÄ¼ş
+    // è¯»å– è§†é¢‘ æ–‡ä»¶
     cv::VideoCapture capture;
     capture.open("/root/video/pump_gate_status/192.168.116.240_12_20240306163128579.mp4");
 
-    // ÖğÖ¡½âÂë²¢±£´æÎªÍ¼Ïñ
+    // é€å¸§è§£ç å¹¶ä¿å­˜ä¸ºå›¾åƒ
     cv::Mat frame;
     int frameCount                    = 0;
     gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
     int cnnt                          = 0;
     while (true) {
-        // ¶ÁÈ¡Ö¡
+        // è¯»å–å¸§
         capture >> frame;
         if (frame.empty())
             break;
@@ -1563,7 +1563,7 @@ void gate_status2() {
         frameCount++;
     }
 
-    // ÊÍ·Å VideoCapture ×ÊÔ´
+    // é‡Šæ”¾ VideoCapture èµ„æº
     capture.release();
 }
 
@@ -1596,7 +1596,7 @@ void face_test() {
 }
 
 
-    // ¶àÏß³Ì²âÈËÍ·(¶ÁÈ¡ÎÄ¼ş¼ĞÄÚÈİ²¢Ğ´ÈëjsonÎÄ¼ş£©
+    // å¤šçº¿ç¨‹æµ‹äººå¤´(è¯»å–æ–‡ä»¶å¤¹å†…å®¹å¹¶å†™å…¥jsonæ–‡ä»¶ï¼‰
 void thread_function_head_from() {
     gx_head_api* api_temp = new gx_head_api(CONFIG_PATH);
     int T                 = 1;
@@ -1609,11 +1609,11 @@ void thread_function_head_from() {
             for (int i = 0; i < folder_file.size(); i++)
             {
                 fs::path filePath(folder_file[i]);
-                std::string fileName = filePath.filename().string();//ÄÃµ½Í¼Æ¬Ãû×Ö(º¬ºó×ºÃû)
+                std::string fileName = filePath.filename().string();//æ‹¿åˆ°å›¾ç‰‡åå­—(å«åç¼€å)
                 std::string fileNamePre;
                 std::cout << "fileName : " << fileName << std::endl;
                 size_t lastDotPos = fileName.find_last_of(".");
-                //Èç¹ûÕÒµ½ µã ,Ôò½ØÈ¡Ç°ÃæµÄ²¿·Ö×÷ÎªÎÄ¼şÃû
+                //å¦‚æœæ‰¾åˆ° ç‚¹ ,åˆ™æˆªå–å‰é¢çš„éƒ¨åˆ†ä½œä¸ºæ–‡ä»¶å
                 if(lastDotPos != std::string::npos)
                 {
                     fileNamePre = fileName.substr(0, lastDotPos);
@@ -1633,7 +1633,7 @@ void thread_function_head_from() {
                         std::cout << "y2 : " << val[i].y2 << std::endl;
                         std::cout << "score : " << val[i].score << std::endl << std::endl;
 
-                        //Ğ´ÈëjsonÎÄ¼ş
+                        //å†™å…¥jsonæ–‡ä»¶
                         
                         std::ofstream outputFile("./json/" + fileNamePre + ".json");
                         if (outputFile.is_open()) {
