@@ -14,6 +14,7 @@
 #include <gx_climb_api.hpp>
 #include <gx_crossing_api.hpp>
 #include <gx_crowd_api.hpp>
+#include <gx_crowd_pedestrian_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_fighting_api.hpp>
 #include <gx_flame_api.hpp>
@@ -39,6 +40,7 @@
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
+#include <gx_tumble_pedestrian_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
@@ -1109,6 +1111,30 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("pedestrian_min time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    
+    // t36 多线程测跌倒_行人
+    void thread_function_tumble_pedestrian() {
+        gx_tumble_pedestrian_api* api_temp = new gx_tumble_pedestrian_api(CONFIG_PATH);
+        int T                   = TIMES;
+        auto start              = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(abi::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_tumble_pedestrian(img);
+                if (condition)
+                    printf(
+                        "[tumble_pedestrian] : tumble_list = %d stand_list = %d\n", val.tumble_list.size(), val.stand_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("tumble_pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix

@@ -35,6 +35,7 @@
 #include "../src/nessus/protocols/smog.hpp"
 #include "../src/nessus/protocols/smoke.hpp"
 #include "../src/nessus/protocols/tumble.hpp"
+#include "../src/nessus/protocols/tumble_pedestrian.hpp"
 #include "../src/nessus/protocols/vehicle.hpp"
 #include "../src/nessus/protocols/wander.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
@@ -181,10 +182,20 @@ namespace glasssix {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
                 }
+                else if (temp_str == "tumble_pedestrian") {
+                    try {
+                        _config->set_tumble_pedestrian(_config->_path);
+                        tumble_handle = protocol_ptr.make_instance<tumble_pedestrian>(tumble_pedestrian_new_param{
+                            _config->_tumble_pedestrian_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
             }
         }
         nessus_protocol protocol_ptr;
         tumble tumble_handle;
+        tumble_pedestrian tumble_pedestrian_handle;
     };
     class algo_climb_ptr {
     public:

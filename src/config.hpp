@@ -429,6 +429,7 @@ namespace glasssix {
         sleep_config _sleep_config;
         smoke_config _smoke_config;
         tumble_config _tumble_config;
+        tumble_config _tumble_pedestrian_config;
         vehicle_config _vehicle_config;
         wander_config _wander_config;
         wander_limit_config _wander_limit_config;
@@ -507,6 +508,7 @@ namespace glasssix {
         bool sleep_is_load               = false;
         bool smoke_is_load               = false;
         bool tumble_is_load              = false;
+        bool tumble_pedestrian_is_load   = false;
         bool vehicle_is_load             = false;
         bool wander_is_load              = false;
         bool wander_limit_is_load        = false;

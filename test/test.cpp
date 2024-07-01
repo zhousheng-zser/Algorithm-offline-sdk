@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
         //printf("start run video\n");
         //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
         //todo_video("/root/video/fighting.mp4", "/root/video/smk/", "/root/video/smk/ans/", data_);
+        //todo_video("/root/video/fighting.mp4", "/root/img/test/climb1/", "/root/img/test/climb1/ans/", data_);
 
         // yuv_test();
         // gif_test();
@@ -64,6 +65,8 @@ int main(int argc, char** argv) {
             // t[33] = std::jthread(thread_function_pump_work_status);
             // t[34] = std::jthread(thread_function_crossing);
             // t[35] = std::jthread(thread_function_pedestrian_min);
+             t[36] = std::jthread(thread_function_tumble_pedestrian);
+             t[37] = std::jthread(thread_function_climb_pedestrian);
 
         }
         else
@@ -106,6 +109,8 @@ int main(int argc, char** argv) {
             // thread_function_face_attributes();
             // thread_function_pump_work_status();
             // thread_function_crossing();
+             thread_function_tumble_pedestrian();
+             thread_function_climb_pedestrian();
         }
         
         auto end      = std::chrono::steady_clock::now();
