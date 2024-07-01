@@ -17,6 +17,8 @@ namespace glasssix {
         GX_FIELD(int, thread_pool_num_fighting);
         GX_FIELD(int, thread_pool_num_tumble);
         GX_FIELD(int, thread_pool_num_climb);
+        GX_FIELD(int, thread_pool_num_tumble_pedestrian);
+        GX_FIELD(int, thread_pool_num_climb_pedestrian);
         GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
 
@@ -449,6 +451,7 @@ namespace glasssix {
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
         void set_climb(const abi::string& path);
+        void set_climb_pedestrian(const abi::string& path);
         void set_crowd(const abi::string& path);
         void set_crossing(const abi::string& path);
         void set_batterypilferers(const abi::string& path);
@@ -468,6 +471,7 @@ namespace glasssix {
         void set_sleep(const abi::string& path);
         void set_smoke(const abi::string& path);
         void set_tumble(const abi::string& path);
+        void set_tumble_pedestrian(const abi::string& path);
         void set_vehicle(const abi::string& path);
         void set_wander(const abi::string& path);
         void set_wander_limit(const abi::string& path);

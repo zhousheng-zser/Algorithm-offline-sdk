@@ -185,7 +185,8 @@ namespace glasssix {
                 else if (temp_str == "tumble_pedestrian") {
                     try {
                         _config->set_tumble_pedestrian(_config->_path);
-                        tumble_handle = protocol_ptr.make_instance<tumble_pedestrian>(tumble_pedestrian_new_param{
+                        tumble_pedestrian_handle = protocol_ptr.make_instance<tumble_pedestrian>(
+                            tumble_pedestrian_new_param{
                             _config->_tumble_pedestrian_config.device, _config->_configure_directory.models_directory});
                     } catch (const std::exception& ex) {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());

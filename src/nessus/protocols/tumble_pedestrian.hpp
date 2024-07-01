@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../include/g6/info_tumble.hpp"
+#include "../../../include/g6/info_pedestrian.hpp"
 #include "../common_protocols.hpp"
 
 #include <cstdint>
@@ -39,6 +40,7 @@ namespace glasssix {
         GX_FIELD(std::int32_t, roi_y);
         GX_FIELD(std::int32_t, roi_width);
         GX_FIELD(std::int32_t, roi_height);
+        GX_FIELD(abi::vector<pedestrian_info::boxes>, person_list);
         GX_FIELD(confidence_params, params);
         GX_END_FIELDS;
 
@@ -48,7 +50,7 @@ namespace glasssix {
     struct tumble_pedestrian_detect_result {
         GX_BEGIN_FIELDS(tumble_pedestrian_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(tumble_pedestrian_info, detect_info);
+        GX_FIELD(tumble_info, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };

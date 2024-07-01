@@ -5,7 +5,7 @@
 namespace glasssix {
 
     thread_pool* pool_tumble_pedestrian = nullptr;
-    std::unordered_map<std::thread::id, algo_tumble_pedestrian_ptr*> tumble_pedestrian_thread_algo_ptr;
+    std::unordered_map<std::thread::id, algo_tumble_ptr*> tumble_pedestrian_thread_algo_ptr;
     gx_tumble_pedestrian_api::gx_tumble_pedestrian_api() : impl_{std::make_unique<impl>()} {}
     gx_tumble_pedestrian_api::gx_tumble_pedestrian_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_tumble_pedestrian_api::~gx_tumble_pedestrian_api() {}
@@ -78,21 +78,21 @@ namespace glasssix {
     };
 
     //  跌倒_行人检测
-    tumble_pedestrian_info gx_tumble_pedestrian_api::safe_production_tumble_pedestrian(const gx_img_api& mat)
+    tumble_info gx_tumble_pedestrian_api::safe_production_tumble_pedestrian(const gx_img_api& mat)
     {
         auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
         return safe_production_tumble_pedestrian(mat, person_list.person_list);
     }
-    tumble_pedestrian_info gx_tumble_pedestrian_api::safe_production_tumble_pedestrian(
+    tumble_info gx_tumble_pedestrian_api::safe_production_tumble_pedestrian(
         const gx_img_api& mat, const abi::vector<pedestrian_info::boxes>& person_list) {
         try {
             auto result_pool = pool_tumble_pedestrian->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (tumble_pedestrian_thread_algo_ptr[id_] == nullptr) {
-                    tumble_pedestrian_thread_algo_ptr[id_] = new algo_tumble_pedestrian_ptr();
+                    tumble_pedestrian_thread_algo_ptr[id_] = new algo_tumble_ptr();
                 }
                 auto ptr = tumble_pedestrian_thread_algo_ptr[id_];
-                tumble_pedestrian_info ans;
+                tumble_info ans;
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
 #else
