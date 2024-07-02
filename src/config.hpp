@@ -412,6 +412,7 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         climb_config _climb_config;
+        climb_config _climb_pedestrian_config;
         crowd_config _crowd_config;
         crossing_config _crossing_config;
         batterypilferers_config _batterypilferers_config;
@@ -492,6 +493,7 @@ namespace glasssix {
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
         bool climb_is_load               = false;
+        bool climb_pedestrian_is_load    = false;
         bool crowd_is_load               = false;
         bool crossing_is_load            = false;
         bool batterypilferers_is_load    = false;

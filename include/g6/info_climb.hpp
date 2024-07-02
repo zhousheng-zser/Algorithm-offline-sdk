@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "gx_pedestrian_api.hpp"
 #include <g6/json_extensions.hpp>
 typedef unsigned char uchar;
 
