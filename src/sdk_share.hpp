@@ -216,9 +216,9 @@ namespace glasssix {
                 }
                 else if (temp_str == "climb_pedestrian") {
                     try {
-                        _config->set_climb(_config->_path);
-                        climb_handle = protocol_ptr.make_instance<climb>(climb_new_param{
-                            _config->_climb_config.device, _config->_configure_directory.models_directory});
+                        _config->set_climb_pedestrian(_config->_path);
+                        climb_pedestrian_handle = protocol_ptr.make_instance<climb_pedestrian>(climb_pedestrian_new_param{
+                            _config->_climb_pedestrian_config.device, _config->_configure_directory.models_directory});
                     } catch (const std::exception& ex) {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }

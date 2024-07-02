@@ -12,9 +12,9 @@
 #include <gx_api.hpp>
 #include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
+#include <gx_climb_pedestrian_api.hpp>
 #include <gx_crossing_api.hpp>
 #include <gx_crowd_api.hpp>
-#include <gx_crowd_pedestrian_api.hpp>
 #include <gx_face_api.hpp>
 #include <gx_fighting_api.hpp>
 #include <gx_flame_api.hpp>
