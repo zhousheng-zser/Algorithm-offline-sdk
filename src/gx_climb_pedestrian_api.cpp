@@ -80,7 +80,7 @@ namespace glasssix {
     climb_info gx_climb_pedestrian_api::safe_production_climb_pedestrian(const gx_img_api& mat)
     {
         auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
-        return safe_production_tumble_pedestrian(mat, person_list.person_list);
+        return safe_production_climb_pedestrian(mat, person_list.person_list);
     }
     climb_info gx_climb_pedestrian_api::safe_production_climb_pedestrian(
         const gx_img_api& mat, const abi::vector<pedestrian_info::boxes>& person_list) {
@@ -88,7 +88,7 @@ namespace glasssix {
             auto result_pool = pool_climb_pedestrian->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (climb_pedestrian_thread_algo_ptr[id_] == nullptr) {
-                    climb_pedestrian_thread_algo_ptr[id_] = new algo_climb_pedestrian_ptr();
+                    climb_pedestrian_thread_algo_ptr[id_] = new algo_climb_ptr();
                 }
                 auto ptr = climb_pedestrian_thread_algo_ptr[id_];
                 climb_info ans;
