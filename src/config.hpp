@@ -18,7 +18,7 @@ namespace glasssix {
         GX_FIELD(int, thread_pool_num_tumble);
         GX_FIELD(int, thread_pool_num_climb);
         GX_FIELD(int, thread_pool_num_tumble_pedestrian);
-        GX_FIELD(int, thread_pool_num_climb_pedestrian);
+        GX_FIELD(int, thread_pool_num_climb_tumble_pedestrian);
         GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
 
@@ -412,7 +412,7 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         climb_config _climb_config;
-        climb_config _climb_pedestrian_config;
+        climb_config _climb_tumble_pedestrian_config;
         crowd_config _crowd_config;
         crossing_config _crossing_config;
         batterypilferers_config _batterypilferers_config;
@@ -452,7 +452,7 @@ namespace glasssix {
         void set_feature(const abi::string& path);
         void set_face_user(const abi::string& path);
         void set_climb(const abi::string& path);
-        void set_climb_pedestrian(const abi::string& path);
+        void set_climb_tumble_pedestrian(const abi::string& path);
         void set_crowd(const abi::string& path);
         void set_crossing(const abi::string& path);
         void set_batterypilferers(const abi::string& path);
@@ -493,7 +493,7 @@ namespace glasssix {
         bool feature_is_load             = false;
         bool face_user_is_load           = false;
         bool climb_is_load               = false;
-        bool climb_pedestrian_is_load    = false;
+        bool climb_tumble_pedestrian_is_load    = false;
         bool crowd_is_load               = false;
         bool crossing_is_load            = false;
         bool batterypilferers_is_load    = false;

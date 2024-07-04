@@ -12,7 +12,7 @@
 #include <gx_api.hpp>
 #include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
-#include <gx_climb_pedestrian_api.hpp>
+#include <gx_climb_tumble_pedestrian_api.hpp>
 #include <gx_crossing_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_face_api.hpp>
@@ -1139,17 +1139,17 @@ namespace glasssix {
     }
 
     // t37 多线程测攀爬
-    void thread_function_climb_pedestrian() {
-        gx_climb_pedestrian_api* api_temp = new gx_climb_pedestrian_api(CONFIG_PATH);
+    void thread_function_climb_tumble_pedestrian() {
+        gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "climb.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_climb_pedestrian(img);
+                auto val = api_temp->safe_production_climb_tumble_pedestrian(img);
                 if (condition)
                     printf(
-                        "[climb_pedestrian] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
+                        "[climb_tumble_pedestrian] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1157,7 +1157,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("climb_pedestrian time = %lld microsecond\n", duration.count());
+            printf("climb_tumble_pedestrian time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix

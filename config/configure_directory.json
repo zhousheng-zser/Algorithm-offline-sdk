@@ -9,7 +9,7 @@
     "thread_pool_num_tumble": 2,
     "thread_pool_num_climb": 2,
     "thread_pool_num_tumble_pedestrian": 2,
-    "thread_pool_num_climb_pedestrian": 2,
+    "thread_pool_num_climb_tumble_pedestrian": 2,
     "dump_img_directory": "dump_img"
 
 }

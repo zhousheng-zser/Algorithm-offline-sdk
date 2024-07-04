@@ -299,9 +299,9 @@ namespace glasssix {
                 } else if (name == "climb.json" && _config->climb_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_climb_config);
-                } else if (name == "climb_pedestrian.json" && _config->climb_pedestrian_is_load) {
+                } else if (name == "climb_tumble_pedestrian.json" && _config->climb_tumble_pedestrian_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
-                    temp.get_to(_config->_climb_pedestrian_config);
+                    temp.get_to(_config->_climb_tumble_pedestrian_config);
                 } else if (name == "crowd.json" && _config->crowd_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_crowd_config);

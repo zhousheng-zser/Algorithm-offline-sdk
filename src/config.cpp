@@ -94,11 +94,11 @@ namespace glasssix {
         temp.get_to(_climb_config);
         climb_is_load = true;
     }
-    void config::set_climb_pedestrian(const abi::string& path) {
+    void config::set_climb_tumble_pedestrian(const abi::string& path) {
         glasssix::json temp;
-        temp = read_json_file(path + "/climb_pedestrian.json");
-        temp.get_to(_climb_pedestrian_config);
-        climb_pedestrian_is_load = true;
+        temp = read_json_file(path + "/climb_tumble_pedestrian.json");
+        temp.get_to(_climb_tumble_pedestrian_config);
+        climb_tumble_pedestrian_is_load = true;
     }
     void config::set_crowd(const abi::string& path) {
         glasssix::json temp;

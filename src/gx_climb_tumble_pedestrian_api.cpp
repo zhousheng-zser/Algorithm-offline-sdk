@@ -1,21 +1,21 @@
-﻿#include "gx_climb_pedestrian_api.hpp"
+﻿#include "gx_climb_tumble_pedestrian_api.hpp"
 
 #include "sdk_share.hpp"
 
 namespace glasssix {
 
-    thread_pool* pool_climb_pedestrian = nullptr;
-    std::unordered_map<std::thread::id, algo_climb_ptr*> climb_pedestrian_thread_algo_ptr;
-    gx_climb_pedestrian_api::gx_climb_pedestrian_api() : impl_{std::make_unique<impl>()} {}
-    gx_climb_pedestrian_api::gx_climb_pedestrian_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_climb_pedestrian_api::~gx_climb_pedestrian_api() {}
-    gx_climb_pedestrian_api::gx_climb_pedestrian_api(gx_climb_pedestrian_api&&) noexcept            = default;
-    gx_climb_pedestrian_api& gx_climb_pedestrian_api::operator=(gx_climb_pedestrian_api&&) noexcept = default;
-    class gx_climb_pedestrian_api::impl {
+    thread_pool* pool_climb_tumble_pedestrian = nullptr;
+    std::unordered_map<std::thread::id, algo_climb_ptr*> climb_tumble_pedestrian_thread_algo_ptr;
+    gx_climb_tumble_pedestrian_api::gx_climb_tumble_pedestrian_api() : impl_{std::make_unique<impl>()} {}
+    gx_climb_tumble_pedestrian_api::gx_climb_tumble_pedestrian_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_climb_tumble_pedestrian_api::~gx_climb_tumble_pedestrian_api() {}
+    gx_climb_tumble_pedestrian_api::gx_climb_tumble_pedestrian_api(gx_climb_tumble_pedestrian_api&&) noexcept            = default;
+    gx_climb_tumble_pedestrian_api& gx_climb_tumble_pedestrian_api::operator=(gx_climb_tumble_pedestrian_api&&) noexcept = default;
+    class gx_climb_tumble_pedestrian_api::impl {
     public:
         void init() {
-            if (pool_climb_pedestrian == nullptr)
-                pool_climb_pedestrian = new thread_pool(_config->_configure_directory.thread_pool_num_climb_pedestrian);
+            if (pool_climb_tumble_pedestrian == nullptr)
+                pool_climb_tumble_pedestrian = new thread_pool(_config->_configure_directory.thread_pool_num_climb_tumble_pedestrian);
             if (api_temp == nullptr) {
                 api_temp = new gx_pedestrian_api();
             }
@@ -57,7 +57,7 @@ namespace glasssix {
 #if (GX_EMPOWER_FLAG)
         secret_key_empower empower;
         std::string empower_key          = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CLIMB_PEDESTRIAN_V1.2.0";
+        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_CLIMB_TUMBLE_PEDESTRIAN_V1.2.0";
         std::vector<std::string> empower_algorithm_id_list = {"7"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
@@ -77,20 +77,20 @@ namespace glasssix {
     };
 
     //  安全生产 攀爬检测
-    climb_info gx_climb_pedestrian_api::safe_production_climb_pedestrian(const gx_img_api& mat)
+    climb_info gx_climb_tumble_pedestrian_api::safe_production_climb_tumble_pedestrian(const gx_img_api& mat)
     {
         auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
-        return safe_production_climb_pedestrian(mat, person_list.person_list);
+        return safe_production_climb_tumble_pedestrian(mat, person_list.person_list);
     }
-    climb_info gx_climb_pedestrian_api::safe_production_climb_pedestrian(
+    climb_info gx_climb_tumble_pedestrian_api::safe_production_climb_tumble_pedestrian(
         const gx_img_api& mat, const abi::vector<pedestrian_info::boxes>& person_list) {
         try {
-            auto result_pool = pool_climb_pedestrian->enqueue([&] {
+            auto result_pool = pool_climb_tumble_pedestrian->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (climb_pedestrian_thread_algo_ptr[id_] == nullptr) {
-                    climb_pedestrian_thread_algo_ptr[id_] = new algo_climb_ptr();
+                if (climb_tumble_pedestrian_thread_algo_ptr[id_] == nullptr) {
+                    climb_tumble_pedestrian_thread_algo_ptr[id_] = new algo_climb_ptr();
                 }
-                auto ptr = climb_pedestrian_thread_algo_ptr[id_];
+                auto ptr = climb_tumble_pedestrian_thread_algo_ptr[id_];
                 climb_info ans;
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
@@ -103,9 +103,9 @@ namespace glasssix {
                 std::span<char> str{
                     reinterpret_cast<char*>(const_cast<uchar*>(img_data.data())), mat.get_cols() * mat.get_rows() * 3};
 #endif
-                auto result = ptr->protocol_ptr.invoke<climb_pedestrian::detect>(ptr->climb_pedestrian_handle,
-                    climb_pedestrian_detect_param{.instance_guid = "",
-                        .format                       = _config->_climb_pedestrian_config.format,
+                auto result = ptr->protocol_ptr.invoke<climb_tumble_pedestrian::detect>(ptr->climb_tumble_pedestrian_handle,
+                    climb_tumble_pedestrian_detect_param{.instance_guid = "",
+                        .format                       = _config->_climb_tumble_pedestrian_config.format,
                         .height                       = mat.get_rows(),
                         .width                        = mat.get_cols(),
                         .roi_x                        = 0,
@@ -113,9 +113,9 @@ namespace glasssix {
                         .roi_width                    = mat.get_cols(),
                         .roi_height                   = mat.get_rows(),
                         .person_list                  = person_list,
-                        .params = climb_pedestrian_detect_param::confidence_params{.conf_thres = _config->_climb_pedestrian_config.conf_thres,
-                            .nms_thres                                              = _config->_climb_pedestrian_config.nms_thres,
-                            .little_target_conf_thres = _config->_climb_pedestrian_config.little_target_conf_thres
+                        .params = climb_tumble_pedestrian_detect_param::confidence_params{.conf_thres = _config->_climb_tumble_pedestrian_config.conf_thres,
+                            .nms_thres                                              = _config->_climb_tumble_pedestrian_config.nms_thres,
+                            .little_target_conf_thres = _config->_climb_tumble_pedestrian_config.little_target_conf_thres
 
 
                         }},
@@ -126,7 +126,7 @@ namespace glasssix {
             });
             return result_pool.get();
         } catch (const std::exception& ex) {
-            bool flag = write_dump_img(mat, "_climb_pedestrian_dump.jpg");
+            bool flag = write_dump_img(mat, "_climb_tumble_pedestrian_dump.jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }

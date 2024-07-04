@@ -3,7 +3,7 @@
 #include "../src/nessus/protocols/batterypilferers.hpp"
 #include "../src/nessus/protocols/cassius.hpp"
 #include "../src/nessus/protocols/climb.hpp"
-#include "../src/nessus/protocols/climb_pedestrian.hpp"
+#include "../src/nessus/protocols/climb_tumble_pedestrian.hpp"
 #include "../src/nessus/protocols/crossing.hpp"
 #include "../src/nessus/protocols/crowd.hpp"
 #include "../src/nessus/protocols/damocles.hpp"
@@ -214,11 +214,11 @@ namespace glasssix {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
                 }
-                else if (temp_str == "climb_pedestrian") {
+                else if (temp_str == "climb_tumble_pedestrian") {
                     try {
-                        _config->set_climb_pedestrian(_config->_path);
-                        climb_pedestrian_handle = protocol_ptr.make_instance<climb_pedestrian>(climb_pedestrian_new_param{
-                            _config->_climb_pedestrian_config.device, _config->_configure_directory.models_directory});
+                        _config->set_climb_tumble_pedestrian(_config->_path);
+                        climb_tumble_pedestrian_handle = protocol_ptr.make_instance<climb_tumble_pedestrian>(climb_tumble_pedestrian_new_param{
+                            _config->_climb_tumble_pedestrian_config.device, _config->_configure_directory.models_directory});
                     } catch (const std::exception& ex) {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
@@ -227,7 +227,7 @@ namespace glasssix {
         }
         nessus_protocol protocol_ptr;
         climb climb_handle;
-        climb_pedestrian climb_pedestrian_handle;
+        climb_tumble_pedestrian climb_tumble_pedestrian_handle;
     };
     class algo_ptr {
     public:
