@@ -8,10 +8,9 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
 
-        //printf("start run video\n");
-        //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        //todo_video("/root/video/fighting.mp4", "/root/video/smk/", "/root/video/smk/ans/", data_);
-        //todo_video("/root/video/fighting.mp4", "/root/img/test/climb1/", "/root/img/test/climb1/ans/", data_);
+        printf("start run video\n");
+        video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
+        todo_video("/root/video/fighting.mp4", "/root/img/test/person_detection_test/", "/root/img/test/person_detection_test/ans/", data_);
 
         // yuv_test();
         // gif_test();

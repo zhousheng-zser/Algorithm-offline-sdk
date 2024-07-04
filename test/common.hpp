@@ -1217,7 +1217,7 @@ namespace glasssix {
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_climb_api* api_temp = new gx_climb_api(CONFIG_PATH);
+        gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1232,18 +1232,18 @@ namespace glasssix {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
-                auto val             = api_temp->safe_production_climb(gx_img_api{abi::string{temp[i]}, 1 << 28});
+                auto val             = api_temp->safe_production_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
-                if (val.climb_list.size() > 0) {
+                if (val.person_list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
                     printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                    for (int j = 0; j < val.climb_list.size(); j++) {
-                        int x1      = val.climb_list[j].x1;
-                        int x2      = val.climb_list[j].x2;
-                        int y1      = val.climb_list[j].y1;
-                        int y2      = val.climb_list[j].y2;
-                        float score = val.climb_list[j].score;
+                    for (int j = 0; j < val.person_list.size(); j++) {
+                        int x1      = val.person_list[j].x1;
+                        int x2      = val.person_list[j].x2;
+                        int y1      = val.person_list[j].y1;
+                        int y2      = val.person_list[j].y2;
+                        float score = val.person_list[j].score;
                         rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                         std::string text  = std::to_string(score);
                         cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
