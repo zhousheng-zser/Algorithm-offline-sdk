@@ -299,6 +299,9 @@ namespace glasssix {
                 } else if (name == "climb.json" && _config->climb_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_climb_config);
+                } else if (name == "climb_tumble_pedestrian.json" && _config->climb_tumble_pedestrian_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_climb_tumble_pedestrian_config);
                 } else if (name == "crowd.json" && _config->crowd_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_crowd_config);
@@ -359,6 +362,9 @@ namespace glasssix {
                 } else if (name == "tumble.json" && _config->tumble_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_tumble_config);
+                } else if (name == "tumble_pedestrian.json" && _config->tumble_pedestrian_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_tumble_pedestrian_config);
                 } else if (name == "vehicle.json" && _config->vehicle_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_vehicle_config);
