@@ -8,9 +8,9 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
 
-        printf("start run video\n");
-        video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        todo_video("/root/video/fighting.mp4", "/root/img/test/person_detection_test/", "/root/img/test/person_detection_test/ans/", data_);
+        //printf("start run video\n");
+        //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
+        //todo_video("/root/video/fighting.mp4", "/root/img/test/person_detection_test/", "/root/img/test/person_detection_test/ans/", data_);
 
         // yuv_test();
         // gif_test();
@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
             // t[12] = std::jthread(thread_function_pedestrian);
             // t[13] = std::jthread(thread_function_Action_live_Blur);
             // t[14] = std::jthread(thread_function_smog);
-             t[15] = std::jthread(thread_function_tumble);
-             t[16] = std::jthread(thread_function_climb);
+             //t[15] = std::jthread(thread_function_tumble);
+             //t[16] = std::jthread(thread_function_climb);
              t[17] = std::jthread(thread_function_crowd);
              t[18] = std::jthread(thread_function_wander);
              t[19] = std::jthread(thread_function_fighting);
@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
             // t[33] = std::jthread(thread_function_pump_work_status);
             // t[34] = std::jthread(thread_function_crossing);
             // t[35] = std::jthread(thread_function_pedestrian_min);
-             t[36] = std::jthread(thread_function_tumble_pedestrian);
+             //t[36] = std::jthread(thread_function_tumble_pedestrian);
              t[37] = std::jthread(thread_function_climb_tumble_pedestrian);
 
         }
@@ -88,8 +88,8 @@ int main(int argc, char** argv) {
             // thread_function_pedestrian_min();
             // thread_function_Action_live_Blur();
             // thread_function_smog();
-             thread_function_tumble();
-             thread_function_climb();
+             //thread_function_tumble();
+             //thread_function_climb();
              thread_function_crowd();
              thread_function_wander();
              thread_function_fighting();
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
             // thread_function_face_attributes();
             // thread_function_pump_work_status();
             // thread_function_crossing();
-             thread_function_tumble_pedestrian();
+            //  thread_function_tumble_pedestrian();
              thread_function_climb_tumble_pedestrian();
         }
         
