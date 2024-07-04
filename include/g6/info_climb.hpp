@@ -6,7 +6,7 @@
 typedef unsigned char uchar;
 
 namespace glasssix {
-    // 攀爬信息
+    // 攀爬,跌倒信息
     struct climb_info {
         struct boxes {
             GX_BEGIN_FIELDS(boxes);
@@ -21,8 +21,10 @@ namespace glasssix {
         };
         GX_BEGIN_FIELDS(climb_info);
 
+        GX_FIELD(abi::vector<boxes>, normal_list); // 正常状态的人
         GX_FIELD(abi::vector<boxes>, climb_list); // 攀爬的人
-        GX_FIELD(abi::vector<boxes>, normal_list); // 没攀爬的人
+        GX_FIELD(abi::vector<boxes>, tumble_list); // 跌倒的人
+        GX_FIELD(abi::vector<boxes>, abnormal_list); // 非人
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

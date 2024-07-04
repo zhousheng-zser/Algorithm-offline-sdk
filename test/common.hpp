@@ -1149,7 +1149,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_climb_tumble_pedestrian(img);
                 if (condition)
                     printf(
-                        "[climb_tumble_pedestrian] : climb_list = %d normal_list = %d\n", val.climb_list.size(), val.normal_list.size());
+                        "[climb_tumble_pedestrian] : climb_list = %d tumble_list = %d normal_list = %d abnormal_list = %d\n", val.climb_list.size(), val.tumble_list.size(), val.normal_list.size(), val.abnormal_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
