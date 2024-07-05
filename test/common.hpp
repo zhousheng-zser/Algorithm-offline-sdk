@@ -1140,8 +1140,8 @@ namespace glasssix {
         delete api_temp;
     }
 
-    // t37 多线程测攀爬
-    void thread_function_climb_tumble_pedestrian() {
+    // t37 多线程测攀爬跌倒的攀爬
+    void thread_function_climb_tumble_pedestrian_climb() {
         gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
@@ -1156,6 +1156,18 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("climb_tumble_pedestrian_climb time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t38 多线程测攀爬跌倒的跌倒
+    void thread_function_climb_tumble_pedestrian_tumble() {
+        gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
+        int T                  = TIMES;
+        auto start             = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
@@ -1172,7 +1184,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("climb_tumble_pedestrian time = %lld microsecond\n", duration.count());
+            printf("climb_tumble_pedestrian_tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix
