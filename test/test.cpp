@@ -65,7 +65,8 @@ int main(int argc, char** argv) {
             // t[34] = std::jthread(thread_function_crossing);
             // t[35] = std::jthread(thread_function_pedestrian_min);
              //t[36] = std::jthread(thread_function_tumble_pedestrian);
-             t[37] = std::jthread(thread_function_climb_tumble_pedestrian);
+             t[37] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
+             t[38] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
 
         }
         else
@@ -109,7 +110,8 @@ int main(int argc, char** argv) {
             // thread_function_pump_work_status();
             // thread_function_crossing();
             //  thread_function_tumble_pedestrian();
-             thread_function_climb_tumble_pedestrian();
+             thread_function_climb_tumble_pedestrian_climb();
+             thread_function_climb_tumble_pedestrian_tumble();
         }
         
         auto end      = std::chrono::steady_clock::now();
