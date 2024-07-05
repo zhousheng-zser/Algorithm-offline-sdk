@@ -183,7 +183,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
                 }
-                else if (temp_str == "tumble_pedestrian") {
+                else if (temp_str == "tumble_pedestrian") { //是个坑 回头填
                     try {
                         _config->set_tumble_pedestrian(_config->_path);
                         tumble_pedestrian_handle = protocol_ptr.make_instance<tumble_pedestrian>(
@@ -214,7 +214,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
                 }
-                else if (temp_str == "climb_tumble_pedestrian") {
+                else if (temp_str == "climb_tumble_pedestrian") {//是个坑 回头填
                     try {
                         _config->set_climb_tumble_pedestrian(_config->_path);
                         climb_tumble_pedestrian_handle = protocol_ptr.make_instance<climb_tumble_pedestrian>(climb_tumble_pedestrian_new_param{
