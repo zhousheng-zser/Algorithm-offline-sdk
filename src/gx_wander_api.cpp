@@ -54,6 +54,7 @@ namespace glasssix {
 
         int camera_id = 0; // 摄像头ID
         int category  = 0; // 0:未分类 1:徘徊 2:越界
+        std::chrono::steady_clock::time_point temp_time; // 上一次检测的时间点
         int time      = 0;
         struct person_cache {
             std::int64_t sum_time  = 0;
@@ -93,6 +94,7 @@ namespace glasssix {
         if (!impl_->camera_id) {
             impl_->camera_id = device_id;
             impl_->category  = 1;
+            impl_->temp_time = std::chrono::steady_clock::now() - std::chrono::seconds(10);
         } else if (impl_->camera_id != device_id)
             throw source_code_aware_runtime_error{"(device_id:" + std::to_string(device_id)
                                                   + ") != (camera_id:" + std::to_string(impl_->camera_id) + ")\n"};
@@ -100,6 +102,11 @@ namespace glasssix {
             throw source_code_aware_runtime_error{
                 "device_id:" + std::to_string(device_id)
                 + " \"wander\" and \"wander_limit\" cannot be used at the same time\n"};
+        
+        std::chrono::steady_clock::time_point now_time = std::chrono::steady_clock::now();
+        auto duration         = std::chrono::duration_cast<std::chrono::microseconds>(now_time - impl_->temp_time);
+        double detection_fps_ = double{1000000.0}/ duration.count();
+        impl_->temp_time      = now_time;
 
         ///  超过interval秒没出现的人自动删
         std::vector<std::int32_t> v;
@@ -165,6 +172,7 @@ namespace glasssix {
                     impl_->wander_map[id_temp].sum_time += (current_time - impl_->wander_map[id_temp].last_time+86400)%86400;
                     impl_->wander_map[id_temp].last_time = current_time;
                 }
+                ans.person_info[i].detection_fps = detection_fps_;
                 ans.person_info[i].sum_time = impl_->wander_map[id_temp].sum_time;
             }
 

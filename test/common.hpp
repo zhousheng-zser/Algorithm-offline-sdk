@@ -615,7 +615,7 @@ namespace glasssix {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "crowd.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_crowd(img, 5, 30, 0);
-                if (i % 9 == 0)
+                if (val.head_list.size())
                     api_temp->crowd_remove_library(0);
                 if (condition)
                     printf("[crowd] : head_list = %d\n", val.head_list.size());
