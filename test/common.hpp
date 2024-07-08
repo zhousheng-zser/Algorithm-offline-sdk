@@ -1244,7 +1244,7 @@ namespace glasssix {
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
+        gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1259,18 +1259,23 @@ namespace glasssix {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
-                auto val             = api_temp->safe_production_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
+                auto val             = api_temp->safe_production_climb_tumble_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
-                if (val.person_list.size() > 0) {
+                if (val.tumble_list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
-                    printf("-------- %s.jpg\t --------\n", temp[i].c_str());
-                    for (int j = 0; j < val.person_list.size(); j++) {
-                        int x1      = val.person_list[j].x1;
-                        int x2      = val.person_list[j].x2;
-                        int y1      = val.person_list[j].y1;
-                        int y2      = val.person_list[j].y2;
-                        float score = val.person_list[j].score;
+                    printf("-------- %s\t --------\n", temp[i].c_str());
+                    for (int j = 0; j < val.tumble_list.size(); j++) {
+                        int x1      = val.tumble_list[j].x1;
+                        int x2      = val.tumble_list[j].x2;
+                        int y1      = val.tumble_list[j].y1;
+                        int y2      = val.tumble_list[j].y2;
+                        float score = val.tumble_list[j].score;
+                        if (true) {
+                            cv::Rect roi(x1, y1, x2 - x1, y2 - y1);
+                            cv::Mat crop = img(roi).clone();
+                            cv::imwrite(temp[i] + "_out.jpg", crop);
+                        }
                         rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
                         std::string text  = std::to_string(score);
                         cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
