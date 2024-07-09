@@ -471,7 +471,7 @@ namespace glasssix {
 #if 1 // 这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img(abi::string(IMG_PATH) + "wsj_13.jpg", static_cast<int>(1e9));
+                const gx_img_api img(abi::string(IMG_PATH) + "playphone.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 if (condition)
                     printf("[playphone] : playphone_list = %d norm_list = %d bodyerror_list = %d\n",
