@@ -24,6 +24,7 @@ endif()
 
 include(Dependencies.cmake)
 
+add_subdirectory(cmake/batterypilferers)
 add_subdirectory(cmake/gx_api)
 add_subdirectory(cmake/posture)
 add_subdirectory(cmake/head)
@@ -34,7 +35,7 @@ add_subdirectory(cmake/smog)
 add_subdirectory(cmake/climb)
 add_subdirectory(cmake/tumble)
 add_subdirectory(cmake/crowd)
-#add_subdirectory(cmake/fighting)
+add_subdirectory(cmake/fighting)
 add_subdirectory(test)
 
 

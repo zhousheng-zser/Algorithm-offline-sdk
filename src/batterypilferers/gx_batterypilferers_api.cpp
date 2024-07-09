@@ -1,14 +1,15 @@
-﻿#include "gx_batterypilferers_api.hpp"
-#include "thread_pool.hpp"
-#include "../sdk_share.hpp"
+﻿#include "../sdk_share.hpp"
 #include "config.hpp"
+#include "gx_batterypilferers_api.hpp"
+#include "thread_pool.hpp"
+
 #include <unordered_map>
 namespace glasssix {
     config* _config = nullptr;
-    
+
     class algo_ptr {
     public:
-        std::string instance_guid = ""; 
+        std::string instance_guid = "";
         algo_ptr() {
             try {
                 char* init_result_c = parser_init_plugin(_config->_configure_directory.directory.c_str(), "license");
@@ -17,8 +18,8 @@ namespace glasssix {
                     throw std::runtime_error{init_result_c};
 
                 nlohmann::json new_json(batterypilferers_new_param{.device = _config->_batterypilferers_config.device,
-                    .models_directory            = _config->_configure_directory.models_directory,
-                    .batch = _config->_batterypilferers_config.batch});
+                    .models_directory                              = _config->_configure_directory.models_directory,
+                    .batch                                         = _config->_batterypilferers_config.batch});
                 char* new_result_c = parser_create_instance("g6.batterypilferers.detect_code", new_json.dump().c_str());
                 parser_create_instance_result new_result =
                     json::parse(new_result_c).get<parser_create_instance_result>();
@@ -107,20 +108,14 @@ namespace glasssix {
 #endif
                     }
                     std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
-
                     nlohmann::json execute_json(batterypilferers_detect_param{
-                        .algo_params =
-                            batterypilferers_detect_param::optional_params{
-                                .dyparams =
-                                    batterypilferers_detect_param::optional_params::dyparams_params{
-                                        .roi_x = roi.x, .roi_y = roi.y, .roi_width = roi.w, .roi_height = roi.h}},
+                        .algo_params = batterypilferers_detect_param::optional_params{.dyparams = nullptr},
                         .data_params = batterypilferers_detect_param::basic_params{.height = mat_list[0].get_rows(),
-                            .width                                                 = mat_list[0].get_cols()}
-
-
-                    });
+                            .width                                                         = mat_list[0].get_cols(),
+                            .channels                                                      = 3,
+                            .num = _config->_batterypilferers_config.batch}});
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
-                        str.data(), 3ll * mat_list[0].get_rows() * mat_list[0].get_cols(), nullptr, 0);
+                        str.data(), imgBatchDataArr.size(), nullptr, 0);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
@@ -140,9 +135,8 @@ namespace glasssix {
                     ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
             }
         }
+
     private:
-
-
 #if (GX_EMPOWER_FLAG)
         secret_key_empower empower;
         std::string empower_key               = "";
@@ -166,7 +160,7 @@ namespace glasssix {
     };
 
 
-    //  安全生产 偷电瓶检测
+    //  安全生产 打架检测
     batterypilferers_info gx_batterypilferers_api::safe_production_batterypilferers(
         const std::vector<gx_img_api>& mat_list) {
         if (impl_ == nullptr)

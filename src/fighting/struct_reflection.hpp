@@ -66,6 +66,8 @@ struct fighting_detect_param {
     struct basic_params {
         int height;
         int width;
+        int channels;
+        int num;
     };
     optional_params algo_params;
     basic_params data_params;
@@ -87,4 +89,6 @@ DEFINE_STRUCT_SCHEMA(fighting_detect_param::optional_params::dyparams_params,
 
 DEFINE_STRUCT_SCHEMA(fighting_detect_param::basic_params, 
     DEFINE_STRUCT_FIELD(height, "height"), 
-    DEFINE_STRUCT_FIELD(width, "width"));
+    DEFINE_STRUCT_FIELD(width, "width"), 
+    DEFINE_STRUCT_FIELD(channels, "channels"), 
+    DEFINE_STRUCT_FIELD(num, "num"));

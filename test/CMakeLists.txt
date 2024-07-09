@@ -42,6 +42,7 @@ target_link_libraries(
 	gx-tumble
 	gx-crowd
 	gx-fighting
+	gx-batterypilferers
 
 )
 

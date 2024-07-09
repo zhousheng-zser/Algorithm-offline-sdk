@@ -107,7 +107,6 @@ namespace glasssix {
 #endif
                     }
                     std::span<char> str{imgBatchDataArr.data(), imgBatchDataArr.size()};
-
                     nlohmann::json execute_json(fighting_detect_param{
                         .algo_params =
                             fighting_detect_param::optional_params{
@@ -115,12 +114,14 @@ namespace glasssix {
                                     fighting_detect_param::optional_params::dyparams_params{
                                         .roi_x = roi.x, .roi_y = roi.y, .roi_width = roi.w, .roi_height = roi.h}},
                         .data_params = fighting_detect_param::basic_params{.height = mat_list[0].get_rows(),
-                            .width                                                 = mat_list[0].get_cols()}
+                            .width                                                 = mat_list[0].get_cols(),
+                            .channels                                              = 3,
+                            .num                                                   = _config->_fighting_config.batch}
 
 
                     });
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
-                        str.data(), 3ll * mat_list[0].get_rows() * mat_list[0].get_cols(), nullptr, 0);
+                        str.data(), imgBatchDataArr.size(), nullptr, 0);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};

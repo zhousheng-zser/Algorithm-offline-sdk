@@ -1,0 +1,8 @@
+{
+    "device": -1,
+    "format": 1,
+    "head_conf_thres": 0.6,
+    "conf_thres": 0.6,
+    "nms_thres": 0.5,
+    "min_size": 36
+}

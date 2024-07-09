@@ -30,9 +30,10 @@ int main(int argc, char** argv) {
             //t[14] = std::jthread(thread_function_smog);
             //t[15] = std::jthread(thread_function_tumble);
             //t[16] = std::jthread(thread_function_climb);
-            t[17] = std::jthread(thread_function_crowd);
-            t[19] = std::jthread(thread_function_fighting);
+            //t[17] = std::jthread(thread_function_crowd);
+            //t[19] = std::jthread(thread_function_fighting);
             //t[22] = std::jthread(thread_function_head);
+            t[23] = std::jthread(thread_function_batterypilferers);
             //t[12] = std::jthread(thread_function_pedestrian); ////Ã»²â
             //t[12] = std::jthread(thread_function_pedestrian_min); ////Ã»²â
             //t[20] = std::jthread(thread_function_posture);

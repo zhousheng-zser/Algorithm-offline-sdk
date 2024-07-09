@@ -19,12 +19,13 @@
 #include <gx_tumble_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_fighting_api.hpp>
+#include <gx_batterypilferers_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
 bool condition                       = true;
 bool is_out_json                     = true;
-static const std::string CONFIG_PATH = "/root/install/glasssix-offline-sdk-restruct/config";
+static const std::string CONFIG_PATH = "/root/install/restruct/config";
 static std::string IMG_PATH = "/root/img/";
 
 #define TIMES 100
@@ -287,6 +288,46 @@ namespace glasssix {
             printf("head time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t23 多线程测偷电瓶
+    void thread_function_batterypilferers() {
+        gx_batterypilferers_api* api_temp = new gx_batterypilferers_api(CONFIG_PATH);
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
+        std::vector<gx_img_api> img_list;
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_2.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_3.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_4.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_5.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_6.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_7.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_8.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(
+            gx_img_api(std::string(IMG_PATH) + "batterypilferers/batterypilferers_9.jpg", static_cast<int>(1e9)));
+
+        for (int i = 0; i < T; ++i) {
+            try {
+                auto val = api_temp->safe_production_batterypilferers(img_list);
+                if (condition)
+                    printf("[batterypilferers] : score =%f category=%d\n", val.score, val.category);
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("batterypilferers time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
     // t35 多线程测行人min检测
     void thread_function_pedestrian_min() {
         gx_pedestrian_min_api* api_temp = new gx_pedestrian_min_api(CONFIG_PATH);
