@@ -24,6 +24,7 @@ namespace glasssix {
 
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
+            GX_FIELD(std::optional<float>, device_id);
             GX_FIELD(std::optional<float>, conf_thres);
             GX_FIELD(std::optional<float>, nms_thres);
             GX_FIELD(std::optional<float>, little_target_conf_thres);

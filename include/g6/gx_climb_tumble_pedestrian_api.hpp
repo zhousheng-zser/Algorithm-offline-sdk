@@ -13,11 +13,11 @@ namespace glasssix {
         gx_climb_tumble_pedestrian_api& operator=(gx_climb_tumble_pedestrian_api&&) noexcept;
 
         //  安全生产 攀爬检测
-        climb_info safe_production_climb_tumble_pedestrian(const gx_img_api& mat);
+        climb_info safe_production_climb_tumble_pedestrian(const gx_img_api& mat, int device_id);
 
         //  安全生产 攀爬检测
         climb_info safe_production_climb_tumble_pedestrian(
-            const gx_img_api& mat, const abi::vector<pedestrian_info::boxes>& person_list);
+            const gx_img_api& mat, int device_id, const abi::vector<pedestrian_info::boxes>& person_list);
 
     private:
         class impl;
