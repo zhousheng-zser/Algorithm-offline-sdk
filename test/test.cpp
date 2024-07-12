@@ -9,8 +9,10 @@ int main(int argc, char** argv) {
         auto begin = std::chrono::steady_clock::now();
 
         //printf("start run video\n");
+        //std::string module{"aa/"};
         //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        //todo_video("/root/video/fighting.mp4", "/root/img/test/person_detection_test/", "/root/img/test/person_detection_test/ans/", data_);
+        //todo_video(
+        //    "/root/video/fighting.mp4", "/root/img/test/" + module, "/root/img/test/" + module + "ans/", data_);
 
         // yuv_test();
         // gif_test();
@@ -65,7 +67,8 @@ int main(int argc, char** argv) {
             // t[34] = std::jthread(thread_function_crossing);
             // t[35] = std::jthread(thread_function_pedestrian_min);
              //t[36] = std::jthread(thread_function_tumble_pedestrian);
-             t[37] = std::jthread(thread_function_climb_tumble_pedestrian);
+             t[37] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
+             t[38] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
 
         }
         else
@@ -109,7 +112,8 @@ int main(int argc, char** argv) {
             // thread_function_pump_work_status();
             // thread_function_crossing();
             //  thread_function_tumble_pedestrian();
-             thread_function_climb_tumble_pedestrian();
+             thread_function_climb_tumble_pedestrian_climb();
+             thread_function_climb_tumble_pedestrian_tumble();
         }
         
         auto end      = std::chrono::steady_clock::now();
