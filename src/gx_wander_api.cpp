@@ -15,7 +15,7 @@ namespace glasssix {
         void init() {
             wander_map.clear();
             if (api_temp == nullptr) {
-                api_temp = new gx_pedestrian_api();
+                api_temp = new gx_pedestrian_api();//前面已经加载过路径 不用在加
             }
             time = 0;
 #if (GX_EMPOWER_FLAG)  
@@ -120,10 +120,10 @@ namespace glasssix {
         }
         wander_info ans;
         // 过滤掉行人置信度小于person_conf的
-        abi::vector<pedestrian_info::boxes> posture_list_temp;
+        abi::vector<pedestrian_info::boxes> pedestrian_list_temp;
         for (int i = 0; i < person_list.size(); i++) {
             if (person_list[i].score >= _config->_wander_config.person_conf)
-                posture_list_temp.emplace_back(person_list[i]);
+                pedestrian_list_temp.emplace_back(person_list[i]);
         }
         try {
             auto result_pool = pool->enqueue([&] {
@@ -152,7 +152,7 @@ namespace glasssix {
                         .roi_y                         = 0,
                         .roi_width                     = mat.get_cols(),
                         .roi_height                    = mat.get_rows(),
-                        .person_list                   = posture_list_temp,
+                        .person_list                   = pedestrian_list_temp,
                         .params =
                             wander_detect_param::confidence_params{
                                 .current_time            = current_time,
@@ -221,10 +221,10 @@ namespace glasssix {
         }
         wander_info temp_ans;
         // 过滤掉行人置信度小于person_conf的
-        abi::vector<pedestrian_info::boxes> posture_list_temp;
+        abi::vector<pedestrian_info::boxes> pedestrian_list_temp;
         for (int i = 0; i < person_list.size(); i++) {
             if (person_list[i].score >= _config->_wander_limit_config.person_conf)
-                posture_list_temp.emplace_back(person_list[i]);
+                pedestrian_list_temp.emplace_back(person_list[i]);
         }
         try {
             auto result_pool = pool->enqueue([&] {
@@ -253,7 +253,7 @@ namespace glasssix {
                         .roi_y                         = 0,
                         .roi_width                     = mat.get_cols(),
                         .roi_height                    = mat.get_rows(),
-                        .person_list                   = posture_list_temp,
+                        .person_list                   = pedestrian_list_temp,
                         .params =
                             wander_detect_param::confidence_params{
                                 .current_time            = current_time,
