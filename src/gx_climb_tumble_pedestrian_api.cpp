@@ -89,11 +89,13 @@ namespace glasssix {
         const gx_img_api& mat, int device_id, const abi::vector<pedestrian_info::boxes>& person_list) {
 
         // 过滤掉行人置信度小于person_conf的
-        abi::vector<pedestrian_info::boxes> posture_list_temp;
+        abi::vector<pedestrian_info::boxes> pedestrian_list_temp;
         for (int i = 0; i < person_list.size(); i++) {
             if (person_list[i].score >= _config->_climb_tumble_pedestrian_config.person_conf)
-                posture_list_temp.emplace_back(person_list[i]);
+                pedestrian_list_temp.emplace_back(person_list[i]);
         }
+        //pedestrian_list_temp.emplace_back(
+        //    pedestrian_info::boxes{.score = 0.9, .x1 = 0, .y1 = 0, .x2 = mat.get_cols(), .y2 = mat.get_rows()});
         try {
             auto result_pool = pool_climb_tumble_pedestrian->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -123,7 +125,7 @@ namespace glasssix {
                             .roi_y       = 0,
                             .roi_width   = mat.get_cols(),
                             .roi_height  = mat.get_rows(),
-                            .person_list = posture_list_temp,
+                            .person_list = pedestrian_list_temp,
                             .params = climb_tumble_pedestrian_detect_param::confidence_params{.device_id = device_id,
                                 .conf_thres = _config->_climb_tumble_pedestrian_config.conf_thres,
                                 .nms_thres  = _config->_climb_tumble_pedestrian_config.nms_thres}},

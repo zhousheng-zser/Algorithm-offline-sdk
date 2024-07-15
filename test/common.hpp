@@ -393,7 +393,7 @@ namespace glasssix {
                     printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
                     // printf("[wander] : wander_remove_id ans =%d\n",
                     // api_temp->wander_remove_id(val.person_info[0].id));
-                }
+         }
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
