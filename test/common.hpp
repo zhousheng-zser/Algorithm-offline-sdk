@@ -40,7 +40,6 @@
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
-#include <gx_tumble_pedestrian_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
@@ -1116,42 +1115,27 @@ namespace glasssix {
         delete api_temp;
     }
 
-    
-    // t36 多线程测跌倒_行人
-    void thread_function_tumble_pedestrian() {
-        gx_tumble_pedestrian_api* api_temp = new gx_tumble_pedestrian_api(CONFIG_PATH);
-        int T                   = TIMES;
-        auto start              = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < T; ++i) {
-            try {
-                const gx_img_api img(abi::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_tumble_pedestrian(img);
-                if (condition)
-                    printf(
-                        "[tumble_pedestrian] : tumble_list = %d stand_list = %d\n", val.tumble_list.size(), val.stand_list.size());
-            } catch (const std::exception& ex) {
-                printf("error =  %s\n", ex.what());
-            }
-        }
-        auto end      = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        if (condition_time)
-            printf("tumble_pedestrian time = %lld microsecond\n", duration.count());
-        delete api_temp;
-    }
 
     // t37 多线程测攀爬跌倒的攀爬
     void thread_function_climb_tumble_pedestrian_climb() {
         gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
         int T                  = TIMES;
         auto start             = std::chrono::high_resolution_clock::now();
+        //auto list_ = find_file("/root/img/test/aa(2)/");
+        //for (int i = 0; i < list_.size(); ++i) {
+        //    std::cout << list_[i] << "\n";
+        //    const gx_img_api img(list_[i], static_cast<int>(1e9));
+        //    api_temp->safe_production_climb_tumble_pedestrian(img, 0,{});
+        //    auto val = api_temp->safe_production_climb_tumble_pedestrian(img, 0,{});
+        //}
+
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "climb.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_climb_tumble_pedestrian(img);
+                auto val = api_temp->safe_production_climb_tumble_pedestrian(img,0);
                 if (condition)
-                    printf(
-                        "[climb_tumble_pedestrian:climb] : climb_list = %d tumble_list = %d normal_list = %d abnormal_list = %d\n", val.climb_list.size(), val.tumble_list.size(), val.normal_list.size(), val.abnormal_list.size());
+                    printf("[climb_tumble_pedestrian:climb] : persion_list = %llu climb_list = %llu tumble_list = %llu disabled_list = %llu other_list = %llu \n",
+                        val.persion_list.size(), val.climb_list.size(), val.tumble_list.size(), val.disabled_list.size(), val.other_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1171,12 +1155,12 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_climb_tumble_pedestrian(img);
+                auto val = api_temp->safe_production_climb_tumble_pedestrian(img,1);
                 if (condition)
-                    printf("[climb_tumble_pedestrian:tumble] : climb_list = %d tumble_list = %d normal_list = %d "
-                           "abnormal_list = %d\n",
-                        val.climb_list.size(), val.tumble_list.size(), val.normal_list.size(),
-                        val.abnormal_list.size());
+                    printf("[climb_tumble_pedestrian:climb] : persion_list = %llu climb_list = %llu tumble_list = %llu "
+                           "disabled_list = %llu other_list = %llu \n",
+                        val.persion_list.size(), val.climb_list.size(), val.tumble_list.size(),
+                        val.disabled_list.size(), val.other_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1259,7 +1243,7 @@ namespace glasssix {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
-                auto val             = api_temp->safe_production_climb_tumble_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
+                auto val             = api_temp->safe_production_climb_tumble_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28},3);
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
                 if (val.tumble_list.size() > 0) {
@@ -1493,7 +1477,7 @@ void wangder_limit() {
 
     // 读取 视频 文件
     cv::VideoCapture capture;
-    capture.open("/root/video/wander_limit/DownLoad1 - Trim.mp4");
+    capture.open("/root/video/Trim.mp4");
 
     // 逐帧解码并保存为图像
     cv::Mat frame;
@@ -1507,17 +1491,20 @@ void wangder_limit() {
         if (frame.empty())
             break;
 
-        if (frameCount % 10 == 0) {
+        if (frameCount % 15 == 0) {
             // 保存为图像
             std::string outputName = "/root/video/temp.jpg";
             cv::imwrite(outputName, frame);
 
             gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
-            auto val_ped = api_ped->safe_production_pedestrian(img1);
-            wander_info val = api_temp->safe_production_wander(img1, frameCount / 25, 1,60, val_ped.person_list);
+            auto val_ped             = api_ped->safe_production_pedestrian(img1);
+            auto now                 = std::chrono::system_clock::now();
+            auto duration            = now.time_since_epoch();
+            int64_t wander_timestamp = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+            wander_info val = api_temp->safe_production_wander(img1, wander_timestamp, 1, 60, val_ped.person_list);
             int result   = 0;
-            for (int i = 0; i < val.person_info.size(); i++) {
-                int x1 = val.person_info[i].x1;
+            for (const auto& detected : val.person_info) {
+               /* int x1 = val.person_info[i].x1;
                 int x2 = val.person_info[i].x2;
                 int y1 = val.person_info[i].y1;
                 int y2 = val.person_info[i].y2;
@@ -1528,10 +1515,13 @@ void wangder_limit() {
                     cv::Point(x1, y1),
                     cv::FONT_HERSHEY_SIMPLEX, 1,
                     WHITE, 2);
-                cv::rectangle(frame, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                cv::rectangle(frame, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);*/
+                printf("人员ID:%d 徘徊时间:%lld 出现次数:%d 预计徘徊时间内的总帧数:%.6f \n", detected.id,
+                    detected.sum_time, detected.detection_number, 8 * 60 * detected.detection_fps);
+
             }
-            std::string path_ = "/root/video/" + std::to_string(cnnt++) + ".jpg";
-            cv::imwrite(path_, frame);
+            //std::string path_ = "/root/video/" + std::to_string(cnnt++) + ".jpg";
+            //cv::imwrite(path_, frame);
         }
         frameCount++;
     }

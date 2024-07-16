@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../include/g6/info_climb.hpp"
+#include "../../../include/g6/info_climb_tumble_pedestrian.hpp"
 #include "../../../include/g6/info_pedestrian.hpp"
 #include "../common_protocols.hpp"
 
@@ -24,9 +24,9 @@ namespace glasssix {
 
         struct confidence_params {
             GX_BEGIN_FIELDS(confidence_params);
+            GX_FIELD(std::optional<float>, device_id);
             GX_FIELD(std::optional<float>, conf_thres);
             GX_FIELD(std::optional<float>, nms_thres);
-            GX_FIELD(std::optional<float>, little_target_conf_thres);
             GX_END_FIELDS;
 
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
@@ -51,7 +51,7 @@ namespace glasssix {
     struct climb_tumble_pedestrian_detect_result {
         GX_BEGIN_FIELDS(climb_tumble_pedestrian_detect_result);
         GX_FIELD(parser_result_status, status);
-        GX_FIELD(climb_info, detect_info);
+        GX_FIELD(climb_tumble_info, detect_info);
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
