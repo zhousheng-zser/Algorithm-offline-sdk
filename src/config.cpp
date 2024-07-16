@@ -214,12 +214,6 @@ namespace glasssix {
         temp.get_to(_tumble_config);
         tumble_is_load = true;
     }
-    void config::set_tumble_pedestrian(const abi::string& path) {
-        glasssix::json temp;
-        temp = read_json_file(path + "/tumble_pedestrian.json");
-        temp.get_to(_tumble_pedestrian_config);
-        tumble_pedestrian_is_load = true;
-    }
     void config::set_vehicle(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/vehicle.json");

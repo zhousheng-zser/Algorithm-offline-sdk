@@ -17,7 +17,6 @@ namespace glasssix {
         GX_FIELD(int, thread_pool_num_fighting);
         GX_FIELD(int, thread_pool_num_tumble);
         GX_FIELD(int, thread_pool_num_climb);
-        GX_FIELD(int, thread_pool_num_tumble_pedestrian);
         GX_FIELD(int, thread_pool_num_climb_tumble_pedestrian);
         GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
@@ -96,6 +95,18 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+
+     struct climb_tumble_pedestrian_config {
+        GX_BEGIN_FIELDS(climb_tumble_pedestrian_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_FIELD(float, person_conf);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
+
     struct crowd_config {
         GX_BEGIN_FIELDS(crowd_config);
         GX_FIELD(int, device);
@@ -412,7 +423,7 @@ namespace glasssix {
         feature_config _feature_config;
         face_user_config _face_user_config;
         climb_config _climb_config;
-        climb_config _climb_tumble_pedestrian_config;
+        climb_tumble_pedestrian_config _climb_tumble_pedestrian_config;
         crowd_config _crowd_config;
         crossing_config _crossing_config;
         batterypilferers_config _batterypilferers_config;
@@ -432,7 +443,6 @@ namespace glasssix {
         sleep_config _sleep_config;
         smoke_config _smoke_config;
         tumble_config _tumble_config;
-        tumble_config _tumble_pedestrian_config;
         vehicle_config _vehicle_config;
         wander_config _wander_config;
         wander_limit_config _wander_limit_config;
@@ -472,7 +482,6 @@ namespace glasssix {
         void set_sleep(const abi::string& path);
         void set_smoke(const abi::string& path);
         void set_tumble(const abi::string& path);
-        void set_tumble_pedestrian(const abi::string& path);
         void set_vehicle(const abi::string& path);
         void set_wander(const abi::string& path);
         void set_wander_limit(const abi::string& path);
@@ -514,7 +523,6 @@ namespace glasssix {
         bool sleep_is_load               = false;
         bool smoke_is_load               = false;
         bool tumble_is_load              = false;
-        bool tumble_pedestrian_is_load   = false;
         bool vehicle_is_load             = false;
         bool wander_is_load              = false;
         bool wander_limit_is_load        = false;

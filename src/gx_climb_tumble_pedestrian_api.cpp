@@ -5,7 +5,7 @@
 namespace glasssix {
 
     thread_pool* pool_climb_tumble_pedestrian = nullptr;
-    std::unordered_map<std::thread::id, algo_climb_ptr*> climb_tumble_pedestrian_thread_algo_ptr;
+    std::unordered_map<std::thread::id, climb_tumble_pedestrian_ptr*> climb_tumble_pedestrian_thread_algo_ptr;
     gx_climb_tumble_pedestrian_api::gx_climb_tumble_pedestrian_api() : impl_{std::make_unique<impl>()} {}
     gx_climb_tumble_pedestrian_api::gx_climb_tumble_pedestrian_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_climb_tumble_pedestrian_api::~gx_climb_tumble_pedestrian_api() {}
@@ -76,22 +76,32 @@ namespace glasssix {
 #endif
     };
 
-    //  安全生产 攀爬检测
-    climb_info gx_climb_tumble_pedestrian_api::safe_production_climb_tumble_pedestrian(const gx_img_api& mat)
+    //  安全生产 攀爬_跌倒检测
+    climb_tumble_info gx_climb_tumble_pedestrian_api::safe_production_climb_tumble_pedestrian(
+        const gx_img_api& mat, int device_id)
     {
         auto person_list = impl_->api_temp->safe_production_pedestrian(mat);
-        return safe_production_climb_tumble_pedestrian(mat, person_list.person_list);
+        return safe_production_climb_tumble_pedestrian(mat, device_id, person_list.person_list);
     }
-    climb_info gx_climb_tumble_pedestrian_api::safe_production_climb_tumble_pedestrian(
-        const gx_img_api& mat, const abi::vector<pedestrian_info::boxes>& person_list) {
+
+
+    climb_tumble_info gx_climb_tumble_pedestrian_api::safe_production_climb_tumble_pedestrian(
+        const gx_img_api& mat, int device_id, const abi::vector<pedestrian_info::boxes>& person_list) {
+
+        // 过滤掉行人置信度小于person_conf的
+        abi::vector<pedestrian_info::boxes> posture_list_temp;
+        for (int i = 0; i < person_list.size(); i++) {
+            if (person_list[i].score >= _config->_climb_tumble_pedestrian_config.person_conf)
+                posture_list_temp.emplace_back(person_list[i]);
+        }
         try {
             auto result_pool = pool_climb_tumble_pedestrian->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
                 if (climb_tumble_pedestrian_thread_algo_ptr[id_] == nullptr) {
-                    climb_tumble_pedestrian_thread_algo_ptr[id_] = new algo_climb_ptr();
+                    climb_tumble_pedestrian_thread_algo_ptr[id_] = new climb_tumble_pedestrian_ptr();
                 }
                 auto ptr = climb_tumble_pedestrian_thread_algo_ptr[id_];
-                climb_info ans;
+                climb_tumble_info ans;
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
 #else
@@ -103,23 +113,21 @@ namespace glasssix {
                 std::span<char> str{
                     reinterpret_cast<char*>(const_cast<uchar*>(img_data.data())), mat.get_cols() * mat.get_rows() * 3};
 #endif
-                auto result = ptr->protocol_ptr.invoke<climb_tumble_pedestrian::detect>(ptr->climb_tumble_pedestrian_handle,
-                    climb_tumble_pedestrian_detect_param{.instance_guid = "",
-                        .format                       = _config->_climb_tumble_pedestrian_config.format,
-                        .height                       = mat.get_rows(),
-                        .width                        = mat.get_cols(),
-                        .roi_x                        = 0,
-                        .roi_y                        = 0,
-                        .roi_width                    = mat.get_cols(),
-                        .roi_height                   = mat.get_rows(),
-                        .person_list                  = person_list,
-                        .params = climb_tumble_pedestrian_detect_param::confidence_params{.conf_thres = _config->_climb_tumble_pedestrian_config.conf_thres,
-                            .nms_thres                                              = _config->_climb_tumble_pedestrian_config.nms_thres,
-                            .little_target_conf_thres = _config->_climb_tumble_pedestrian_config.little_target_conf_thres
-
-
-                        }},
-                    str);
+                auto result =
+                    ptr->protocol_ptr.invoke<climb_tumble_pedestrian::detect>(ptr->climb_tumble_pedestrian_handle,
+                        climb_tumble_pedestrian_detect_param{.instance_guid = "",
+                            .format      = _config->_climb_tumble_pedestrian_config.format,
+                            .height      = mat.get_rows(),
+                            .width       = mat.get_cols(),
+                            .roi_x       = 0,
+                            .roi_y       = 0,
+                            .roi_width   = mat.get_cols(),
+                            .roi_height  = mat.get_rows(),
+                            .person_list = posture_list_temp,
+                            .params = climb_tumble_pedestrian_detect_param::confidence_params{.device_id = device_id,
+                                .conf_thres = _config->_climb_tumble_pedestrian_config.conf_thres,
+                                .nms_thres  = _config->_climb_tumble_pedestrian_config.nms_thres}},
+                        str);
 
                 ans = std::move(result.detect_info);
                 return ans;
