@@ -12,7 +12,7 @@ namespace glasssix {
     public:
         void init() {
             if (api_temp == nullptr) {
-                api_temp = new gx_posture_api();
+                api_temp = new gx_posture_api();//前面已经加载过路径 不用在加
             }
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
