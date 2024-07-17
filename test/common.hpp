@@ -470,7 +470,7 @@ namespace glasssix {
 #if 1 // 这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img(abi::string(IMG_PATH) + "wsj_13.jpg", static_cast<int>(1e9));
+                const gx_img_api img(abi::string(IMG_PATH) + "playphone.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 if (condition)
                     printf("[playphone] : playphone_list = %d norm_list = %d bodyerror_list = %d\n",
@@ -1157,7 +1157,7 @@ namespace glasssix {
                 const gx_img_api img(abi::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_climb_tumble_pedestrian(img,1);
                 if (condition)
-                    printf("[climb_tumble_pedestrian:climb] : persion_list = %llu climb_list = %llu tumble_list = %llu "
+                    printf("[climb_tumble_pedestrian:tumble] : persion_list = %llu climb_list = %llu tumble_list = %llu "
                            "disabled_list = %llu other_list = %llu \n",
                         val.persion_list.size(), val.climb_list.size(), val.tumble_list.size(),
                         val.disabled_list.size(), val.other_list.size());
@@ -1228,7 +1228,7 @@ namespace glasssix {
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
+        gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1243,19 +1243,19 @@ namespace glasssix {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
-                auto val             = api_temp->safe_production_climb_tumble_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28},3);
+                auto val             = api_temp->safe_production_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
-                if (val.tumble_list.size() > 0) {
+                if (val.person_list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
                     printf("-------- %s\t --------\n", temp[i].c_str());
-                    for (int j = 0; j < val.tumble_list.size(); j++) {
-                        int x1      = val.tumble_list[j].x1;
-                        int x2      = val.tumble_list[j].x2;
-                        int y1      = val.tumble_list[j].y1;
-                        int y2      = val.tumble_list[j].y2;
-                        float score = val.tumble_list[j].score;
-                        if (true) {
+                    for (int j = 0; j < val.person_list.size(); j++) {
+                        int x1      = val.person_list[j].x1;
+                        int x2      = val.person_list[j].x2;
+                        int y1      = val.person_list[j].y1;
+                        int y2      = val.person_list[j].y2;
+                        float score = val.person_list[j].score;
+                        if (false) {
                             cv::Rect roi(x1, y1, x2 - x1, y2 - y1);
                             cv::Mat crop = img(roi).clone();
                             cv::imwrite(temp[i] + "_out.jpg", crop);
