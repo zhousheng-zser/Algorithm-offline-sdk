@@ -1201,10 +1201,10 @@ namespace glasssix {
         int T                           = TIMES;
         auto start                      = std::chrono::high_resolution_clock::now();
 
-         //auto list_ = find_file("/root/img/test/orig/");
-            //std::cout << list_[i] << "\n";
-        for (int i = 0; i < T; ++i) {
-            const gx_img_api img("/root/img/test/WeChat_20240529103018.mp4_20240530_110834.073.jpg", static_cast<int>(1e9));
+         auto list_ = find_file("/root/img/test/orig/");
+        for (int i = 0; i < list_.size(); ++i) {
+            std::cout << list_[i] << "\n";
+            const gx_img_api img(list_[i], static_cast<int>(1e9));
             auto val = api_temp->safe_production_subway_anomaly(
                 img, subway_anomaly_roi{697, 265, 74, 401}, 1); // x, y, width, height
             if (condition)
