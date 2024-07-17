@@ -40,6 +40,7 @@
 #include "../src/nessus/protocols/vehicle.hpp"
 #include "../src/nessus/protocols/wander.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
+#include "../src/nessus/protocols/subway_anomaly.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
 #if (GX_EMPOWER_FLAG)
@@ -282,6 +283,7 @@ namespace glasssix {
             Function["pedestrian"]          = &algo_ptr::set_protocols_handl_pedestrian;
             Function["pedestrian_min"]      = &algo_ptr::set_protocols_handl_pedestrian_min;
             Function["posture"]             = &algo_ptr::set_protocols_handl_posture;
+            Function["subway_anomaly"]      = &algo_ptr::set_protocols_handl_subway_anomaly;
         }
         void set_protocols_handl_crossing() {
             _config->set_crossing(_config->_path);
@@ -457,6 +459,11 @@ namespace glasssix {
             posture_handle = protocol_ptr.make_instance<posture>(posture_new_param{
                 .device = -1, .models_directory = _config->_configure_directory.models_directory, .model_type = 1});
         }
+        void set_protocols_handl_subway_anomaly() {
+            _config->set_subway_anomaly(_config->_path);
+            subway_anomaly_handle = protocol_ptr.make_instance<subway_anomaly>(subway_anomaly_new_param{
+                _config->_subway_anomaly_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         face_attributes face_attributes_handle;
@@ -492,6 +499,7 @@ namespace glasssix {
         pedestrian pedestrian_handle;
         pedestrian_min pedestrian_min_handle;
         posture posture_handle;
+        subway_anomaly subway_anomaly_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern algo_crowd_ptr* thread_algo_crowd_ptr;

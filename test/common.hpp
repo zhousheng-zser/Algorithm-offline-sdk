@@ -43,6 +43,7 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
+#include <gx_subway_anomaly_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -570,7 +571,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "pedestrian.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pedestrian(img);
+            auto val = api_temp->safe_production_pedestrian(img);
                 if (condition)
                     printf("[pedestrian] : person_list = %d\n", val.person_list.size());
             } catch (const std::exception& ex) {
@@ -1171,6 +1172,50 @@ namespace glasssix {
             printf("climb_tumble_pedestrian_tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t39 多线程测地铁异常宁梓骁的
+    void thread_function_subway_anomaly_nzx() {
+        gx_subway_anomaly_api* api_temp          = new gx_subway_anomaly_api(CONFIG_PATH);
+        int T                                    = TIMES;
+        auto start                               = std::chrono::high_resolution_clock::now();
+
+         for (int i = 0; i < T; ++i) {
+             try {
+                 const gx_img_api img("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155244.109.png", static_cast<int>(1e9));
+                 auto val = api_temp->safe_production_subway_anomaly(
+                     img, subway_anomaly_roi{955, 560, 75, 175}, 0); // x, y, width, height
+                 if (condition)
+                     printf("[subway_anomaly] : anomaly_status = %d\n",val.anomaly_status );
+             } catch (const std::exception& ex) {
+                 printf("error =  %s\n", ex.what());
+             }
+         }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("subway_anomaly time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t40 多线程测地铁异常杨凡的
+    void thread_function_subway_anomaly_yf() {
+        gx_subway_anomaly_api* api_temp = new gx_subway_anomaly_api(CONFIG_PATH);
+        int T                           = TIMES;
+        auto start                      = std::chrono::high_resolution_clock::now();
+
+         //auto list_ = find_file("/root/img/test/orig/");
+            //std::cout << list_[i] << "\n";
+        for (int i = 0; i < T; ++i) {
+            const gx_img_api img("/root/img/test/WeChat_20240529103018.mp4_20240530_110834.073.jpg", static_cast<int>(1e9));
+            auto val = api_temp->safe_production_subway_anomaly(
+                img, subway_anomaly_roi{697, 265, 74, 401}, 1); // x, y, width, height
+            if (condition)
+                printf("[subway_anomaly] : anomaly_status = %d\n", val.anomaly_status);
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("subway_anomaly time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 } // namespace glasssix
 
 // 处理视频的
@@ -1312,6 +1357,47 @@ namespace glasssix {
     }
 
 } // namespace glasssix
+
+
+void subway_anomaly_test(std::string old_path, std::string new_path){
+    int normal_closedoor_thresh = 5;
+    cv::Rect compare_area(955, 560, 75, 175); // x, y, width, height
+    cv::Mat image               = cv::imread(old_path);
+    //cv::Mat blurred;
+    //cv::GaussianBlur(image(compare_area), blurred, cv::Size(5, 5), 0);
+    cv::Mat thresh;
+    cv::threshold(image(compare_area), thresh, 150, 255, cv::THRESH_BINARY);
+
+
+    cv::Mat black_pixels;
+    cv::inRange(thresh, cv::Scalar(0), cv::Scalar(0), black_pixels);
+    double num_black_pixels = cv::countNonZero(black_pixels);
+
+    double total_pixels     =  thresh.total();
+
+    double black_pixel_ratio = num_black_pixels / total_pixels;
+    double notclosed_ratio   = std::fabs(black_pixel_ratio * 100 - 71) / 71;
+
+    std::cout << "Percentage of not closed: " << notclosed_ratio * 100 << "%   num_black_pixels: " << num_black_pixels
+              << "\n";
+
+    std::string res;
+    cv::Scalar color;
+    if (notclosed_ratio * 100 > normal_closedoor_thresh) {
+        res   = "WARNING: Abnormally Closed!";
+        color = cv::Scalar(0, 0, 255);
+    } else {
+        res   = "Normal Closed";
+        color = cv::Scalar(0, 255, 0);
+    }
+    cv::Mat img_show       = image.clone();
+    img_show(compare_area) = thresh;
+    std::string text       = "Percentage of not closed: " + std::to_string(notclosed_ratio * 100) + "% num_black_pixels:"
+                     + std::to_string(num_black_pixels) + " black_pixel_ratio: " + std::to_string(black_pixel_ratio);
+    cv::putText(img_show, res, cv::Point(10, 950), cv::FONT_HERSHEY_SIMPLEX, 0.9, color, 3, cv::LINE_AA);
+    cv::putText(img_show, text.c_str(), cv::Point(10, 1050), cv::FONT_HERSHEY_SIMPLEX, 0.9, color, 3, cv::LINE_AA);
+    cv::imwrite(new_path, img_show);
+}
 
 
 // 3566

@@ -274,4 +274,10 @@ namespace glasssix {
         temp.get_to(_pedestrian_min_config);
         pedestrian_min_is_load = true;
     }
+    void config::set_subway_anomaly(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/subway_anomaly.json");
+        temp.get_to(_subway_anomaly_config);
+        subway_anomaly_is_load = true;
+    }
 } // namespace glasssix
