@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
         auto begin = std::chrono::steady_clock::now();
 
         //printf("start run video\n");
-        //std::string module{"aa/"};
+        //std::string module{"pedestrian/"};
         //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
         //todo_video(
         //    "/root/video/fighting.mp4", "/root/img/test/" + module, "/root/img/test/" + module + "ans/", data_);
@@ -69,8 +69,7 @@ int main(int argc, char** argv) {
             t[37] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
             t[38] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
 
-        }
-        else
+        } else if (TIMES == 1)
         {
             //当循环次数为1,进行单线程跑
 
@@ -112,7 +111,8 @@ int main(int argc, char** argv) {
             thread_function_crossing();
             thread_function_climb_tumble_pedestrian_climb();
             thread_function_climb_tumble_pedestrian_tumble();
-        }
+        } else
+        {}
         
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
