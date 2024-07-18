@@ -25,6 +25,12 @@ int main(int argc, char** argv) {
         // gate_status2();
         // face_test();
 
+        //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155244.109.png", "/root/img/test/a_screenshot/a.mp4_20240715_155244.109.png");
+        //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155249.277.png", "/root/img/test/a_screenshot/a.mp4_20240715_155249.277.png");
+        //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155251.095.png", "/root/img/test/a_screenshot/a.mp4_20240715_155251.095.png");
+        //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155258.323.png", "/root/img/test/a_screenshot/a.mp4_20240715_155258.323.png");
+        //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155300.062.png", "/root/img/test/a_screenshot/a.mp4_20240715_155300.062.png");
+
         /* 多线程测性能测试 */
         if(TIMES > 1)
         {
@@ -68,6 +74,8 @@ int main(int argc, char** argv) {
             t[35] = std::jthread(thread_function_pedestrian_min);
             t[37] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
             t[38] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
+            t[39] = std::jthread(thread_function_subway_anomaly_nzx);
+            t[40] = std::jthread(thread_function_subway_anomaly_yf);
 
         } else if (TIMES == 1)
         {
@@ -111,9 +119,10 @@ int main(int argc, char** argv) {
             thread_function_crossing();
             thread_function_climb_tumble_pedestrian_climb();
             thread_function_climb_tumble_pedestrian_tumble();
+            thread_function_subway_anomaly_nzx();
+            thread_function_subway_anomaly_yf();
         } else
         {}
-        
         auto end      = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
         printf("[ ] : the test all cost time : %d seconds\n", duration);
