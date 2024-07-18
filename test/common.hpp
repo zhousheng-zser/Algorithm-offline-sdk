@@ -1284,6 +1284,7 @@ namespace glasssix {
         std::cout << relative_path.size() << std::endl;
         auto begin = std::chrono::high_resolution_clock::now();
         int F      = 1;
+        int num    = 1;
         while (F--) {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
@@ -1291,6 +1292,8 @@ namespace glasssix {
                 auto val             = api_temp->safe_production_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
+
+                cv::Mat out_img = img.clone();
                 if (val.person_list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
                     printf("-------- %s\t --------\n", temp[i].c_str());
@@ -1300,22 +1303,24 @@ namespace glasssix {
                         int y1      = val.person_list[j].y1;
                         int y2      = val.person_list[j].y2;
                         float score = val.person_list[j].score;
-                        if (false) {
+                        if (1) {//抠图
                             cv::Rect roi(x1, y1, x2 - x1, y2 - y1);
                             cv::Mat crop = img(roi).clone();
-                            cv::imwrite(temp[i] + "_out.jpg", crop);
+                            cv::imwrite(temp[i] + std::to_string(num++) + "_out.jpg", crop);
                         }
-                        rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                        std::string text  = std::to_string(score);
-                        cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
-                        cv::rectangle(img, cv::Point(x1, y1),
-                            cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
-                        putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                        if (1) {//画图
+                            rectangle(out_img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                            std::string text  = std::to_string(score);
+                            cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                            cv::rectangle(out_img, cv::Point(x1, y1),
+                                cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                            putText(out_img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                        }
                     }
                     // cv之前要先创建路径
                     std::filesystem::create_directories(ans_path);
                     // std::cout << "return path: " << ans_path << std::endl;
-                    cv::imwrite(ans_path + relative, img);
+                    cv::imwrite(ans_path + relative, out_img);
                 }
 #else
                 // ans_path += "2";//常量,不允许自加
