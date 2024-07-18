@@ -1,25 +1,29 @@
 #include <algorithm>
 #include <chrono>
+#include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <optional>
 #include <random>
 #include <thread>
-#include <cstdio>
 
 #include <gx_api.hpp>
-#include <gx_smog_api.hpp>
-#include <gx_posture_api.hpp>
-#include <gx_head_api.hpp>
-#include <gx_playphone_api.hpp>
-#include <gx_pedestrian_api.hpp>
-#include <gx_pedestrian_min_api.hpp>
+#include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
-#include <gx_tumble_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_fighting_api.hpp>
-#include <gx_batterypilferers_api.hpp>
+#include <gx_flame_api.hpp>
+#include <gx_head_api.hpp>
+#include <gx_helmet_api.hpp>
+#include <gx_pedestrian_api.hpp>
+#include <gx_pedestrian_min_api.hpp>
+#include <gx_playphone_api.hpp>
+#include <gx_posture_api.hpp>
+#include <gx_refvest_api.hpp>
+#include <gx_smog_api.hpp>
+#include <gx_tumble_api.hpp>
+#include <gx_sleep_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -51,7 +55,100 @@ namespace glasssix {
 
 
 // 调试代码
-namespace glasssix {
+namespace glasssix {    
+    // t0 多线程测安全帽
+    void thread_function_helmet() {
+        gx_helmet_api* api_temp = new gx_helmet_api(CONFIG_PATH);
+        int T                   = TIMES;
+        auto start              = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "helmet.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_helmet(img);
+                if (condition)
+                    printf("[helmet] : with_helmet_list = %d with_hat_list = %d head_list = %d\n",
+                        val.with_helmet_list.size(), val.with_hat_list.size(), val.head_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("helmet time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t1 多线程测火焰
+    void thread_function_flame() {
+        gx_flame_api* api_temp = new gx_flame_api(CONFIG_PATH);
+        int T                  = TIMES;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "flame.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_flame(img);
+                if (condition)
+                    printf("[flame] : fire_list = %d\n", val.fire_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("flame time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t2 多线程测反光衣
+    void thread_function_refvest() {
+        gx_refvest_api* api_temp = new gx_refvest_api(CONFIG_PATH);
+        int T                    = TIMES;
+        auto start               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "refvest.jpeg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_refvest(img);
+                if (condition)
+                    printf("[refvest] : with_refvest_list = %d without_refvest_list = %d\n",
+                        val.with_refvest_list.size(), val.without_refvest_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("refvest time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t6 多线程测睡岗
+    void thread_function_sleep() {
+        gx_sleep_api* api_temp = new gx_sleep_api(CONFIG_PATH);
+        int T                  = TIMES;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "sleep1.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_sleep(img,1);
+                if (condition)
+                    printf("[sleep] : lying_list = %d work_list = %d\n", val.lying_list.size(), val.work_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("sleep time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+
     // t8 多线程测玩手机
     void thread_function_playphone() {
         gx_playphone_api* api_temp = new gx_playphone_api(CONFIG_PATH);

@@ -32,6 +32,8 @@ target_link_libraries(
 	Threads::Threads
 	${OpenCV_LIBS}
 	gx-api
+	gx-helmet
+	gx-flame
 	gx-smog
 	gx-posture
 	gx-playphone
@@ -41,7 +43,9 @@ target_link_libraries(
 	gx-climb
 	gx-tumble
 	gx-crowd
+	gx-sleep
 	gx-fighting
+	gx-refvest
 	gx-batterypilferers
 
 )

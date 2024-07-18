@@ -1,0 +1,7 @@
+{
+    "device": -1,
+    "format": 1,
+    "posture_conf_thres": 0.65,
+    "conf_thres": 0.8,
+    "nms_thres": 0.5
+}
