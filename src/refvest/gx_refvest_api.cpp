@@ -167,14 +167,14 @@ namespace glasssix {
     };
 
 
-    //  安全生产 玩手机检测
+    //  安全生产 反光衣检测
     refvest_info gx_refvest_api::safe_production_refvest(const gx_img_api& mat) {
         if (impl_ == nullptr)
             throw std::runtime_error{"You need to create a new object !\n"};
         auto posture_info_list = impl_->api_temp->safe_production_posture(mat);
         return impl_->safe_production_refvest(mat, posture_info_list);
     }
-    //  安全生产 玩手机检测
+    //  安全生产 反光衣检测
     refvest_info gx_refvest_api::safe_production_refvest(
         const gx_img_api& mat, const std::vector<posture_info>& posture_info_list) {
         if (impl_ == nullptr)

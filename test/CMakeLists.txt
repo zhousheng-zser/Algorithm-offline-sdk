@@ -38,6 +38,7 @@ target_link_libraries(
 	gx-posture
 	gx-playphone
 	gx-head
+	gx-smoke
 	gx-pedestrian
 	gx-pedestrian_min
 	gx-climb

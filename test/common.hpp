@@ -24,6 +24,7 @@
 #include <gx_smog_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_sleep_api.hpp>
+#include <gx_smoke_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -145,6 +146,34 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("sleep time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t7 ∂‡œﬂ≥Ã≤‚≥È—Ã
+    void thread_function_smoke() {
+        gx_smoke_api* api_temp = new gx_smoke_api(CONFIG_PATH);
+        int T                  = TIMES;
+        auto start             = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "smoke3.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_smoke(img);
+                if (condition)
+                    printf("[smoke] : smoke_list = %d norm_list = %d\n", val.smoke_list.size(), val.norm_list.size());
+                auto end      = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                // printf("smoke only  time = %lld microsecond\n", duration);
+            } catch (const std::exception& ex) {
+                auto end      = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                // printf("smoke error time = %lld microsecond\n", duration);
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        if (condition_time)
+            printf("smoke time = %lld microsecond\n", duration);
         delete api_temp;
     }
 

@@ -40,6 +40,7 @@ add_subdirectory(cmake/fighting)
 add_subdirectory(cmake/helmet)
 add_subdirectory(cmake/refvest)
 add_subdirectory(cmake/sleep)
+add_subdirectory(cmake/smoke)
 add_subdirectory(test)
 
 

@@ -29,7 +29,8 @@ int main(int argc, char** argv) {
             //t[0] = std::jthread(thread_function_helmet);
             //t[1] = std::jthread(thread_function_flame);
             //t[2] = std::jthread(thread_function_refvest);//algorithmzoo  还没有重构
-            t[6] = std::jthread(thread_function_sleep);
+            //t[6] = std::jthread(thread_function_sleep);
+            //t[7] = std::jthread(thread_function_smoke);
             //t[8] = std::jthread(thread_function_playphone);
             //t[14] = std::jthread(thread_function_smog);
             //t[15] = std::jthread(thread_function_tumble);

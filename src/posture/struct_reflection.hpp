@@ -38,11 +38,11 @@ DEFINE_STRUCT_SCHEMA(posture_info,
     );
 
 struct posture_detect_info_result {
-    std::vector<posture_info> info_list;
+    std::vector<posture_info> posture_info_list;
 };
 
 DEFINE_STRUCT_SCHEMA(posture_detect_info_result, 
-    DEFINE_STRUCT_FIELD(info_list, "info_list"));
+    DEFINE_STRUCT_FIELD(posture_info_list, "posture_info_list"));
 
 
 // new 
