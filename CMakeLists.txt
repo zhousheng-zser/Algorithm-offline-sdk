@@ -41,6 +41,8 @@ add_subdirectory(cmake/helmet)
 add_subdirectory(cmake/refvest)
 add_subdirectory(cmake/sleep)
 add_subdirectory(cmake/smoke)
+add_subdirectory(cmake/vehicle)
+add_subdirectory(cmake/wander)
 add_subdirectory(test)
 
 

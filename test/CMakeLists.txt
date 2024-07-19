@@ -48,7 +48,8 @@ target_link_libraries(
 	gx-fighting
 	gx-refvest
 	gx-batterypilferers
-
+	gx-vehicle
+	gx-wander
 )
 
 if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))

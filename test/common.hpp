@@ -25,6 +25,8 @@
 #include <gx_tumble_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smoke_api.hpp>
+#include <gx_vehicle_api.hpp>
+#include <gx_wander_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -226,6 +228,30 @@ namespace glasssix {
             printf("playphone time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+
+        // t11 多线程测车辆
+    void thread_function_vehicle() {
+        gx_vehicle_api* api_temp = new gx_vehicle_api(CONFIG_PATH);
+        int T                    = TIMES;
+        auto start               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "vehicle.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_vehicle(img);
+                if (condition)
+                    printf("[vehicle] : vehicle_list = %d\n", val.vehicle_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("vehicle time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
     // t12 多线程测行人检测
     void thread_function_pedestrian() {
         gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
@@ -334,6 +360,70 @@ namespace glasssix {
         }
         delete api_temp;
     }
+
+    
+    // t18 多线程测徘徊
+    void thread_function_wander() {
+        gx_wander_api* api_temp = new gx_wander_api(CONFIG_PATH);
+        int T                   = TIMES;
+        auto start              = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "wander.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_wander(img, i, 1, 60);
+                if (condition) {
+                    printf("[wander] : wander_list = %d device =%d\n", val.person_info.size(), 1);
+                    // printf("[wander] : wander_remove_id ans =%d\n",
+                    // api_temp->wander_remove_id(val.person_info[0].id));
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        api_temp->wander_remove_library();
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("wander time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t21 多线程测越界
+    void thread_function_wander_limit() {
+        gx_wander_api* api_temp                = new gx_wander_api(CONFIG_PATH);
+        gx_pedestrian_api* api_pedestrian_temp = new gx_pedestrian_api(CONFIG_PATH);
+        int T                                  = TIMES;
+        auto start                             = std::chrono::high_resolution_clock::now();
+        const gx_img_api img1(std::string(IMG_PATH) + "wander_limit1.png", static_cast<int>(1e9));
+        const gx_img_api img2(std::string(IMG_PATH) + "wander_limit2.png", static_cast<int>(1e9));
+        auto post1 = api_pedestrian_temp->safe_production_pedestrian(img1);
+        auto post2 = api_pedestrian_temp->safe_production_pedestrian(img2);
+        for (int i = 0; i < T; i += 2) {
+            try {
+                auto val_1 = api_temp->safe_production_wander_limit(img1, i, 2, post1.person_list);
+                auto val_2 = api_temp->safe_production_wander_limit(img2, i + 1, 2, post2.person_list);
+                for (int j = 0; j < val_2.person_info.size(); ++j) {
+                    if (condition) {
+                        printf("[wander_limit] : segment: %d %d %d %d\n", val_2.segment_info[j].x1,
+                            val_2.segment_info[j].x2, val_2.segment_info[j].y1, val_2.segment_info[j].y2);
+                        printf("[wander_limit] : boxes:   %d %d %d %d\n", val_2.person_info[j].x1,
+                            val_2.person_info[j].x2, val_2.person_info[j].y1, val_2.person_info[j].y2);
+                    }
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition) {
+            printf("[wander_limit] : %d\n", api_temp->wander_remove_library());
+        }
+        if (condition_time) {
+            printf("wander_limit time = %lld microsecond\n", duration.count());
+        }
+        delete api_temp;
+    }
+
 
     // t19 多线程测打架斗殴
     void thread_function_fighting() {

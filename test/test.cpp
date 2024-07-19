@@ -32,10 +32,12 @@ int main(int argc, char** argv) {
             //t[6] = std::jthread(thread_function_sleep);
             //t[7] = std::jthread(thread_function_smoke);
             //t[8] = std::jthread(thread_function_playphone);
+            //t[11] = std::jthread(thread_function_vehicle);//algorithmzoo  还没有重构
             //t[14] = std::jthread(thread_function_smog);
             //t[15] = std::jthread(thread_function_tumble);
             //t[16] = std::jthread(thread_function_climb);
             //t[17] = std::jthread(thread_function_crowd);
+            t[18] = std::jthread(thread_function_wander);////algorithmzoo  删库接口还没有重构
             //t[19] = std::jthread(thread_function_fighting);
             //t[22] = std::jthread(thread_function_head);
             //t[23] = std::jthread(thread_function_batterypilferers);
