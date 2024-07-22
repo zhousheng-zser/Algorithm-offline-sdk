@@ -46,6 +46,8 @@ int main(int argc, char** argv) {
             //t[20] = std::jthread(thread_function_posture);
             //离岗  没测
             //工服  没测
+            //泵业灯光  没测
+            //泵业防护面罩  没测
         } else {
             // 当循环次数为1,进行单线程跑
               thread_function_smog();

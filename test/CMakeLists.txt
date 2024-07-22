@@ -52,6 +52,9 @@ target_link_libraries(
 	gx-wander
 	gx-leavepost
 	gx-workcloth
+	gx-pump_light
+	gx-pump_mask
+	gx-pump_vesthelmet
 )
 
 if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))

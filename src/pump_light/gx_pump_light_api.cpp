@@ -1,4 +1,4 @@
-﻿#include "gx_smog_api.hpp"
+﻿#include "gx_pump_light_api.hpp"
 #include "thread_pool.hpp"
 #include "../sdk_share.hpp"
 #include "config.hpp"
@@ -16,9 +16,9 @@ namespace glasssix {
                 if (init_result.status.code != 0)
                     throw std::runtime_error{init_result_c};
 
-                nlohmann::json new_json(smog_new_param{.device = _config->_smog_config.device,
+                nlohmann::json new_json(pump_light_new_param{.device = _config->_pump_light_config.device,
                     .models_directory            = _config->_configure_directory.models_directory});
-                char* new_result_c = parser_create_instance("g6.smog.detect_code", new_json.dump().c_str());
+                char* new_result_c = parser_create_instance("g6.pump_light.detect_code", new_json.dump().c_str());
                 parser_create_instance_result new_result =
                     json::parse(new_result_c).get<parser_create_instance_result>();
                 if (new_result.status.code != 0)
@@ -36,12 +36,12 @@ namespace glasssix {
 
     std::unordered_map<std::thread::id, algo_ptr*> thread_algo_ptr;
     thread_pool* pool = nullptr;
-    gx_smog_api::gx_smog_api() : impl_{std::make_unique<impl>()} {}
-    gx_smog_api::gx_smog_api(const std::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
-    gx_smog_api::~gx_smog_api() {}
-    gx_smog_api::gx_smog_api(gx_smog_api&&) noexcept            = default;
-    gx_smog_api& gx_smog_api::operator=(gx_smog_api&&) noexcept = default;
-    class gx_smog_api::impl {
+    gx_pump_light_api::gx_pump_light_api() : impl_{std::make_unique<impl>()} {}
+    gx_pump_light_api::gx_pump_light_api(const std::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_pump_light_api::~gx_pump_light_api() {}
+    gx_pump_light_api::gx_pump_light_api(gx_pump_light_api&&) noexcept            = default;
+    gx_pump_light_api& gx_pump_light_api::operator=(gx_pump_light_api&&) noexcept = default;
+    class gx_pump_light_api::impl {
     public:
         void init() {
 #if (GX_EMPOWER_FLAG)
@@ -77,7 +77,8 @@ namespace glasssix {
             init();
         }
         ~impl() {}
-        smog_info safe_production_smog(const gx_img_api& mat) {
+        pump_light_info safe_production_pump_light(
+            const gx_img_api& mat, const std::vector<pump_light_point>& quadrangle) {
             try {
                 auto result_pool = pool->enqueue([&] {
                     std::thread::id id_ = std::this_thread::get_id();
@@ -85,7 +86,7 @@ namespace glasssix {
                         thread_algo_ptr[id_] = new algo_ptr();
                     }
                     auto ptr = thread_algo_ptr[id_];
-                    smog_info ans;
+                    pump_light_info ans;
 #if (GX_PLATFORM_NAME != 8)
                     std::span<char> str{
                         reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
@@ -99,26 +100,37 @@ namespace glasssix {
                         mat.get_cols() * mat.get_rows() * 3};
 #endif
 
-                    nlohmann::json execute_json(smog_detect_param{
-                        .algo_params =
-                            smog_detect_param::optional_params{.dyparams =
-                                                                   smog_detect_param::optional_params::dyparams_params{
-                                                                       .conf_thres = _config->_smog_config.conf_thres,
-                                                                       .nms_thres  = _config->_smog_config.nms_thres}},
+                    nlohmann::json execute_json(
+                        pump_light_detect_param{.algo_params =
+                                                    pump_light_detect_param::optional_params{
+                                                        .dyparams =
+                                                            pump_light_detect_param::optional_params::dyparams_params{
+                                                                .conf_thres = _config->_pump_light_config.conf_thres,
+                                                                .x1         = quadrangle[0].x,
+                                                                .y1         = quadrangle[0].y,
+                                                                .x2         = quadrangle[1].x,
+                                                                .y2         = quadrangle[1].y,
+                                                                .x3         = quadrangle[2].x,
+                                                                .y3         = quadrangle[2].y,
+                                                                .x4         = quadrangle[3].x,
+                                                                .y4         = quadrangle[3].y}},
                         .data_params =
-                            smog_detect_param::basic_params{.height = mat.get_rows(), .width = mat.get_cols()}});
+                            pump_light_detect_param::basic_params{.height = mat.get_rows(), .width = mat.get_cols()}
+
+
+                    });
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
                         str.data(), 3ll * mat.get_rows() * mat.get_cols(), nullptr, 0);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
 
-                    ans = std::move(json::parse(execute_result.result).get<smog_detect_info_result>().detect_info);
+                    ans = std::move(json::parse(execute_result.result).get<pump_light_detect_info_result>().detect_info);
                     return ans;
                 });
                 return result_pool.get();
             } catch (const std::exception& ex) {
-                bool flag = write_dump_img(mat, "_smog_dump.jpg", _config->_configure_directory.dump_img_directory);
+                bool flag = write_dump_img(mat, "_pump_light_dump.jpg", _config->_configure_directory.dump_img_directory);
                 throw std::runtime_error{
                     ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
             }
@@ -129,7 +141,7 @@ namespace glasssix {
 #if (GX_EMPOWER_FLAG)
         secret_key_empower empower;
         std::string empower_key               = "";
-        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_SMOG_V3.0.0";
+        std::string empower_algorithm_version = share_platform_name + "_" + share_empower_language + "_pump_light_V3.0.0";
         std::vector<std::string> empower_algorithm_id_list = {"15"};
         std::string get_empower_key(std::string& path) {
             std::ifstream key(path, std::ios::in);
@@ -149,11 +161,12 @@ namespace glasssix {
     };
 
 
-    //  安全生产 烟雾检测
-    smog_info gx_smog_api::safe_production_smog(const gx_img_api& mat) {
+    //  泵业灯光检测
+    pump_light_info gx_pump_light_api::safe_production_pump_light(
+        const gx_img_api& mat,const std::vector<pump_light_point>& quadrangle) {
         if (impl_ == nullptr)
             throw std::runtime_error{"You need to create a new object !\n"};
-        return impl_->safe_production_smog(mat);
+        return impl_->safe_production_pump_light(mat, quadrangle);
     }
 
 } // namespace glasssix

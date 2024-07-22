@@ -45,6 +45,9 @@ add_subdirectory(cmake/smoke)
 add_subdirectory(cmake/vehicle)
 add_subdirectory(cmake/wander)
 add_subdirectory(cmake/workcloth)
+add_subdirectory(cmake/pump_light)
+add_subdirectory(cmake/pump_mask)
+add_subdirectory(cmake/pump_vesthelmet)
 add_subdirectory(test)
 
 
