@@ -48,6 +48,12 @@ add_subdirectory(cmake/workcloth)
 add_subdirectory(cmake/pump_light)
 add_subdirectory(cmake/pump_mask)
 add_subdirectory(cmake/pump_vesthelmet)
+add_subdirectory(cmake/pumptop_helmet)
+add_subdirectory(cmake/pump_gate_status)
+add_subdirectory(cmake/pump_hoisting)
+add_subdirectory(cmake/pump_weld)
+add_subdirectory(cmake/pump_pumptop_person)
+add_subdirectory(cmake/pump_work_status)
 add_subdirectory(test)
 
 

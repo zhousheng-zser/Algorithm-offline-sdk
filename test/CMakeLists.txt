@@ -55,6 +55,12 @@ target_link_libraries(
 	gx-pump_light
 	gx-pump_mask
 	gx-pump_vesthelmet
+	gx-pumptop_helmet
+	gx-pump_gate_status
+	gx-pump_hoisting
+	gx-pump_weld
+	gx-pump_pumptop_person
+	gx-pump_work_status
 )
 
 if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
