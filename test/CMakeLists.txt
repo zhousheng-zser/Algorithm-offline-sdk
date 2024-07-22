@@ -50,6 +50,8 @@ target_link_libraries(
 	gx-batterypilferers
 	gx-vehicle
 	gx-wander
+	gx-leavepost
+	gx-workcloth
 )
 
 if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))

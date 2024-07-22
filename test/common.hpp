@@ -24,6 +24,7 @@
 #include <gx_smog_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_sleep_api.hpp>
+#include <gx_leavepost_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
