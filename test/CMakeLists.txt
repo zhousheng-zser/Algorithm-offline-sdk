@@ -61,6 +61,9 @@ target_link_libraries(
 	gx-pump_weld
 	gx-pump_pumptop_person
 	gx-pump_work_status
+	gx-crossing
+	gx-onphone
+	gx-climb_tumble_pedestrian
 )
 
 if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
