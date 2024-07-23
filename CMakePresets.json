@@ -266,7 +266,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "GX_OPENCV_ROOT": "/root/install/opencv-sophon",
-                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta-restruct",
                 "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient-sophon",
                 "GX_TOOLHAIN_TARGET_NAME": "SOPHON",
                 "CMAKE_C_COMPILER": "gcc-11",

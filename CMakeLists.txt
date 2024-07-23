@@ -24,11 +24,26 @@ endif()
 
 include(Dependencies.cmake)
 
-add_subdirectory(cmake/batterypilferers)
+#全局链接opencv
+include_directories(
+	${GX_PUBLIC_INCLUDE_DIR}/g6
+	${OpenCV_INCLUDE_DIRS}
+)
+link_directories(${OpenCV_LIB_DIR})
+
+if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
+    include_directories(${GX_OPENCV_ROOT}/include)
+    link_directories(${GX_OPENCV_ROOT}/lib)
+    message("${GX_OPENCV_ROOT}/lib" )
+    link_libraries(bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
+endif()
+
+
 add_subdirectory(cmake/gx_api)
 add_subdirectory(cmake/posture)
 add_subdirectory(cmake/head)
 add_subdirectory(cmake/pedestrian)
+add_subdirectory(cmake/batterypilferers)
 add_subdirectory(cmake/pedestrian_min)
 add_subdirectory(cmake/playphone)
 add_subdirectory(cmake/smog)

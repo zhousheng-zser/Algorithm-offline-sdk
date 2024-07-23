@@ -83,12 +83,10 @@ target_include_directories(
 	PRIVATE
 	${GX_PUBLIC_INCLUDE_DIR}/g6
 	${THIRD_PARTY_INCLUDE_DIR}
-	${OpenCV_INCLUDE_DIRS}
 	${GX_CV_SDK_INCLUDE}
 )
 
 target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
-target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
 
 target_link_libraries(
 	${target_name}
@@ -107,12 +105,6 @@ target_link_libraries(
 	PRIVATE
 	LicenseClient::license_client
 )
-endif()
-
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
-    target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
-    target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
-    target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
 endif()
 
 if(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588")

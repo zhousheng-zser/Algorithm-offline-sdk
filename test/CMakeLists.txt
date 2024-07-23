@@ -17,15 +17,6 @@ target_sources(
     PRIVATE ${private_sources}
 )
 
-target_include_directories(
-	${target_name}
-	PRIVATE
-	${GX_PUBLIC_INCLUDE_DIR}/g6
-	${OpenCV_INCLUDE_DIRS}
-)
-
-target_link_directories(${target_name} PRIVATE ${OpenCV_LIB_DIR})
-
 target_link_libraries(
 	${target_name}
 	PRIVATE
@@ -65,12 +56,6 @@ target_link_libraries(
 	gx-onphone
 	gx-climb_tumble_pedestrian
 )
-
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
-    target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
-    target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
-    target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
-endif()
 
 if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU") )
     target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )

@@ -1,6 +1,7 @@
-﻿#include "../sdk_share.hpp"
+﻿#include "gx_batterypilferers_api.hpp"
+
+#include "../sdk_share.hpp"
 #include "config.hpp"
-#include "gx_batterypilferers_api.hpp"
 #include "thread_pool.hpp"
 
 #include <unordered_map>
@@ -18,8 +19,8 @@ namespace glasssix {
                     throw std::runtime_error{init_result_c};
 
                 nlohmann::json new_json(batterypilferers_new_param{.device = _config->_batterypilferers_config.device,
-                    .models_directory                              = _config->_configure_directory.models_directory,
-                    .batch                                         = _config->_batterypilferers_config.batch});
+                    .models_directory = _config->_configure_directory.models_directory,
+                    .batch            = _config->_batterypilferers_config.batch});
                 char* new_result_c = parser_create_instance("g6.batterypilferers.detect_code", new_json.dump().c_str());
                 parser_create_instance_result new_result =
                     json::parse(new_result_c).get<parser_create_instance_result>();
@@ -39,7 +40,8 @@ namespace glasssix {
     std::unordered_map<std::thread::id, algo_ptr*> thread_algo_ptr;
     thread_pool* pool = nullptr;
     gx_batterypilferers_api::gx_batterypilferers_api() : impl_{std::make_unique<impl>()} {}
-    gx_batterypilferers_api::gx_batterypilferers_api(const std::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    gx_batterypilferers_api::gx_batterypilferers_api(const std::string& config_path)
+        : impl_{std::make_unique<impl>(config_path)} {}
     gx_batterypilferers_api::~gx_batterypilferers_api() {}
     gx_batterypilferers_api::gx_batterypilferers_api(gx_batterypilferers_api&&) noexcept            = default;
     gx_batterypilferers_api& gx_batterypilferers_api::operator=(gx_batterypilferers_api&&) noexcept = default;
@@ -90,8 +92,8 @@ namespace glasssix {
                     if (_config->_batterypilferers_config.batch != mat_list.size())
                         throw std::runtime_error{"Error: The config/batterypilferers.json : batch != mat_list.size()"};
                     batterypilferers_info ans;
-                    std::vector<char> imgBatchDataArr(
-                        _config->_batterypilferers_config.batch * mat_list[0].get_data_len()); // push batch img to array
+                    std::vector<char> imgBatchDataArr(_config->_batterypilferers_config.batch
+                                                      * mat_list[0].get_data_len()); // push batch img to array
                     for (int j = 0; j < _config->_batterypilferers_config.batch; ++j) {
                         //   构造图片数组
 #if (GX_PLATFORM_NAME != 8)
@@ -120,7 +122,8 @@ namespace glasssix {
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
 
-                    ans = std::move(json::parse(execute_result.result).get<batterypilferers_detect_info_result>().detect_info);
+                    ans = std::move(
+                        json::parse(execute_result.result).get<batterypilferers_detect_info_result>().detect_info);
                     return ans;
                 });
                 return result_pool.get();

@@ -19,7 +19,6 @@ target_sources(
 target_include_directories(
 	${target_name}	
 	PRIVATE 
-	${OpenCV_INCLUDE_DIRS}
 	${GX_PUBLIC_INCLUDE_DIR}
 )
 
@@ -35,13 +34,6 @@ target_link_libraries(
 	Threads::Threads
 	${OpenCV_LIBS}
 )
-
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU"))
-    target_include_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/include)
-    target_link_directories(${target_name} PRIVATE ${GX_OPENCV_ROOT}/lib)
-    target_link_libraries(${target_name} PRIVATE bmlib bmrt bmcv yuv bmjpuapi bmjpulite)
-endif()
-
 
 if( (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109" ) OR (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106" )  )
 target_link_libraries(

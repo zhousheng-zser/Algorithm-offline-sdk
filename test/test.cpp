@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
         /* 多线程测性能测试 */
         if (TIMES > 1) {
             std::jthread t[50];
-            //t[0] = std::jthread(thread_function_helmet);
+            t[0] = std::jthread(thread_function_helmet);
             //t[1] = std::jthread(thread_function_flame);
             //t[2] = std::jthread(thread_function_refvest);//algorithmzoo  还没有重构
             //t[6] = std::jthread(thread_function_sleep);
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
             //t[15] = std::jthread(thread_function_tumble);
             //t[16] = std::jthread(thread_function_climb);
             //t[17] = std::jthread(thread_function_crowd);
-            t[18] = std::jthread(thread_function_wander);////algorithmzoo  删库接口还没有重构
+            //t[18] = std::jthread(thread_function_wander);////algorithmzoo  删库接口还没有重构
             //t[19] = std::jthread(thread_function_fighting);
             //t[22] = std::jthread(thread_function_head);
             //t[23] = std::jthread(thread_function_batterypilferers);
