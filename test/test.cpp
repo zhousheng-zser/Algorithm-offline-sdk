@@ -1,6 +1,7 @@
-#include <iostream>
-#include <cstdio>
 #include "common.hpp"
+
+#include <cstdio>
+#include <iostream>
 
 int main(int argc, char** argv) {
     /* C++ 接口测试*/
@@ -27,36 +28,36 @@ int main(int argc, char** argv) {
         if (TIMES > 1) {
             std::jthread t[50];
             t[0] = std::jthread(thread_function_helmet);
-            //t[1] = std::jthread(thread_function_flame);
-            //t[2] = std::jthread(thread_function_refvest);//algorithmzoo  还没有重构
-            //t[6] = std::jthread(thread_function_sleep);
-            //t[7] = std::jthread(thread_function_smoke);
-            //t[8] = std::jthread(thread_function_playphone);
-            //t[11] = std::jthread(thread_function_vehicle);//algorithmzoo  还没有重构
-            //t[14] = std::jthread(thread_function_smog);
-            //t[15] = std::jthread(thread_function_tumble);
-            //t[16] = std::jthread(thread_function_climb);
-            //t[17] = std::jthread(thread_function_crowd);
-            //t[18] = std::jthread(thread_function_wander);////algorithmzoo  删库接口还没有重构
-            //t[19] = std::jthread(thread_function_fighting);
-            //t[22] = std::jthread(thread_function_head);
-            //t[23] = std::jthread(thread_function_batterypilferers);
-            //t[12] = std::jthread(thread_function_pedestrian); ////没测
-            //t[12] = std::jthread(thread_function_pedestrian_min); ////没测
-            //t[20] = std::jthread(thread_function_posture);
-            //离岗  没测
-            //工服  没测
-            //泵业灯光  没测
-            //泵业防护面罩  没测
-            //泵业天车工  没测
-            //泵顶安全帽  没测
-            //大门关闭  没测
-            //狭小空间  没测
-            //焊接规范  没测
+            // t[1] = std::jthread(thread_function_flame);
+            // t[2] = std::jthread(thread_function_refvest);//algorithmzoo  还没有重构
+            // t[6] = std::jthread(thread_function_sleep);
+            // t[7] = std::jthread(thread_function_smoke);
+            // t[8] = std::jthread(thread_function_playphone);
+            // t[11] = std::jthread(thread_function_vehicle);//algorithmzoo  还没有重构
+            // t[14] = std::jthread(thread_function_smog);
+            // t[15] = std::jthread(thread_function_tumble);
+            // t[16] = std::jthread(thread_function_climb);
+            // t[17] = std::jthread(thread_function_crowd);
+            // t[18] = std::jthread(thread_function_wander);////algorithmzoo  删库接口还没有重构
+            // t[19] = std::jthread(thread_function_fighting);
+            // t[22] = std::jthread(thread_function_head);
+            // t[23] = std::jthread(thread_function_batterypilferers);
+            // t[12] = std::jthread(thread_function_pedestrian); ////没测
+            // t[12] = std::jthread(thread_function_pedestrian_min); ////没测
+            // t[20] = std::jthread(thread_function_posture);
+            // 离岗  没测
+            // 工服  没测
+            // 泵业灯光  没测
+            // 泵业防护面罩  没测
+            // 泵业天车工  没测
+            // 泵顶安全帽  没测
+            // 大门关闭  没测
+            // 狭小空间  没测
+            // 焊接规范  没测
 
         } else {
             // 当循环次数为1,进行单线程跑
-              thread_function_smog();
+            thread_function_smog();
         }
 
     } catch (const std::exception& ex) {
@@ -64,4 +65,4 @@ int main(int argc, char** argv) {
     }
     std::getchar();
     return 0;
-    }
+}

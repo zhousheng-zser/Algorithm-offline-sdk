@@ -87,13 +87,13 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "RK3588" )
     set(OpenCV_LIB_DIR ${GX_OPENCV_ROOT}/lib)
     set(OpenCV_LIBS opencv_world)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON" )
-    find_package(
-    LicenseClient
-    REQUIRED
-    NO_DEFAULT_PATH
-    HINTS
-    ${GX_LICENSECLIENT_ROOT}
-    )
+    #find_package(
+    #LicenseClient
+    #REQUIRED
+    #NO_DEFAULT_PATH
+    #HINTS
+    #${GX_LICENSECLIENT_ROOT}
+    #)
 
     find_package(OpenCV
     REQUIRED 
