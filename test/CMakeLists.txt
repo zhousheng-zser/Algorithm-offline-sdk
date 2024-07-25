@@ -57,11 +57,10 @@ target_link_libraries(
 	gx-climb_tumble_pedestrian
 )
 
-if((GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1109") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL  "UBUNTU") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL  "RV1106") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON") OR (GX_TOOLHAIN_TARGET_NAME STREQUAL "SOPHON_UBUNTU") )
-    target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
-    target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
-    target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
-endif()
+#Ìí¼Óparser primitives
+target_link_libraries( ${target_name} PRIVATE ${GX_CV_SDK_LIBS} )
+target_include_directories( ${target_name} PRIVATE ${GX_CV_SDK_INCLUDE} )
+target_link_directories(${target_name} PRIVATE ${GX_CV_SDK_LIB_DIR})
 
 set_target_properties(${target_name}
 	PROPERTIES
