@@ -11,6 +11,6 @@ struct pump_light_info {
 
 // 灯光区域点
 struct pump_light_point {
-    std::int32_t x; // 坐标x
-    std::int32_t y; // 坐标y
+    int x; // 坐标x
+    int y; // 坐标y
 };

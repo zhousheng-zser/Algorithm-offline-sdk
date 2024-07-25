@@ -58,8 +58,8 @@ struct sleep_detect_param {
         struct dyparams_params {
             float conf_thres;
             float nms_thres;
-            float frame_count_thres;
-            float device_id;
+            int frame_count_thres;
+            int device_id;
         };
         dyparams_params dyparams;
     };

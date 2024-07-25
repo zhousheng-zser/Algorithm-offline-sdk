@@ -68,8 +68,8 @@ struct pump_weld_detect_param {
             float wmachine_conf_thres;
             float wlight_conf_thres;
             float nms_thres;
-            int candidate_box_width;
-            int candidate_box_height;
+            float candidate_box_width;
+            float candidate_box_height;
             int batch;
         };
         dyparams_params dyparams;
