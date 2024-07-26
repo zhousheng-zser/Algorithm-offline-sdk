@@ -46,7 +46,7 @@
 #include <gx_subway_anomaly_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
-bool condition_time                  = false;
+bool condition_time                  = true;
 bool condition                       = true;
 bool is_out_json                     = true;
 #if SOPHON
