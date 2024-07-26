@@ -799,8 +799,8 @@ namespace glasssix {
                 gx_img_api img(abi::string(IMG_PATH) + "tcg.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_vesthelmet(img);
                 if (condition)
-                    printf("[pump_vesthelmet] : category = %d score = %.2f  \n", val.pump_vesthelmet_list[0].category,
-                        val.pump_vesthelmet_list[0].score);
+                    for (int i = 0; i < val.pump_vesthelmet_list.size();i++)
+                        printf("[pump_vesthelmet] : category = %d score = %.2f  \n", val.pump_vesthelmet_list[i].category,val.pump_vesthelmet_list[i].score);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
