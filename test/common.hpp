@@ -46,7 +46,7 @@
 #include <gx_subway_anomaly_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
-bool condition_time                  = false;
+bool condition_time                  = true;
 bool condition                       = true;
 bool is_out_json                     = true;
 #if SOPHON
@@ -55,7 +55,7 @@ static const abi::string CONFIG_PATH = "config";
 static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #endif
 static std::string IMG_PATH = "/root/img/";
-#define TIMES 1100
+#define TIMES 1000
 namespace fs = std::filesystem;
 namespace glasssix {
 
@@ -286,7 +286,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("pedestrian time = %lld microsecond\n", duration.count());
+            printf("Action_live_Blur time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // t6 多线程测睡岗
@@ -648,7 +648,8 @@ namespace glasssix {
             try {
                 auto val = api_temp->safe_production_batterypilferers(img_list);
                 if (condition)
-                    printf("[batterypilferers] : score =%f category=%d\n", val.score, val.category);
+                    printf("[batterypilferers] : steal_list =%d normal_list =%d\n", val.steal_list.size(),
+                        val.normal_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -687,7 +688,7 @@ namespace glasssix {
             auto end      = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             if (condition_time)
-                printf("flame time = %lld microsecond\n", duration.count());
+                printf("fighting time = %lld microsecond\n", duration.count());
             delete api_temp;
         } catch (const std::exception& ex) {
             printf("error =  %s\n", ex.what());
@@ -712,7 +713,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("flame time = %lld microsecond\n", duration.count());
+            printf("posture time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // t24 多线程测定制灯光
@@ -1178,13 +1179,13 @@ namespace glasssix {
         auto list_                               = find_file("/root/img/test/a_screenshot/a_screenshot/");
         for (int i = 0; i < list_.size(); ++i) {
              try {
-                std ::cout << list_[i] << "\n";
+                //std ::cout << list_[i] << "\n";
                 const gx_img_api img(list_[i], static_cast<int>(1e9));
                  auto val = api_temp->safe_production_subway_anomaly(img,
                      {subway_anomaly_roi{955, 560, 75, 175}, subway_anomaly_roi{750, 500, 535, 30}},
                      0); // x, y, width, height
                  if (condition)
-                     printf("[subway_anomaly] : anomaly_status = %d\n",val.anomaly_status );
+                     printf("[subway_anomaly_nzx] : anomaly_status = %d\n",val.anomaly_status );
              } catch (const std::exception& ex) {
                  printf("error =  %s\n", ex.what());
              }
@@ -1192,7 +1193,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("subway_anomaly time = %lld microsecond\n", duration.count());
+            printf("subway_anomaly_nzx time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // t40 多线程测地铁异常杨凡的
@@ -1203,17 +1204,17 @@ namespace glasssix {
 
          auto list_ = find_file("/root/img/test/orig/");
         for (int i = 0; i < list_.size(); ++i) {
-            std::cout << list_[i] << "\n";
+            //std::cout << list_[i] << "\n";
             const gx_img_api img(list_[i], static_cast<int>(1e9));
             auto val = api_temp->safe_production_subway_anomaly(
                 img, {subway_anomaly_roi{697, 265, 74, 401}}, 1); // x, y, width, height
             if (condition)
-                printf("[subway_anomaly] : anomaly_status = %d\n", val.anomaly_status);
+                printf("[subway_anomaly_yf] : anomaly_status = %d\n", val.anomaly_status);
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("subway_anomaly time = %lld microsecond\n", duration.count());
+            printf("subway_anomaly_yf time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix

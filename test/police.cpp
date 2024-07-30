@@ -19,7 +19,8 @@ int main(int argc, char** argv) {
             t[23] = std::jthread(thread_function_batterypilferers);
             t[37] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
             t[38] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
-
+            t[39] = std::jthread(thread_function_subway_anomaly_nzx);
+            t[40] = std::jthread(thread_function_subway_anomaly_yf);
         }
         else
         {
@@ -31,6 +32,8 @@ int main(int argc, char** argv) {
             thread_function_batterypilferers();
             thread_function_climb_tumble_pedestrian_climb();
             thread_function_climb_tumble_pedestrian_tumble();
+            thread_function_subway_anomaly_nzx();
+            thread_function_subway_anomaly_yf();
 
         }
         
