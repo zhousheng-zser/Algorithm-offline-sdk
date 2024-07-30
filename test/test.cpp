@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
             t[5]  = std::jthread(thread_function_leavepost);
             t[6]  = std::jthread(thread_function_sleep);
             t[7]  = std::jthread(thread_function_smoke);
-            t[8]  = std::jthread(thread_function_playphone);
+            //t[8]  = std::jthread(thread_function_playphone);
             t[9]  = std::jthread(thread_function_onphone);
             t[10] = std::jthread(thread_function_workcloth);
             t[11] = std::jthread(thread_function_vehicle);
@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
             thread_function_leavepost();
             thread_function_sleep();
             thread_function_smoke();
-            thread_function_playphone();
+            //thread_function_playphone();
             thread_function_onphone();
             thread_function_workcloth();
             thread_function_vehicle();

@@ -55,7 +55,7 @@ static const abi::string CONFIG_PATH = "config";
 static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #endif
 static std::string IMG_PATH = "/root/img/";
-#define TIMES 1100
+#define TIMES 1000
 namespace fs = std::filesystem;
 namespace glasssix {
 
@@ -648,7 +648,8 @@ namespace glasssix {
             try {
                 auto val = api_temp->safe_production_batterypilferers(img_list);
                 if (condition)
-                    printf("[batterypilferers] : score =%f category=%d\n", val.score, val.category);
+                    printf("[batterypilferers] : steal_list =%d normal_list =%d\n", val.steal_list.size(),
+                        val.normal_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -1178,7 +1179,7 @@ namespace glasssix {
         auto list_                               = find_file("/root/img/test/a_screenshot/a_screenshot/");
         for (int i = 0; i < list_.size(); ++i) {
              try {
-                std ::cout << list_[i] << "\n";
+                //std ::cout << list_[i] << "\n";
                 const gx_img_api img(list_[i], static_cast<int>(1e9));
                  auto val = api_temp->safe_production_subway_anomaly(img,
                      {subway_anomaly_roi{955, 560, 75, 175}, subway_anomaly_roi{750, 500, 535, 30}},
@@ -1203,7 +1204,7 @@ namespace glasssix {
 
          auto list_ = find_file("/root/img/test/orig/");
         for (int i = 0; i < list_.size(); ++i) {
-            std::cout << list_[i] << "\n";
+            //std::cout << list_[i] << "\n";
             const gx_img_api img(list_[i], static_cast<int>(1e9));
             auto val = api_temp->safe_production_subway_anomaly(
                 img, {subway_anomaly_roi{697, 265, 74, 401}}, 1); // x, y, width, height
