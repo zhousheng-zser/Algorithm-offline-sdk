@@ -8,11 +8,11 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
 
-        //printf("start run video\n");
-        //std::string module{"pedestrian/"};
-        //video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        //todo_video(
-        //    "/root/video/fighting.mp4", "/root/img/test/" + module, "/root/img/test/" + module + "ans/", data_);
+        printf("start run video\n");
+        std::string module{"smoke/"};
+        video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
+        todo_video(
+            "/root/video/fighting.mp4", "/root/img/test/" + module, "/root/img/test/" + module + "ans/", data_);
 
         // yuv_test();
         // gif_test();
