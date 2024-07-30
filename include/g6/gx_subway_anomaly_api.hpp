@@ -13,7 +13,7 @@ namespace glasssix {
         gx_subway_anomaly_api& operator=(gx_subway_anomaly_api&&) noexcept;
 
         //  µÿÃ˙“Ï≥£ºÏ≤‚
-        subway_anomaly_info safe_production_subway_anomaly(const gx_img_api& mat, const subway_anomaly_roi& roi,int type);
+        subway_anomaly_info safe_production_subway_anomaly(const gx_img_api& mat, const std::vector<subway_anomaly_roi>& roi,int type);
 
     private:
         class impl;

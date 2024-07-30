@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
         //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155258.323.png", "/root/img/test/a_screenshot/a.mp4_20240715_155258.323.png");
         //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155300.062.png", "/root/img/test/a_screenshot/a.mp4_20240715_155300.062.png");
 
+        //make_video("/root/img/test/ori_result_a.mp4", "/root/img/test/b.mp4");
         /* 多线程测性能测试 */
         if(TIMES > 1)
         {

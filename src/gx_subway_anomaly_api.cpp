@@ -72,11 +72,29 @@ namespace glasssix {
 
     //  地铁异常检测
     subway_anomaly_info gx_subway_anomaly_api::safe_production_subway_anomaly(
-        const gx_img_api& mat, const subway_anomaly_roi& roi, int type) {
+        const gx_img_api& mat, const std::vector<subway_anomaly_roi>& rois, int type) {
         try {
 
             if (type != 0 && type != 1)
                 throw source_code_aware_runtime_error(U8("Error: safe_production_subway_anomaly : type != 0 && type != 1"));
+
+            if (type == 0 && rois.size() != 2)
+                throw source_code_aware_runtime_error(
+                    U8("Error: safe_production_subway_anomaly : type = 0, but rois.size() != 2"));
+
+            if (type == 1 && rois.size() !=1)
+                throw source_code_aware_runtime_error(
+                    U8("Error: safe_production_subway_anomaly : type = 1, but rois.size() != 1"));
+
+            subway_anomaly_roi transverse, vertical;//横的和竖的roi
+            if (type == 0) {
+                transverse = rois[0].w > rois[1].w ? rois[0] : rois[1];
+                vertical   = rois[0].h > rois[1].h ? rois[0] : rois[1];
+            }
+            else {
+                transverse = {};
+                vertical = rois[0];
+            }
 
             auto result_pool = pool->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
@@ -101,14 +119,17 @@ namespace glasssix {
                         .format                                = _config->_subway_anomaly_config.format,
                         .height                                = mat.get_rows(),
                         .width                                 = mat.get_cols(),
-                        .roi_x                                 = roi.x,
-                        .roi_y                                 = roi.y,
-                        .roi_width                             = roi.w,
-                        .roi_height                            = roi.h,
+                        .roi_x                                 = vertical.x,
+                        .roi_y                                 = vertical.y,
+                        .roi_width                             = vertical.w,
+                        .roi_height                            = vertical.h,
                         .params = subway_anomaly_detect_param::confidence_params{.type = type,
-                            .conf_thres = _config->_subway_anomaly_config.conf_thres,
-                            .normal_closedoor_thresh = _config->_subway_anomaly_config.normal_closedoor_thresh
-                    }},
+                            .conf_thres              = _config->_subway_anomaly_config.conf_thres,
+                            .normal_closedoor_thresh = _config->_subway_anomaly_config.normal_closedoor_thresh,
+                            .transverse_x            = transverse.x,
+                            .transverse_y            = transverse.y,
+                            .transverse_w            = transverse.w,
+                            .transverse_h            = transverse.h}},
                     str);
 
                 ans = std::move(result.detect_info);
