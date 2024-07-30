@@ -936,9 +936,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_pumptop_helmet(img);
                 if (condition) {
                     if (val.person_list.size() > 0)
-                        printf("[pumptop_helmet] : category = %d \n", 1);
-                    else
-                        printf("[pumptop_helmet] : category = %d \n", 0);
+                        printf("[pumptop_helmet] : category = %d \n", val.person_list[0].category);
                 }
 
             } catch (const std::exception& ex) {
@@ -1177,12 +1175,14 @@ namespace glasssix {
         gx_subway_anomaly_api* api_temp          = new gx_subway_anomaly_api(CONFIG_PATH);
         int T                                    = TIMES;
         auto start                               = std::chrono::high_resolution_clock::now();
-
-         for (int i = 0; i < T; ++i) {
+        auto list_                               = find_file("/root/img/test/a_screenshot/a_screenshot/");
+        for (int i = 0; i < list_.size(); ++i) {
              try {
-                 const gx_img_api img("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155244.109.png", static_cast<int>(1e9));
-                 auto val = api_temp->safe_production_subway_anomaly(
-                     img, subway_anomaly_roi{955, 560, 75, 175}, 0); // x, y, width, height
+                std ::cout << list_[i] << "\n";
+                const gx_img_api img(list_[i], static_cast<int>(1e9));
+                 auto val = api_temp->safe_production_subway_anomaly(img,
+                     {subway_anomaly_roi{955, 560, 75, 175}, subway_anomaly_roi{750, 500, 535, 30}},
+                     0); // x, y, width, height
                  if (condition)
                      printf("[subway_anomaly_nzx] : anomaly_status = %d\n",val.anomaly_status );
              } catch (const std::exception& ex) {
@@ -1206,7 +1206,7 @@ namespace glasssix {
             std::cout << list_[i] << "\n";
             const gx_img_api img(list_[i], static_cast<int>(1e9));
             auto val = api_temp->safe_production_subway_anomaly(
-                img, subway_anomaly_roi{697, 265, 74, 401}, 1); // x, y, width, height
+                img, {subway_anomaly_roi{697, 265, 74, 401}}, 1); // x, y, width, height
             if (condition)
                 printf("[subway_anomaly_yf] : anomaly_status = %d\n", val.anomaly_status);
         }
@@ -1359,6 +1359,66 @@ namespace glasssix {
         const std::string& name, const std::string& save_path, const std::string& ans_path, video_data data_) {
         // try_a_try(name, save_path, data_);//分割视频的,测试目录图片时,可以不使用
         video_test(save_path, ans_path, data_);
+    }
+
+    void make_video(const std::string& name, const std::string& save_path) {
+        cv::VideoCapture cap(name);
+        if (!cap.isOpened()) {
+            std::cerr << "Error opening video file" << std::endl;
+            return ;
+        }
+        // 获取视频的基本属性
+        double fps      = cap.get(cv::CAP_PROP_FPS);
+        int frameWidth  = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
+        int frameHeight = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+
+        // 创建视频写入器
+        cv::VideoWriter writer(
+            save_path, cv::VideoWriter::fourcc('m', 'p', '4', 'v'), fps, cv::Size(frameWidth, frameHeight));
+        if (!writer.isOpened()) {
+            std::cerr << "Error creating video writer" << std::endl;
+            return ;
+        }
+        gx_subway_anomaly_api* api_temp = new gx_subway_anomaly_api(CONFIG_PATH);
+        cv::Mat frame;
+        while (true) {
+            // 读取一帧
+            cap >> frame;
+            if (frame.empty())
+                break;
+            long long sum = frame.cols * frame.rows * 3;
+            std::vector<uchar> buffer( sum);
+            std::memcpy(buffer.data(), frame.data, sum);
+            const gx_img_api img(buffer,  frame.cols, frame.rows,static_cast<int>(1e9) ,true);
+            auto val = api_temp->safe_production_subway_anomaly(img,
+                {subway_anomaly_roi{955, 560, 75, 175}, subway_anomaly_roi{750, 500, 535, 30}},
+                0); // x, y, width, height
+            std::string res;
+            cv::Scalar color;
+            if (!val.anomaly_status) {
+                res   = "WARNING: Abnormally Closed!";
+                color = cv::Scalar(0, 0, 255);
+            } else {
+                res   = "Normal Closed";
+                color = cv::Scalar(0, 255, 0);
+            }
+            std::string text = "black_pixel_ratio2: " + std::to_string(val.score * 100) + "%";
+            cv::rectangle(frame, cv::Point(750, 500), cv::Point(750 + 535, 500 + 30), RED, 6);
+            cv::rectangle(frame, cv::Point(955, 560), cv::Point(955+75, 560+175), RED, 6);
+            cv::putText(frame, res, cv::Point(10, 950), cv::FONT_HERSHEY_SIMPLEX, 0.9, color, 3, cv::LINE_AA);
+            cv::putText(frame, text.c_str(), cv::Point(10, 1050), cv::FONT_HERSHEY_SIMPLEX, 0.9, color, 3, cv::LINE_AA);
+
+
+            // 写入处理后的帧
+            writer.write(frame);
+
+        }
+
+        // 释放资源
+        cap.release();
+        writer.release();
+        cv::destroyAllWindows();
+
     }
 
 } // namespace glasssix
