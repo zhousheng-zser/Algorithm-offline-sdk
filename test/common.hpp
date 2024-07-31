@@ -46,7 +46,7 @@
 #include <gx_subway_anomaly_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
-bool condition_time                  = true;
+bool condition_time                  = false;
 bool condition                       = true;
 bool is_out_json                     = true;
 #if SOPHON
@@ -1176,7 +1176,7 @@ namespace glasssix {
         gx_subway_anomaly_api* api_temp          = new gx_subway_anomaly_api(CONFIG_PATH);
         int T                                    = TIMES;
         auto start                               = std::chrono::high_resolution_clock::now();
-        auto list_                               = find_file("/root/img/test/a_screenshot/a_screenshot/");
+        auto list_                               = find_file("/root/img/subway_anomaly_nzx/");
         for (int i = 0; i < list_.size(); ++i) {
              try {
                 //std ::cout << list_[i] << "\n";
@@ -1202,7 +1202,7 @@ namespace glasssix {
         int T                           = TIMES;
         auto start                      = std::chrono::high_resolution_clock::now();
 
-         auto list_ = find_file("/root/img/test/orig/");
+         auto list_ = find_file("/root/img/subway_anomaly_nzx/");
         for (int i = 0; i < list_.size(); ++i) {
             //std::cout << list_[i] << "\n";
             const gx_img_api img(list_[i], static_cast<int>(1e9));
