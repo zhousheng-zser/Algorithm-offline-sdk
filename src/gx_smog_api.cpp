@@ -4,6 +4,8 @@
 
 namespace glasssix {
 
+    thread_pool* pool_smog = nullptr;
+    std::unordered_map<std::thread::id, algo_smog_ptr*> smog_thread_algo_ptr;
     gx_smog_api::gx_smog_api() : impl_{std::make_unique<impl>()} {}
     gx_smog_api::gx_smog_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_smog_api::~gx_smog_api() {}
@@ -12,6 +14,8 @@ namespace glasssix {
     class gx_smog_api::impl {
     public:
         void init() {
+            if (pool_smog == nullptr)
+                pool_smog = new thread_pool(_config->_configure_directory.thread_pool_num_smog);
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
@@ -72,12 +76,12 @@ namespace glasssix {
     //  安全生产 烟雾检测
     smog_info gx_smog_api::safe_production_smog(const gx_img_api& mat) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_smog->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (smog_thread_algo_ptr[id_] == nullptr) {
+                    smog_thread_algo_ptr[id_] = new algo_smog_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = smog_thread_algo_ptr[id_];
                 smog_info ans;
 #if (GX_PLATFORM_NAME != 8)
                 std::span<char> str{reinterpret_cast<char*>(const_cast<uchar*>(mat.get_data())), mat.get_data_len()};
