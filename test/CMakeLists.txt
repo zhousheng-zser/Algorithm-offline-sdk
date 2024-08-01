@@ -7,8 +7,8 @@ file(
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
     common.hpp
     #sophon.cpp
-    test.cpp
-    #police.cpp
+    #test.cpp
+    police.cpp
     #nessus.cpp
     #face.cpp
 )

@@ -46,7 +46,7 @@
 #include <gx_subway_anomaly_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
-bool condition_time                  = false;
+bool condition_time                  = true;
 bool condition                       = true;
 bool is_out_json                     = true;
 #if SOPHON
@@ -55,7 +55,7 @@ static const abi::string CONFIG_PATH = "config";
 static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #endif
 static std::string IMG_PATH = "/root/img/";
-#define TIMES 1100
+#define TIMES 1000
 namespace fs = std::filesystem;
 namespace glasssix {
 
@@ -286,7 +286,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("pedestrian time = %lld microsecond\n", duration.count());
+            printf("Action_live_Blur time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // t6 多线程测睡岗
@@ -648,7 +648,8 @@ namespace glasssix {
             try {
                 auto val = api_temp->safe_production_batterypilferers(img_list);
                 if (condition)
-                    printf("[batterypilferers] : score =%f category=%d\n", val.score, val.category);
+                    printf("[batterypilferers] : steal_list =%d normal_list =%d\n", val.steal_list.size(),
+                        val.normal_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -687,7 +688,7 @@ namespace glasssix {
             auto end      = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             if (condition_time)
-                printf("flame time = %lld microsecond\n", duration.count());
+                printf("fighting time = %lld microsecond\n", duration.count());
             delete api_temp;
         } catch (const std::exception& ex) {
             printf("error =  %s\n", ex.what());
@@ -712,7 +713,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("flame time = %lld microsecond\n", duration.count());
+            printf("posture time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // t24 多线程测定制灯光
@@ -799,8 +800,8 @@ namespace glasssix {
                 gx_img_api img(abi::string(IMG_PATH) + "tcg.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_vesthelmet(img);
                 if (condition)
-                    printf("[pump_vesthelmet] : category = %d score = %.2f  \n", val.pump_vesthelmet_list[0].category,
-                        val.pump_vesthelmet_list[0].score);
+                    for (int i = 0; i < val.pump_vesthelmet_list.size();i++)
+                        printf("[pump_vesthelmet] : category = %d score = %.2f  \n", val.pump_vesthelmet_list[i].category,val.pump_vesthelmet_list[i].score);
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -1178,13 +1179,13 @@ namespace glasssix {
         auto list_                               = find_file("/root/img/test/a_screenshot/a_screenshot/");
         for (int i = 0; i < list_.size(); ++i) {
              try {
-                std ::cout << list_[i] << "\n";
+                //std ::cout << list_[i] << "\n";
                 const gx_img_api img(list_[i], static_cast<int>(1e9));
                  auto val = api_temp->safe_production_subway_anomaly(img,
                      {subway_anomaly_roi{955, 560, 75, 175}, subway_anomaly_roi{750, 500, 535, 30}},
                      0); // x, y, width, height
                  if (condition)
-                     printf("[subway_anomaly] : anomaly_status = %d\n",val.anomaly_status );
+                     printf("[subway_anomaly_nzx] : anomaly_status = %d\n",val.anomaly_status );
              } catch (const std::exception& ex) {
                  printf("error =  %s\n", ex.what());
              }
@@ -1192,7 +1193,7 @@ namespace glasssix {
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("subway_anomaly time = %lld microsecond\n", duration.count());
+            printf("subway_anomaly_nzx time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
     // t40 多线程测地铁异常杨凡的
@@ -1203,17 +1204,17 @@ namespace glasssix {
 
          auto list_ = find_file("/root/img/test/orig/");
         for (int i = 0; i < list_.size(); ++i) {
-            std::cout << list_[i] << "\n";
+            //std::cout << list_[i] << "\n";
             const gx_img_api img(list_[i], static_cast<int>(1e9));
             auto val = api_temp->safe_production_subway_anomaly(
                 img, {subway_anomaly_roi{697, 265, 74, 401}}, 1); // x, y, width, height
             if (condition)
-                printf("[subway_anomaly] : anomaly_status = %d\n", val.anomaly_status);
+                printf("[subway_anomaly_yf] : anomaly_status = %d\n", val.anomaly_status);
         }
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
-            printf("subway_anomaly time = %lld microsecond\n", duration.count());
+            printf("subway_anomaly_yf time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix
@@ -1284,6 +1285,7 @@ namespace glasssix {
         std::cout << relative_path.size() << std::endl;
         auto begin = std::chrono::high_resolution_clock::now();
         int F      = 1;
+        int num    = 1;
         while (F--) {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
@@ -1291,6 +1293,8 @@ namespace glasssix {
                 auto val             = api_temp->safe_production_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
+
+                cv::Mat out_img = img.clone();
                 if (val.person_list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
                     printf("-------- %s\t --------\n", temp[i].c_str());
@@ -1300,22 +1304,24 @@ namespace glasssix {
                         int y1      = val.person_list[j].y1;
                         int y2      = val.person_list[j].y2;
                         float score = val.person_list[j].score;
-                        if (false) {
+                        if (1) {//抠图
                             cv::Rect roi(x1, y1, x2 - x1, y2 - y1);
                             cv::Mat crop = img(roi).clone();
-                            cv::imwrite(temp[i] + "_out.jpg", crop);
+                            cv::imwrite(temp[i] + std::to_string(num++) + "_out.jpg", crop);
                         }
-                        rectangle(img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
-                        std::string text  = std::to_string(score);
-                        cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
-                        cv::rectangle(img, cv::Point(x1, y1),
-                            cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
-                        putText(img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                        if (1) {//画图
+                            rectangle(out_img, cv::Point(x1, y1), cv::Point(x2, y2), RED, 6);
+                            std::string text  = std::to_string(score);
+                            cv::Size textSize = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 1.2, 2, 0);
+                            cv::rectangle(out_img, cv::Point(x1, y1),
+                                cv::Point(x1, y1) + cv::Point(textSize.width, -textSize.height), RED, -1);
+                            putText(out_img, text, cv::Point(x1, y1), cv::FONT_HERSHEY_SIMPLEX, 1, WHITE, 2);
+                        }
                     }
                     // cv之前要先创建路径
                     std::filesystem::create_directories(ans_path);
                     // std::cout << "return path: " << ans_path << std::endl;
-                    cv::imwrite(ans_path + relative, img);
+                    cv::imwrite(ans_path + relative, out_img);
                 }
 #else
                 // ans_path += "2";//常量,不允许自加

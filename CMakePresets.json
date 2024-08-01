@@ -293,6 +293,33 @@
             }
         },
         {
+            "name": "sophon-7.232",
+            "displayName": "Linux Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "GX_OPENCV_ROOT": "/opt/glasssix/jianzhang/install/opencv-sophon",
+                "GX_CV_SDK_ROOT": "/opt/glasssix/jianzhang/install/Glasssix_CV_SDK_beta",
+                "GX_MISCELLANEOUS_ROOT": "/opt/glasssix/jianzhang/install/miscellaneous-sophon",
+                "GX_LICENSECLIENT_ROOT": "/opt/glasssix/jianzhang/install/LicenseClient-sophon",
+                "GX_TOOLHAIN_TARGET_NAME": "SOPHON",
+                "CMAKE_C_COMPILER": "gcc-11",
+                "CMAKE_CXX_COMPILER": "g++-11"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
             "name": "sophon-gmake-Release",
             "displayName": "Linux Release",
             "generator": "Unix Makefiles",
