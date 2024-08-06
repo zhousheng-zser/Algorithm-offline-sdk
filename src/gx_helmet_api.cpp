@@ -4,6 +4,8 @@
 
 namespace glasssix {
 
+    thread_pool* pool_helmet = nullptr;
+    std::unordered_map<std::thread::id, algo_helmet_ptr*> helmet_thread_algo_ptr;
     gx_helmet_api::gx_helmet_api() : impl_{std::make_unique<impl>()} {}
     gx_helmet_api::gx_helmet_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_helmet_api::~gx_helmet_api() {}
@@ -12,6 +14,8 @@ namespace glasssix {
     class gx_helmet_api::impl {
     public:
         void init() {
+            if (pool_helmet == nullptr)
+                pool_helmet = new thread_pool(_config->_configure_directory.thread_pool_num_helmet);
             if (api_temp == nullptr) {
                 api_temp = new gx_head_api();
             }
@@ -78,12 +82,12 @@ namespace glasssix {
     helmet_info gx_helmet_api::safe_production_helmet(
         const gx_img_api& mat, const abi::vector<head_info>& head_info_list) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_helmet->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (helmet_thread_algo_ptr[id_] == nullptr) {
+                    helmet_thread_algo_ptr[id_] = new algo_helmet_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = helmet_thread_algo_ptr[id_];
                 helmet_info ans;
                 // 过滤掉人头置信度小于conf_thres的
                 abi::vector<head_info> head_list_temp;

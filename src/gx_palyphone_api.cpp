@@ -3,6 +3,8 @@
 
 namespace glasssix {
 
+    thread_pool* pool_playphone = nullptr;
+    std::unordered_map<std::thread::id, algo_playphone_ptr*> playphone_thread_algo_ptr;
     gx_playphone_api::gx_playphone_api() : impl_{std::make_unique<impl>()} {}
     gx_playphone_api::gx_playphone_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_playphone_api::~gx_playphone_api() {}
@@ -11,6 +13,8 @@ namespace glasssix {
     class gx_playphone_api::impl {
     public:
         void init() {
+            if (pool_playphone == nullptr)
+                pool_playphone = new thread_pool(_config->_configure_directory.thread_pool_num_playphone);
             if (api_temp == nullptr) {
                 api_temp = new gx_posture_api();//前面已经加载过路径 不用在加
             }
@@ -77,12 +81,12 @@ namespace glasssix {
     playphone_info gx_playphone_api::safe_production_playphone(
         const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_playphone->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (playphone_thread_algo_ptr[id_] == nullptr) {
+                    playphone_thread_algo_ptr[id_] = new algo_playphone_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = playphone_thread_algo_ptr[id_];
                 playphone_info ans;
                 // 过滤掉姿态置信度小于0.6的
                 abi::vector<posture_info> posture_list_temp;

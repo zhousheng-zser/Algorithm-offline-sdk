@@ -4,6 +4,8 @@
 
 namespace glasssix {
 
+    thread_pool* pool_smoke = nullptr;
+    std::unordered_map<std::thread::id, algo_smoke_ptr*> smoke_thread_algo_ptr;
     gx_smoke_api::gx_smoke_api() : impl_{std::make_unique<impl>()} {}
     gx_smoke_api::gx_smoke_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
     gx_smoke_api::~gx_smoke_api() {}
@@ -12,6 +14,8 @@ namespace glasssix {
     class gx_smoke_api::impl {
     public:
         void init() {
+            if (pool_smoke == nullptr)
+                pool_smoke = new thread_pool(_config->_configure_directory.thread_pool_num_smoke);
             if (api_temp == nullptr) {
                 api_temp = new gx_posture_api();//前面已经加载过路径 不用在加
             }
@@ -77,12 +81,12 @@ namespace glasssix {
     smoke_info gx_smoke_api::safe_production_smoke(
         const gx_img_api& mat, const abi::vector<posture_info>& posture_info_list) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_smoke->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (smoke_thread_algo_ptr[id_] == nullptr) {
+                    smoke_thread_algo_ptr[id_] = new algo_smoke_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = smoke_thread_algo_ptr[id_];
                 smoke_info ans;
                 // 过滤掉姿态置信度小于0.6的
                 abi::vector<posture_info> posture_list_temp;
