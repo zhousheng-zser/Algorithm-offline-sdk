@@ -18,6 +18,13 @@ namespace glasssix {
         GX_FIELD(int, thread_pool_num_tumble);
         GX_FIELD(int, thread_pool_num_climb);
         GX_FIELD(int, thread_pool_num_climb_tumble_pedestrian);
+        GX_FIELD(int, thread_pool_num_flame);
+        GX_FIELD(int, thread_pool_num_smog);
+        GX_FIELD(int, thread_pool_num_smoke);
+        GX_FIELD(int, thread_pool_num_playphone);
+        GX_FIELD(int, thread_pool_num_sleep);
+        GX_FIELD(int, thread_pool_num_helmet);
+        GX_FIELD(int, thread_pool_num_leavepost);
         GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
 

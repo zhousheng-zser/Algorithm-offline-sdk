@@ -231,6 +231,146 @@ namespace glasssix {
         nessus_protocol protocol_ptr;
         climb_tumble_pedestrian climb_tumble_pedestrian_handle;
     };
+    class algo_flame_ptr {
+    public:
+        algo_flame_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "flame") {
+                    try {
+                        _config->set_flame(_config->_path);
+                        flame_handle = protocol_ptr.make_instance<flame>(flame_new_param{
+                            _config->_flame_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        flame flame_handle;
+    };
+    class algo_smog_ptr {
+    public:
+        algo_smog_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "smog") {
+                    try {
+                        _config->set_smog(_config->_path);
+                        smog_handle = protocol_ptr.make_instance<smog>(smog_new_param{
+                            _config->_smog_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        smog smog_handle;
+    };
+    class algo_smoke_ptr {
+    public:
+        algo_smoke_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "smoke") {
+                    try {
+                        _config->set_smoke(_config->_path);
+                        smoke_handle = protocol_ptr.make_instance<smoke>(smoke_new_param{
+                            _config->_smoke_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        smoke smoke_handle;
+    };
+    class algo_playphone_ptr {
+    public:
+        algo_playphone_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "playphone") {
+                    try {
+                        _config->set_playphone(_config->_path);
+                        playphone_handle = protocol_ptr.make_instance<playphone>(playphone_new_param{
+                            _config->_playphone_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        playphone playphone_handle;
+    };
+    class algo_sleep_ptr {
+    public:
+        algo_sleep_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "sleep") {
+                    try {
+                        _config->set_sleep(_config->_path);
+                        sleep_handle = protocol_ptr.make_instance<sleep>(sleep_new_param{
+                            _config->_sleep_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        sleep sleep_handle;
+    };
+    class algo_helmet_ptr {
+    public:
+        algo_helmet_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "helmet") {
+                    try {
+                        _config->set_helmet(_config->_path);
+                        helmet_handle = protocol_ptr.make_instance<helmet>(helmet_new_param{
+                            _config->_helmet_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        helmet helmet_handle;
+    };
+    class algo_leavepost_ptr {
+    public:
+        algo_leavepost_ptr() {
+            protocol_ptr.init(_config->_configure_directory.directory);
+            for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                std::string temp_str = _config->protocols_list["plugin_list"][i];
+                if (temp_str == "leavepost") {
+                    try {
+                        _config->set_leavepost(_config->_path);
+                        leavepost_handle = protocol_ptr.make_instance<leavepost>(leavepost_new_param{
+                            _config->_leavepost_config.device, _config->_configure_directory.models_directory});
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
+        }
+        nessus_protocol protocol_ptr;
+        leavepost leavepost_handle;
+    };
     class algo_ptr {
     public:
         typedef void (algo_ptr::*set_protocols_handle)();
@@ -253,7 +393,6 @@ namespace glasssix {
         void set_Function() {
             Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
             Function["crossing"]            = &algo_ptr::set_protocols_handl_crossing;
-            Function["flame"]               = &algo_ptr::set_protocols_handl_flame;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
             Function["pump_weld"]           = &algo_ptr::set_protocols_handl_pump_weld;
             Function["pump_hoisting"]       = &algo_ptr::set_protocols_handl_pump_hoisting;
@@ -262,22 +401,16 @@ namespace glasssix {
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
             Function["pump_light"]          = &algo_ptr::set_protocols_handl_pump_light;
             Function["pump_work_status"]    = &algo_ptr::set_protocols_handl_pump_work_status;
-            Function["smog"]                = &algo_ptr::set_protocols_handl_smog;
             Function["refvest"]             = &algo_ptr::set_protocols_handl_refvest;
             Function["head"]                = &algo_ptr::set_protocols_handl_head;
-            Function["helmet"]              = &algo_ptr::set_protocols_handl_helmet;
             Function["selene"]              = &algo_ptr::set_protocols_handl_selene;
             Function["cassius"]             = &algo_ptr::set_protocols_handl_cassius;
             Function["longinus"]            = &algo_ptr::set_protocols_handl_longinus;
             Function["romancia"]            = &algo_ptr::set_protocols_handl_romancia;
             Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
-            Function["sleep"]               = &algo_ptr::set_protocols_handl_sleep;
-            Function["smoke"]               = &algo_ptr::set_protocols_handl_smoke;
             Function["vehicle"]             = &algo_ptr::set_protocols_handl_vehicle;
             Function["wander"]              = &algo_ptr::set_protocols_handl_wander;
             Function["pump_pumptop_person"] = &algo_ptr::set_protocols_handl_pump_pumptop_person;
-            Function["leavepost"]           = &algo_ptr::set_protocols_handl_leavepost;
-            Function["playphone"]           = &algo_ptr::set_protocols_handl_playphone;
             Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
             Function["workcloth"]           = &algo_ptr::set_protocols_handl_workcloth;
             Function["pedestrian"]          = &algo_ptr::set_protocols_handl_pedestrian;
@@ -289,11 +422,6 @@ namespace glasssix {
             _config->set_crossing(_config->_path);
             crossing_handle = protocol_ptr.make_instance<crossing>(
                 crossing_new_param{_config->_crossing_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_flame() {
-            _config->set_flame(_config->_path);
-            flame_handle = protocol_ptr.make_instance<flame>(
-                flame_new_param{_config->_flame_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_mask() {
             _config->set_pump_mask(_config->_path);
@@ -334,11 +462,6 @@ namespace glasssix {
             _config->set_pump_work_status(_config->_path);
             pump_work_status_handle = protocol_ptr.make_instance<pump_work_status>(pump_work_status_new_param{});
         }
-        void set_protocols_handl_smog() {
-            _config->set_smog(_config->_path);
-            smog_handle = protocol_ptr.make_instance<smog>(
-                smog_new_param{_config->_smog_config.device, _config->_configure_directory.models_directory});
-        }
         void set_protocols_handl_refvest() {
             _config->set_refvest(_config->_path);
             refvest_handle = protocol_ptr.make_instance<refvest>(
@@ -347,11 +470,6 @@ namespace glasssix {
         void set_protocols_handl_head() {
             head_handle = protocol_ptr.make_instance<head>(
                 head_new_param{.device = -1, .models_directory = _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_helmet() {
-            _config->set_helmet(_config->_path);
-            helmet_handle = protocol_ptr.make_instance<helmet>(
-                helmet_new_param{_config->_helmet_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_selene() {
             _config->set_feature(_config->_path);
@@ -399,16 +517,6 @@ namespace glasssix {
                 protocol_ptr.make_instance<damocles>(damocles_new_param{_config->_action_live_config.device,
                     _config->_action_live_config.model_type, _config->_configure_directory.models_directory});
         }
-        void set_protocols_handl_sleep() {
-            _config->set_sleep(_config->_path);
-            sleep_handle = protocol_ptr.make_instance<sleep>(
-                sleep_new_param{_config->_sleep_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_smoke() {
-            _config->set_smoke(_config->_path);
-            smoke_handle = protocol_ptr.make_instance<smoke>(
-                smoke_new_param{_config->_smoke_config.device, _config->_configure_directory.models_directory});
-        }
         void set_protocols_handl_vehicle() {
             _config->set_vehicle(_config->_path);
             vehicle_handle = protocol_ptr.make_instance<vehicle>(
@@ -425,20 +533,10 @@ namespace glasssix {
             pump_pumptop_person_handle = protocol_ptr.make_instance<pump_pumptop_person>(pump_pumptop_person_new_param{
                 _config->_pump_pumptop_person_config.device, _config->_configure_directory.models_directory});
         }
-        void set_protocols_handl_leavepost() {
-            _config->set_leavepost(_config->_path);
-            leavepost_handle = protocol_ptr.make_instance<leavepost>(
-                leavepost_new_param{_config->_leavepost_config.device, _config->_configure_directory.models_directory});
-        }
         void set_protocols_handl_onphone() {
             _config->set_onphone(_config->_path);
             onphone_handle = protocol_ptr.make_instance<onphone>(
                 onphone_new_param{_config->_onphone_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_playphone() {
-            _config->set_playphone(_config->_path);
-            playphone_handle = protocol_ptr.make_instance<playphone>(
-                playphone_new_param{_config->_playphone_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_workcloth() {
             _config->set_workcloth(_config->_path);
@@ -475,7 +573,6 @@ namespace glasssix {
         cassius cassius_handle;
         refvest refvest_handle;
         crossing crossing_handle;
-        flame flame_handle;
         pump_mask pump_mask_handle;
         pump_weld pump_weld_handle;
         pump_hoisting pump_hoisting_handle;
@@ -485,15 +582,9 @@ namespace glasssix {
         pump_light pump_light_handle;
         pump_work_status pump_work_status_handle;
         pump_pumptop_person pump_pumptop_person_handle;
-        smog smog_handle;
         head head_handle;
-        helmet helmet_handle;
-        sleep sleep_handle;
-        smoke smoke_handle;
         vehicle vehicle_handle;
         wander wander_handle;
-        leavepost leavepost_handle;
-        playphone playphone_handle;
         onphone onphone_handle;
         workcloth workcloth_handle;
         pedestrian pedestrian_handle;
