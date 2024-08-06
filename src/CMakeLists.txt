@@ -14,7 +14,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3588" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=0)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=1)
 	set(GX_EMPOWER OFF)
-	set(target_version 2.35.2)
+	set(target_version 2.36.1)
 elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "RK3399" )
     target_compile_definitions(${target_name} PRIVATE EMPOWER_LANGUAGE=1)
     target_compile_definitions(${target_name} PRIVATE GX_PLATFORM_NAME=2)
@@ -64,7 +64,7 @@ file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
 	${GX_PUBLIC_INCLUDE_DIR}/g6/*.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
+    #${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
 	nessus/*.hpp
 	nessus/*.cpp
 	nessus/protocols/*.hpp
