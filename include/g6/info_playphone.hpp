@@ -15,6 +15,8 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_FIELD(std::int32_t, frequency); // 检出玩手机次数
+            GX_FIELD(std::int32_t, id); // 检出框体对应ID
             GX_END_FIELDS;
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
@@ -36,6 +38,8 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_FIELD(std::int32_t, frequency); // 检出玩手机次数
+            GX_FIELD(std::int32_t, id); // 检出框体对应ID
             GX_END_FIELDS;
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };
@@ -57,6 +61,8 @@ namespace glasssix {
             GX_FIELD(std::int32_t, y1); // 检出框体左上坐标y
             GX_FIELD(std::int32_t, x2); // 检出框体右下坐标x
             GX_FIELD(std::int32_t, y2); // 检出框体右下坐标y
+            GX_FIELD(std::int32_t, frequency); // 检出玩手机次数
+            GX_FIELD(std::int32_t, id); // 检出框体对应ID
             GX_END_FIELDS;
             GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
         };

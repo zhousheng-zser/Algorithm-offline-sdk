@@ -48,7 +48,7 @@
 using namespace glasssix;
 bool condition_time                  = false;
 bool condition                       = true;
-bool is_out_json                     = true;
+bool is_out_json                     = false;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
@@ -468,7 +468,7 @@ namespace glasssix {
         gx_playphone_api* api_temp = new gx_playphone_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
-#if 1 // 这里必须要有表达式,不能省略
+#if 0 // 这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "playphone.jpg", static_cast<int>(1e9));
@@ -483,7 +483,7 @@ namespace glasssix {
 #else // 测试要求进行多图片检测
         try {
             std::vector<std::string> v_img;
-            for (auto enter : std::filesystem::directory_iterator(abi::string(IMG_PATH) + "playphone/")) {
+            for (auto enter : std::filesystem::directory_iterator(abi::string(IMG_PATH) + "playphone/trace/")) {
                 if (enter.is_regular_file()) {
                     std::string exit{enter.path().string()};
                     v_img.push_back(exit);
@@ -495,9 +495,9 @@ namespace glasssix {
                     size_t subPos = exit.rfind("/") + 1;
                     relative_path = exit.substr(subPos);
                     if (condition)
-                        printf("image_name = %s bodyerror_list = %d norm_list = %d playphone_list = %d\n",
-                            relative_path.c_str(), val.bodyerror_list.size(), val.norm_list.size(),
-                            val.playphone_list.size());
+                        printf("[playphone] : image_name = %s playphone_list = %d norm_list = %d bodyerror_list = %d\n",
+                            relative_path.c_str(), val.playphone_list.size(), val.norm_list.size(),
+                            val.bodyerror_list.size());
                 }
             }
             for (auto exit : v_img) {
