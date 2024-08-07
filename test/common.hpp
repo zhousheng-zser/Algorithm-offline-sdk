@@ -978,11 +978,13 @@ namespace glasssix {
         gx_pump_weld_api* api_temp = new gx_pump_weld_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
-
         abi::vector<gx_img_api> img_list;
-        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/weld0.png", static_cast<int>(1e9)));
-        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/weld1.png", static_cast<int>(1e9)));
-        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/weld2.png", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/0.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/1.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/2.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/3.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/4.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(abi::string(IMG_PATH) + "pump_weld/5.jpg", static_cast<int>(1e9)));
         for (int i = 0; i < T; ++i) {
             try {
                 auto val = api_temp->safe_production_pump_weld(img_list);
