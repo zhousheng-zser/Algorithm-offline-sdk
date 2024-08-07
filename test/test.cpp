@@ -45,15 +45,13 @@ int main(int argc, char** argv) {
             t[5]  = std::jthread(thread_function_leavepost);
             t[6]  = std::jthread(thread_function_sleep);
             t[7]  = std::jthread(thread_function_smoke);
-            //t[8]  = std::jthread(thread_function_playphone);
+            t[8]  = std::jthread(thread_function_playphone);
             t[9]  = std::jthread(thread_function_onphone);
             t[10] = std::jthread(thread_function_workcloth);
             t[11] = std::jthread(thread_function_vehicle);
             t[12] = std::jthread(thread_function_pedestrian);
             t[13] = std::jthread(thread_function_Action_live_Blur);
             t[14] = std::jthread(thread_function_smog);
-            // t[15] = std::jthread(thread_function_tumble);
-            // t[16] = std::jthread(thread_function_climb);
             t[17] = std::jthread(thread_function_crowd);
             t[18] = std::jthread(thread_function_wander);
             t[19] = std::jthread(thread_function_fighting);
@@ -90,7 +88,7 @@ int main(int argc, char** argv) {
             thread_function_leavepost();
             thread_function_sleep();
             thread_function_smoke();
-            //thread_function_playphone();
+            thread_function_playphone();
             thread_function_onphone();
             thread_function_workcloth();
             thread_function_vehicle();
@@ -98,8 +96,6 @@ int main(int argc, char** argv) {
             thread_function_pedestrian_min();
             thread_function_Action_live_Blur();
             thread_function_smog();
-            // thread_function_tumble();
-            // thread_function_climb();
             thread_function_crowd();
             thread_function_wander();
             thread_function_fighting();

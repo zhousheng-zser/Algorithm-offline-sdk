@@ -48,7 +48,7 @@
 using namespace glasssix;
 bool condition_time                  = false;
 bool condition                       = true;
-bool is_out_json                     = true;
+bool is_out_json                     = false;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
