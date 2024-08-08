@@ -46,9 +46,9 @@
 #include <gx_subway_anomaly_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
-bool condition_time                  = true;
+bool condition_time                  = false;
 bool condition                       = true;
-bool is_out_json                     = true;
+bool is_out_json                     = false;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
@@ -468,7 +468,7 @@ namespace glasssix {
         gx_playphone_api* api_temp = new gx_playphone_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
-#if 1 // 这里必须要有表达式,不能省略
+#if 0 // 这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "playphone.jpg", static_cast<int>(1e9));
@@ -483,7 +483,7 @@ namespace glasssix {
 #else // 测试要求进行多图片检测
         try {
             std::vector<std::string> v_img;
-            for (auto enter : std::filesystem::directory_iterator(abi::string(IMG_PATH) + "playphone/")) {
+            for (auto enter : std::filesystem::directory_iterator(abi::string(IMG_PATH) + "playphone/trace/")) {
                 if (enter.is_regular_file()) {
                     std::string exit{enter.path().string()};
                     v_img.push_back(exit);
@@ -495,9 +495,9 @@ namespace glasssix {
                     size_t subPos = exit.rfind("/") + 1;
                     relative_path = exit.substr(subPos);
                     if (condition)
-                        printf("image_name = %s bodyerror_list = %d norm_list = %d playphone_list = %d\n",
-                            relative_path.c_str(), val.bodyerror_list.size(), val.norm_list.size(),
-                            val.playphone_list.size());
+                        printf("[playphone] : image_name = %s playphone_list = %d norm_list = %d bodyerror_list = %d\n",
+                            relative_path.c_str(), val.playphone_list.size(), val.norm_list.size(),
+                            val.bodyerror_list.size());
                 }
             }
             for (auto exit : v_img) {
@@ -1178,7 +1178,7 @@ namespace glasssix {
         gx_subway_anomaly_api* api_temp          = new gx_subway_anomaly_api(CONFIG_PATH);
         int T                                    = TIMES;
         auto start                               = std::chrono::high_resolution_clock::now();
-        auto list_                               = find_file("/root/img/test/a_screenshot/a_screenshot/");
+        auto list_                               = find_file("/root/img/subway_anomaly_nzx/");
         for (int i = 0; i < list_.size(); ++i) {
              try {
                 //std ::cout << list_[i] << "\n";
@@ -1204,7 +1204,7 @@ namespace glasssix {
         int T                           = TIMES;
         auto start                      = std::chrono::high_resolution_clock::now();
 
-         auto list_ = find_file("/root/img/test/orig/");
+         auto list_ = find_file("/root/img/subway_anomaly_nzx/");
         for (int i = 0; i < list_.size(); ++i) {
             //std::cout << list_[i] << "\n";
             const gx_img_api img(list_[i], static_cast<int>(1e9));
@@ -1276,7 +1276,7 @@ namespace glasssix {
         for (auto const& file : relative_path) {
             std::cout << " " << file << std::endl;
         }
-        gx_pedestrian_api* api_temp = new gx_pedestrian_api(CONFIG_PATH);
+        auto api_temp = new gx_smoke_api(CONFIG_PATH);
         // abi::vector<tumble_point> quadrangle;
         // quadrangle.emplace_back(tumble_point{.x =765, .y =567 });
         // quadrangle.emplace_back(tumble_point{.x =1309, .y =566 });
@@ -1292,21 +1292,22 @@ namespace glasssix {
             for (int i = 0; i < temp.size(); i++) {
                 // std::cout << "for 循环 : " << i << std::endl;
                 std::string relative = std::filesystem::relative(temp.at(i), save_path).string();
-                auto val             = api_temp->safe_production_pedestrian(gx_img_api{abi::string{temp[i]}, 1 << 28});
+                auto val             = api_temp->safe_production_smoke(gx_img_api{abi::string{temp[i]}, 1 << 28});
                 cv::Mat img          = cv::imread(abi::string{temp[i]}.c_str());
 #if 1
 
                 cv::Mat out_img = img.clone();
-                if (val.person_list.size() > 0) {
+                auto list       = val.smoke_list;
+                if (list.size() > 0) {
                     std::cout << " I am here: " << std::endl;
                     printf("-------- %s\t --------\n", temp[i].c_str());
-                    for (int j = 0; j < val.person_list.size(); j++) {
-                        int x1      = val.person_list[j].x1;
-                        int x2      = val.person_list[j].x2;
-                        int y1      = val.person_list[j].y1;
-                        int y2      = val.person_list[j].y2;
-                        float score = val.person_list[j].score;
-                        if (1) {//抠图
+                    for (int j = 0; j < list.size(); j++) {
+                        int x1      = list[j].x1;
+                        int x2      = list[j].x2;
+                        int y1      = list[j].y1;
+                        int y2      = list[j].y2;
+                        float score = list[j].score;
+                        if (0) {//抠图
                             cv::Rect roi(x1, y1, x2 - x1, y2 - y1);
                             cv::Mat crop = img(roi).clone();
                             cv::imwrite(temp[i] + std::to_string(num++) + "_out.jpg", crop);
