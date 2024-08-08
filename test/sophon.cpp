@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
             t[10] = std::jthread(thread_function_leavepost);
             t[11] = std::jthread(thread_function_sleep);
             t[12] = std::jthread(thread_function_smoke);
-            //t[13] = std::jthread(thread_function_playphone);
+            t[13] = std::jthread(thread_function_playphone);
             t[14] = std::jthread(thread_function_onphone);
             t[15] = std::jthread(thread_function_workcloth);
             t[16] = std::jthread(thread_function_vehicle);
@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
             t[44] = std::jthread(thread_function_pump_mask);
             t[45] = std::jthread(thread_function_pumptop_helmet);
             t[46] = std::jthread(thread_function_pump_hoisting);
-            t[47] = std::jthread(thread_function_pump_weld);
+            //t[47] = std::jthread(thread_function_pump_weld);
             t[48] = std::jthread(thread_function_pump_work_status);
 
         } else if (TIMES == 1) {
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
             thread_function_leavepost();
             thread_function_sleep();
             thread_function_smoke();
-            //thread_function_playphone();
+            thread_function_playphone();
             thread_function_onphone();
             thread_function_workcloth();
             thread_function_vehicle();
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
             thread_function_pump_mask();
             thread_function_pumptop_helmet();
             thread_function_pump_hoisting();
-            thread_function_pump_weld();
+            //thread_function_pump_weld();
             thread_function_pump_work_status();
 
         } else {
