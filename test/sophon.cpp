@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
             t[44] = std::jthread(thread_function_pump_mask);
             t[45] = std::jthread(thread_function_pumptop_helmet);
             t[46] = std::jthread(thread_function_pump_hoisting);
-            //t[47] = std::jthread(thread_function_pump_weld);
+            t[47] = std::jthread(thread_function_pump_weld);
             t[48] = std::jthread(thread_function_pump_work_status);
 
         } else if (TIMES == 1) {
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
             thread_function_pump_mask();
             thread_function_pumptop_helmet();
             thread_function_pump_hoisting();
-            //thread_function_pump_weld();
+            thread_function_pump_weld();
             thread_function_pump_work_status();
 
         } else {
