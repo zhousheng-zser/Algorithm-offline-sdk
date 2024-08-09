@@ -16,6 +16,7 @@
     "thread_pool_num_sleep": 1,
     "thread_pool_num_helmet": 1,
     "thread_pool_num_leavepost": 1,
+    "thread_pool_num_pump_weld_hoisting": 1,
     "dump_img_directory": "dump_img"
 
 }
