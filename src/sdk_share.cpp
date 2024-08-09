@@ -1,11 +1,13 @@
 #include "sdk_share.hpp"
 namespace glasssix {
-    config* _config                                             = nullptr;
-    bool empower_warning_flag                                   = false;
-    algo_irisviel_ptr* thread_algo_irisviel_ptr                 = nullptr;
-    algo_crowd_ptr* thread_algo_crowd_ptr                       = nullptr;
+    config* _config                                                 = nullptr;
+    bool empower_warning_flag                                       = false;
+    algo_irisviel_ptr* thread_algo_irisviel_ptr                     = nullptr;
+    algo_crowd_ptr* thread_algo_crowd_ptr                           = nullptr;
+    algo_pump_weld_hoisting_ptr* thread_algo_pump_weld_hoisting_ptr = nullptr;//目前无效的
+    thread_pool* pool                                               = nullptr;
+    thread_pool* pool_pump_weld_hoisting                            = nullptr;
     std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
-    thread_pool* pool = nullptr;
 
     void empower_Callback(void* context, std::string success, const char* message, std::int64_t remaining_seconds) {
         int T             = 3;
