@@ -819,8 +819,8 @@ namespace glasssix {
         auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img(abi::string(IMG_PATH) + "gate_open2.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_gate_status(img, 10);
+                gx_img_api img(abi::string(IMG_PATH) + "pump_gate_status.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_gate_status(img, 15);
                 if (condition)
                     printf("[pump_gate_status] : %s  \n", val.c_str());
             } catch (const std::exception& ex) {
