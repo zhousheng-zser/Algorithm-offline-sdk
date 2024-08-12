@@ -937,7 +937,10 @@ namespace glasssix {
                 auto val = api_temp->safe_production_pumptop_helmet(img);
                 if (condition) {
                     if (val.person_list.size() > 0)
-                        printf("[pumptop_helmet] : category = %d \n", val.person_list[0].category);
+                        printf("[pumptop_helmet] : size = %d \n", 1);
+                    else
+                        printf("[pumptop_helmet] : size = %d \n", 0);
+
                 }
 
             } catch (const std::exception& ex) {
