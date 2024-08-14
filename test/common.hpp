@@ -52,7 +52,7 @@ bool is_out_json                     = false;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
-static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
+static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk_zj/config";
 #endif
 static std::string IMG_PATH = "/root/img/";
 #define TIMES 1000
