@@ -11,6 +11,7 @@ file(
     #police.cpp
     #nessus.cpp
     #face.cpp
+    #time_test.cpp
 )
 add_executable(${target_name} )
 

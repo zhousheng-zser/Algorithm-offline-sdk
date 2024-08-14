@@ -238,6 +238,12 @@ namespace glasssix {
         temp.get_to(_pump_pumptop_person_config);
         pump_pumptop_person_is_load = true; 
     }
+    void config::set_policeuniform(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/policeuniform.json");
+        temp.get_to(_policeuniform_config);
+        policeuniform_is_load = true;
+    }
     void config::set_leavepost(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/leavepost.json");
