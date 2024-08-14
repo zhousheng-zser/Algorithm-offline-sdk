@@ -24,17 +24,6 @@ namespace glasssix {
             filename = path + instance_name + ".json";
         }
 
-        // 检查目录是否存在,文件是否存在
-        // 创建目录（包括父目录）
-        if (!std::filesystem::exists(path)) {
-            std::filesystem::create_directories(path);
-        }
-        if (!std::filesystem::exists(path_fault)) {
-            std::filesystem::create_directories(path_fault);
-        }
-        if (!std::filesystem::exists(path_warning)) {
-            std::filesystem::create_directories(path_warning);
-        }
         std::string out_path{};
         if (std::filesystem::exists(filename)) // 先读取,用来比较
         {
@@ -58,18 +47,28 @@ namespace glasssix {
                 if (instance == "playphone") {
                     std::cout << "old_data: " << old_data["playphone_list"].size() << " ";
                     std::cout << "new_data: " << data["playphone_list"].size() << " ";
-                    if (data["playphone_list"].size() <= old_data["playphone_list"].size()) {
-                        std::cout << "warning : " << instance << std::endl;
+                    if (data["playphone_list"].size() < old_data["playphone_list"].size()) {
+                        std::cout << "warning : " << instance << "'s size == " << data["playphone_list"].size()
+                                  << std::endl;
                         path = path_warning;
                     }
-                    if (data["playphone_list"].size() == 0) {
-                        std::cout << "fault : " << instance << std::endl;
+                    if (data["playphone_list"].size() == 0 && old_data["playphone_list"].size() != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << data["playphone_list"].size()
+                                  << std::endl;
                         path = path_fault;
                     }
                 }
                 if (instance == "pumptop_helmet") {
                     std::cout << "old_data: " << old_data["person_list"].size() << " ";
                     std::cout << "new_data: " << data["person_list"].size() << " ";
+                    if (data["person_list"].size() <= old_data["person_list"].size()) {
+                        std::cout << "warning : " << instance << "'s size == " << data["person_list"].size() << std::endl;
+                        path = path_warning;
+                    }
+                    if (data["person_list"].size() == 0 && old_data["person_list"].size() != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << data["person_list"].size() << std::endl;
+                        path = path_fault;
+                    }
                 }
 
             } catch (const glasssix::json::parse_error& e) {
@@ -79,7 +78,12 @@ namespace glasssix {
 
         }
         filename = path + instance_name + ".json";
-        ;
+
+        // 检查目录是否存在,文件是否存在
+        // 创建目录（包括父目录）
+        if (!std::filesystem::exists(path)) {
+            std::filesystem::create_directories(path);
+        }
         std::ofstream outFile(filename);
         // 检查文件是否成功打开
         if (!outFile) {
@@ -234,8 +238,9 @@ int main(int argc, char** argv) {
                 else
                     (t[i] = std::jthread(glasssix::thread_function_pumptop_helmet, temp_str));
 
-
+             std::cout << "the test is over ......." << std::endl;
         }
+
     } catch (const std::exception& ex) {
         printf("%s\n", ex.what());
     }
