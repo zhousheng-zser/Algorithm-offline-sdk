@@ -414,7 +414,7 @@
             "name": "sophon",
             "configurePreset": "sophon",
             "configuration": "Release",
-            "jobs": 4
+            "jobs": 3
         },
         {
             "name": "sophon-Debug",

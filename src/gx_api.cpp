@@ -224,6 +224,7 @@ namespace glasssix {
             name_config["batterypilferers.json"]    = _config->_batterypilferers_config;
             name_config["fighting.json"]            = _config->_fighting_config;
             name_config["flame.json"]               = _config->_flame_config;
+            name_config["policeuniform.json"]       = _config->_policeuniform_config;
             name_config["smog.json"]                = _config->_smog_config;
             name_config["helmet.json"]              = _config->_helmet_config;
             name_config["refvest.json"]             = _config->_refvest_config;
@@ -345,6 +346,9 @@ namespace glasssix {
                 } else if (name == "flame.json" && _config->flame_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_flame_config);
+                } else if (name == "policeuniform.json" && _config->policeuniform_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_policeuniform_config);
                 } else if (name == "smog.json" && _config->smog_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_smog_config);

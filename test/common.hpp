@@ -41,6 +41,7 @@
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
+#include <gx_policeuniform_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
 #include <gx_subway_anomaly_api.hpp>
@@ -1217,6 +1218,31 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("subway_anomaly_yf time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t41 多线程测警服
+    void thread_function_policeuniform() {
+        gx_policeuniform_api* api_temp = new gx_policeuniform_api(CONFIG_PATH);
+        int T                    = TIMES;
+        auto start               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(abi::string(IMG_PATH) + "policeuniform.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_policeuniform(img);
+                nlohmann::json xxx(val);
+                std::cout << xxx.dump() << "\n";
+                if (condition)
+                    printf("[policeuniform] : policeuniform_list = %d\n", val.without_policeuniform_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("policeuniform time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix
