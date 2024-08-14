@@ -8,12 +8,17 @@ namespace glasssix {
 
     gx_pump_weld_api::gx_pump_weld_api() : impl_{std::make_unique<impl>()} {}
     gx_pump_weld_api::gx_pump_weld_api(const abi::string& config_path) : impl_{std::make_unique<impl>(config_path)} {}
+    std::unordered_map<std::thread::id, algo_pump_weld_hoisting_ptr*> algo_pump_weld_hoisting_thread_algo_ptr;
     gx_pump_weld_api::~gx_pump_weld_api() {}
     gx_pump_weld_api::gx_pump_weld_api(gx_pump_weld_api&&) noexcept            = default;
     gx_pump_weld_api& gx_pump_weld_api::operator=(gx_pump_weld_api&&) noexcept = default;
     class gx_pump_weld_api::impl {
     public:
         void init() {
+            if (pool_pump_weld_hoisting == nullptr)
+            {
+                pool_pump_weld_hoisting = new thread_pool(_config->_configure_directory.thread_pool_num_pump_weld_hoisting);
+            }
 #if (GX_EMPOWER_FLAG)  
             for (int i = 0; i < empower_algorithm_id_list.size(); ++i) {
                 try {
@@ -35,14 +40,12 @@ namespace glasssix {
         impl() {
             if (_config == nullptr) {
                 _config = new config();
-                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
-                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
@@ -76,12 +79,12 @@ namespace glasssix {
     pump_weld_info gx_pump_weld_api::safe_production_pump_weld(const abi::vector<gx_img_api>& mat_list,
         float light_conf_thres, float candidate_box_width, float candidate_box_height) {
         try {
-            auto result_pool = pool->enqueue([&] {
+            auto result_pool = pool_pump_weld_hoisting->enqueue([&] {
                 std::thread::id id_ = std::this_thread::get_id();
-                if (all_thread_algo_ptr[id_] == nullptr) {
-                    all_thread_algo_ptr[id_] = new algo_ptr();
+                if (algo_pump_weld_hoisting_thread_algo_ptr[id_] == nullptr) {
+                    algo_pump_weld_hoisting_thread_algo_ptr[id_] = new algo_pump_weld_hoisting_ptr();
                 }
-                auto ptr = all_thread_algo_ptr[id_];
+                auto ptr = algo_pump_weld_hoisting_thread_algo_ptr[id_];
                 if (_config->_pump_weld_config.batch != mat_list.size())
                     throw source_code_aware_runtime_error(
                         U8("Error: The config/pump_weld.json : batch != mat_list.size()"));

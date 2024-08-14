@@ -372,31 +372,57 @@ namespace glasssix {
         nessus_protocol protocol_ptr;
         leavepost leavepost_handle;
     };
-    class algo_ptr {
+    class algo_pump_weld_hoisting_ptr {
     public:
-        typedef void (algo_ptr::*set_protocols_handle)();
-        algo_ptr() {
+        algo_pump_weld_hoisting_ptr() {
             protocol_ptr.init(_config->_configure_directory.directory);
-            set_Function();
             for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
                 std::string temp_str = _config->protocols_list["plugin_list"][i];
                 try {
-                    set_protocols_handle fun = this->Function[temp_str];
-                    if (fun != nullptr) {
-                        (this->*fun)();
+                    if (temp_str == "pump_weld")
+                        {
+                            _config->set_pump_weld(_config->_path);
+                            pump_weld_handle = protocol_ptr.make_instance<pump_weld>(pump_weld_new_param{
+                                _config->_pump_weld_config.device, _config->_configure_directory.models_directory});
+                    }
+                    else if (temp_str == "pump_hoisting")
+                    {
+                        _config->set_pump_hoisting(_config->_path);
+                        pump_hoisting_handle = protocol_ptr.make_instance<pump_hoisting>(pump_hoisting_new_param{
+                            _config->_pump_hoisting_config.device, _config->_configure_directory.models_directory});
                     }
                 } catch (const std::exception& ex) {
                     throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                 }
             }
         }
+        nessus_protocol protocol_ptr;
+        pump_weld pump_weld_handle;
+        pump_hoisting pump_hoisting_handle;
+    };
+        class algo_ptr {
+        public:
+            typedef void (algo_ptr::*set_protocols_handle)();
+            algo_ptr() {
+                protocol_ptr.init(_config->_configure_directory.directory);
+                set_Function();
+                for (int i = 0; i < _config->protocols_list["plugin_list"].size(); ++i) {
+                    std::string temp_str = _config->protocols_list["plugin_list"][i];
+                    try {
+                        set_protocols_handle fun = this->Function[temp_str];
+                        if (fun != nullptr) {
+                            (this->*fun)();
+                        }
+                    } catch (const std::exception& ex) {
+                        throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
+                    }
+                }
+            }
         std::unordered_map<std::string, set_protocols_handle> Function;
         void set_Function() {
             Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
             Function["crossing"]            = &algo_ptr::set_protocols_handl_crossing;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
-            Function["pump_weld"]           = &algo_ptr::set_protocols_handl_pump_weld;
-            Function["pump_hoisting"]       = &algo_ptr::set_protocols_handl_pump_hoisting;
             Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
             Function["pumptop_helmet"]      = &algo_ptr::set_protocols_handl_pumptop_helmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
@@ -429,16 +455,6 @@ namespace glasssix {
             _config->set_pump_mask(_config->_path);
             pump_mask_handle = protocol_ptr.make_instance<pump_mask>(
                 pump_mask_new_param{_config->_pump_mask_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_pump_weld() {
-            _config->set_pump_weld(_config->_path);
-            pump_weld_handle = protocol_ptr.make_instance<pump_weld>(
-                pump_weld_new_param{_config->_pump_weld_config.device, _config->_configure_directory.models_directory});
-        }
-        void set_protocols_handl_pump_hoisting() {
-            _config->set_pump_hoisting(_config->_path);
-            pump_hoisting_handle = protocol_ptr.make_instance<pump_hoisting>(pump_hoisting_new_param{
-                _config->_pump_hoisting_config.device, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
@@ -602,8 +618,10 @@ namespace glasssix {
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern algo_crowd_ptr* thread_algo_crowd_ptr;
+    extern algo_pump_weld_hoisting_ptr* thread_algo_pump_weld_hoisting_ptr;
     extern std::unordered_map<std::thread::id, algo_ptr*> all_thread_algo_ptr;
     extern thread_pool* pool;
+    extern thread_pool* pool_pump_weld_hoisting;
     extern void empower_Callback(
         void* context, std::string success, const char* message, std::int64_t remaining_seconds);
     extern std::string empower_time_decode(std::string timestampStr, std::string encode_str);

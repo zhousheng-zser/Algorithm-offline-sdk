@@ -25,6 +25,7 @@ namespace glasssix {
         GX_FIELD(int, thread_pool_num_sleep);
         GX_FIELD(int, thread_pool_num_helmet);
         GX_FIELD(int, thread_pool_num_leavepost);
+        GX_FIELD(int, thread_pool_num_pump_weld_hoisting);
         GX_FIELD(abi::string, dump_img_directory);
         GX_END_FIELDS;
 

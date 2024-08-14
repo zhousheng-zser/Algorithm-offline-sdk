@@ -820,8 +820,8 @@ namespace glasssix {
         auto start                        = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img(abi::string(IMG_PATH) + "gate_open2.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_gate_status(img, 10);
+                gx_img_api img(abi::string(IMG_PATH) + "pump_gate_status.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_gate_status(img, 15);
                 if (condition)
                     printf("[pump_gate_status] : %s  \n", val.c_str());
             } catch (const std::exception& ex) {
@@ -909,7 +909,7 @@ namespace glasssix {
         auto start                 = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                gx_img_api img(abi::string(IMG_PATH) + "pump_mak.jpg", static_cast<int>(1e9));
+                gx_img_api img(abi::string(IMG_PATH) + "pump_mask.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pump_mask(img);
                 if (condition) {
                     if (val.pump_head_list.size() > 0)
@@ -1042,10 +1042,10 @@ namespace glasssix {
         int T                             = TIMES;
         auto start                        = std::chrono::high_resolution_clock::now();
         abi::vector<pump_work_status_point> polygon;
-        polygon.emplace_back(pump_work_status_point{741, 412});
-        polygon.emplace_back(pump_work_status_point{1035, 412});
-        polygon.emplace_back(pump_work_status_point{1475, 1080});
-        polygon.emplace_back(pump_work_status_point{847, 1080});
+        polygon.emplace_back(pump_work_status_point{773, 407});
+        polygon.emplace_back(pump_work_status_point{1072, 407});
+        polygon.emplace_back(pump_work_status_point{1526, 1080});
+        polygon.emplace_back(pump_work_status_point{895, 1080});
         for (int i = 0; i < T; ++i) {
             try {
                 gx_img_api img(abi::string(IMG_PATH) + "pump_work_status.jpg", static_cast<int>(1e9));
