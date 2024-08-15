@@ -284,6 +284,32 @@
             }
         },
         {
+            "name": "sophon-8.220",
+            "displayName": "Linux Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "GX_TOOLCHAIN_PREFIX": "/home/glasssix/sophon_tool_chain/sophon_toolchain/toolchain-aarch64-g6-linux-gnu-with-sophon/bin/aarch64-g6-linux-gnu-",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
+                "GX_OPENCV_ROOT": "/root/install/opencv-sophon",
+                "GX_CV_SDK_ROOT": "/root/Glasssix_CV_SDK_beta-restruct",
+                "GX_LICENSECLIENT_ROOT": "/root/install/LicenseClient-sophon",
+                "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
             "name": "sophon-gmake-Release",
             "displayName": "Linux Release",
             "generator": "Unix Makefiles",
@@ -370,6 +396,12 @@
             "configurePreset": "sophon",
             "configuration": "Release",
             "jobs": 4
+        },
+        {
+            "name": "sophon-8.220",
+            "configurePreset": "sophon-8.220",
+            "configuration": "Release",
+            "jobs": 7
         },
         {
             "name": "sophon-gmake",
