@@ -1230,8 +1230,6 @@ namespace glasssix {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "policeuniform.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_policeuniform(img);
-                nlohmann::json xxx(val);
-                std::cout << xxx.dump() << "\n";
                 if (condition)
                     printf("[policeuniform] : policeuniform_list = %d\n", val.without_policeuniform_list.size());
 
