@@ -15,7 +15,7 @@ namespace fs = std::filesystem;
 using namespace glasssix;
 namespace glasssix {
     //主要一些重要的函数
-    //写入json文件
+    //写入json文件，并进行比较
     void write_json(std::string instance, glasssix::json data, bool is_multi = false, bool is_video = false,
         std::string multi_file = "")
     {
@@ -49,28 +49,34 @@ namespace glasssix {
                 //比较结果
                 std::cout << "file image: " << instance_name << std::endl;
                 if (instance == "playphone") {
-                    std::cout << "old_data: " << old_data["playphone_list"].size() << " ";
-                    std::cout << "new_data: " << data["playphone_list"].size() << " ";
-                    if (data["playphone_list"].size() < old_data["playphone_list"].size()) {
-                        std::cout << "warning : " << instance << "'s size == " << data["playphone_list"].size()
+                    int old_number = old_data["playphone_list"].size();
+                    int new_number = data["playphone_list"].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number
                                   << std::endl;
                         path = path_warning;
                     }
-                    if (data["playphone_list"].size() == 0 && old_data["playphone_list"].size() != 0) {
-                        std::cout << "fault : " << instance << "'s size == " << data["playphone_list"].size()
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number
                                   << std::endl;
                         path = path_fault;
                     }
                 }
                 if (instance == "pumptop_helmet") {
-                    std::cout << "old_data: " << old_data["person_list"].size() << " ";
-                    std::cout << "new_data: " << data["person_list"].size() << " ";
-                    if (data["person_list"].size() <= old_data["person_list"].size()) {
-                        std::cout << "warning : " << instance << "'s size == " << data["person_list"].size() << std::endl;
+                    int old_number = old_data["person_list"].size();
+                    int new_number = data["person_list"].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number
+                                  << std::endl;
                         path = path_warning;
                     }
-                    if (data["person_list"].size() == 0 && old_data["person_list"].size() != 0) {
-                        std::cout << "fault : " << instance << "'s size == " << data["person_list"].size() << std::endl;
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number
+                                  << std::endl;
                         path = path_fault;
                     }
                 }
