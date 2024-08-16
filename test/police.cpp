@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
             t[17] = std::jthread(thread_function_crowd);
             t[18] = std::jthread(thread_function_wander);
             t[19] = std::jthread(thread_function_fighting);
+            t[28] = std::jthread(thread_function_policeuniform);
             t[23] = std::jthread(thread_function_batterypilferers);
             t[37] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
             t[38] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
             thread_function_crowd();
             thread_function_wander();
             thread_function_fighting();
+            thread_function_policeuniform();
             thread_function_batterypilferers();
             thread_function_climb_tumble_pedestrian_climb();
             thread_function_climb_tumble_pedestrian_tumble();
