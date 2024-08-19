@@ -1,7 +1,7 @@
 #include "head_require.h"
 #include "config.hpp"
 // static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";// 编译识别不了 abi
-static const std::string CONFIG_PATH   = "/root/install/glasssix-offline-sdk.37.1/config";// 编译识别不了 abi
+static const std::string CONFIG_PATH   = "/root/install/glasssix-offline-sdk/config";// 编译识别不了 abi
 static std::string OUTPUT_DIR          = "results/";
 static glasssix::abi::string IMG_PATH  = "/root/img/";
 static int TIMES                       = 1;
