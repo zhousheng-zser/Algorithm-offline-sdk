@@ -40,12 +40,14 @@ namespace glasssix {
         impl() {
             if (_config == nullptr) {
                 _config = new config();
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
         impl(const abi::string& config_path) {
             if (_config == nullptr) {
                 _config = new config(config_path);
+                pool    = new thread_pool(_config->_configure_directory.thread_pool_num);
             }
             init();
         }
