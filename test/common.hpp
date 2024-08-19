@@ -41,6 +41,7 @@
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
+#include <gx_policeuniform_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
 #include <gx_subway_anomaly_api.hpp>
@@ -474,7 +475,7 @@ namespace glasssix {
                 const gx_img_api img(abi::string(IMG_PATH) + "playphone.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 if (condition)
-                    printf("[playphone] : playphone_list = %d norm_list = %d bodyerror_list = %d\n",
+                    printf("[playphone] : playphone_list = %d norm_list = %d bodye rror_list = %d\n",
                         val.playphone_list.size(), val.norm_list.size(), val.bodyerror_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
@@ -495,7 +496,7 @@ namespace glasssix {
                     size_t subPos = exit.rfind("/") + 1;
                     relative_path = exit.substr(subPos);
                     if (condition)
-                        printf("[playphone] : image_name = %s playphone_list = %d norm_list = %d bodyerror_list = %d\n",
+                        printf("[playphone] : image_name = %s playphone_list = %d norm_list = %d bodye rror_list = %d\n",
                             relative_path.c_str(), val.playphone_list.size(), val.norm_list.size(),
                             val.bodyerror_list.size());
                 }
@@ -1220,6 +1221,31 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("subway_anomaly_yf time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t41 多线程测警服
+    void thread_function_policeuniform() {
+        gx_policeuniform_api* api_temp = new gx_policeuniform_api(CONFIG_PATH);
+        int T                    = TIMES;
+        auto start               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(abi::string(IMG_PATH) + "policeuniform.png", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_policeuniform(img);
+                nlohmann::json xxx(val);
+                std::cout << xxx.dump() << "\n";
+                if (condition)
+                    printf("[policeuniform] : policeuniform_list = %d\n", val.without_policeuniform_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("policeuniform time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix

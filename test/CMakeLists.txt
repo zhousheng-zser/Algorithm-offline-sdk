@@ -13,6 +13,7 @@ file(
     #nessus.cpp
     #face.cpp
     config.*
+    #time_test.cpp
 )
 add_executable(${target_name} )
 

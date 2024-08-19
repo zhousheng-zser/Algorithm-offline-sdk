@@ -16,6 +16,7 @@
 #include "../src/nessus/protocols/leavepost.hpp"
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
+#include "../src/nessus/protocols/policeuniform.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
 #include "../src/nessus/protocols/pedestrian_min.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
@@ -435,6 +436,7 @@ namespace glasssix {
             Function["romancia"]            = &algo_ptr::set_protocols_handl_romancia;
             Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
             Function["vehicle"]             = &algo_ptr::set_protocols_handl_vehicle;
+            Function["policeuniform"]       = &algo_ptr::set_protocols_handl_policeuniform;
             Function["wander"]              = &algo_ptr::set_protocols_handl_wander;
             Function["pump_pumptop_person"] = &algo_ptr::set_protocols_handl_pump_pumptop_person;
             Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
@@ -538,6 +540,11 @@ namespace glasssix {
             vehicle_handle = protocol_ptr.make_instance<vehicle>(
                 vehicle_new_param{_config->_vehicle_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_policeuniform() {
+            _config->set_policeuniform(_config->_path);
+            policeuniform_handle = protocol_ptr.make_instance<policeuniform>(
+                policeuniform_new_param{_config->_policeuniform_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_wander() {
             _config->set_wander(_config->_path);
             _config->set_wander_limit(_config->_path);
@@ -600,6 +607,7 @@ namespace glasssix {
         pump_pumptop_person pump_pumptop_person_handle;
         head head_handle;
         vehicle vehicle_handle;
+        policeuniform policeuniform_handle;
         wander wander_handle;
         onphone onphone_handle;
         workcloth workcloth_handle;
