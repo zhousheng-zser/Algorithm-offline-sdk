@@ -1,7 +1,7 @@
 #include "head_require.h"
 #include "config.hpp"
 // static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";// 编译识别不了 abi
-static const std::string CONFIG_PATH   = "/root/install/glasssix-offline-sdk_zj/config";// 编译识别不了 abi
+static const std::string CONFIG_PATH   = "/root/install/glasssix-offline-sdk.37.1/config";// 编译识别不了 abi
 static std::string OUTPUT_DIR          = "results/";
 static glasssix::abi::string IMG_PATH  = "/root/img/";
 static int TIMES                       = 1;
@@ -48,9 +48,435 @@ namespace glasssix {
                 inputFile >> old_data;
                 //比较结果
                 std::cout << "file image: " << instance_name << std::endl;
+                if (instance == "wander") {
+                    std::string index{"person_info"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "flame") {
+                    std::string index{"fire_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "refvest") {
+                    std::string index{"with_refvest_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "leavepost") {
+                    std::string index{"hat_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "sleep") {
+                    std::string index{"lying_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "smoke") {
+                    std::string index{"smoke_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
                 if (instance == "playphone") {
-                    int old_number = old_data["playphone_list"].size();
-                    int new_number = data["playphone_list"].size();
+                    std::string index{"playphone_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "onphone_head") {
+                    std::string index{"onphone_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "onphone_posture") {
+                    std::string index{"onphone_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "workcloth") {
+                    std::string index{"cloth_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "vehicle") {
+                    std::string index{"vehicle_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "smog") {
+                    std::string index{"smog_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "helmet") {
+                    std::string index{"with_helmet_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "fighting") {
+                    std::string index{"fight_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "crowd") {
+                    std::string index{"head_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "wander_limit") {
+                    std::string index{"segment_info"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "crossing") {
+                    std::string index{"crossing_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "batterypilferers") {
+                    std::string index{"steal_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pedestrian_min") {
+                    std::string index{"person_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "climb_tumble_pedestrian_climb") {
+                    std::string index{"climb_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "climb_tumble_pedestrian_tumble") {
+                    std::string index{"tumble_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "subway_anomaly_nzx") {
+                    std::string index{"anomaly_status"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "subway_anomaly_yf") {
+                    std::string index{"anomaly_status"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "policeuniform") {
+                    std::string index{"without_policeuniform_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_light") {
+                    std::string index{"light_status"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_vesthelmet") {
+                    std::string index{"pump_vesthelmet_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_gate_status") {
+                    std::cout << "old_data: " << old_data << " ";
+                    std::cout << "new_data: " << data << " ";
+                    if (data != old_data) {
+                        std::cout << "fault : " << instance << "'s old_data == " << old_data << ";'s new_data == " << data << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_work_status") {
+                    std::cout << "old_data: " << old_data << " ";
+                    std::cout << "new_data: " << data << " ";
+                    if (data != old_data) {
+                        std::cout << "fault : " << instance << "'s old_data == " << old_data << ";'s new_data == " << data << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_pumptop_person") {
+                    std::string index{"persons_in_pumptop"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_mask") {
+                    std::string index{"pump_head_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
                     std::cout << "old_data: " << old_number << " ";
                     std::cout << "new_data: " << new_number << " ";
                     if (new_number < old_number) {
@@ -65,8 +491,43 @@ namespace glasssix {
                     }
                 }
                 if (instance == "pumptop_helmet") {
-                    int old_number = old_data["person_list"].size();
-                    int new_number = data["person_list"].size();
+                    std::string index{"person_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_hoisting") {
+                    std::string index{"dangerous_region"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "old_data: " << old_number << " ";
+                    std::cout << "new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "warning : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0 && old_number != 0) {
+                        std::cout << "fault : " << instance << "'s size == " << new_number
+                                  << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_weld") {
+                    std::string index{"persons_weld"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
                     std::cout << "old_data: " << old_number << " ";
                     std::cout << "new_data: " << new_number << " ";
                     if (new_number < old_number) {
@@ -575,11 +1036,12 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 auto val1 = api_temp->safe_production_onphone(img, val_head);
-                glasssix::write_json(instance, glasssix::json(val1));
+                auto val2 = api_temp->safe_production_onphone(img, val_posture);
+                glasssix::write_json(instance + "_head", glasssix::json(val1));
+                glasssix::write_json(instance + "_posture", glasssix::json(val2));
                 if (condition) {
                     printf("[onphone] : head-> onphone_list = %d norm_list = %d\n", val1.onphone_list.size(),
                         val1.norm_list.size());
-                    auto val2 = api_temp->safe_production_onphone(img, val_posture);
                     printf("[onphone] : post-> onphone_list = %d norm_list = %d\n", val2.onphone_list.size(),
                         val2.norm_list.size());
                 }
@@ -1011,6 +1473,7 @@ namespace glasssix {
             try {
                 gx_img_api img(glasssix::abi::string(IMG_PATH) + "pumptop_helmet.png", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_pumptop_helmet(img);
+                glasssix::write_json(instance, glasssix::json(val));
                  //std::cout << glasssix::json::parse(val).dump() << "+++++++++\n";/这个有问题
                 //std::cout << glasssix::json(val).dump() << "+++++++++\n";//这个正常
                 //std::cout << glasssix::json(val) << "+++++++++\n";//正常
@@ -1225,7 +1688,7 @@ namespace glasssix {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "climb.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_climb_tumble_pedestrian(img, 0);
-                glasssix::write_json(instance, glasssix::json(val));
+                glasssix::write_json(instance + "_climb", glasssix::json(val));
                 if (condition)
                     printf("[climb_tumble_pedestrian:climb] : persion_list = %llu climb_list = %llu tumble_list = %llu "
                            "disabled_list = %llu other_list = %llu \n",
@@ -1251,7 +1714,7 @@ namespace glasssix {
             try {
                 const gx_img_api img(abi::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_climb_tumble_pedestrian(img, 1);
-                glasssix::write_json(instance, glasssix::json(val));
+                glasssix::write_json(instance + "_tumble", glasssix::json(val));
                 if (condition)
                     printf(
                         "[climb_tumble_pedestrian:tumble] : persion_list = %llu climb_list = %llu tumble_list = %llu "
@@ -1281,7 +1744,7 @@ namespace glasssix {
                 auto val = api_temp->safe_production_subway_anomaly(img,
                     {subway_anomaly_roi{955, 560, 75, 175}, subway_anomaly_roi{750, 500, 535, 30}},
                     0); // x, y, width, height
-                glasssix::write_json(instance, glasssix::json(val));
+                glasssix::write_json(instance + "_nzx", glasssix::json(val));
                 if (condition)
                     printf("[subway_anomaly_nzx] : anomaly_status = %d\n", val.anomaly_status);
             } catch (const std::exception& ex) {
@@ -1306,7 +1769,7 @@ namespace glasssix {
             const gx_img_api img(list_[i], static_cast<int>(1e9));
             auto val = api_temp->safe_production_subway_anomaly(
                 img, {subway_anomaly_roi{697, 265, 74, 401}}, 1); // x, y, width, height
-            glasssix::write_json(instance, glasssix::json(val));
+            glasssix::write_json(instance + "_yf", glasssix::json(val));
             if (condition)
                 printf("[subway_anomaly_yf] : anomaly_status = %d\n", val.anomaly_status);
         }
@@ -1350,6 +1813,8 @@ int main(int argc, char** argv) {
         glasssix::init();
         TIMES        = glasssix::_config->_configure_directory.cycle_num;
         bool iscycle = (TIMES) <= 1 ? 0 : 1;
+        if (!TIMES++)
+            ;
         std::cout << " config : " << glasssix::_config->_configure_directory.license_directory << std::endl;
         std::cout << "plugin_configure.json : " << glasssix::_config->protocols_list << std::endl;
         //开始读取插件表并运行相关算法
@@ -1369,11 +1834,6 @@ int main(int argc, char** argv) {
                     glasssix::thread_function_flame(temp_str);
                 else
                     (t[i] = std::jthread(glasssix::thread_function_flame, temp_str));
-            if (temp_str == "wander")
-                if (iscycle == 0)
-                    glasssix::thread_function_wander(temp_str);
-                else
-                    (t[i] = std::jthread(glasssix::thread_function_wander, temp_str));
             if (temp_str == "refvest")
                 if (iscycle == 0)
                     glasssix::thread_function_refvest(temp_str);
@@ -1449,16 +1909,27 @@ int main(int argc, char** argv) {
                     glasssix::thread_function_pedestrian_min(temp_str);
                 else
                     (t[i] = std::jthread(glasssix::thread_function_pedestrian_min, temp_str));
-            //if (temp_str == "climb_tumble_pedestrian")
-            //    if (iscycle == 0)
-            //        glasssix::thread_function_climb_tumble_pedestrian(temp_str);
-            //    else
-            //        (t[i] = std::jthread(glasssix::thread_function_climb_tumble_pedestrian, temp_str));
-            //if (temp_str == "subway_anomaly")
-            //    if (iscycle == 0)
-            //        glasssix::thread_function_subway_anomaly(temp_str);
-            //    else
-            //        (t[i] = std::jthread(glasssix::thread_function_subway_anomaly, temp_str));
+            if (temp_str == "climb_tumble_pedestrian")
+                if (iscycle == 0)
+                {
+                    glasssix::thread_function_climb_tumble_pedestrian_climb(temp_str);
+                    glasssix::thread_function_climb_tumble_pedestrian_tumble(temp_str);
+                }
+                else
+                {
+                    (t[i] = std::jthread(glasssix::thread_function_climb_tumble_pedestrian_climb, temp_str));
+                    (t[99] = std::jthread(glasssix::thread_function_climb_tumble_pedestrian_tumble, temp_str));
+                }
+            if (temp_str == "subway_anomaly")
+                if (iscycle == 0) {
+                    glasssix::thread_function_subway_anomaly_nzx(temp_str);
+                    glasssix::thread_function_subway_anomaly_yf(temp_str);
+                }
+                else
+                {
+                    (t[i] = std::jthread(glasssix::thread_function_subway_anomaly_nzx, temp_str));
+                    (t[98] = std::jthread(glasssix::thread_function_subway_anomaly_yf, temp_str));
+                }
             if (temp_str == "pump_light")
                 if (iscycle == 0)
                     glasssix::thread_function_pump_light(temp_str);
