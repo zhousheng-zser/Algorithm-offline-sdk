@@ -367,33 +367,13 @@ namespace glasssix {
                         path = path_fault;
                     }
                 }
-                if (instance == "subway_anomaly_nzx") {
+                if (instance == "subway_anomaly_yf" || instance == "subway_anomaly_nzx") {
                     std::string index{"anomaly_status"};
-                    int old_number = old_data[index].size();
-                    int new_number = data[index].size();
-                    std::cout << "old_data: " << old_number << " ";
-                    std::cout << "new_data: " << new_number << " ";
-                    if (new_number < old_number) {
-                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
-                        path = path_warning;
-                    }
-                    if (new_number == 0 && old_number != 0) {
-                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
-                        path = path_fault;
-                    }
-                }
-                if (instance == "subway_anomaly_yf") {
-                    std::string index{"anomaly_status"};
-                    int old_number = old_data[index].size();
-                    int new_number = data[index].size();
-                    std::cout << "old_data: " << old_number << " ";
-                    std::cout << "new_data: " << new_number << " ";
-                    if (new_number < old_number) {
-                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
-                        path = path_warning;
-                    }
-                    if (new_number == 0 && old_number != 0) {
-                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                    std::cout << "old_data: " << old_data[index] << " ";
+                    std::cout << "new_data: " << data[index] << " ";
+                    if (data != old_data) {
+                        std::cout << "fault : " << instance << "'s old_data == " << old_data
+                                  << ";'s new_data == " << data << std::endl;
                         path = path_fault;
                     }
                 }
@@ -414,20 +394,15 @@ namespace glasssix {
                 }
                 if (instance == "pump_light") {
                     std::string index{"light_status"};
-                    int old_number = old_data[index].size();
-                    int new_number = data[index].size();
-                    std::cout << "old_data: " << old_number << " ";
-                    std::cout << "new_data: " << new_number << " ";
-                    if (new_number < old_number) {
-                        std::cout << "warning : " << instance << "'s size == " << new_number << std::endl;
-                        path = path_warning;
-                    }
-                    if (new_number == 0 && old_number != 0) {
-                        std::cout << "fault : " << instance << "'s size == " << new_number << std::endl;
+                    std::cout << "old_data: " << old_data[index] << " ";
+                    std::cout << "new_data: " << data[index] << " ";
+                    if (old_data[index] != data[index]) {
+                        std::cout << "fault : " << instance << "'s old_data == " << old_data
+                                  << ";'s new_data == " << data << std::endl;
                         path = path_fault;
                     }
                 }
-                if (instance == "pump_vesthelmet") {
+                if (instance == "pump_vesthelmet") {//& 粗略比较//TODO
                     std::string index{"pump_vesthelmet_list"};
                     int old_number = old_data[index].size();
                     int new_number = data[index].size();
