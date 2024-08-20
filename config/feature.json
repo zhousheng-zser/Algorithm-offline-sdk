@@ -3,5 +3,5 @@
     "use_int8": false,
     "format": 1,
     "model_type": 3,
-    "dimension": 256
+    "dimension": 512
 }
