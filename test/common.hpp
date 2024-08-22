@@ -53,7 +53,7 @@ bool is_out_json                     = false;
 #if SOPHON
 static const abi::string CONFIG_PATH = "config";
 #else
-static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk_zj/config";
+static const abi::string CONFIG_PATH = "/root/install/glasssix-offline-sdk/config";
 #endif
 static std::string IMG_PATH = "/root/img/";
 #define TIMES 1000
@@ -1573,21 +1573,24 @@ void subway_anomaly_test(std::string old_path, std::string new_path){
 //     delete api_temp;
 // }
 
-
+//可以测试人脸相关(selene,cassius)
 void yuv_test() {
 
-    const gx_img_api img_new(abi::string(IMG_PATH) + "NULL.jpg", static_cast<int>(1e9));
-    const gx_img_api img(abi::string(IMG_PATH) + "action_live_5.jpg", static_cast<int>(1e9));
+    printf("face_feature    ------\n");
+    const gx_img_api img_new(abi::string(IMG_PATH) + "action_live_5.jpg", static_cast<int>(1e9));
     gx_face_api* temp_api = new gx_face_api(CONFIG_PATH);
     temp_api->detect(img_new);
-
-    printf("face_feature    ------\n");
-    std::getchar();
-    int T = TIMES;
+    //std::getchar();
+    int addNum = 1;
+    int T      = TIMES + addNum;
+    auto begin = std::chrono::high_resolution_clock::now();
     while (T--) {
-        auto val_new = temp_api->face_feature(img, false);
+        auto val_new = temp_api->face_feature(img_new, false);
         printf("facerectwithfaceinfo_list.size = %d\n", val_new.facerectwithfaceinfo_list.size());
     }
+    auto end      = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    printf("face_feature time = %lld microsecond\n", duration.count() / (addNum + TIMES));
 }
 
 void gif_test() {

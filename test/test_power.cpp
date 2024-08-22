@@ -6,7 +6,7 @@ static std::string OUTPUT_DIR          = "results/";
 static glasssix::abi::string IMG_PATH  = "/root/img/";
 static int TIMES                       = 1;
 bool condition_time                    = false;
-bool condition                         = true;
+bool condition                         = false;
 bool is_out_json                       = false;
 namespace fs = std::filesystem;
 #include<vector>
@@ -19,6 +19,7 @@ namespace glasssix {
     void write_json(std::string instance, glasssix::json data, bool is_multi = false, bool is_video = false,
         std::string multi_file = "")
     {
+        //return;
         std::string path          = CONFIG_PATH + "/../" + OUTPUT_DIR + "correct/" + instance + "/";
         std::string path_fault    = CONFIG_PATH + "/../" + OUTPUT_DIR + "fault/" + instance + "/";
         std::string path_warning  = CONFIG_PATH + "/../" + OUTPUT_DIR + "warning/" + instance + "/";
@@ -1755,7 +1756,29 @@ namespace glasssix {
         delete api_temp;
     }
 
+        // t41 多线程测警服
+    void thread_function_policeuniform(const std::string& instance) {
+        gx_policeuniform_api* api_temp = new gx_policeuniform_api(glasssix::abi::string(CONFIG_PATH));
+        int T                          = TIMES;
+        auto start                     = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(abi::string(IMG_PATH) + "policeuniform.png", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_policeuniform(img);
+                glasssix::write_json(instance, glasssix::json(val));
+                if (condition)
+                    printf("[policeuniform] : policeuniform_list = %d\n", val.without_policeuniform_list.size());
 
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("policeuniform time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
 } // namespace glasssix
 
 namespace glasssix {
@@ -1904,6 +1927,12 @@ int main(int argc, char** argv) {
                 {
                     (t[i] = std::jthread(glasssix::thread_function_subway_anomaly_nzx, temp_str));
                     (t[98] = std::jthread(glasssix::thread_function_subway_anomaly_yf, temp_str));
+                }
+            if (temp_str == "policeuniform")
+                if (iscycle == 0) {
+                    glasssix::thread_function_policeuniform(temp_str);
+                } else {
+                    (t[i] = std::jthread(glasssix::thread_function_policeuniform, temp_str));
                 }
             if (temp_str == "pump_light")
                 if (iscycle == 0)
