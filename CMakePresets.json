@@ -347,6 +347,70 @@
             }
         },
         {
+            "8_220": "",
+            "name": "sophon-Ninja-Release",
+            "displayName": "Linux Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+          "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release",
+            "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
+            "GX_TOOLCHAIN_PREFIX": "/home/glasssix/cw/suanneng/sophon_toolchain/toolchain-aarch64-g6-linux-gnu-with-sophon/bin/aarch64-g6-linux-gnu-",
+            "GX_OPENCV_ROOT": "/home/glasssix/jianzhang/depends/sdk/opencv-4.7.0-sophon",
+            "GX_CV_SDK_ROOT": "/home/glasssix/jianzhang/depends/sdk/Glasssix_CV_SDK_beta",
+            "GX_MISCELLANEOUS_ROOT": "/home/glasssix/jianzhang/depends/sdk/miscellaneous-sophon",
+            "GX_LICENSECLIENT_ROOT": "/home/glasssix/jianzhang/depends/sdk/LicenseClient-sophon",
+            "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
+          },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "8_220": "",
+            "name": "sophon-UBuntu-Release",
+            "displayName": "Linux Release",
+            "generator": "Unix Makefiles",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+          "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release",
+            "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/ArmToolchain.cmake",
+            "GX_TOOLCHAIN_PREFIX": "/home/glasssix/cw/suanneng/sophon_toolchain/toolchain-aarch64-g6-linux-gnu-with-sophon/bin/aarch64-g6-linux-gnu-",
+            "GX_OPENCV_ROOT": "/home/glasssix/jianzhang/depends/sdk/opencv-4.7.0-sophon",
+            "GX_CV_SDK_ROOT": "/home/glasssix/jianzhang/depends/sdk/Glasssix_CV_SDK_beta",
+            "GX_MISCELLANEOUS_ROOT": "/home/glasssix/jianzhang/depends/sdk/miscellaneous-sophon",
+            "GX_LICENSECLIENT_ROOT": "/home/glasssix/jianzhang/depends/sdk/LicenseClient-sophon",
+            "GX_TOOLHAIN_TARGET_NAME": "SOPHON"
+          },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "name": "sophon-UBuntu-Debug",
+            "displayName": "Linux Debug",
+            "inherits": "sophon-UBuntu-Release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
             "name": "rk3588-debug",
             "displayName": "Linux Release",
             "inherits": "rk3588",

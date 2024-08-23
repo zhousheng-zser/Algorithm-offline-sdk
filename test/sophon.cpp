@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
             t[23] = std::jthread(thread_function_batterypilferers);
             t[25] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
             t[26] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
+            t[28] = std::jthread(thread_function_policeuniform);
 
             t[40] = std::jthread(thread_function_pump_light);
             t[41] = std::jthread(thread_function_pump_vesthelmet);
@@ -68,6 +69,7 @@ int main(int argc, char** argv) {
             thread_function_batterypilferers();
             thread_function_climb_tumble_pedestrian_climb();
             thread_function_climb_tumble_pedestrian_tumble();
+            thread_function_policeuniform();
 
             thread_function_pump_light();
             thread_function_pump_vesthelmet();
