@@ -231,6 +231,7 @@ namespace glasssix {
     struct pump_light_config {
         GX_BEGIN_FIELDS(pump_light_config);
         GX_FIELD(int, device);
+        GX_FIELD(int, model_type);
         GX_FIELD(int, format);
         GX_FIELD(float, conf_thres);
         GX_END_FIELDS;

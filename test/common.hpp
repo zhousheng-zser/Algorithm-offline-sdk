@@ -202,7 +202,7 @@ namespace glasssix {
     }
     // t3 多线程测搜索
     void thread_function_search() {
-        gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
+    gx_face_api* api_temp = new gx_face_api(CONFIG_PATH);
         api_temp->user_load();
         int T      = TIMES;
         auto start = std::chrono::high_resolution_clock::now();
@@ -726,11 +726,11 @@ namespace glasssix {
             try {
                 {
                     gx_img_api img(abi::string(IMG_PATH) + "pump_light/1.jpg", static_cast<int>(1e9));
-                    auto val = api_temp->safe_production_pump_light(
+                auto val = api_temp->safe_production_pump_light(
                         img, abi::vector<pump_light_point>{pump_light_point{1269, 154}, pump_light_point{1385, 154},
                                  pump_light_point{1385, 225}, pump_light_point{1269, 225}});
-                    if (condition)
-                        printf("[pump_light] : score =%f light_status=%d\n", val.score, val.light_status);
+                if (condition)
+                    printf("[pump_light] : score =%f light_status=%d\n", val.score, val.light_status);
                 }
                 {
                     gx_img_api img(abi::string(IMG_PATH) + "pump_light/3.jpg", static_cast<int>(1e9));

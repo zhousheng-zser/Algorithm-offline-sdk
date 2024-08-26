@@ -473,8 +473,8 @@ namespace glasssix {
         }
         void set_protocols_handl_pump_light() {
             _config->set_pump_light(_config->_path);
-            pump_light_handle = protocol_ptr.make_instance<pump_light>(pump_light_new_param{
-                _config->_pump_light_config.device, _config->_configure_directory.models_directory});
+            pump_light_handle = protocol_ptr.make_instance<pump_light>(pump_light_new_param{_config->_pump_light_config.device,
+                    _config->_pump_light_config.model_type, _config->_configure_directory.models_directory});
         }
         void set_protocols_handl_pump_work_status() {
             _config->set_pump_work_status(_config->_path);
