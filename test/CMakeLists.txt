@@ -1,16 +1,18 @@
 ﻿set(target_name gx-offline-recognition-test)
 
-##add_compile_definitions(SOPHON=8) #算丰的话,这里不能注释,3588 的要注释
 file(
 	GLOB private_sources
     CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/../config/*.json
     common.hpp
+    head_require.h
+    test_power.cpp
     #sophon.cpp
-    test.cpp
+    #test.cpp
     #police.cpp
     #nessus.cpp
     #face.cpp
+    config.*
     #time_test.cpp
 )
 add_executable(${target_name} )
@@ -19,6 +21,7 @@ add_executable(${target_name} )
 target_sources(
     ${target_name} 
     PRIVATE ${private_sources}
+# "head_require.h"
 )
 
 target_include_directories(
