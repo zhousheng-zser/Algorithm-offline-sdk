@@ -144,7 +144,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
                 }
-            }
+            } 
         }
         nessus_protocol protocol_ptr;
         batterypilferers batterypilferers_handle;

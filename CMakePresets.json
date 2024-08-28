@@ -481,6 +481,18 @@
             "jobs": 3
         },
         {
+            "name": "sophon-Ninja-Release",
+            "configurePreset": "sophon",
+            "configuration": "Release",
+            "jobs": 3
+        },
+        {
+            "name": "sophon-UBuntu-Release",
+            "configurePreset": "sophon",
+            "configuration": "Release",
+            "jobs": 3
+        },
+        {
             "name": "sophon-Debug",
             "configurePreset": "sophon-Debug",
             "configuration": "Debug",

@@ -45,4 +45,5 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
+#include <gx_policeuniform_api.hpp>
 #include <opencv2/opencv.hpp>
