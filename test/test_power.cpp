@@ -1,6 +1,6 @@
 #include "head_require.h"
 #include "config.hpp"
-static const std::string CONFIG_PATH   = "/root/install/glasssix-offline-sdk/config";// 编译识别不了 abi
+static const std::string CONFIG_PATH   = "/root/install/glasssix-offline-sdk_zj/config";// 编译识别不了 abi
 static std::string OUTPUT_DIR          = "results/";
 static glasssix::abi::string IMG_PATH  = "/root/img/"; 
 static int TIMES                       = 1;
@@ -412,6 +412,21 @@ namespace glasssix {
                 }
                 if (instance == "pump_mask") {
                     std::string index{"pump_head_list"};
+                    int old_number = old_data[index].size();
+                    int new_number = data[index].size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "pump_protect_face") {
+                    std::string index{"pump_no_protect_face_list"};
                     int old_number = old_data[index].size();
                     int new_number = data[index].size();
                     std::cout << "instance: " << instance << " old_data: " << old_number << " ";
@@ -1435,6 +1450,32 @@ namespace glasssix {
             printf("pump_mask time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t48 多线程测定制防护面罩
+    void thread_function_pump_protect_face(const std::string& instance) {
+        gx_pump_protect_face_api* api_temp = new gx_pump_protect_face_api(glasssix::abi::string(CONFIG_PATH));
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img(abi::string(IMG_PATH) + "pump_protect_face.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_protect_face(img);
+                glasssix::write_json(instance, glasssix::json(val));
+                if (condition) {
+                    if (val.pump_no_protect_face_list.size() > 0)
+                        printf("[pump_protect_face] : category=%d\n", val.pump_no_protect_face_list[0].category);//为1表示未戴防护镜
+                    else
+                        printf("[pump_protect_face] : category=%d\n", 10);
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_protect_face time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
     // t29 多线程测定制泵顶安全帽
     void thread_function_pumptop_helmet(const std::string& instance) {
         glasssix::gx_pumptop_helmet_api* api_temp =
@@ -1942,6 +1983,11 @@ int main(int argc, char** argv) {
                     glasssix::thread_function_pump_mask(temp_str);
                 else
                     (t[i] = std::jthread(glasssix::thread_function_pump_mask, temp_str));
+            if (temp_str == "pump_protect_face")
+                if (iscycle == 0)
+                    glasssix::thread_function_pump_protect_face(temp_str);
+                else
+                    (t[i] = std::jthread(glasssix::thread_function_pump_protect_face, temp_str));
             if (temp_str == "pumptop_helmet")
                 if (iscycle == 0)
                     glasssix::thread_function_pumptop_helmet(temp_str);

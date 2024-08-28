@@ -424,6 +424,7 @@ namespace glasssix {
             Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
             Function["crossing"]            = &algo_ptr::set_protocols_handl_crossing;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
+            Function["pump_protect_face"]   = &algo_ptr::set_protocols_handl_pump_protect_face;
             Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
             Function["pumptop_helmet"]      = &algo_ptr::set_protocols_handl_pumptop_helmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
