@@ -2,5 +2,5 @@
     "device": -1,
     "format": 1,
     "conf_thres": 0.9,
-    "normal_closedoor_thresh": 0.05
+    "normal_closedoor_thresh": 0.10
 }

@@ -13,6 +13,7 @@ namespace glasssix {
     struct pump_light_new_param {
         GX_BEGIN_FIELDS(pump_light_new_param);
         GX_FIELD(std::int32_t, device);
+        GX_FIELD(std::int32_t, model_type);
         GX_FIELD(abi::string, models_directory);
         GX_END_FIELDS;
 
