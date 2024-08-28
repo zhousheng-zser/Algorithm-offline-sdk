@@ -25,6 +25,7 @@
 #include "../src/nessus/protocols/pump_hoisting.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
 #include "../src/nessus/protocols/pump_mask.hpp"
+#include "../src/nessus/protocols/pump_protect_face.hpp"
 #include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/pump_weld.hpp"
@@ -456,6 +457,11 @@ namespace glasssix {
             pump_mask_handle = protocol_ptr.make_instance<pump_mask>(
                 pump_mask_new_param{_config->_pump_mask_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pump_protect_face() {
+            _config->set_pump_protect_face(_config->_path);
+            pump_protect_face_handle = protocol_ptr.make_instance<pump_protect_face>(pump_protect_face_new_param{
+                _config->_pump_protect_face_config.device, _config->_configure_directory.models_directory, _config->_pump_protect_face_config.model_type});
+        }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
             pump_vesthelmet_handle = protocol_ptr.make_instance<pump_vesthelmet>(pump_vesthelmet_new_param{
@@ -597,6 +603,7 @@ namespace glasssix {
         refvest refvest_handle;
         crossing crossing_handle;
         pump_mask pump_mask_handle;
+        pump_protect_face pump_protect_face_handle;
         pump_weld pump_weld_handle;
         pump_hoisting pump_hoisting_handle;
         pump_vesthelmet pump_vesthelmet_handle;
