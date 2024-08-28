@@ -26,34 +26,48 @@ int main(int argc, char** argv) {
 
         /* 多线程测性能测试 */
         if (TIMES > 1) {
-            std::jthread t[50];
-            t[0] = std::jthread(thread_function_helmet);
-            // t[1] = std::jthread(thread_function_flame);
-            // t[2] = std::jthread(thread_function_refvest);//algorithmzoo  还没有重构
-            // t[6] = std::jthread(thread_function_sleep);
-            // t[7] = std::jthread(thread_function_smoke);
-            // t[8] = std::jthread(thread_function_playphone);
-            // t[11] = std::jthread(thread_function_vehicle);//algorithmzoo  还没有重构
-            // t[14] = std::jthread(thread_function_smog);
-            // t[15] = std::jthread(thread_function_tumble);
-            // t[16] = std::jthread(thread_function_climb);
-            // t[17] = std::jthread(thread_function_crowd);
-            // t[18] = std::jthread(thread_function_wander);////algorithmzoo  删库接口还没有重构
-            // t[19] = std::jthread(thread_function_fighting);
-            // t[22] = std::jthread(thread_function_head);
-            // t[23] = std::jthread(thread_function_batterypilferers);
-            // t[12] = std::jthread(thread_function_pedestrian); ////没测
-            // t[12] = std::jthread(thread_function_pedestrian_min); ////没测
-            // t[20] = std::jthread(thread_function_posture);
-            // 离岗  没测
-            // 工服  没测
-            // 泵业灯光  没测
-            // 泵业防护面罩  没测
-            // 泵业天车工  没测
-            // 泵顶安全帽  没测
-            // 大门关闭  没测
-            // 狭小空间  没测
-            // 焊接规范  没测
+            std::jthread t[60];
+
+            //t[0]  = std::jthread(thread_function_search);
+            //t[1]  = std::jthread(thread_function_integration);
+            //t[2]  = std::jthread(thread_function_face_attributes);
+            //t[3]  = std::jthread(thread_function_Action_live_Blur);
+            //t[4]  = std::jthread(thread_function_pedestrian);//V
+            //t[5]  = std::jthread(thread_function_head);//V
+            //t[6]  = std::jthread(thread_function_posture);//V
+            //t[7]  = std::jthread(thread_function_wander);//X
+            //t[8]  = std::jthread(thread_function_flame);//V
+            //t[9]  = std::jthread(thread_function_refvest);//V
+            //t[11] = std::jthread(thread_function_sleep);//V
+            //t[12] = std::jthread(thread_function_smoke);//V
+            t[13] = std::jthread(thread_function_playphone);
+            //t[14] = std::jthread(thread_function_onphone);
+            //t[15] = std::jthread(thread_function_workcloth);
+            //t[16] = std::jthread(thread_function_vehicle);
+            //t[17] = std::jthread(thread_function_smog);
+            //t[18] = std::jthread(thread_function_helmet);
+            //t[19] = std::jthread(thread_function_fighting);
+            //t[20] = std::jthread(thread_function_crowd);
+            //t[21] = std::jthread(thread_function_wander_limit);
+            //t[22] = std::jthread(thread_function_crossing);
+            //t[23] = std::jthread(thread_function_batterypilferers);
+            //t[24] = std::jthread(thread_function_pedestrian_min);
+            //t[25] = std::jthread(thread_function_climb_tumble_pedestrian_climb);
+            //t[26] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
+            //t[27] = std::jthread(thread_function_subway_anomaly_nzx);
+            //t[28] = std::jthread(thread_function_subway_anomaly_yf);
+
+
+            //t[40] = std::jthread(thread_function_pump_light);
+            //t[41] = std::jthread(thread_function_pump_vesthelmet);
+            //t[42] = std::jthread(thread_function_pump_gate_status);
+            //t[43] = std::jthread(thread_function_pump_pumptop_person);
+            //t[44] = std::jthread(thread_function_pump_mask);
+            //t[45] = std::jthread(thread_function_pumptop_helmet);
+            //t[46] = std::jthread(thread_function_pump_hoisting);
+            //t[47] = std::jthread(thread_function_pump_weld);
+            //t[48] = std::jthread(thread_function_pump_work_status);
+
 
         } else {
             // 当循环次数为1,进行单线程跑

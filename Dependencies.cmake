@@ -135,7 +135,7 @@ elseif(GX_TOOLHAIN_TARGET_NAME STREQUAL  "SOPHON_UBUNTU" )
     set(GX_CV_SDK_LIBS parser primitives)
 endif()
 
-set(GX_CV_SDK_INCLUDE ${GX_CV_SDK_ROOT}/include)
+set(GX_CV_SDK_INCLUDE ${THIRD_PARTY_INCLUDE_DIR}/glasssix_cv_sdk_beta)
 set(GX_CV_SDK_LIB_DIR ${GX_CV_SDK_ROOT}${cvsdk_lib_relative_path})
 
 message(STATUS "GX_CV_SDK_INCLUDE: ${GX_CV_SDK_INCLUDE}")
