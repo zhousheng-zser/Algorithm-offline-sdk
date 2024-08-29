@@ -11,21 +11,23 @@
 #include <gx_api.hpp>
 #include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
+#include <gx_climb_tumble_pedestrian_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_fighting_api.hpp>
 #include <gx_flame_api.hpp>
 #include <gx_head_api.hpp>
 #include <gx_helmet_api.hpp>
+#include <gx_leavepost_api.hpp>
+#include <gx_onphone_api.hpp>
 #include <gx_pedestrian_api.hpp>
 #include <gx_pedestrian_min_api.hpp>
 #include <gx_playphone_api.hpp>
 #include <gx_posture_api.hpp>
 #include <gx_refvest_api.hpp>
-#include <gx_smog_api.hpp>
-#include <gx_tumble_api.hpp>
 #include <gx_sleep_api.hpp>
-#include <gx_leavepost_api.hpp>
+#include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
+#include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <opencv2/opencv.hpp>
@@ -34,7 +36,7 @@ bool condition_time                  = false;
 bool condition                       = true;
 bool is_out_json                     = true;
 static const std::string CONFIG_PATH = "/root/install/restruct/config";
-static std::string IMG_PATH = "/root/img/";
+static std::string IMG_PATH          = "/root/img/";
 
 #define TIMES 100
 namespace fs = std::filesystem;
@@ -59,7 +61,7 @@ namespace glasssix {
 
 
 // 调试代码
-namespace glasssix {    
+namespace glasssix {
     // t0 多线程测安全帽
     void thread_function_helmet() {
         gx_helmet_api* api_temp = new gx_helmet_api(CONFIG_PATH);
@@ -138,7 +140,7 @@ namespace glasssix {
         for (int i = 0; i < T; ++i) {
             try {
                 const gx_img_api img(std::string(IMG_PATH) + "sleep1.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_sleep(img,1);
+                auto val = api_temp->safe_production_sleep(img, 1);
                 if (condition)
                     printf("[sleep] : lying_list = %lu work_list = %lu\n", val.lying_list.size(), val.work_list.size());
             } catch (const std::exception& ex) {
@@ -230,7 +232,37 @@ namespace glasssix {
         delete api_temp;
     }
 
-        // t11 多线程测车辆
+    // t9 多线程测打电话
+    void thread_function_onphone() {
+        gx_onphone_api* api_temp         = new gx_onphone_api(CONFIG_PATH);
+        gx_head_api* api_head_temp       = new gx_head_api(CONFIG_PATH);
+        gx_posture_api* api_posture_temp = new gx_posture_api(CONFIG_PATH);
+        const gx_img_api img(std::string(IMG_PATH) + "onphone.png", static_cast<int>(1e9));
+        auto val_head    = api_head_temp->safe_production_head(img);
+        auto val_posture = api_posture_temp->safe_production_posture(img);
+        int T            = TIMES;
+        auto start       = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                auto val1 = api_temp->safe_production_onphone(img, val_head);
+                if (condition) {
+                    printf("[onphone] : head-> onphone_list = %d norm_list = %d\n", val1.onphone_list.size(),
+                        val1.norm_list.size());
+                    auto val2 = api_temp->safe_production_onphone(img, val_posture);
+                    printf("[onphone] : post-> onphone_list = %d norm_list = %d\n", val2.onphone_list.size(),
+                        val2.norm_list.size());
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("onphone time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t11 多线程测车辆
     void thread_function_vehicle() {
         gx_vehicle_api* api_temp = new gx_vehicle_api(CONFIG_PATH);
         int T                    = TIMES;
@@ -305,8 +337,8 @@ namespace glasssix {
                 const gx_img_api img(std::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_tumble(img);
                 if (condition)
-                    printf(
-                        "[tumble] : tumble_list = %lu stand_list = %lu\n", val.tumble_list.size(), val.stand_list.size());
+                    printf("[tumble] : tumble_list = %lu stand_list = %lu\n", val.tumble_list.size(),
+                        val.stand_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -327,8 +359,8 @@ namespace glasssix {
                 const gx_img_api img(std::string(IMG_PATH) + "climb.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_climb(img);
                 if (condition)
-                    printf(
-                        "[climb] : climb_list = %zu normal_list = %zu\n", val.climb_list.size(), val.normal_list.size());
+                    printf("[climb] : climb_list = %zu normal_list = %zu\n", val.climb_list.size(),
+                        val.normal_list.size());
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
             }
@@ -362,7 +394,7 @@ namespace glasssix {
         delete api_temp;
     }
 
-    
+
     // t18 多线程测徘徊
     void thread_function_wander() {
         gx_wander_api* api_temp = new gx_wander_api(CONFIG_PATH);
@@ -447,8 +479,8 @@ namespace glasssix {
             for (int i = 0; i < T; ++i) {
                 auto val = api_temp->safe_production_fighting(img_list, {0, 0, 1920, 1080});
                 if (condition)
-                    printf(
-                        "[fighting] : fight_list =%zu normal_list =%zu\n", val.fight_list.size(), val.normal_list.size());
+                    printf("[fighting] : fight_list =%zu normal_list =%zu\n", val.fight_list.size(),
+                        val.normal_list.size());
             }
             auto end      = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -459,7 +491,7 @@ namespace glasssix {
             printf("error =  %s\n", ex.what());
         }
     }
-    
+
     // t20 多线程测姿态
     void thread_function_posture() {
         gx_posture_api* api_temp = new gx_posture_api(CONFIG_PATH);
@@ -564,6 +596,56 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("pedestrian_min time = %ld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // t37 多线程测攀爬跌倒的攀爬
+    void thread_function_climb_tumble_pedestrian_climb() {
+        gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
+        int T                                    = TIMES;
+        auto start                               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "climb.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_climb_tumble_pedestrian(img, 0);
+                if (condition)
+                    printf("[climb_tumble_pedestrian:climb] : persion_list = %llu climb_list = %llu tumble_list = %llu "
+                           "disabled_list = %llu other_list = %llu \n",
+                        val.persion_list.size(), val.climb_list.size(), val.tumble_list.size(),
+                        val.disabled_list.size(), val.other_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("climb_tumble_pedestrian_climb time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t38 多线程测攀爬跌倒的跌倒
+    void thread_function_climb_tumble_pedestrian_tumble() {
+        gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
+        int T                                    = TIMES;
+        auto start                               = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "tumble.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_climb_tumble_pedestrian(img, 1);
+                if (condition)
+                    printf(
+                        "[climb_tumble_pedestrian:tumble] : persion_list = %llu climb_list = %llu tumble_list = %llu "
+                        "disabled_list = %llu other_list = %llu \n",
+                        val.persion_list.size(), val.climb_list.size(), val.tumble_list.size(),
+                        val.disabled_list.size(), val.other_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("climb_tumble_pedestrian_tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 

@@ -18,9 +18,7 @@ namespace glasssix {
 
                 nlohmann::json new_json(pedestrian_min_new_param{.device = _config->_pedestrian_min_config.device,
                     .models_directory            = _config->_configure_directory.models_directory});
-                printf("%s  ++++\n", new_json.dump().c_str());
-                char* new_result_c = parser_create_instance("g6.pedestrian_min.classify_code", new_json.dump().c_str());
-                printf("%s  ++++\n", new_result_c);
+                char* new_result_c = parser_create_instance("g6.pedestrian_min.detect_code", new_json.dump().c_str());
                 parser_create_instance_result new_result =
                     json::parse(new_result_c).get<parser_create_instance_result>();
                 if (new_result.status.code != 0)

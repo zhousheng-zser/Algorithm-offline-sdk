@@ -19,7 +19,6 @@ namespace glasssix {
                 nlohmann::json new_json(vehicle_new_param{.device = _config->_vehicle_config.device,
                     .models_directory            = _config->_configure_directory.models_directory});
                 char* new_result_c = parser_create_instance("g6.vehicle.detect_code", new_json.dump().c_str());
-                printf("%s =========\n", new_result_c);
                 parser_create_instance_result new_result =
                     json::parse(new_result_c).get<parser_create_instance_result>();
                 if (new_result.status.code != 0)

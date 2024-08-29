@@ -90,12 +90,12 @@ struct onphone_detect_param {
             float phone_distance_thres;
         };
         dyparams_params dyparams;
+        int command;
     };
 
     struct basic_params {
         int height;
         int width;
-        int command;
     };
     optional_params algo_params;
     basic_params data_params;
@@ -107,7 +107,8 @@ DEFINE_STRUCT_SCHEMA(onphone_detect_param,
     DEFINE_STRUCT_FIELD(data_params, "data_params"));
 
 DEFINE_STRUCT_SCHEMA(onphone_detect_param::optional_params, 
-    DEFINE_STRUCT_FIELD(dyparams, "dyparams"));
+    DEFINE_STRUCT_FIELD(dyparams, "dyparams"),
+    DEFINE_STRUCT_FIELD(command, "command"));
 
 DEFINE_STRUCT_SCHEMA(onphone_detect_param::optional_params::dyparams_params, 
     DEFINE_STRUCT_FIELD(posture_info_list, "posture_info_list"),
@@ -118,5 +119,4 @@ DEFINE_STRUCT_SCHEMA(onphone_detect_param::optional_params::dyparams_params,
 
 DEFINE_STRUCT_SCHEMA(onphone_detect_param::basic_params, 
     DEFINE_STRUCT_FIELD(height, "height"), 
-    DEFINE_STRUCT_FIELD(width, "width"), 
-    DEFINE_STRUCT_FIELD(command, "command"));
+    DEFINE_STRUCT_FIELD(width, "width"));

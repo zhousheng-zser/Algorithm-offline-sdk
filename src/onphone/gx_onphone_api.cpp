@@ -115,9 +115,9 @@ namespace glasssix {
                                         .head_info_list = std::make_unique<std::vector<head_info>>(head_list_temp),
                                         .conf_thres           = _config->_onphone_config.conf_thres,
                                         .nms_thres            = _config->_onphone_config.nms_thres,
-                                        .phone_distance_thres = _config->_onphone_config.phone_distance_thres}},
-                        .data_params = onphone_detect_param::basic_params{
-                            .height = mat.get_rows(), .width = mat.get_cols(), .command = 0}});
+                                        .phone_distance_thres = _config->_onphone_config.phone_distance_thres},
+                                .command = 0},
+                        .data_params = onphone_detect_param::basic_params{.height = mat.get_rows(), .width = mat.get_cols()}});
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
                         str.data(), 3ll * mat.get_rows() * mat.get_cols(), nullptr, 0);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
@@ -171,11 +171,12 @@ namespace glasssix {
                                         .head_info_list       = nullptr,
                                         .conf_thres           = _config->_onphone_config.conf_thres,
                                         .nms_thres            = _config->_onphone_config.nms_thres,
-                                        .phone_distance_thres = _config->_onphone_config.phone_distance_thres}},
-                        .data_params = onphone_detect_param::basic_params{
-                            .height = mat.get_rows(), .width = mat.get_cols(), .command = 1}});
+                                        .phone_distance_thres = _config->_onphone_config.phone_distance_thres},
+                                .command = 1},
+                        .data_params = onphone_detect_param::basic_params{.height = mat.get_rows(), .width = mat.get_cols()}});
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
                         str.data(), 3ll * mat.get_rows() * mat.get_cols(), nullptr, 0);
+                    printf("%s +++\n", execute_result_c);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
