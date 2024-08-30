@@ -30,6 +30,7 @@
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
+#include <gx_crossing_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -576,7 +577,36 @@ namespace glasssix {
             printf("batterypilferers time = %ld microsecond\n", duration.count());
         delete api_temp;
     }
+    void thread_function_crossing() {
+        gx_crossing_api* api_temp = new gx_crossing_api(CONFIG_PATH);
+        int T                     = TIMES;
+        for (int i = 0; i < T; ++i) {
+            try {
+                {
+                    gx_img_api img(std::string(IMG_PATH) + "crossing1.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_crossing(img);
+                    if (condition)
+                        printf("[crossing1] : %llu \n", val.crossing_list.size());
+                }
+                {
+                    gx_img_api img(std::string(IMG_PATH) + "crossing2.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_crossing(img);
+                    if (condition)
+                        printf("[crossing2] : %llu \n", val.crossing_list.size());
+                }
+                {
+                    gx_img_api img(std::string(IMG_PATH) + "crossing3.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_crossing(img);
+                    if (condition)
+                        printf("[crossing3] : %llu \n", val.crossing_list.size());
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
 
+        delete api_temp;
+    }
     // t35 多线程测行人min检测
     void thread_function_pedestrian_min() {
         gx_pedestrian_min_api* api_temp = new gx_pedestrian_min_api(CONFIG_PATH);

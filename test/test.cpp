@@ -49,8 +49,8 @@ int main(int argc, char** argv) {
             //t[19] = std::jthread(thread_function_fighting);//V
             //t[20] = std::jthread(thread_function_crowd);//V
             //t[21] = std::jthread(thread_function_wander_limit);
-            //t[22] = std::jthread(thread_function_crossing);
-            //t[23] = std::jthread(thread_function_batterypilferers);
+            //t[22] = std::jthread(thread_function_crossing);//V
+            //t[23] = std::jthread(thread_function_batterypilferers);//V
             //t[24] = std::jthread(thread_function_pedestrian_min);//V
             //t[25] = std::jthread(thread_function_climb_tumble_pedestrian_climb);//V
             //t[26] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);//V
