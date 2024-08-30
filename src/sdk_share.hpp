@@ -17,6 +17,7 @@
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
 #include "../src/nessus/protocols/policeuniform.hpp"
+#include "../src/nessus/protocols/pump_glove.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
 #include "../src/nessus/protocols/pedestrian_min.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
@@ -437,6 +438,7 @@ namespace glasssix {
             Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
             Function["vehicle"]             = &algo_ptr::set_protocols_handl_vehicle;
             Function["policeuniform"]       = &algo_ptr::set_protocols_handl_policeuniform;
+            Function["pump_glove"]          = &algo_ptr::set_protocols_handl_pump_glove;
             Function["wander"]              = &algo_ptr::set_protocols_handl_wander;
             Function["pump_pumptop_person"] = &algo_ptr::set_protocols_handl_pump_pumptop_person;
             Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
@@ -545,6 +547,11 @@ namespace glasssix {
             policeuniform_handle = protocol_ptr.make_instance<policeuniform>(
                 policeuniform_new_param{_config->_policeuniform_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pump_glove() {
+            _config->set_pump_glove(_config->_path);
+            pump_glove_handle = protocol_ptr.make_instance<pump_glove>(pump_glove_new_param{
+                _config->_pump_glove_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_wander() {
             _config->set_wander(_config->_path);
             _config->set_wander_limit(_config->_path);
@@ -608,6 +615,7 @@ namespace glasssix {
         head head_handle;
         vehicle vehicle_handle;
         policeuniform policeuniform_handle;
+        pump_glove pump_glove_handle;
         wander wander_handle;
         onphone onphone_handle;
         workcloth workcloth_handle;

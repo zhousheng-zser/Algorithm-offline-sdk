@@ -35,6 +35,7 @@
 #include <gx_pump_weld_api.hpp>
 #include <gx_pump_work_status_api.hpp>
 #include <gx_pumptop_helmet_api.hpp>
+#include <gx_pump_glove_api.hpp>
 #include <gx_refvest_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smog_api.hpp>
@@ -1244,6 +1245,28 @@ namespace glasssix {
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
             printf("policeuniform time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // 多线程测手套
+    void thread_function_pump_glove() {
+        gx_pump_glove_api* api_temp = new gx_pump_glove_api(CONFIG_PATH);
+        int T                          = TIMES;
+        auto start                     = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(abi::string(IMG_PATH) + "pump_glove.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_glove(img);
+                if (condition)
+                    printf("[pump_glove] : unglove_list = %d\n", val.unglove_list.size());
+
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_glove time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
 } // namespace glasssix

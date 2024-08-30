@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
             t[26] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);
             t[27] = std::jthread(thread_function_subway_anomaly_nzx);
             t[28] = std::jthread(thread_function_subway_anomaly_yf);
+            t[29] = std::jthread(thread_function_policeuniform);
 
 
             t[40] = std::jthread(thread_function_pump_light);
@@ -77,6 +78,7 @@ int main(int argc, char** argv) {
             t[46] = std::jthread(thread_function_pump_hoisting);
             t[47] = std::jthread(thread_function_pump_weld);
             t[48] = std::jthread(thread_function_pump_work_status);
+            t[48] = std::jthread(thread_function_pump_glove);
 
         } else if (TIMES == 1)
         {

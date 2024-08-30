@@ -170,6 +170,16 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_glove_config {
+        GX_BEGIN_FIELDS(pump_glove_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, hand_conf_thres);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct pump_mask_config {
         GX_BEGIN_FIELDS(pump_mask_config);
         GX_FIELD(int, device);
@@ -456,6 +466,7 @@ namespace glasssix {
         fighting_config _fighting_config;
         flame_config _flame_config;
         policeuniform_config _policeuniform_config;
+        pump_glove_config _pump_glove_config;
         pump_mask_config _pump_mask_config;
         pump_weld_config _pump_weld_config;
         pump_hoisting_config _pump_hoisting_config;
@@ -497,6 +508,7 @@ namespace glasssix {
         void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_policeuniform(const abi::string& path);
+        void set_pump_glove(const abi::string& path);
         void set_pump_mask(const abi::string& path);
         void set_pump_weld(const abi::string& path);
         void set_pump_hoisting(const abi::string& path);
@@ -539,6 +551,7 @@ namespace glasssix {
         bool fighting_is_load                = false;
         bool flame_is_load                   = false;
         bool policeuniform_is_load           = false;
+        bool pump_glove_is_load              = false;
         bool pump_mask_is_load               = false;
         bool pump_weld_is_load               = false;
         bool pump_hoisting_is_load           = false;
