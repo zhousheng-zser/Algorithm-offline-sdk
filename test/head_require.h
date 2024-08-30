@@ -31,6 +31,7 @@
 #include <gx_pump_hoisting_api.hpp>
 #include <gx_pump_light_api.hpp>
 #include <gx_pump_mask_api.hpp>
+#include <gx_pump_protect_face_api.hpp>
 #include <gx_pump_pumptop_person_api.hpp>
 #include <gx_pump_vesthelmet_api.hpp>
 #include <gx_pump_weld_api.hpp>
@@ -45,4 +46,5 @@
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
 #include <gx_workcloth_api.hpp>
+#include <gx_policeuniform_api.hpp>
 #include <opencv2/opencv.hpp>

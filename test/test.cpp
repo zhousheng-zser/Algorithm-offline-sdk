@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
         //todo_video(
         //    "/root/video/fighting.mp4", "/root/img/test/" + module, "/root/img/test/" + module + "ans/", data_);
 
-        // yuv_test();
+        //yuv_test();
         // gif_test();
         // wangder_limit();
         // crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
@@ -113,6 +113,7 @@ int main(int argc, char** argv) {
             thread_function_climb_tumble_pedestrian_tumble();
             thread_function_subway_anomaly_nzx();
             thread_function_subway_anomaly_yf();
+            thread_function_policeuniform();
 
 
             thread_function_pump_light();

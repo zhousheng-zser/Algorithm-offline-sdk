@@ -26,6 +26,7 @@
 #include "../src/nessus/protocols/pump_hoisting.hpp"
 #include "../src/nessus/protocols/pump_light.hpp"
 #include "../src/nessus/protocols/pump_mask.hpp"
+#include "../src/nessus/protocols/pump_protect_face.hpp"
 #include "../src/nessus/protocols/pump_pumptop_person.hpp"
 #include "../src/nessus/protocols/pump_vesthelmet.hpp"
 #include "../src/nessus/protocols/pump_weld.hpp"
@@ -145,7 +146,7 @@ namespace glasssix {
                         throw source_code_aware_runtime_error(U8("Error: ") + temp_str + U8(": ") + ex.what());
                     }
                 }
-            }
+            } 
         }
         nessus_protocol protocol_ptr;
         batterypilferers batterypilferers_handle;
@@ -424,6 +425,7 @@ namespace glasssix {
             Function["face_attributes"]     = &algo_ptr::set_protocols_handl_face_attributes;
             Function["crossing"]            = &algo_ptr::set_protocols_handl_crossing;
             Function["pump_mask"]           = &algo_ptr::set_protocols_handl_pump_mask;
+            Function["pump_protect_face"]   = &algo_ptr::set_protocols_handl_pump_protect_face;
             Function["pump_vesthelmet"]     = &algo_ptr::set_protocols_handl_pump_vesthelmet;
             Function["pumptop_helmet"]      = &algo_ptr::set_protocols_handl_pumptop_helmet;
             Function["pump_gate_status"]    = &algo_ptr::set_protocols_handl_pump_gate_status;
@@ -457,6 +459,11 @@ namespace glasssix {
             _config->set_pump_mask(_config->_path);
             pump_mask_handle = protocol_ptr.make_instance<pump_mask>(
                 pump_mask_new_param{_config->_pump_mask_config.device, _config->_configure_directory.models_directory});
+        }
+        void set_protocols_handl_pump_protect_face() {
+            _config->set_pump_protect_face(_config->_path);
+            pump_protect_face_handle = protocol_ptr.make_instance<pump_protect_face>(pump_protect_face_new_param{
+                _config->_pump_protect_face_config.device, _config->_configure_directory.models_directory, _config->_pump_protect_face_config.model_type});
         }
         void set_protocols_handl_pump_vesthelmet() {
             _config->set_pump_vesthelmet(_config->_path);
@@ -604,6 +611,7 @@ namespace glasssix {
         refvest refvest_handle;
         crossing crossing_handle;
         pump_mask pump_mask_handle;
+        pump_protect_face pump_protect_face_handle;
         pump_weld pump_weld_handle;
         pump_hoisting pump_hoisting_handle;
         pump_vesthelmet pump_vesthelmet_handle;

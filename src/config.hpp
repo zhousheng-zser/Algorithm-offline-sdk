@@ -189,6 +189,15 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_protect_face_config {
+        GX_BEGIN_FIELDS(pump_protect_face_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, model_type);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct pump_weld_config {
         GX_BEGIN_FIELDS(pump_weld_config);
         GX_FIELD(int, device);
@@ -468,6 +477,7 @@ namespace glasssix {
         policeuniform_config _policeuniform_config;
         pump_glove_config _pump_glove_config;
         pump_mask_config _pump_mask_config;
+        pump_protect_face_config _pump_protect_face_config;
         pump_weld_config _pump_weld_config;
         pump_hoisting_config _pump_hoisting_config;
         pump_vesthelmet_config _pump_vesthelmet_config;
@@ -510,6 +520,7 @@ namespace glasssix {
         void set_policeuniform(const abi::string& path);
         void set_pump_glove(const abi::string& path);
         void set_pump_mask(const abi::string& path);
+        void set_pump_protect_face(const abi::string& path);
         void set_pump_weld(const abi::string& path);
         void set_pump_hoisting(const abi::string& path);
         void set_pump_vesthelmet(const abi::string& path);
@@ -553,6 +564,7 @@ namespace glasssix {
         bool policeuniform_is_load           = false;
         bool pump_glove_is_load              = false;
         bool pump_mask_is_load               = false;
+        bool pump_protect_face_is_load       = false;
         bool pump_weld_is_load               = false;
         bool pump_hoisting_is_load           = false;
         bool pump_pumptop_person_is_load     = false;
