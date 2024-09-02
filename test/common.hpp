@@ -1254,10 +1254,10 @@ namespace glasssix {
         auto start                     = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img(abi::string(IMG_PATH) + "pump_glove.jpg", static_cast<int>(1e9));
-                auto val = api_temp->safe_production_pump_glove(img);
-                if (condition)
-                    printf("[pump_glove] : unglove_list = %d\n", val.unglove_list.size());
+                const gx_img_api img(abi::string(IMG_PATH) + "pump_glove0.jpg", static_cast<int>(1e9));
+                    auto val = api_temp->safe_production_pump_glove(img);
+                    if (condition)
+                        printf("[pump_glove] : unglove_list = %d\n", val.unglove_list.size());
 
             } catch (const std::exception& ex) {
                 printf("error =  %s\n", ex.what());
