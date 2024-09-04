@@ -129,8 +129,8 @@ namespace glasssix {
             return result_pool.get();
         } catch (const std::exception& ex) {
             bool flag = 1;
-            for (int i = 0; i < _config->_batterypilferers_config.batch && flag; i++)
-                flag =write_dump_img(mat_list[i], "_batterypilferers_dump_" + std::to_string(i) + ".jpg");
+            for (int i = 0; i < mat_list.size() && flag; i++)
+                flag = write_dump_img(mat_list[i], "_batterypilferers_dump_" + std::to_string(i) + ".jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
         }

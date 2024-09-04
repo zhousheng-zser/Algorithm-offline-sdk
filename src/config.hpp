@@ -170,6 +170,16 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_glove_config {
+        GX_BEGIN_FIELDS(pump_glove_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, hand_conf_thres);
+        GX_FIELD(float, conf_thres);
+        GX_FIELD(float, nms_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
     struct pump_mask_config {
         GX_BEGIN_FIELDS(pump_mask_config);
         GX_FIELD(int, device);
@@ -442,6 +452,14 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_cover_plate_config {
+        GX_BEGIN_FIELDS(pump_cover_plate_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
 
     class config {
     public:
@@ -465,6 +483,7 @@ namespace glasssix {
         fighting_config _fighting_config;
         flame_config _flame_config;
         policeuniform_config _policeuniform_config;
+        pump_glove_config _pump_glove_config;
         pump_mask_config _pump_mask_config;
         pump_protect_face_config _pump_protect_face_config;
         pump_weld_config _pump_weld_config;
@@ -491,6 +510,7 @@ namespace glasssix {
         pedestrian_config _pedestrian_config;
         pedestrian_min_config _pedestrian_min_config;
         subway_anomaly_config _subway_anomaly_config;
+        pump_cover_plate_config _pump_cover_plate_config;
         void set_configure_directory(abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
@@ -507,6 +527,7 @@ namespace glasssix {
         void set_fighting(const abi::string& path);
         void set_flame(const abi::string& path);
         void set_policeuniform(const abi::string& path);
+        void set_pump_glove(const abi::string& path);
         void set_pump_mask(const abi::string& path);
         void set_pump_protect_face(const abi::string& path);
         void set_pump_weld(const abi::string& path);
@@ -533,6 +554,7 @@ namespace glasssix {
         void set_pedestrian(const abi::string& path);
         void set_pedestrian_min(const abi::string& path);
         void set_subway_anomaly(const abi::string& path);
+        void set_pump_cover_plate(const abi::string& path);
 
         bool configure_directory_is_load     = false;
         bool detect_is_load                  = false;
@@ -550,6 +572,7 @@ namespace glasssix {
         bool fighting_is_load                = false;
         bool flame_is_load                   = false;
         bool policeuniform_is_load           = false;
+        bool pump_glove_is_load              = false;
         bool pump_mask_is_load               = false;
         bool pump_protect_face_is_load       = false;
         bool pump_weld_is_load               = false;
@@ -576,6 +599,7 @@ namespace glasssix {
         bool pedestrian_is_load              = false;
         bool pedestrian_min_is_load          = false;
         bool subway_anomaly_is_load          = false;
+        bool pump_cover_plate_is_load       = false;
 
     private:
         glasssix::json read_json_file(const abi::string& path);

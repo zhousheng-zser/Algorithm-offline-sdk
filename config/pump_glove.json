@@ -1,0 +1,7 @@
+{
+    "device": -1,
+    "format": 1,
+    "hand_conf_thres": 0.4,
+    "conf_thres": 0.7,
+    "nms_thres": 0.65
+}

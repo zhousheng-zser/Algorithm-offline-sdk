@@ -225,6 +225,7 @@ namespace glasssix {
             name_config["fighting.json"]            = _config->_fighting_config;
             name_config["flame.json"]               = _config->_flame_config;
             name_config["policeuniform.json"]       = _config->_policeuniform_config;
+            name_config["pump_glove.json"]          = _config->_pump_glove_config;
             name_config["smog.json"]                = _config->_smog_config;
             name_config["helmet.json"]              = _config->_helmet_config;
             name_config["refvest.json"]             = _config->_refvest_config;
@@ -249,6 +250,7 @@ namespace glasssix {
             name_config["pedestrian.json"]          = _config->_pedestrian_config;
             name_config["pedestrian_min.json"]      = _config->_pedestrian_min_config;
             name_config["subway_anomaly.json"]      = _config->_subway_anomaly_config;
+            name_config["pump_cover_plate.json"]    = _config->_pump_cover_plate_config;
             return name_config;
         }
 
@@ -349,6 +351,9 @@ namespace glasssix {
                 } else if (name == "policeuniform.json" && _config->policeuniform_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_policeuniform_config);
+                } else if (name == "pump_glove.json" && _config->pump_glove_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_glove_config);
                 } else if (name == "smog.json" && _config->smog_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_smog_config);
@@ -397,6 +402,9 @@ namespace glasssix {
                 } else if (name == "subway_anomaly.json" && _config->subway_anomaly_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_subway_anomaly_config);
+                } else if (name == "pump_cover_plate.json" && _config->pump_cover_plate_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_cover_plate_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例 _config指针为空
                 }

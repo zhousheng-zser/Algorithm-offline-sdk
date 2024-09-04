@@ -78,43 +78,47 @@ int main(int argc, char** argv) {
             t[46] = std::jthread(thread_function_pump_hoisting);
             t[47] = std::jthread(thread_function_pump_weld);
             t[48] = std::jthread(thread_function_pump_work_status);
+            t[49] = std::jthread(thread_function_pump_glove);
+            t[50] = std::jthread(thread_function_pump_protect_face);
+            t[51] = std::jthread(thread_function_pump_cover_plate);
 
         } else if (TIMES == 1)
         {
             //当循环次数为1,进行单线程跑
 
-            thread_function_search();
-            thread_function_integration();
-            thread_function_face_attributes();
-            thread_function_Action_live_Blur();
-            thread_function_pedestrian();
-            thread_function_head();
-            thread_function_posture();
-            thread_function_wander();
-            thread_function_flame();
-            thread_function_refvest();
-            thread_function_leavepost();
-            thread_function_sleep();
-            thread_function_smoke();
-            thread_function_playphone();
-            thread_function_onphone();
-            thread_function_workcloth();
-            thread_function_vehicle();
-            thread_function_smog();
-            thread_function_helmet();
-            thread_function_fighting();
-            thread_function_crowd();
-            thread_function_wander_limit();
-            thread_function_crossing();
-            thread_function_batterypilferers();
-            thread_function_pedestrian_min();
-            thread_function_climb_tumble_pedestrian_climb();
-            thread_function_climb_tumble_pedestrian_tumble();
-            thread_function_subway_anomaly_nzx();
-            thread_function_subway_anomaly_yf();
-            thread_function_policeuniform();
+            //thread_function_search();
+            //thread_function_integration();
+            //thread_function_face_attributes();
+            //thread_function_Action_live_Blur();
+            //thread_function_pedestrian();
+            //thread_function_head();
+            //thread_function_posture();
+            //thread_function_wander();
+            //thread_function_flame();
+            //thread_function_refvest();
+            //thread_function_leavepost();
+            //thread_function_sleep();
+            //thread_function_smoke();
+            //thread_function_playphone();
+            //thread_function_onphone();
+            //thread_function_workcloth();
+            //thread_function_vehicle();
+            //thread_function_smog();
+            //thread_function_helmet();
+            //thread_function_fighting();
+            //thread_function_crowd();
+            //thread_function_wander_limit();
+            //thread_function_crossing();
+            //thread_function_batterypilferers();
+            //thread_function_pedestrian_min();
+            //thread_function_climb_tumble_pedestrian_climb();
+            //thread_function_climb_tumble_pedestrian_tumble();
+            //thread_function_subway_anomaly_nzx();
+            //thread_function_subway_anomaly_yf();
+            //thread_function_policeuniform();
 
-
+            
+            thread_function_pump_cover_plate();
             thread_function_pump_light();
             thread_function_pump_vesthelmet();
             thread_function_pump_gate_status();
@@ -124,6 +128,8 @@ int main(int argc, char** argv) {
             thread_function_pump_hoisting();
             thread_function_pump_weld();
             thread_function_pump_work_status();
+            thread_function_pump_glove();
+            thread_function_pump_protect_face();
 
         } else
         {}

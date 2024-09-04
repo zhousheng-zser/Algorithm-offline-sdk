@@ -21,7 +21,6 @@ add_executable(${target_name} )
 target_sources(
     ${target_name} 
     PRIVATE ${private_sources}
-# "head_require.h"
 )
 
 target_include_directories(

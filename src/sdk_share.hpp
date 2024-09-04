@@ -17,6 +17,7 @@
 #include "../src/nessus/protocols/longinus.hpp"
 #include "../src/nessus/protocols/onphone.hpp"
 #include "../src/nessus/protocols/policeuniform.hpp"
+#include "../src/nessus/protocols/pump_glove.hpp"
 #include "../src/nessus/protocols/pedestrian.hpp"
 #include "../src/nessus/protocols/pedestrian_min.hpp"
 #include "../src/nessus/protocols/playphone.hpp"
@@ -43,6 +44,7 @@
 #include "../src/nessus/protocols/wander.hpp"
 #include "../src/nessus/protocols/workcloth.hpp"
 #include "../src/nessus/protocols/subway_anomaly.hpp"
+#include "../src/nessus/protocols/pump_cover_plate.hpp"
 #include "config.hpp"
 #include "data_time.hpp"
 #if (GX_EMPOWER_FLAG)
@@ -439,6 +441,7 @@ namespace glasssix {
             Function["damocles"]            = &algo_ptr::set_protocols_handl_damocles;
             Function["vehicle"]             = &algo_ptr::set_protocols_handl_vehicle;
             Function["policeuniform"]       = &algo_ptr::set_protocols_handl_policeuniform;
+            Function["pump_glove"]          = &algo_ptr::set_protocols_handl_pump_glove;
             Function["wander"]              = &algo_ptr::set_protocols_handl_wander;
             Function["pump_pumptop_person"] = &algo_ptr::set_protocols_handl_pump_pumptop_person;
             Function["onphone"]             = &algo_ptr::set_protocols_handl_onphone;
@@ -447,6 +450,7 @@ namespace glasssix {
             Function["pedestrian_min"]      = &algo_ptr::set_protocols_handl_pedestrian_min;
             Function["posture"]             = &algo_ptr::set_protocols_handl_posture;
             Function["subway_anomaly"]      = &algo_ptr::set_protocols_handl_subway_anomaly;
+            Function["pump_cover_plate"]    = &algo_ptr::set_protocols_handl_pump_cover_plate;
         }
         void set_protocols_handl_crossing() {
             _config->set_crossing(_config->_path);
@@ -552,6 +556,11 @@ namespace glasssix {
             policeuniform_handle = protocol_ptr.make_instance<policeuniform>(
                 policeuniform_new_param{_config->_policeuniform_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pump_glove() {
+            _config->set_pump_glove(_config->_path);
+            pump_glove_handle = protocol_ptr.make_instance<pump_glove>(pump_glove_new_param{
+                _config->_pump_glove_config.device, _config->_configure_directory.models_directory});
+        }
         void set_protocols_handl_wander() {
             _config->set_wander(_config->_path);
             _config->set_wander_limit(_config->_path);
@@ -592,6 +601,11 @@ namespace glasssix {
             subway_anomaly_handle = protocol_ptr.make_instance<subway_anomaly>(subway_anomaly_new_param{
                 _config->_subway_anomaly_config.device, _config->_configure_directory.models_directory});
         }
+        void set_protocols_handl_pump_cover_plate() {
+            _config->set_pump_cover_plate(_config->_path);
+            pump_cover_plate_handle = protocol_ptr.make_instance<pump_cover_plate>(pump_cover_plate_new_param{
+                _config->_pump_cover_plate_config.device, _config->_configure_directory.models_directory});
+        }
 
         nessus_protocol protocol_ptr;
         face_attributes face_attributes_handle;
@@ -616,6 +630,7 @@ namespace glasssix {
         head head_handle;
         vehicle vehicle_handle;
         policeuniform policeuniform_handle;
+        pump_glove pump_glove_handle;
         wander wander_handle;
         onphone onphone_handle;
         workcloth workcloth_handle;
@@ -623,6 +638,7 @@ namespace glasssix {
         pedestrian_min pedestrian_min_handle;
         posture posture_handle;
         subway_anomaly subway_anomaly_handle;
+        pump_cover_plate pump_cover_plate_handle;
     };
     extern algo_irisviel_ptr* thread_algo_irisviel_ptr;
     extern algo_crowd_ptr* thread_algo_crowd_ptr;

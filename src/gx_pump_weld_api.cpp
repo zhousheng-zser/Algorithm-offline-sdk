@@ -117,8 +117,8 @@ namespace glasssix {
                         .params                           = pump_weld_detect_param::confidence_params{.conf_thres =
                                                                                 _config->_pump_weld_config.conf_thres,
                                                       .nms_thres            = _config->_pump_weld_config.nms_thres,
-                                                      .wmachine_conf_thres            = _config->_pump_weld_config.wmachine_conf_thres,
-                                                      .wlight_conf_thres            = light_conf_thres,
+                                                      .wmachine_conf_thres  = _config->_pump_weld_config.wmachine_conf_thres,
+                                                      .wlight_conf_thres    = light_conf_thres,
                                                       .candidate_box_width  = candidate_box_width,
                                                       .candidate_box_height = candidate_box_height}},
                     str);
@@ -129,7 +129,7 @@ namespace glasssix {
             return result_pool.get();
         } catch (const std::exception& ex) {
             bool flag = 1;
-            for (int i = 0; i < _config->_pump_weld_config.batch && flag; i++)
+            for (int i = 0; i < mat_list.size() && flag; i++)
                 flag = write_dump_img(mat_list[i], "_pump_weld_dump_" + std::to_string(i) + ".jpg");
             throw source_code_aware_runtime_error{
                 ex.what() + std::string{flag ? "\nSave_picture_successfully" : "\nSave_picture_fail"}};
