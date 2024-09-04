@@ -250,6 +250,7 @@ namespace glasssix {
             name_config["pedestrian.json"]          = _config->_pedestrian_config;
             name_config["pedestrian_min.json"]      = _config->_pedestrian_min_config;
             name_config["subway_anomaly.json"]      = _config->_subway_anomaly_config;
+            name_config["pump_cover_plate.json"]    = _config->_pump_cover_plate_config;
             return name_config;
         }
 
@@ -401,6 +402,9 @@ namespace glasssix {
                 } else if (name == "subway_anomaly.json" && _config->subway_anomaly_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_subway_anomaly_config);
+                } else if (name == "pump_cover_plate.json" && _config->pump_cover_plate_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_pump_cover_plate_config);
                 } else {
                     return -1; // 文件对应的算法未构建实例 _config指针为空
                 }

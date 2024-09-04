@@ -78,7 +78,9 @@ int main(int argc, char** argv) {
             t[46] = std::jthread(thread_function_pump_hoisting);
             t[47] = std::jthread(thread_function_pump_weld);
             t[48] = std::jthread(thread_function_pump_work_status);
-            t[48] = std::jthread(thread_function_pump_glove);
+            t[49] = std::jthread(thread_function_pump_glove);
+            t[50] = std::jthread(thread_function_pump_protect_face);
+            t[51] = std::jthread(thread_function_pump_cover_plate);
 
         } else if (TIMES == 1)
         {
@@ -115,17 +117,19 @@ int main(int argc, char** argv) {
             //thread_function_subway_anomaly_yf();
             //thread_function_policeuniform();
 
-
-            //thread_function_pump_light();
-            //thread_function_pump_vesthelmet();
-            //thread_function_pump_gate_status();
-            //thread_function_pump_pumptop_person();
-            //thread_function_pump_mask();
-            //thread_function_pumptop_helmet();
-            //thread_function_pump_hoisting();
-            //thread_function_pump_weld();
-            //thread_function_pump_work_status();
+            
+            thread_function_pump_cover_plate();
+            thread_function_pump_light();
+            thread_function_pump_vesthelmet();
+            thread_function_pump_gate_status();
+            thread_function_pump_pumptop_person();
+            thread_function_pump_mask();
+            thread_function_pumptop_helmet();
+            thread_function_pump_hoisting();
+            thread_function_pump_weld();
+            thread_function_pump_work_status();
             thread_function_pump_glove();
+            thread_function_pump_protect_face();
 
         } else
         {}

@@ -452,6 +452,14 @@ namespace glasssix {
         GX_END_FIELDS;
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct pump_cover_plate_config {
+        GX_BEGIN_FIELDS(pump_cover_plate_config);
+        GX_FIELD(int, device);
+        GX_FIELD(int, format);
+        GX_FIELD(float, conf_thres);
+        GX_END_FIELDS;
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
 
     class config {
     public:
@@ -502,6 +510,7 @@ namespace glasssix {
         pedestrian_config _pedestrian_config;
         pedestrian_min_config _pedestrian_min_config;
         subway_anomaly_config _subway_anomaly_config;
+        pump_cover_plate_config _pump_cover_plate_config;
         void set_configure_directory(abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
@@ -545,6 +554,7 @@ namespace glasssix {
         void set_pedestrian(const abi::string& path);
         void set_pedestrian_min(const abi::string& path);
         void set_subway_anomaly(const abi::string& path);
+        void set_pump_cover_plate(const abi::string& path);
 
         bool configure_directory_is_load     = false;
         bool detect_is_load                  = false;
@@ -589,6 +599,7 @@ namespace glasssix {
         bool pedestrian_is_load              = false;
         bool pedestrian_min_is_load          = false;
         bool subway_anomaly_is_load          = false;
+        bool pump_cover_plate_is_load       = false;
 
     private:
         glasssix::json read_json_file(const abi::string& path);

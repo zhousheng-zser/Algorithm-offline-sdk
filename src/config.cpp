@@ -298,4 +298,10 @@ namespace glasssix {
         temp.get_to(_subway_anomaly_config);
         subway_anomaly_is_load = true;
     }
+    void config::set_pump_cover_plate(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/pump_cover_plate.json");
+        temp.get_to(_pump_cover_plate_config);
+        pump_cover_plate_is_load = true;
+    }
 } // namespace glasssix
