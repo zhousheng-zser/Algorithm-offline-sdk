@@ -50,6 +50,67 @@ namespace glasssix {
                     inputFile >> old_data;
                 // 比较结果
                 std::cout << "file image: " << instance_name << std::endl;
+                //^ 人脸有所不一样,根据实际情况来处理
+                if (instance == "search") {
+                    std::string index{"info_list"};
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "integration") {
+                    std::string index{"info_list"};
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "face_attributes") {
+                    std::string index{"info_list"};
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "action_live") {
+                    std::string index{"info_list"};
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
                 if (instance == "head") {
                     std::string index{"info_list"};
                     int old_number = old_data.size();
@@ -1873,9 +1934,8 @@ int main(int argc, char** argv) {
     /* C++ 接口测试*/
     std::jthread t[100];
     std::vector<std::string> plugins{"plugin_register", "vision_service"};
-    std::vector<std::string> plugins_face {
-        " selene ", " longinus ", " romancia ", " damocles ", "irisviel", "face_attributes"
-           };
+    std::vector<std::string> plugins_face {" selene ", " cassius ", " longinus ", " romancia ", " damocles ", "irisviel",
+        "face_attributes"};//这几个,缺一不可,插件表如果缺少任意一个,则不应该测试人脸相关算法(包括口罩)
     try {
         printf("result result result ~~~~ \n");
         glasssix::init();
@@ -1901,10 +1961,28 @@ int main(int argc, char** argv) {
             if (std::find(plugins_face.begin(), plugins_face.end(), temp_str) != plugins_face.end())
             {
                 //开始检测人脸
-                //if (iscycle == 0)
-                //    glasssix::thread_function_wander(temp_str);
-                //else
-                //    (t[i] = std::jthread(glasssix::thread_function_wander, temp_str));
+                if (iscycle == 0)
+                {
+                    temp_str = "search";
+                    glasssix::thread_function_search(temp_str);
+                    temp_str = "integration";
+                    glasssix::thread_function_integration(temp_str);
+                    temp_str = "face_attributes";
+                    glasssix::thread_function_face_attributes(temp_str);
+                    temp_str = "action_live";
+                    glasssix::thread_function_Action_live_Blur(temp_str);
+                }
+                else
+                {
+                    temp_str = "search";
+                    (t[i] = std::jthread(glasssix::thread_function_search, temp_str));
+                    temp_str = "integration";
+                    (t[i] = std::jthread(glasssix::thread_function_integration, temp_str));
+                    temp_str = "face_attributes";
+                    (t[i] = std::jthread(glasssix::thread_function_face_attributes, temp_str));
+                    temp_str = "action_live";
+                    (t[i] = std::jthread(glasssix::thread_function_Action_live_Blur, temp_str));
+                }
             }
             if (temp_str == "head")
                 if (iscycle == 0)
