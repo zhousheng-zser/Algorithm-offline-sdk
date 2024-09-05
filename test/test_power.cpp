@@ -52,7 +52,6 @@ namespace glasssix {
                 std::cout << "file image: " << instance_name << std::endl;
                 //^ 人脸有所不一样,根据实际情况来处理
                 if (instance == "search") {
-                    std::string index{"info_list"};
                     int old_number = old_data.size();
                     int new_number = data.size();
                     std::cout << "instance: " << instance << " old_data: " << old_number << " ";
@@ -67,7 +66,6 @@ namespace glasssix {
                     }
                 }
                 if (instance == "integration") {
-                    std::string index{"info_list"};
                     int old_number = old_data.size();
                     int new_number = data.size();
                     std::cout << "instance: " << instance << " old_data: " << old_number << " ";
@@ -82,7 +80,6 @@ namespace glasssix {
                     }
                 }
                 if (instance == "face_attributes") {
-                    std::string index{"info_list"};
                     int old_number = old_data.size();
                     int new_number = data.size();
                     std::cout << "instance: " << instance << " old_data: " << old_number << " ";
@@ -96,8 +93,77 @@ namespace glasssix {
                         path = path_fault;
                     }
                 }
-                if (instance == "action_live") {
-                    std::string index{"info_list"};
+                if (instance == "action_live_BLINK") {
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "action_live_OPEN_MOUTH") {
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "action_live_NOD") {
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "action_live_LEFT_HEAD") {
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "action_live_RIGHT_HEAD") {
+                    int old_number = old_data.size();
+                    int new_number = data.size();
+                    std::cout << "instance: " << instance << " old_data: " << old_number << " ";
+                    std::cout << "instance: " << instance << " new_data: " << new_number << " ";
+                    if (new_number < old_number) {
+                        std::cout << "\nwarning : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_warning;
+                    }
+                    if (new_number == 0) {
+                        std::cout << "\nfault : " << instance << "'s size == " << new_number << std::endl;
+                        path = path_fault;
+                    }
+                }
+                if (instance == "action_live_blur") {
                     int old_number = old_data.size();
                     int new_number = data.size();
                     std::cout << "instance: " << instance << " old_data: " << old_number << " ";
@@ -856,21 +922,27 @@ namespace glasssix {
         int T              = TIMES;
         while (T--) {
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_BLINK, action_result, img[0]);
+            glasssix::write_json(instance + "_BLINK", glasssix::json(action_result));
             if (condition)
                 printf("[action_live] : BDFACE_ACTION_LIVE_BLINK %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_OPEN_MOUTH, action_result, img[1]);
+            glasssix::write_json(instance + "_OPEN_MOUTH", glasssix::json(action_result));
             if (condition)
                 printf("[action_live] : BDFACE_ACTION_LIVE_OPEN_MOUTH %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_NOD, action_result, img[2]);
+            glasssix::write_json(instance + "_NOD", glasssix::json(action_result));
             if (condition)
                 printf("[action_live] : BDFACE_ACTION_LIVE_NOD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_LEFT_HEAD, action_result, img[3]);
+            glasssix::write_json(instance + "_LEFT_HEAD", glasssix::json(action_result));
             if (condition)
                 printf("[action_live] : BDFACE_ACTION_LIVE_LEFT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             info = api_temp->face_action_live(action_live_type::BDFACE_ACTION_LIVE_RIGHT_HEAD, action_result, img[4]);
+            glasssix::write_json(instance + "_RIGHT_HEAD", glasssix::json(action_result));
             if (condition)
                 printf("[action_live] : BDFACE_ACTION_LIVE_RIGHT_HEAD %s\n", action_result ? "VVVVVVVVV" : "XXXXXXXXX");
             auto val = api_temp->face_blur(img[5]);
+            glasssix::write_json(instance + "_blur", glasssix::json(val));
             if (condition)
                 printf("[action_live] : blur ====== %.2f\n", val.clarity[0]);
         }
