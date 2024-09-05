@@ -9,26 +9,11 @@ int main(int argc, char** argv) {
         printf("hello world\n");
         auto begin = std::chrono::steady_clock::now();
 
-        // printf("start run video\n");
-        // video_data data_{.be_x = 0, .be_y = 0, .ed_x = 2, .ed_y = 00, .fps = 25};
-        // todo_video("/root/video/fighting.mp4", "/root/video/smk/", "/root/video/smk/ans/", data_);
-
-        // yuv_test();
-        // gif_test();
-        // wangder_limit();
-        // crossing("/root/video/192.168.3.225_01_20240313160125612.mp4", "12__");
-        // crossing("/root/video/192.168.3.225_01_20240313160432579.mp4", "79__");
-        // crossing("/root/video/192.168.3.225_01_20240313160527787.mp4", "87__");
-        // crossing("/root/video/192.168.3.225_01_20240313160622539.mp4", "39__");
-        // gate_status1();
-        // gate_status2();
-        // face_test();
-
         /* 多线程测性能测试 */
         if (TIMES > 1) {
             std::jthread t[60];
 
-            //t[0]  = std::jthread(thread_function_search);
+             //t[0]  = std::jthread(thread_function_search);
             //t[1]  = std::jthread(thread_function_integration);
             //t[2]  = std::jthread(thread_function_face_attributes);
             //t[3]  = std::jthread(thread_function_Action_live_Blur);
@@ -54,8 +39,8 @@ int main(int argc, char** argv) {
             //t[24] = std::jthread(thread_function_pedestrian_min);//V
             //t[25] = std::jthread(thread_function_climb_tumble_pedestrian_climb);//V
             //t[26] = std::jthread(thread_function_climb_tumble_pedestrian_tumble);//V
-            //t[27] = std::jthread(thread_function_subway_anomaly_nzx);
-            //t[28] = std::jthread(thread_function_subway_anomaly_yf);
+            //t[27] = std::jthread(thread_function_subway_anomaly_nzx);// 只上3588
+            //t[28] = std::jthread(thread_function_subway_anomaly_yf);// 只上3588
 
 
             //t[40] = std::jthread(thread_function_pump_light);
@@ -67,6 +52,9 @@ int main(int argc, char** argv) {
             //t[46] = std::jthread(thread_function_pump_hoisting);
             //t[47] = std::jthread(thread_function_pump_weld);
             //t[48] = std::jthread(thread_function_pump_work_status);
+            //pump_protect_face
+            //pump_glove
+            //pump_cover_plate
 
 
         } else {

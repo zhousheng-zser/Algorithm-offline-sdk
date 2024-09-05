@@ -4,10 +4,8 @@ file(
 	GLOB private_sources
 	CONFIGURE_DEPENDS
     common.hpp
-    #sophon.cpp
-    test.cpp
-    #nessus.cpp
-    #face.cpp
+    sophon_test.cpp
+    #rk3588_test.cpp
 )
 
 add_executable(${target_name})

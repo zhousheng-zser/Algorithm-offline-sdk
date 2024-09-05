@@ -12,6 +12,7 @@
 #include <gx_batterypilferers_api.hpp>
 #include <gx_climb_api.hpp>
 #include <gx_climb_tumble_pedestrian_api.hpp>
+#include <gx_crossing_api.hpp>
 #include <gx_crowd_api.hpp>
 #include <gx_fighting_api.hpp>
 #include <gx_flame_api.hpp>
@@ -30,7 +31,9 @@
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
-#include <gx_crossing_api.hpp>
+// #include <gx_pump_protect_face_api.hpp>
+// #include <gx_pump_cover_plate_api.hpp>
+// #include <gx_policeuniform_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -39,7 +42,7 @@ bool is_out_json                     = true;
 static const std::string CONFIG_PATH = "/root/install/restruct/config";
 static std::string IMG_PATH          = "/root/img/";
 
-#define TIMES 100
+#define TIMES 1
 namespace fs = std::filesystem;
 namespace glasssix {
 
@@ -653,7 +656,6 @@ namespace glasssix {
         delete api_temp;
     }
 
-    // t38 嗣盄最聆戀鰾視給腔視給
     void thread_function_climb_tumble_pedestrian_tumble() {
         gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
         int T                                    = TIMES;
@@ -678,5 +680,119 @@ namespace glasssix {
             printf("climb_tumble_pedestrian_tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // void thread_function_policeuniform() {
+    //     gx_policeuniform_api* api_temp = new gx_policeuniform_api(CONFIG_PATH);
+    //     int T                          = TIMES;
+    //     auto start                     = std::chrono::high_resolution_clock::now();
+    //     for (int i = 0; i < T; ++i) {
+    //         try {
+    //             const gx_img_api img(abi::string(IMG_PATH) + "policeuniform.png", static_cast<int>(1e9));
+    //             auto val = api_temp->safe_production_policeuniform(img);
+    //             if (condition)
+    //                 printf("[policeuniform] : policeuniform_list = %d\n", val.without_policeuniform_list.size());
 
+    //        } catch (const std::exception& ex) {
+    //            printf("error =  %s\n", ex.what());
+    //        }
+    //    }
+    //    auto end      = std::chrono::high_resolution_clock::now();
+    //    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //    if (condition_time)
+    //        printf("policeuniform time = %lld microsecond\n", duration.count());
+    //    delete api_temp;
+    //}
+    // void thread_function_pump_glove() {
+    //    gx_pump_glove_api* api_temp = new gx_pump_glove_api(CONFIG_PATH);
+    //    int T                       = TIMES;
+    //    auto start                  = std::chrono::high_resolution_clock::now();
+    //    for (int i = 0; i < T; ++i) {
+    //        try {
+    //            const gx_img_api img(abi::string(IMG_PATH) + "pump_glove0.jpg", static_cast<int>(1e9));
+    //            auto val = api_temp->safe_production_pump_glove(img);
+    //            if (condition)
+    //                printf("[pump_glove] : unglove_list = %d\n", val.unglove_list.size());
+
+    //        } catch (const std::exception& ex) {
+    //            printf("error =  %s\n", ex.what());
+    //        }
+    //    }
+    //    auto end      = std::chrono::high_resolution_clock::now();
+    //    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //    if (condition_time)
+    //        printf("pump_glove time = %lld microsecond\n", duration.count());
+    //    delete api_temp;
+    //}
+
+    // void thread_function_pump_protect_face() {
+    //     gx_pump_protect_face_api* api_temp = new gx_pump_protect_face_api(glasssix::abi::string(CONFIG_PATH));
+    //     int T                              = TIMES;
+    //     auto start                         = std::chrono::high_resolution_clock::now();
+    //     for (int i = 0; i < T; ++i) {
+    //         try {
+    //             gx_img_api img(abi::string(IMG_PATH) + "pump_protect_face.jpg", static_cast<int>(1e9));
+    //             auto val = api_temp->safe_production_pump_protect_face(img);
+    //             if (condition) {
+    //                 if (val.pump_no_protect_face_list.size())
+    //                     printf("[pump_protect_face] : category=%d\n",
+    //                         val.pump_no_protect_face_list[0].category);
+    //                 else
+    //                     printf("[pump_protect_face] : category=%d\n", 10);
+    //             }
+    //         } catch (const std::exception& ex) {
+    //             printf("error =  %s\n", ex.what());
+    //         }
+    //     }
+    //     auto end      = std::chrono::high_resolution_clock::now();
+    //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //     if (condition_time)
+    //         printf("pump_protect_face time = %lld microsecond\n", duration.count());
+    //     delete api_temp;
+    // }
+
+    // void thread_function_pump_cover_plate() {
+    //     gx_pump_cover_plate_api* api_temp = new gx_pump_cover_plate_api(CONFIG_PATH);
+    //     int T                             = TIMES;
+    //     auto start                        = std::chrono::high_resolution_clock::now();
+    //     for (int i = 0; i < T; ++i) {
+    //         try {
+    //             {
+    //                 gx_img_api img(abi::string(IMG_PATH) + "pump_cover_plate.jpg", static_cast<int>(1e9));
+    //                 auto val = api_temp->safe_production_pump_cover_plate(
+    //                     img, abi::vector<pump_cover_plate_point>{pump_cover_plate_point{1699, 827},
+    //                              pump_cover_plate_point{2009, 769}, pump_cover_plate_point{2357, 1035},
+    //                              pump_cover_plate_point{2069, 1179}});
+    //                 if (condition)
+    //                     printf("[pump_cover_plate] : score =%f cover_plate_status=%d\n", val.score,
+    //                         val.cover_plate_status);
+    //             }
+    //             {
+    //                 gx_img_api img(abi::string(IMG_PATH) + "pump_cover_plate_close.jpg", static_cast<int>(1e9));
+    //                 auto val = api_temp->safe_production_pump_cover_plate(
+    //                     img, abi::vector<pump_cover_plate_point>{pump_cover_plate_point{1699, 827},
+    //                              pump_cover_plate_point{2009, 769}, pump_cover_plate_point{2357, 1035},
+    //                              pump_cover_plate_point{2069, 1179}});
+    //                 if (condition)
+    //                     printf("[pump_cover_plate] : score =%f cover_plate_status=%d\n", val.score,
+    //                         val.cover_plate_status);
+    //             }
+    //             {
+    //                 gx_img_api img(abi::string(IMG_PATH) + "pump_cover_plate_open.jpg", static_cast<int>(1e9));
+    //                 auto val = api_temp->safe_production_pump_cover_plate(
+    //                     img, abi::vector<pump_cover_plate_point>{pump_cover_plate_point{1699, 827},
+    //                              pump_cover_plate_point{2009, 769}, pump_cover_plate_point{2357, 1035},
+    //                              pump_cover_plate_point{2069, 1179}});
+    //                 if (condition)
+    //                     printf("[pump_cover_plate] : score =%f cover_plate_status=%d\n", val.score,
+    //                         val.cover_plate_status);
+    //             }
+    //         } catch (const std::exception& ex) {
+    //             printf("error =  %s\n", ex.what());
+    //         }
+    //     }
+    //     auto end      = std::chrono::high_resolution_clock::now();
+    //     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //     if (condition_time)
+    //         printf("pump_cover_plate time = %lld microsecond\n", duration.count());
+    //     delete api_temp;
+    // }
 } // namespace glasssix

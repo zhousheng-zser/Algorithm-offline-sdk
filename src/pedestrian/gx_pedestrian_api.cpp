@@ -153,7 +153,7 @@ namespace glasssix {
     };
 
 
-    //  安全生产 姿态检测
+    //  安全生产 行人检测
     pedestrian_info gx_pedestrian_api::safe_production_pedestrian(const gx_img_api& mat) {
         if (impl_ == nullptr)
             throw std::runtime_error{"You need to create a new object !\n"};
