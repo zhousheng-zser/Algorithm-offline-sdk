@@ -285,6 +285,9 @@ namespace glasssix {
                 } else if (name == "blur.json" && _config->blur_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_blur_config);
+                } else if (name == "camera_occlusion.json" && _config->camera_occlusion_is_load) {
+                    std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
+                    temp.get_to(_config->_camera_occlusion_config);
                 } else if (name == "detect.json" && _config->detect_is_load) {
                     std::ofstream(path.c_str(), std::ios::trunc) << temp.dump(4);
                     temp.get_to(_config->_detect_config);
