@@ -136,7 +136,7 @@ namespace glasssix {
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
 
-                    ans = std::move(json::parse(execute_result.result)
+                    ans = std::move(json::parse(*execute_result.result)
                                         .get<climb_tumble_pedestrian_detect_info_result>()
                                         .detect_info);
                     return ans;

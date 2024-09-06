@@ -21,7 +21,7 @@ struct parser_create_instance_result {
 
 // ¼ì²â½á¹û
 struct parser_execute_result {
-    std::string result;
+    std::unique_ptr<std::string> result;
     basic_result status;
 };
 

@@ -117,7 +117,7 @@ namespace glasssix {
                         throw std::runtime_error{execute_result_c};
 
                     ans =
-                        std::move(json::parse(execute_result.result).get<pedestrian_detect_info_result>().detect_info);
+                        std::move(json::parse(*execute_result.result).get<pedestrian_detect_info_result>().detect_info);
                     return ans;
                 });
                 return result_pool.get();

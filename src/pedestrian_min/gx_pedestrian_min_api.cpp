@@ -112,12 +112,13 @@ namespace glasssix {
                     });
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
                         str.data(), 3ll * mat.get_rows() * mat.get_cols(), nullptr, 0);
+                    printf("+++++%s\n", execute_result_c);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
 
                     ans =
-                        std::move(json::parse(execute_result.result).get<pedestrian_min_detect_info_result>().detect_info);
+                        std::move(json::parse(*execute_result.result).get<pedestrian_min_detect_info_result>().detect_info);
                     return ans;
                 });
                 return result_pool.get();

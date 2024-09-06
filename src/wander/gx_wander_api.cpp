@@ -176,7 +176,7 @@ namespace glasssix {
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
 
-                    ans = std::move(json::parse(execute_result.result).get<wander_detect_info_result>().detect_info);
+                    ans = std::move(json::parse(*execute_result.result).get<wander_detect_info_result>().detect_info);
                     return ans;
                 });
                 return result_pool.get();
@@ -250,7 +250,7 @@ namespace glasssix {
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};
-                    return std::move(json::parse(execute_result.result).get<wander_detect_info_result>().detect_info);
+                    return std::move(json::parse(*execute_result.result).get<wander_detect_info_result>().detect_info);
                 });
                 temp_ans = result_pool.get();
                 wander_limit_info ans(temp_ans);

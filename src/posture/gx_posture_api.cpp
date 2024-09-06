@@ -119,7 +119,7 @@ namespace glasssix {
                         throw std::runtime_error{execute_result_c};
 
                     ans = std::move(
-                        json::parse(execute_result.result).get<posture_detect_info_result>().posture_info_list);
+                        json::parse(*execute_result.result).get<posture_detect_info_result>().posture_info_list);
                     return ans;
                 });
                 return result_pool.get();
