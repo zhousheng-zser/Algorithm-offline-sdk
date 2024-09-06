@@ -100,6 +100,12 @@ namespace glasssix {
         temp.get_to(_climb_tumble_pedestrian_config);
         climb_tumble_pedestrian_is_load = true;
     }
+    void config::set_camera_occlusion(const abi::string& path) {
+        glasssix::json temp;
+        temp = read_json_file(path + "/camera_occlusion.json");
+        temp.get_to(_camera_occlusion_config);
+        camera_occlusion_is_load = true;
+    }
     void config::set_crowd(const abi::string& path) {
         glasssix::json temp;
         temp = read_json_file(path + "/crowd.json");

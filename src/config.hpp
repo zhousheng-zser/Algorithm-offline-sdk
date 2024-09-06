@@ -31,6 +31,20 @@ namespace glasssix {
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
     };
+    struct camera_occlusion_config {
+        GX_BEGIN_FIELDS(camera_occlusion_config);
+        GX_FIELD(int, initial_normal_range_l);
+        GX_FIELD(int, initial_normal_range_r);
+        GX_FIELD(int, num_frames);
+        GX_FIELD(int, frames_interval);
+        GX_FIELD(int, repeated_outside_threshold);
+        GX_FIELD(int, restart_normal_count);
+        GX_FIELD(int, update_interval);
+        GX_FIELD(int, sigma);
+        GX_END_FIELDS;
+
+        GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);
+    };
 
     struct detect_config {
         GX_BEGIN_FIELDS(detect_config);
@@ -468,6 +482,7 @@ namespace glasssix {
         abi::string _path;
         nlohmann::json protocols_list;
         configure_directory _configure_directory;
+        camera_occlusion_config _camera_occlusion_config;
         detect_config _detect_config;
         track_config _track_config;
         blur_config _blur_config;
@@ -512,6 +527,7 @@ namespace glasssix {
         subway_anomaly_config _subway_anomaly_config;
         pump_cover_plate_config _pump_cover_plate_config;
         void set_configure_directory(abi::string& path);
+        void set_camera_occlusion(const abi::string& path);
         void set_detect(const abi::string& path);
         void set_track(const abi::string& path);
         void set_blur(const abi::string& path);
@@ -557,6 +573,7 @@ namespace glasssix {
         void set_pump_cover_plate(const abi::string& path);
 
         bool configure_directory_is_load     = false;
+        bool camera_occlusion_is_load        = false;
         bool detect_is_load                  = false;
         bool track_is_load                   = false;
         bool blur_is_load                    = false;

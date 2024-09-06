@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
         // gate_status1();
         // gate_status2();
         // face_test();
-
+        //camera_occlusion("/root/video/20240905_101357.mp4");
         //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155244.109.png", "/root/img/test/a_screenshot/a.mp4_20240715_155244.109.png");
         //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155249.277.png", "/root/img/test/a_screenshot/a.mp4_20240715_155249.277.png");
         //subway_anomaly_test("/root/img/test/a_screenshot/a_screenshot/a.mp4_20240715_155251.095.png", "/root/img/test/a_screenshot/a.mp4_20240715_155251.095.png");

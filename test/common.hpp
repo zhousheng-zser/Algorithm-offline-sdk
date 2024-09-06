@@ -48,6 +48,7 @@
 #include <gx_subway_anomaly_api.hpp>
 #include <gx_pump_protect_face_api.hpp>
 #include <gx_pump_cover_plate_api.hpp>
+#include <gx_camera_occlusion_api.hpp>
 #include <opencv2/opencv.hpp>
 using namespace glasssix;
 bool condition_time                  = false;
@@ -1952,6 +1953,34 @@ void face_test() {
     delete api_temp;
 }
 
+void camera_occlusion(std::string path) {
+
+    // 读取 视频 文件
+    cv::VideoCapture capture;
+    capture.open(path.c_str());
+    // 逐帧解码并保存为图像
+    cv::Mat frame;
+    int frameCount            = 0;
+    gx_camera_occlusion_api* api_temp = new gx_camera_occlusion_api(CONFIG_PATH);
+    int cnnt                  = 0;
+    while (true) {
+        // 读取帧
+        capture >> frame;
+        if (frame.empty())
+            break;
+
+        // 保存为图像
+        std::string outputName = "/root/video/temp.jpg";
+        cv::imwrite(outputName, frame);
+
+        gx_img_api img1("/root/video/temp.jpg", static_cast<int>(1e9));
+        auto val   = api_temp->safe_production_camera_occlusion(img1,(cnnt++)/5, 0);
+        printf("time = %d %s \n", cnnt/60, val ? "true" : "false");
+    }
+
+    // 释放 VideoCapture 资源
+    capture.release();
+}
 
     // 多线程测人头(读取文件夹内容并写入json文件）
 void thread_function_head_from() {
