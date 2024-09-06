@@ -11,8 +11,12 @@ namespace glasssix {
         gx_camera_occlusion_api(gx_camera_occlusion_api&&) noexcept;
         gx_camera_occlusion_api& operator=(gx_camera_occlusion_api&&) noexcept;
 
-        //ÉãÏñÍ·ÕÚµ²¼ì²â
-        bool safe_production_camera_occlusion(const gx_img_api& mat, int device_id);
+        //  ÉãÏñÍ·ÕÚµ²¼ì²â
+        bool safe_production_camera_occlusion(
+            const gx_img_api& mat, std::int64_t current_time, int device_id, double sigma = 2);
+
+        // Çå¿ÕÉãÏñÍ·ĞÅÏ¢
+        bool camera_occlusion_remove_id(int id);
 
     private:
         class impl;
