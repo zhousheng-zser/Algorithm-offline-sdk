@@ -40,7 +40,6 @@ namespace glasssix {
         GX_FIELD(int, repeated_outside_threshold);
         GX_FIELD(int, restart_normal_count);
         GX_FIELD(int, update_interval);
-        GX_FIELD(int, sigma);
         GX_END_FIELDS;
 
         GX_JSON_SERIALIZABLE(naming_convention::lower_case_with_underscores);

@@ -12,6 +12,8 @@ namespace glasssix {
         std::int64_t last_time; 
         int normal_frame_count = 0;  // 连续正常帧数
         int obscured_count     = 0;  // 连续报警帧数
+        double normal_range_l;
+        double normal_range_r;
     };
     gx_camera_occlusion_api::gx_camera_occlusion_api() : impl_{std::make_unique<impl>()} {}
     gx_camera_occlusion_api::gx_camera_occlusion_api(const abi::string& config_path)
@@ -21,7 +23,9 @@ namespace glasssix {
     gx_camera_occlusion_api& gx_camera_occlusion_api::operator=(gx_camera_occlusion_api&&) noexcept = default;
     class gx_camera_occlusion_api::impl {
     public:
-        void init() {}
+        void init() {
+            _config->set_camera_occlusion(_config->_path);
+        }
         impl() {
             if (_config == nullptr) {
                 _config = new config();
@@ -89,19 +93,20 @@ namespace glasssix {
                  status_now.last_time = current_time;
                  status_now.obscured_count = 0;
                  status_now.normal_frame_count = 0;
+                 status_now.normal_range_l     = _config->_camera_occlusion_config.initial_normal_range_l;
+                 status_now.normal_range_r     = _config->_camera_occlusion_config.initial_normal_range_r;
              }
              status_now.cnt++;
-             double normal_range_l = _config->_camera_occlusion_config.initial_normal_range_l;
-             double normal_range_r = _config->_camera_occlusion_config.initial_normal_range_r;
              double variance       = computeLaplacianVariance(frame);
              if (status_now.cnt <= _config->_camera_occlusion_config.num_frames * 5
                  && status_now.cnt % (_config->_camera_occlusion_config.frames_interval*5) == 0) { 
                  status_now.laplacian_variances.emplace_back(variance);
              } else if (status_now.cnt == _config->_camera_occlusion_config.num_frames * 5 + 1) {
-                 update_normal_range(status_now.laplacian_variances, sigma, normal_range_l, normal_range_r);
+                 update_normal_range(
+                     status_now.laplacian_variances, sigma, status_now.normal_range_l, status_now.normal_range_r);
                  status_now.laplacian_variances.clear();
              }
-             if (variance > normal_range_l)
+             if (variance > status_now.normal_range_l)
              {
                  status_now.normal_frame_count++;
                  if (status_now.normal_frame_count >= _config->_camera_occlusion_config.restart_normal_count)
