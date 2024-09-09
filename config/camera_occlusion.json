@@ -3,7 +3,7 @@
     "initial_normal_range_r": 10000,
     "num_frames": 60,
     "frames_interval": 1,
-    "repeated_outside_threshold": 3,
+    "repeated_outside_threshold": 5,
     "restart_normal_count": 3,
     "update_interval": 3600
 }

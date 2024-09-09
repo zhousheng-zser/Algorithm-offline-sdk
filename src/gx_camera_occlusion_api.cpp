@@ -113,8 +113,9 @@ namespace glasssix {
              else
              {
                  status_now.obscured_count++;
-                 status_now.normal_frame_count = 0; 
-                 if (status_now.obscured_count >= _config->_camera_occlusion_config.repeated_outside_threshold)
+                 status_now.normal_frame_count = 0;
+                 if (status_now.obscured_count >= _config->_camera_occlusion_config.repeated_outside_threshold
+                     && status_now.obscured_count <= 10)
                      ans = true;
              }
 
