@@ -39,6 +39,8 @@ DEFINE_STRUCT_SCHEMA(playphone_info::bodyerror_boxes,
     DEFINE_STRUCT_FIELD(x2, "x2"), 
     DEFINE_STRUCT_FIELD(y2, "y2"), 
     DEFINE_STRUCT_FIELD(man_score, "man_score"),
+    DEFINE_STRUCT_FIELD(frequency, "frequency"),
+    DEFINE_STRUCT_FIELD(id, "id"),
     DEFINE_STRUCT_FIELD(error_keypoints, "error_keypoints"));
 
 //关键点置信度
@@ -56,7 +58,9 @@ DEFINE_STRUCT_SCHEMA(playphone_info::boxes,
     DEFINE_STRUCT_FIELD(y1, "y1"), 
     DEFINE_STRUCT_FIELD(x2, "x2"), 
     DEFINE_STRUCT_FIELD(y2, "y2"), 
-    DEFINE_STRUCT_FIELD(man_score, "man_score"));
+    DEFINE_STRUCT_FIELD(man_score, "man_score"),
+    DEFINE_STRUCT_FIELD(frequency, "frequency"),
+    DEFINE_STRUCT_FIELD(id, "id"));
 
 // 在玩手机
 DEFINE_STRUCT_SCHEMA(playphone_info::playphone_boxes,
@@ -65,6 +69,8 @@ DEFINE_STRUCT_SCHEMA(playphone_info::playphone_boxes,
     DEFINE_STRUCT_FIELD(x2, "x2"), 
     DEFINE_STRUCT_FIELD(y2, "y2"), 
     DEFINE_STRUCT_FIELD(man_score, "man_score"),
+    DEFINE_STRUCT_FIELD(frequency, "frequency"),
+    DEFINE_STRUCT_FIELD(id, "id"),
     DEFINE_STRUCT_FIELD(phone_list, "phone_list")
 );
 

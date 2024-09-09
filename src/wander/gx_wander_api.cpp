@@ -25,7 +25,7 @@ namespace glasssix {
                     json::parse(new_result_c).get<parser_create_instance_result>();
                 if (new_result.status.code != 0)
                     throw std::runtime_error{new_result_c};
-                instance_guid = new_result.instance_id;
+                instance_guid = *new_result.instance_id;
             } catch (const std::exception& ex) {
                 throw std::runtime_error{ex.what()};
             }
@@ -132,10 +132,6 @@ namespace glasssix {
                 if (person_list[i].score >= _config->_wander_config.person_conf)
                     pedestrian_list_temp.emplace_back(person_list[i]);
             }
-            // pedestrian_list_temp.emplace_back(
-            //     pedestrian_info::boxes{.score = 0.9, .x1 = 0, .y1 = 0, .x2 = mat.get_cols(), .y2 = mat.get_rows()});
-
-
             try {
                 auto result_pool = pool->enqueue([&] {
                     std::thread::id id_ = std::this_thread::get_id();

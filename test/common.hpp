@@ -25,12 +25,19 @@
 #include <gx_playphone_api.hpp>
 #include <gx_posture_api.hpp>
 #include <gx_refvest_api.hpp>
+#include <gx_workcloth_api.hpp>
 #include <gx_sleep_api.hpp>
 #include <gx_smog_api.hpp>
 #include <gx_smoke_api.hpp>
 #include <gx_tumble_api.hpp>
 #include <gx_vehicle_api.hpp>
 #include <gx_wander_api.hpp>
+#include <gx_pump_hoisting_api.hpp>
+#include <gx_pump_work_status_api.hpp>
+#include <gx_pump_weld_api.hpp>
+#include <gx_pump_pumptop_person_api.hpp>
+#include <gx_pump_gate_status_api.hpp> 
+#include <gx_pump_mask_api.hpp>
 // #include <gx_pump_protect_face_api.hpp>
 // #include <gx_pump_cover_plate_api.hpp>
 // #include <gx_policeuniform_api.hpp>
@@ -192,10 +199,9 @@ namespace glasssix {
         gx_playphone_api* api_temp = new gx_playphone_api(CONFIG_PATH);
         int T                      = TIMES;
         auto start                 = std::chrono::high_resolution_clock::now();
-#if 1 // 这里必须要有表达式,不能省略
         for (int i = 0; i < T; ++i) {
             try {
-                const gx_img_api img(std::string(IMG_PATH) + "wsj_13.jpg", static_cast<int>(1e9));
+                const gx_img_api img(std::string(IMG_PATH) + "playphone.jpg", static_cast<int>(1e9));
                 auto val = api_temp->safe_production_playphone(img);
                 if (condition)
                     printf("[playphone] : playphone_list = %zu norm_list = %zu bodyerror_list = %zu\n",
@@ -204,31 +210,6 @@ namespace glasssix {
                 printf("error =  %s\n", ex.what());
             }
         }
-#else // 测试要求进行多图片检测
-        try {
-            std::vector<std::string> v_img;
-            for (auto enter : std::filesystem::directory_iterator(std::string(IMG_PATH) + "playphone/")) {
-                if (enter.is_regular_file()) {
-                    std::string exit{enter.path().string()};
-                    v_img.push_back(exit);
-                    std::cout << "Found " << exit << std::endl;
-
-                    const gx_img_api img(std::string(exit), static_cast<int>(1e9));
-                    auto val = api_temp->safe_production_playphone(img);
-                    std::string relative_path{};
-                    size_t subPos = exit.rfind("/") + 1;
-                    relative_path = exit.substr(subPos);
-
-                    if (condition)
-                        printf("image_name = %s bodyerror_list = %d norm_list = %d playphone_list = %d\n",
-                            relative_path.c_str(), val.bodyerror_list.size(), val.norm_list.size(),
-                            val.playphone_list.size());
-                }
-            }
-        } catch (const std::exception& ex) {
-            printf("error =  %s\n", ex.what());
-        }
-#endif
         auto end      = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         if (condition_time)
@@ -631,6 +612,29 @@ namespace glasssix {
             printf("pedestrian_min time = %ld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t10 多线程测工服检测
+    void thread_function_workcloth() {
+        gx_workcloth_api* api_temp = new gx_workcloth_api(CONFIG_PATH);
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                const gx_img_api img(std::string(IMG_PATH) + "workcloth.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_workcloth(img, 0);
+                if (condition)
+                    printf("[workcloth] : workcloth_list = %d\n", val.cloth_list.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("workcloth time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+
     // t37 多线程测攀爬跌倒的攀爬
     void thread_function_climb_tumble_pedestrian_climb() {
         gx_climb_tumble_pedestrian_api* api_temp = new gx_climb_tumble_pedestrian_api(CONFIG_PATH);
@@ -680,6 +684,165 @@ namespace glasssix {
             printf("climb_tumble_pedestrian_tumble time = %lld microsecond\n", duration.count());
         delete api_temp;
     }
+    // t33 多线程测定制工作状态
+    void thread_function_pump_work_status() {
+        gx_pump_work_status_api* api_temp = new gx_pump_work_status_api(CONFIG_PATH);
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
+        std::vector<pump_work_status_point> polygon;
+        polygon.emplace_back(pump_work_status_point{773, 407});
+        polygon.emplace_back(pump_work_status_point{1072, 407});
+        polygon.emplace_back(pump_work_status_point{1526, 1080});
+        polygon.emplace_back(pump_work_status_point{895, 1080});
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img(std::string(IMG_PATH) + "pump_work_status.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_work_status(img, 1, polygon);
+                if (condition)
+                    printf("[pump_work_status] : %s \n", val.security_status.c_str());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_work_status time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t31 多线程测定制泵业焊接
+    void thread_function_pump_weld() {
+        gx_pump_weld_api* api_temp = new gx_pump_weld_api(CONFIG_PATH);
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        std::vector<gx_img_api> img_list;
+        img_list.emplace_back(gx_img_api(std::string(IMG_PATH) + "pump_weld/0.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(std::string(IMG_PATH) + "pump_weld/1.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(std::string(IMG_PATH) + "pump_weld/2.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(std::string(IMG_PATH) + "pump_weld/3.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(std::string(IMG_PATH) + "pump_weld/4.jpg", static_cast<int>(1e9)));
+        img_list.emplace_back(gx_img_api(std::string(IMG_PATH) + "pump_weld/5.jpg", static_cast<int>(1e9)));
+        for (int i = 0; i < T; ++i) {
+            try {
+                auto val = api_temp->safe_production_pump_weld(img_list);
+                if (condition) {
+                    if (val.persons_weld.size() > 0)
+                        printf("[pump_weld] : category=%d\n", val.persons_weld[0].category);
+                    else
+                        printf("[pump_weld] : category=%d\n", 10);
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_weld time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t27 多线程测定制泵顶行人
+    void thread_function_pump_pumptop_person() {
+        gx_pump_pumptop_person_api* api_temp = new gx_pump_pumptop_person_api(CONFIG_PATH);
+        int T                                = TIMES;
+        auto start                           = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                // gx_img_api img(std::string(IMG_PATH) + "pumptop_person.jpg", static_cast<int>(1e9));
+                gx_img_api img(std::string(IMG_PATH) + "pump_pumptop_person.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_pumptop_person(img);
+                if (condition)
+                    if (val.persons_in_pumptop.size() > 0) {
+                        printf("[pump_pumptop_person] : category = %d score = %.2f  \n",
+                            val.persons_in_pumptop[0].category, val.persons_in_pumptop[0].score);
+                    } else {
+                        printf("[pump_pumptop_person] : category = %d score = %.2f  \n", 10, 10);
+                    }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_pumptop_person time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
+    // t26 多线程测定制大门状态
+    void thread_function_pump_gate_status() {
+        gx_pump_gate_status_api* api_temp = new gx_pump_gate_status_api(CONFIG_PATH);
+        int T                             = TIMES;
+        auto start                        = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img(std::string(IMG_PATH) + "pump_gate_status.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_gate_status(img, 15);
+                if (condition)
+                    printf("[pump_gate_status] : %s  \n", val.security_status.c_str());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_gate_status time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    //  多线程测定制防护面罩
+    void thread_function_pump_mask() {
+        gx_pump_mask_api* api_temp = new gx_pump_mask_api(CONFIG_PATH);
+        int T                      = TIMES;
+        auto start                 = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img(std::string(IMG_PATH) + "pump_mask.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_mask(img);
+                if (condition) {
+                    if (val.pump_head_list.size() > 0)
+                        printf("[pump_mask] : category=%d\n", val.pump_head_list[0].category);
+                    else
+                        printf("[pump_mask] : category=%d\n", 10);
+                }
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_mask time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+    // 多线程测定制泵业狭小空间（天车工吊装）
+    void thread_function_pump_hoisting() {
+        gx_pump_hoisting_api* api_temp = new gx_pump_hoisting_api(CONFIG_PATH);
+        int T                          = TIMES;
+        auto start                     = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < T; ++i) {
+            try {
+                gx_img_api img1(std::string(IMG_PATH) + "pump_hoistring2.jpg", static_cast<int>(1e9));
+                api_temp->safe_production_pump_hoisting(img1, 1);
+                gx_img_api img2(std::string(IMG_PATH) + "pump_hoistring1.jpg", static_cast<int>(1e9));
+                auto val = api_temp->safe_production_pump_hoisting(img2, 1);
+                if (condition)
+                    printf("[pump_hoisting] : dangerous_region = %llu \n", val.dangerous_region.size());
+            } catch (const std::exception& ex) {
+                printf("error =  %s\n", ex.what());
+            }
+        }
+        auto end      = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        if (condition_time)
+            printf("pump_hoisting time = %lld microsecond\n", duration.count());
+        delete api_temp;
+    }
+
     // void thread_function_policeuniform() {
     //     gx_policeuniform_api* api_temp = new gx_policeuniform_api(CONFIG_PATH);
     //     int T                          = TIMES;

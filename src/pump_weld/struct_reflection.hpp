@@ -7,16 +7,16 @@ struct pump_weld_config {
     int device;
     int format;
     float nms_thres;
+    float conf_thres;
     float wmachine_conf_thres;
-    float wlight_conf_thres;
     int batch;
 };
 DEFINE_STRUCT_SCHEMA(pump_weld_config, 
     DEFINE_STRUCT_FIELD(device, "device"),
     DEFINE_STRUCT_FIELD(format, "format"),
     DEFINE_STRUCT_FIELD(nms_thres, "nms_thres"),
+    DEFINE_STRUCT_FIELD(conf_thres, "conf_thres"),
     DEFINE_STRUCT_FIELD(wmachine_conf_thres, "wmachine_conf_thres"),
-    DEFINE_STRUCT_FIELD(wlight_conf_thres, "wlight_conf_thres"),
     DEFINE_STRUCT_FIELD(batch, "batch"));
 
 
@@ -68,6 +68,7 @@ struct pump_weld_detect_param {
             float wmachine_conf_thres;
             float wlight_conf_thres;
             float nms_thres;
+            float conf_thres;
             float candidate_box_width;
             float candidate_box_height;
             int batch;
@@ -96,6 +97,7 @@ DEFINE_STRUCT_SCHEMA(pump_weld_detect_param::optional_params::dyparams_params,
     DEFINE_STRUCT_FIELD(wmachine_conf_thres, "wmachine_conf_thres"),
     DEFINE_STRUCT_FIELD(wlight_conf_thres, "wlight_conf_thres"),
     DEFINE_STRUCT_FIELD(nms_thres, "nms_thres"),
+    DEFINE_STRUCT_FIELD(conf_thres, "conf_thres"),
     DEFINE_STRUCT_FIELD(candidate_box_width, "candidate_box_width"),
     DEFINE_STRUCT_FIELD(candidate_box_height, "candidate_box_height"),
     DEFINE_STRUCT_FIELD(batch, "batch"));

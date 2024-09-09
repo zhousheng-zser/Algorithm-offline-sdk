@@ -10,7 +10,7 @@ namespace glasssix {
     public:
         impl(std::string path, int limit) : img{cv::imread(path.c_str())} {
             if (img.empty()) {
-                throw std::string("Error: Could not load image");
+                std::runtime_error{std::string("Error: Could not load image")};
             }
             uchar val[105];
             memset(val, 0, sizeof(val));
@@ -18,11 +18,11 @@ namespace glasssix {
             in_file.read((char*) &val, 10);
             type = check_type(val, 10);
             if (type == "") {
-                throw std::string("Error: The picture is not in the right format");
+                throw std::runtime_error{std::string("Error: The picture is not in the right format")};
             }
             if (img.cols * img.rows > limit) {
                 img.release();
-                throw std::string("Error: The picture has more than maximun limit pixels");
+                throw std::runtime_error{std::string("Error: The picture has more than maximun limit pixels")};
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
             is_infrared = -1;
@@ -30,12 +30,12 @@ namespace glasssix {
         impl(std::vector<uchar>& buffer, int limit) {
             type = check_type(buffer, 10);
             if (type == "") {
-                throw std::string("Error: The picture is not in the right format");
+                throw std::runtime_error{std::string("Error: The picture is not in the right format")};
             }
             img = cv::imdecode(buffer, cv::IMREAD_COLOR);
             if (img.cols * img.rows > limit) {
                 img.release();
-                throw std::string("Error: The picture has more than maximun limit pixels");
+                throw std::runtime_error{std::string("Error: The picture has more than maximun limit pixels")};
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
             is_infrared = -1;
@@ -47,7 +47,7 @@ namespace glasssix {
 
             if (img.cols * img.rows > limit) {
                 img.release();
-                throw std::string("Error: The picture has more than maximun limit pixels");
+                throw std::runtime_error{std::string("Error: The picture has more than maximun limit pixels")};
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
             is_infrared = -1;
@@ -60,11 +60,11 @@ namespace glasssix {
                 img = cv::Mat(rows, cols, CV_8UC3, const_cast<unsigned char*>(bgr_data.data()));
             }
             if (img.empty()) {
-                throw std::string("Error: Could not load image");
+                throw std::runtime_error{std::string("Error: Could not load image")};
             }
             if (img.cols * img.rows > limit) {
                 img.release();
-                throw std::string("Error: The picture has more than maximun limit pixels");
+                throw std::runtime_error{std::string("Error: The picture has more than maximun limit pixels")};
             }
             data_len    = 1llu * img.channels() * img.cols * img.rows;
             is_infrared = -1;

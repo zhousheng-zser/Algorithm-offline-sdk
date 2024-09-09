@@ -53,7 +53,6 @@ DEFINE_STRUCT_SCHEMA(workcloth_info,
     );
 
 DEFINE_STRUCT_SCHEMA(workcloth_info::boxes, 
-    DEFINE_STRUCT_FIELD(score, "score"), 
     DEFINE_STRUCT_FIELD(x1, "x1"),
     DEFINE_STRUCT_FIELD(y1, "y1"), 
     DEFINE_STRUCT_FIELD(x2, "x2"), 

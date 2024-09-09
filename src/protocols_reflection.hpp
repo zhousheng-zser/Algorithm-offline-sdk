@@ -15,7 +15,7 @@ struct parser_init_result {
 
 //加载模型结果
 struct parser_create_instance_result {
-    std::string instance_id;
+    std::unique_ptr <std::string> instance_id;
     basic_result status;
 };
 

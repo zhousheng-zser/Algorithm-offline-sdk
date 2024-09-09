@@ -11,6 +11,8 @@ struct playphone_info {
         int x2; // 检出框体右下坐标x
         int y2; // 检出框体右下坐标y
         float man_score; // 置信度
+        float frequency;  //出现次数
+        float id; 
     };
     struct error_list {
         float nose; // 检出鼻子
@@ -25,6 +27,8 @@ struct playphone_info {
         int x2; // 检出框体右下坐标x
         int y2; // 检出框体右下坐标y
         float man_score; // 置信度
+        float frequency; // 出现次数
+        float id; 
         error_list error_keypoints;
     };
     struct playphone {
@@ -40,6 +44,8 @@ struct playphone_info {
         int x2; // 检出框体右下坐标x
         int y2; // 检出框体右下坐标y
         float man_score; // 置信度
+        float frequency; // 出现次数
+        float id; 
         std::vector<playphone> phone_list; // 手机列表
     };
 

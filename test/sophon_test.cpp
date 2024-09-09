@@ -71,9 +71,9 @@ int main(int argc, char** argv) {
             // thread_function_refvest();//V
             // thread_function_sleep();//V
             // thread_function_smoke();//V
-            // thread_function_playphone();//X
+            // thread_function_playphone();//V
             // thread_function_onphone();//V
-            // thread_function_workcloth();
+            // thread_function_workcloth();//V
             // thread_function_vehicle();//V
             // thread_function_smog();//V
             // thread_function_helmet();//V
@@ -82,19 +82,19 @@ int main(int argc, char** argv) {
             // thread_function_wander_limit();//X
             // thread_function_crossing();//X
             // thread_function_batterypilferers();//V
-            thread_function_pedestrian_min();
+            // thread_function_pedestrian_min();//X
             // thread_function_climb_tumble_pedestrian_climb();//V
             // thread_function_climb_tumble_pedestrian_tumble();//V
 
-             //thread_function_pump_light();
+            // thread_function_pump_light();
             // thread_function_pump_vesthelmet();
-            // thread_function_pump_gate_status();
-            // thread_function_pump_pumptop_person();
-            // thread_function_pump_mask();
+            // thread_function_pump_gate_status();//V
+            // thread_function_pump_pumptop_person();//V
+             //thread_function_pump_mask();//V
             // thread_function_pumptop_helmet();
-            // thread_function_pump_hoisting();
-            // thread_function_pump_weld();
-            // thread_function_pump_work_status();
+             //thread_function_pump_hoisting();//V
+            // thread_function_pump_weld();//V
+            // thread_function_pump_work_status();//V
             // pump_protect_face
             // pump_glove
             // pump_cover_plate

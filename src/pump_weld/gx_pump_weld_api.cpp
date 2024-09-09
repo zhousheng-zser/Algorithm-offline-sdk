@@ -23,7 +23,7 @@ namespace glasssix {
                     json::parse(new_result_c).get<parser_create_instance_result>();
                 if (new_result.status.code != 0)
                     throw std::runtime_error{new_result_c};
-                instance_guid = new_result.instance_id;
+                instance_guid = *new_result.instance_id;
             } catch (const std::exception& ex) {
                 throw std::runtime_error{ex.what()};
             }
@@ -113,8 +113,9 @@ namespace glasssix {
                                 .dyparams =
                                     pump_weld_detect_param::optional_params::dyparams_params{
                                         .wmachine_conf_thres  = _config->_pump_weld_config.wmachine_conf_thres,
-                                        .wlight_conf_thres    = _config->_pump_weld_config.wlight_conf_thres,
+                                        .wlight_conf_thres    = wlight_conf_thres,
                                         .nms_thres            = _config->_pump_weld_config.nms_thres,
+                                        .conf_thres           = _config->_pump_weld_config.conf_thres,
                                         .candidate_box_width  = candidate_box_width,
                                         .candidate_box_height = candidate_box_height,
                                         .batch                = _config->_pump_weld_config.batch}},

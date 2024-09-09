@@ -23,7 +23,7 @@ namespace glasssix {
                     json::parse(new_result_c).get<parser_create_instance_result>();
                 if (new_result.status.code != 0)
                     throw std::runtime_error{new_result_c};
-                instance_guid = new_result.instance_id;
+                instance_guid = *new_result.instance_id;
             } catch (const std::exception& ex) {
                 throw std::runtime_error{ex.what()};
             }
@@ -112,7 +112,6 @@ namespace glasssix {
                     });
                     char* execute_result_c = parser_execute(ptr->instance_guid.c_str(), execute_json.dump().c_str(),
                         str.data(), 3ll * mat.get_rows() * mat.get_cols(), nullptr, 0);
-                    printf("+++++%s\n", execute_result_c);
                     parser_execute_result execute_result = json::parse(execute_result_c).get<parser_execute_result>();
                     if (execute_result.status.code != 0)
                         throw std::runtime_error{execute_result_c};

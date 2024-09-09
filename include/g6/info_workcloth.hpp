@@ -6,7 +6,6 @@
 // 工服信息
 struct workcloth_info {
     struct boxes {
-        float score; // 置信度
         int x1; // 检出框体左上坐标x
         int y1; // 检出框体左上坐标y
         int x2; // 检出框体右下坐标x
