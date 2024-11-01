@@ -4,7 +4,7 @@
 
 struct flame_info {
     struct boxes {
-        int score;
+        float score;
         int x1;
         int y1;
         int x2;
